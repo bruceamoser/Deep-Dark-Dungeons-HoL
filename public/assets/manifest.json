@@ -1,0 +1,17 @@
+[
+  {
+    "pack": "adventurer",
+    "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+    "license": "CC0-1.0"
+  },
+  {
+    "pack": "skeleton",
+    "commit": "15b62b9bad122f72926c10fb14d622c73819fa54",
+    "license": "CC0-1.0"
+  },
+  {
+    "pack": "dungeon",
+    "commit": "b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07",
+    "license": "CC0-1.0"
+  }
+]

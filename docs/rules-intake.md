@@ -8,7 +8,7 @@
 - Foundry HEAD observed: `137cbd9afaf00d5e1520f920c2aadba57d7ea3d2`.
 - Foundry content source-lock book pin: `24e545e6d860e8c1b03a21356fd22cae1c039785`.
 
-These are intake observations, not a reconciled game content baseline. Compare later source changes and approval records before importing. Read Git objects at the chosen pin; do not import unrelated uncommitted work or historical archives.
+The standalone implementation and catalogs are imported at the Foundry pin, with hashes in `hol-source-lock.json`. No changes were found in the relevant book source families between its content pin and the observed book HEAD. Imports read committed Git objects; unrelated uncommitted work and historical archives are excluded.
 
 ## Required coverage
 
@@ -22,4 +22,4 @@ Preserve all five wound tables, conditions, Grit, Dying, Last Words and recovery
 
 Record every computer-game adaptation separately from canonical HoL. Procedural encounter selection, automated judgments, encounter detection, exploration timing and death/save policy require explicit game design decisions. Never label an invented approximation as an inherited HoL rule.
 
-Existing Foundry-independent rules modules and web Character Workshop are reuse candidates. Assess dependencies and tests before selecting an engine integration strategy. Do not modify either source repository as part of game implementation.
+Foundry-independent rules modules and the complete web Character Workshop are reused in the desktop runtime. Neither source repository is modified.

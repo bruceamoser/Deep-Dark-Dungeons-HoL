@@ -1,0 +1,605 @@
+@font-face {
+  font-family: Cinzel;
+  src: url("/vendor/hol/fonts/Cinzel.ttf");
+}
+@font-face {
+  font-family: Garamond;
+  src: url("/vendor/hol/fonts/EBGaramond.ttf");
+}
+:root {
+  color-scheme: dark;
+  --ink: #0c1419;
+  --panel: rgba(12, 20, 25, 0.94);
+  --gold: #d5b77b;
+  --dim: #88999d;
+  --paper: #e4e3d6;
+  --line: #bda16b38;
+  --teal: #88b8b2;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #080e13;
+  color: var(--paper);
+  font:
+    17px Garamond,
+    Georgia,
+    serif;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+  border: 1px solid var(--line);
+  background: #101d23;
+  padding: 10px 17px;
+  transition: 0.18s;
+}
+button:hover {
+  border-color: var(--gold);
+  background: #243136;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+h1,
+h2,
+h3,
+.caps {
+  font-family: Cinzel, serif;
+  font-weight: 400;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+.caps,
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.eyebrow {
+  color: var(--gold);
+  font-family: Arial, sans-serif;
+}
+#world {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  outline: 0;
+}
+#vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 55% 44%,
+    transparent 35%,
+    #02070a99 100%
+  );
+}
+#ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+#ui > * {
+  pointer-events: auto;
+}
+.topbar {
+  height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background: linear-gradient(#071015e8, transparent);
+  border-top: 3px solid #baa47077;
+}
+.brand {
+  font-family: Cinzel;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+.brand small {
+  display: block;
+  color: var(--gold);
+  font: 9px Arial;
+  letter-spacing: 0.3em;
+  margin-top: 5px;
+}
+.location {
+  text-align: center;
+}
+.location h2 {
+  font-size: 21px;
+  margin-top: 5px;
+}
+.top-tools {
+  display: flex;
+  gap: 8px;
+}
+.top-tools button {
+  background: #0c171cc9;
+  font-size: 14px;
+  padding: 7px 13px;
+}
+.compass {
+  position: absolute;
+  right: 38px;
+  top: 105px;
+  color: var(--gold);
+  font-family: Cinzel;
+  text-align: center;
+  font-size: 13px;
+}
+.compass b {
+  display: block;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+}
+.hero-panel {
+  position: absolute;
+  left: 28px;
+  top: 116px;
+  width: 220px;
+  display: grid;
+  gap: 9px;
+}
+.hero-card {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(110deg, #14242bee, #0a1419eb);
+  display: flex;
+  gap: 12px;
+  padding: 13px 12px;
+  text-align: left;
+  border-left: 2px solid #697f82;
+}
+.hero-card.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 22px #cda65312;
+}
+.hero-card .number {
+  font: 11px Arial;
+  color: var(--gold);
+  align-self: center;
+}
+.hero-card h3 {
+  font-size: 14px;
+}
+.hero-card .class {
+  font: 10px Arial;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  margin: 5px 0 8px;
+}
+.hero-card .vitals {
+  font: 11px Arial;
+  color: #c1d0c9;
+  display: flex;
+  justify-content: space-between;
+}
+.bar {
+  height: 3px;
+  background: #03090c;
+  margin: 7px 0;
+}
+.bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #38695e, #97bda4);
+}
+.party-hint {
+  font: 10px Arial;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+  padding: 7px;
+}
+.bottom {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 620px;
+  text-align: center;
+}
+.phase {
+  display: inline-block;
+  padding: 8px 28px;
+  background: #0b151eea;
+  border: 1px solid var(--line);
+  font-family: Cinzel;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  margin-bottom: 8px;
+}
+.phase.combat {
+  color: #e5b38d;
+  border-color: #a16b4d;
+}
+.actionbar {
+  display: flex;
+  justify-content: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 8px;
+  gap: 6px;
+  box-shadow: 0 16px 60px #000a;
+}
+.actionbar button {
+  min-width: 98px;
+  min-height: 58px;
+  background: #152129;
+  padding: 8px 12px;
+}
+.actionbar button small {
+  display: block;
+  font: 9px Arial;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+  margin-top: 5px;
+}
+.actionbar .primary,
+.primary {
+  background: linear-gradient(120deg, #69542e, #a38345);
+  border-color: #c2a367;
+  color: #fff6df;
+}
+.hint {
+  color: #9babb0;
+  font: 11px Arial;
+  margin-top: 12px;
+  text-shadow: 0 1px 4px black;
+}
+.eventlog {
+  position: absolute;
+  bottom: 155px;
+  right: 28px;
+  width: 270px;
+  padding: 15px 17px;
+  background: linear-gradient(90deg, transparent, #0b141ae6);
+  border-right: 1px solid var(--line);
+  font-size: 14px;
+  color: #b6c1bf;
+  line-height: 1.35;
+}
+.eventlog p {
+  margin-top: 9px;
+}
+.eventlog p:last-child {
+  color: var(--paper);
+}
+.minimap {
+  position: absolute;
+  right: 28px;
+  top: 195px;
+  width: 175px;
+  background: #081015c9;
+  border: 1px solid var(--line);
+  padding: 9px;
+}
+.minimap canvas {
+  width: 155px;
+  height: 155px;
+  image-rendering: pixelated;
+}
+.minimap footer {
+  font: 10px Arial;
+  color: var(--dim);
+  text-align: center;
+  margin-top: 5px;
+}
+.town {
+  position: absolute;
+  inset: 85px 0 0;
+  background: linear-gradient(
+    90deg,
+    #071015f5 0%,
+    #071015ee 23%,
+    #07101522 64%,
+    transparent
+  );
+  display: flex;
+  align-items: center;
+  padding: 0 6vw;
+}
+.town-copy {
+  width: 430px;
+  padding-bottom: 25px;
+}
+.town h1 {
+  font-size: 56px;
+  line-height: 1.13;
+  letter-spacing: 0.015em;
+  margin: 20px 0 22px;
+}
+.town .intro {
+  color: #b2c0bd;
+  font-size: 20px;
+  line-height: 1.5;
+  max-width: 360px;
+}
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 28px 0;
+}
+.town-actions {
+  display: grid;
+  gap: 9px;
+  max-width: 335px;
+}
+.town-actions button {
+  text-align: left;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.town-actions button span {
+  color: #c3baa2;
+  font-size: 13px;
+}
+.town-status {
+  display: flex;
+  gap: 28px;
+  margin-top: 28px;
+}
+.town-status b {
+  display: block;
+  font-size: 25px;
+  font-family: Cinzel;
+  font-weight: 400;
+  color: var(--gold);
+}
+.town-status small {
+  font: 9px Arial;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+}
+.town .edition {
+  margin-top: 28px;
+  color: #677c83;
+  font: 10px Arial;
+  letter-spacing: 0.08em;
+}
+.town-party {
+  position: absolute;
+  bottom: 55px;
+  right: 5vw;
+  display: flex;
+  gap: 8px;
+}
+.town-party button {
+  width: 140px;
+  background: #0a141bce;
+  padding: 15px 10px;
+}
+.town-party strong {
+  display: block;
+  font-family: Cinzel;
+  font-size: 12px;
+  font-weight: 400;
+}
+.town-party small {
+  font: 10px Arial;
+  color: var(--dim);
+}
+#toast {
+  position: fixed;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  color: #f0dfba;
+  background: #253038f5;
+  border: 1px solid var(--gold);
+  opacity: 0;
+  transition: 0.2s;
+  pointer-events: none;
+  z-index: 20;
+  max-width: 600px;
+  text-align: center;
+}
+#toast.show {
+  opacity: 1;
+}
+.veil {
+  position: fixed;
+  inset: 0;
+  background: #03090dcc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(7px);
+}
+.dialog {
+  background: #101c23;
+  border: 1px solid #85724c;
+  box-shadow: 0 20px 90px #000b;
+  width: min(850px, 90vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 30px;
+}
+.dialog h2 {
+  font-size: 28px;
+  margin: 10px 0 18px;
+}
+.dialog p {
+  color: #b8c3c1;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dialog footer {
+  display: flex;
+  gap: 9px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+.dialog button.close {
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+}
+.workshop-dialog {
+  position: fixed;
+  inset: 4vh 3vw;
+  background: #101c23;
+  z-index: 12;
+  border: 1px solid #8b7955;
+  display: flex;
+  flex-direction: column;
+}
+.workshop-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  gap: 15px;
+  background: #101c23;
+}
+.workshop-dialog iframe {
+  flex: 1;
+  border: 0;
+  background: #ede9dc;
+}
+.workshop-dialog header p {
+  font-size: 14px;
+  color: var(--dim);
+  flex: 1;
+}
+.catalog-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.catalog-list button {
+  text-align: left;
+}
+.catalog-list button small {
+  display: block;
+  color: var(--dim);
+}
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: #080f15;
+}
+.loading-screen h1 {
+  font-size: 38px;
+  margin: 14px;
+}
+.loading-screen p {
+  color: var(--dim);
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #d5b77b33;
+  border-top-color: var(--gold);
+  transform: rotate(45deg);
+  margin: 30px auto;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(405deg);
+  }
+}
+.sheet-summary {
+  display: flex;
+  gap: 24px;
+  padding: 15px 0;
+  color: var(--gold);
+}
+.card-list {
+  display: grid;
+  gap: 9px;
+}
+.card-list details {
+  padding: 12px;
+  border: 1px solid var(--line);
+}
+.card-list summary {
+  cursor: pointer;
+  font-family: Cinzel;
+  font-size: 13px;
+}
+.card-list p {
+  font-size: 16px;
+}
+.tag {
+  font: 10px Arial;
+  color: #d6ab77;
+  margin-left: 10px;
+}
+.muted {
+  color: var(--dim);
+}
+@media (max-width: 1200px) {
+  .hero-panel {
+    width: 195px;
+    left: 14px;
+  }
+  .eventlog {
+    width: 220px;
+    right: 14px;
+  }
+  .bottom {
+    min-width: 520px;
+  }
+  .actionbar button {
+    min-width: 80px;
+    padding: 8px;
+  }
+  .town h1 {
+    font-size: 46px;
+  }
+  .town-party {
+    right: 2vw;
+  }
+  .town-party button {
+    width: 115px;
+  }
+}
+.brand {
+  position: relative;
+  padding-left: 43px;
+}
+.brand img {
+  position: absolute;
+  left: 0;
+  top: -6px;
+  width: 32px;
+  height: 40px;
+  object-fit: contain;
+}
