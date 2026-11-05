@@ -128,6 +128,49 @@ export async function verifyExpeditionUI(page) {
   await page.mouse.move(p.x, p.y);
   await expect(page.locator("#world-hint")).toContainText("Skeleton");
   await page.screenshot({ path: "test-results/native-enemy-hover.png" });
+  await page.evaluate(() => {
+    const { game: g, scene: s } = window.__ddd,
+      h = g.active;
+    g.mode = "exploration";
+    g.map.lights = [];
+    g.party.forEach((p) => {
+      p.torch.lit = false;
+      p.torch.held = false;
+      p.lantern = false;
+    });
+    g.seen = {};
+    g.map.surveyed = {};
+    g.map.knownInteractions = {};
+    g.map.chests = [
+      { id: "survey-coffer", x: h.x + 3, z: h.z, coins: 12, opened: false },
+    ];
+    s.syncInteractions(g.worldInteractions());
+    s.updateVisibility(g.party, g.seen);
+  });
+  expect(
+    await page.evaluate(
+      () =>
+        window.__ddd.scene.interactables.get("coffer:survey-coffer").obj
+          .visible,
+    ),
+  ).toBe(false);
+  await page.evaluate(() => {
+    const g = window.__ddd.game;
+    g.active.preview.state.abilities.push("ability-read-the-remains");
+    g.useAbility("ability-read-the-remains");
+  });
+  expect(
+    await page.evaluate(
+      () =>
+        window.__ddd.scene.interactables.get("coffer:survey-coffer").obj
+          .visible,
+    ),
+  ).toBe(true);
+  expect(
+    await page.evaluate(
+      () => window.__ddd.scene.entities.get("hover-test").group.visible,
+    ),
+  ).toBe(false);
   await page.evaluate((saved) => {
     const g = window.__ddd.game;
     delete g.dice;
@@ -137,7 +180,7 @@ export async function verifyExpeditionUI(page) {
     g.emit("change");
   }, saved);
   console.log(
-    "Expedition UI: ancestry preparation, retraining chooser, well, materials/crafting, held torch and enemy hover passed.",
+    "Expedition UI: ancestry preparation, retraining chooser, well, materials/crafting, held torch, enemy hover and surveyed coffers without creature revelation passed.",
   );
 }
 if (fileURLToPath(import.meta.url) === process.argv[1]) {

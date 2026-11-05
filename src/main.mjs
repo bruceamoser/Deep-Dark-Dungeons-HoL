@@ -512,6 +512,15 @@ function drawMap() {
     ctx.fillStyle = "#40555c";
     ctx.fillRect(p.x * scale, p.z * scale, scale - 1, scale - 1);
   }
+  for (const item of game.worldInteractions())
+    if (
+      ["coffer", "cache"].includes(item.kind) &&
+      item.available &&
+      game.map.knownInteractions?.[item.id]
+    ) {
+      ctx.fillStyle = "#dcb777";
+      ctx.fillRect(item.x * scale, item.z * scale, 3, 3);
+    }
   for (const h of game.party) {
     ctx.fillStyle = h === game.active ? "#e5c180" : "#83bab1";
     ctx.fillRect(h.x * scale - 1, h.z * scale - 1, 4, 4);
