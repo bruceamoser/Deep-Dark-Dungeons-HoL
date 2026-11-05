@@ -1,3 +1,4 @@
+import { abilityType } from "./ui/book-symbols.mjs";
 import { creationScreen } from "./ui/creation.mjs";
 import "./style.css";
 import { characterSheet } from "./ui/character.mjs";
@@ -25,6 +26,8 @@ function closeModal() {
   modalCleanup?.();
   modalCleanup = null;
   modal.replaceChildren();
+  scene?.highlightInteraction(null);
+  document.querySelector("#world-hint").hidden = true;
 }
 function toast(text) {
   const e = document.querySelector("#toast");
@@ -93,15 +96,34 @@ async function init() {
   };
   examples = party;
   game = new Game(R, C, toast);
-  scene = new Scene(document.querySelector("#world"), clickTile, (p) => {
-    if (modal.children.length || game.mode === "town") return;
-    scene.showPath(game.route(p));
-  });
+  scene = new Scene(
+    document.querySelector("#world"),
+    clickTile,
+    (p, id, event) => {
+      const hint = document.querySelector("#world-hint");
+      const item =
+        p &&
+        !modal.children.length &&
+        !selectedAction &&
+        ["exploration", "combat"].includes(game.mode) &&
+        game.worldInteractions().find((i) => i.id === id);
+      scene.highlightInteraction(item ? id : null);
+      hint.hidden = !item;
+      if (item) {
+        hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO INTERACT</small>`;
+        hint.style.left = `${Math.min(innerWidth - 250, event.clientX + 18)}px`;
+        hint.style.top = `${Math.max(12, Math.min(innerHeight - 75, event.clientY - 65))}px`;
+      } else if (p && !modal.children.length && game.mode !== "town")
+        scene.showPath(game.route(p));
+      else scene.showPath([]);
+    },
+  );
   await scene.load();
   game.listeners.push((type, data) => {
     if (type === "floor") {
       scene.tilesDetail = [];
       scene.build(game.map);
+      scene.syncInteractions(game.worldInteractions());
       scene.resetEntities(game.party, game.enemies);
       scene.updateVisibility(game.party, game.seen);
     }
@@ -110,6 +132,7 @@ async function init() {
       scene.updateVisibility(game.party, game.seen);
     }
     if (type === "move") {
+      scene.queueMovement(data?.steps ?? []);
       if (game.mode === "exploration" && scene.follow)
         scene.focusOn(
           game.party.find((h) => h.id === game.campaign.order[0]),
@@ -139,6 +162,9 @@ async function init() {
       scene.showPath([]);
     }
     if (type === "loot") {
+      scene.highlightInteraction(null);
+      scene.syncInteractions(game.worldInteractions());
+      scene.updateVisibility(game.party, game.seen);
       toast(`Recovered ${data.chest.coins} coins`);
       sound.play("loot");
     }
@@ -146,11 +172,22 @@ async function init() {
     if (type === "dying") dying(data.hero);
     if (type === "wound") woundReview(data);
     if (type === "turnchoices") turnChoices(data);
-    if (type !== "move") {
-      if (selectedAction && selectedAction.hero !== game.active.id)
-        selectedAction = null;
+    if (type === "interact-ready") worldMenu(data.id);
+    if (
+      selectedAction &&
+      (game.mode !== "combat" ||
+        game.encounter.nextSide !== "players" ||
+        selectedAction.hero !== game.active.id ||
+        selectedAction.round !== game.encounter.round ||
+        selectedAction.serial !== game.encounter.serial ||
+        game.actionReason(selectedAction.id))
+    )
+      selectedAction = null;
+    if (
+      type !== "move" ||
+      (game.mode === "combat" && !game.paths.get(game.active.id)?.length)
+    )
       render();
-    }
     scheduleSave();
   });
   game.fresh(
@@ -180,6 +217,7 @@ async function init() {
       )
     ) {
       closeModal();
+      cancelTargeting();
       return;
     }
     if (
@@ -202,13 +240,20 @@ async function init() {
     if (e.key.toLowerCase() === "e") scene.rotate(1);
     if (e.key.toLowerCase() === "f") scene.focusOn(game.active);
     if (e.key === "Escape") {
-      selectedAction = null;
-      scene.showPath([]);
-      render();
+      cancelTargeting();
     }
   });
   initialized = true;
-  window.__ddd = { game, scene, R, C, sound };
+  window.__ddd = {
+    game,
+    scene,
+    R,
+    C,
+    sound,
+    get selectedAction() {
+      return selectedAction;
+    },
+  };
 }
 function className(h) {
   return C.choices.find((c) => c.id === h.draft.classId)?.name ?? "Adventurer";
@@ -231,6 +276,21 @@ function render() {
   } else {
     const combat = game.mode === "combat",
       b = game.budget;
+    const heroState = (p) => {
+      if (!combat) return "";
+      if (game.encounter.current === p.id) return "ACTING";
+      if (game.encounter.acted.includes(p.id)) return "ACTED";
+      return "READY";
+    };
+    const selectable = (p) =>
+      !combat ||
+      (!game.busy &&
+        game.encounter.nextSide === "players" &&
+        (game.encounter.current
+          ? game.encounter.current === p.id
+          : game.R.availableParticipants(game.encounter).some(
+              (a) => a.id === p.id,
+            )));
     let phase = combat
       ? `ROUND ${game.encounter.round} · ${game.encounter.nextSide === "players" ? "YOUR COMPANY" : "OPPOSITION"}`
       : game.mode === "wound-review"
@@ -238,7 +298,7 @@ function render() {
         : "REAL-TIME EXPLORATION";
     ui.innerHTML =
       header +
-      `<div class="hero-panel">${game.party.map((p, i) => `<button class="hero-card ${i === game.selected ? "active" : ""}" data-select="${i}"><span class="number">0${i + 1}</span><div style="flex:1"><h3>${esc(p.name)}</h3><div class="class">${esc(className(p))} · ${p.survival.status}</div><div class="bar"><span style="width:${(p.survival.hp / p.survival.maxHp) * 100}%"></span></div><div class="vitals"><span>${p.survival.hp} / ${p.survival.maxHp} HP</span><span>${p.survival.gritAvailable} GRIT</span></div></div></button>`).join("")}<div class="party-hint">1–4 SELECT · CLICK GROUND TO MOVE</div></div><div class="compass">N<b>◇</b>Q ↶ &nbsp; ↷ E</div><div class="minimap"><canvas id="map" width="155" height="155"></canvas><footer>${c.haul} COINS IN THE PACK</footer></div><aside class="eventlog"><div class="eyebrow">EXPEDITION JOURNAL</div>${game.log
+      `<div class="hero-panel">${game.party.map((p, i) => `<button class="hero-card ${i === game.selected && (!combat || game.encounter.nextSide === "players") ? "active" : ""}" data-select="${i}" ${selectable(p) ? "" : "disabled"} aria-label="${esc(p.name)}${combat ? " · " + heroState(p) : ""}"><span class="number">0${i + 1}</span><div style="flex:1"><h3>${esc(p.name)}</h3><div class="class">${esc(className(p))} · ${p.survival.status}${combat ? ` <b class="hero-turn-state">${heroState(p)}</b>` : ""}</div><div class="bar"><span style="width:${(p.survival.hp / p.survival.maxHp) * 100}%"></span></div><div class="vitals"><span>${p.survival.hp} / ${p.survival.maxHp} HP</span><span>${p.survival.gritAvailable} GRIT</span></div></div></button>`).join("")}<div class="party-hint">1–4 SELECT · CLICK GROUND TO MOVE</div></div><div class="compass">N<b>◇</b>Q ↶ &nbsp; ↷ E</div><div class="minimap"><canvas id="map" width="155" height="155"></canvas><footer>${c.haul} COINS IN THE PACK</footer></div><aside class="eventlog"><div class="eyebrow">EXPEDITION JOURNAL</div>${game.log
         .slice(-4)
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
@@ -249,6 +309,16 @@ function render() {
   bind();
 }
 function bind() {
+  if (game.mode === "combat") {
+    for (const kind of ["end", "convert"]) {
+      const control = ui.querySelector(`[data-action="${kind}"]`);
+      if (control)
+        control.disabled =
+          game.busy ||
+          game.encounter.nextSide !== "players" ||
+          !!game.paths.get(game.active.id)?.length;
+    }
+  }
   ui.querySelectorAll("[data-hot-action]").forEach(
     (b) => (b.onclick = () => activateAction(b.dataset.hotAction)),
   );
@@ -307,7 +377,14 @@ function action(a) {
     case "sheet":
       sheet(game.selected);
       break;
+    case "cancel-target":
+      cancelTargeting();
+      break;
+    case "confirm-self":
+      commitTarget(game.active.id);
+      break;
     case "end":
+      cancelTargeting(false);
       game.endTurn();
       break;
     case "convert":
@@ -359,7 +436,7 @@ function drawMap() {
   ctx.fillStyle = "#b99860";
   ctx.fillRect(game.map.start.x * scale, game.map.start.z * scale, 3, 3);
 }
-function clickTile(p) {
+function clickTile(p, interactionId, event) {
   if (modal.children.length) return;
   attempt(() => {
     const enemy = game.enemies.find(
@@ -367,14 +444,57 @@ function clickTile(p) {
     );
     if (selectedAction) {
       const ally = game.party.find((h) => h.x === p.x && h.z === p.z);
-      const target =
-        ABILITIES[selectedAction.id].target === "ally" ? ally : enemy;
-      game.useAbility(selectedAction.id, target?.id, selectedAction.options);
-      selectedAction = null;
-      render();
+      const type = ABILITIES[selectedAction.id].target;
+      const target = type === "enemy" ? enemy : ally;
+      if (!target || (type === "self" && target.id !== game.active.id))
+        throw new Error(
+          type === "enemy"
+            ? "Choose a living enemy, or cancel to move."
+            : type === "self"
+              ? "Click the acting hero or Use on self."
+              : "Choose a companion, or cancel to move.",
+        );
+      commitTarget(target.id);
     } else if (enemy) game.attack(enemy.id);
+    else if (interactionId) worldMenu(interactionId, event);
     else game.move(p);
   });
+}
+function worldMenu(id, event) {
+  const item = game.worldInteractions().find((i) => i.id === id);
+  if (!item) return;
+  closeModal();
+  game.paths.clear();
+  game.pendingInteraction = null;
+  scene.showPath([]);
+  scene.highlightInteraction(id);
+  document.querySelector("#world-hint").hidden = true;
+  const reason = game.interactionReason(item);
+  const canApproach =
+    game.mode === "exploration" && !game.busy && !game.interactionNear(item);
+  modal.innerHTML = `<div class="interaction-scrim"><section class="world-menu" role="dialog" aria-label="${esc(item.name)}"><header><span class="eyebrow">${item.kind === "cache" ? "LOST EXPEDITION" : item.kind === "coffer" ? "TREASURE" : "PASSAGE"}</span><h3>${esc(item.name)}</h3></header><div class="world-menu-options"><button data-world-option="use" ${reason ? "disabled" : ""}>${icon(item.kind === "coffer" || item.kind === "cache" ? "pack" : "arrow")}<span>${esc(item.action)}<small>${esc(reason || (item.coins !== undefined ? `${item.coins} coins · Company haul` : "Travel with the company"))}</small></span></button>${canApproach ? `<button data-world-option="approach">${icon("boot")}<span>Approach<small>Walk closer and reopen this menu</small></span></button>` : ""}<button data-world-option="inspect">${icon("book")}<span>Inspect<small>Examine this object</small></span></button><div class="world-description" hidden>${esc(item.description)}</div><button data-world-option="leave">${icon("close")}<span>Leave<small>ESC · Return to the dungeon</small></span></button></div></section></div>`;
+  const menu = modal.querySelector(".world-menu");
+  menu.style.left = `${Math.max(12, Math.min(innerWidth - 352, event?.clientX ?? innerWidth / 2 - 170))}px`;
+  menu.style.top = `${Math.max(12, Math.min(innerHeight - 460, event?.clientY ?? innerHeight / 2 - 170))}px`;
+  modal.querySelector(".interaction-scrim").onclick = (e) => {
+    if (e.target === e.currentTarget) closeModal();
+  };
+  modal.querySelectorAll("[data-world-option]").forEach(
+    (b) =>
+      (b.onclick = () =>
+        attempt(() => {
+          if (b.dataset.worldOption === "inspect") {
+            menu.querySelector(".world-description").hidden = false;
+            return;
+          }
+          if (b.dataset.worldOption === "use") game.interact(id);
+          closeModal();
+          scene.highlightInteraction(null);
+          if (b.dataset.worldOption === "approach")
+            game.approachInteraction(id);
+        })),
+  );
+  menu.querySelector("button:not(:disabled)").focus();
 }
 function dialog(title, content, footer = "") {
   closeModal();
@@ -413,6 +533,7 @@ function workshop(slot, development = false) {
   });
 }
 function sheet(index) {
+  cancelTargeting();
   closeModal();
   modalCleanup = characterSheet({
     root: modal,
@@ -426,23 +547,53 @@ function sheet(index) {
     train: (i) => workshop(i, true),
   });
 }
+function cancelTargeting(refresh = true) {
+  selectedAction = null;
+  scene.showPath([]);
+  if (refresh) render();
+}
+function selectAction(id, options) {
+  selectedAction = {
+    id,
+    options,
+    hero: game.active.id,
+    round: game.encounter.round,
+    serial: game.encounter.serial,
+  };
+  scene.showPath([]);
+  render();
+}
+function commitTarget(targetId) {
+  if (!selectedAction) return;
+  const selection = selectedAction;
+  const reason = game.actionReason(selection.id);
+  if (reason) throw new Error(reason);
+  game.useAbility(selection.id, targetId, selection.options);
+  cancelTargeting();
+}
 function activateAction(id) {
   attempt(() => {
+    if (selectedAction?.id === id) {
+      closeModal();
+      cancelTargeting();
+      return;
+    }
     const reason = game.actionReason(id);
     if (reason) throw new Error(reason);
     closeModal();
+    cancelTargeting(false);
     if (id === "ability-reduce-a-condition") {
       dialog(
         "Reduce a condition",
-        '<p>Choose the aid you will give, then click yourself or an adjacent companion. Reduces one temporary rating; persistent injuries need their printed remedy.</p><div class="catalog-list">' +
+        '<p>Choose the aid you will give, then click yourself or an adjacent companion.</p><div class="catalog-list">' +
           [
             ["bleeding", "Apply pressure"],
             ["burning", "Smother flames"],
             ["freezing", "Warm the affected area"],
           ]
             .map(
-              ([id, label]) =>
-                `<button data-reduce="${id}">${label}<small>${id} −1 · Main</small></button>`,
+              ([key, label]) =>
+                `<button data-reduce="${key}">${label}<small>${key} −1 · Main</small></button>`,
             )
             .join("") +
           "</div>",
@@ -450,20 +601,14 @@ function activateAction(id) {
       modal.querySelectorAll("[data-reduce]").forEach(
         (b) =>
           (b.onclick = () => {
-            selectedAction = {
-              id,
-              hero: game.active.id,
-              options: { condition: b.dataset.reduce },
-            };
             closeModal();
-            render();
+            selectAction(id, { condition: b.dataset.reduce });
           }),
       );
+      render();
       return;
     }
-    if (ABILITIES[id].target === "self") game.useAbility(id);
-    else selectedAction = { id, hero: game.active.id };
-    render();
+    selectAction(id);
   });
 }
 function combatDock() {
@@ -472,11 +617,14 @@ function combatDock() {
   const cards = (h.favorites ?? [])
     .map((id) => C.choices.find((c) => c.id === id))
     .filter(Boolean);
-  return `<div class="combat-dock"><div class="combat-status"><strong>${esc(h.name)}</strong><div class="budget-pips"><span><b>${b?.remaining.main ?? 1}</b> MAIN</span><span><b>${b?.remaining.maneuver ?? 1}</b> MANEUVER</span><span><b>${b?.remaining.reaction ?? 1}</b> REACTION</span><span><b>${game.movementLeft()}</b> MOVE</span></div></div><div class="favorite-bar">${
+  const targeting = selectedAction
+    ? `<div class="targeting-tray" role="status"><div><span class="eyebrow">READY TO USE · NO COST SPENT</span><strong>${esc(C.choices.find((c) => c.id === selectedAction.id)?.name)}</strong><small>${ABILITIES[selectedAction.id].target === "self" ? "Use on yourself, or choose a different action." : "Click a target, or select another action to switch."}</small></div>${ABILITIES[selectedAction.id].target === "self" ? button("Use on self", "confirm-self", "CONFIRM", true) : ""}${button("Cancel", "cancel-target", "ESC · RETURN TO MOVEMENT")}</div>`
+    : "";
+  return `<div class="combat-dock">${targeting}<div class="combat-status"><strong>${game.encounter.nextSide === "players" ? esc(h.name) : "Opposition is acting"}</strong><div class="budget-pips">${game.encounter.nextSide === "players" ? `<span><b>${b?.remaining.main ?? 1}</b> MAIN</span><span><b>${b?.remaining.maneuver ?? 1}</b> MANEUVER</span><span><b>${b?.remaining.reaction ?? 1}</b> REACTION</span><span><b>${game.movementLeft()}</b> MOVE</span>` : "<span>WAIT FOR YOUR COMPANY</span>"}</div></div><div class="favorite-bar">${
     cards
       .map((c, i) => {
         const reason = game.actionReason(c.id);
-        return `<button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" title="${esc(c.name)} · ${ABILITIES[c.id].category}${reason ? " · " + esc(reason) : ""}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${i + 5 <= 9 ? i + 5 : ""}</small>${icon(actionIcon(c.id))}<span>${esc(c.name)}</span></button>`;
+        return `<button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" title="${esc(c.name)} · ${ABILITIES[c.id].category}${reason ? " · " + esc(reason) : ""}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${i + 5 <= 9 ? i + 5 : ""}</small>${icon(actionIcon(c.id))}${abilityType(c)}<span>${esc(c.name)}</span></button>`;
       })
       .join("") ||
     '<span class="cost-note">Pin favorite actions from Character → Abilities.</span>'
@@ -496,7 +644,8 @@ function actions() {
       .availableActions()
       .map((c) => {
         const a = ABILITIES[c.id];
-        return `<button data-card="${c.id}">${esc(c.name)}<small>${a.category.toUpperCase()} · ${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}</small></button>`;
+        const reason = game.actionReason(c.id);
+        return `<button data-card="${c.id}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c)}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
       })
       .join("")}</div>`,
     '<button id="main-convert">Main → Maneuver</button><button id="stand">Stand · 2 movement</button>',

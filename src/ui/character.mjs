@@ -1,3 +1,4 @@
+import { abilityType, disciplineIcon } from "./book-symbols.mjs";
 import { icon, itemIcon, actionIcon, esc } from "./icons.mjs";
 import { ABILITIES, coverage } from "../core/abilities.mjs";
 import { heroPreview } from "../view/appearance.mjs";
@@ -222,7 +223,7 @@ export function characterSheet({
           const a = ABILITIES[c.id],
             f = h.favorites?.includes(c.id),
             status = coverage(c.id);
-          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${icon(actionIcon(c.id))}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules">${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
+          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules">${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
         })
         .join("")}</div>`;
       root.querySelectorAll("[data-favorite]").forEach(
@@ -242,7 +243,7 @@ export function characterSheet({
       )
         .map(
           ([k, v]) =>
-            `<div><span>${esc(name(k))}</span><b>${"◆".repeat(v)}${"◇".repeat(3 - v)}</b></div>`,
+            `<div><span>${disciplineIcon(k)}${esc(name(k))}</span><b>${"◆".repeat(v)}${"◇".repeat(3 - v)}</b></div>`,
         )
         .join(
           "",

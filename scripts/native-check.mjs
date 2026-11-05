@@ -1,3 +1,5 @@
+import { verifyCombatUX } from "./combat-ux-check.mjs";
+import { verifyInteractions } from "./interaction-check.mjs";
 import { verifyEffects } from "./effects-check.mjs";
 import { verifyRecovery } from "./recovery-check.mjs";
 import { verifyCharacter } from "./character-check.mjs";
@@ -76,6 +78,8 @@ try {
   expect(JSON.parse(stored).campaign.party).toHaveLength(4);
   await w.screenshot({ path: "test-results/native-dungeon.png" });
   await verifyControls(w);
+  await verifyCombatUX(w);
+  await verifyInteractions(w);
   await verifyEffects(w);
   await verifyRecovery(w);
   expect(errors).toEqual([]);
@@ -98,6 +102,20 @@ try {
   console.log(
     "Exact Linux launcher in the normal terminal AppArmor context, rendered scene and disk save passed; runtime path has no spaces, renderers have seccomp filtering and no --no-sandbox flag.",
   );
+} catch (error) {
+  const page = browser?.contexts()[0]?.pages()[0];
+  if (page) {
+    await page.screenshot({ path: "test-results/native-failure.png" });
+    console.error(
+      await page.evaluate(() => ({
+        selected: window.__ddd?.game.selected,
+        action: window.__ddd?.selectedAction,
+        toast: document.querySelector("#toast")?.textContent,
+        log: window.__ddd?.game.log.slice(-5),
+      })),
+    );
+  }
+  throw error;
 } finally {
   await browser?.close();
   try {

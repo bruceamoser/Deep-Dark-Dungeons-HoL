@@ -1,4 +1,11 @@
+import {
+  movementBlockers,
+  traversalCost,
+  leastCostPath,
+  companyStep,
+} from "./movement.mjs";
 import { recoveryMethods } from "./recovery.mjs";
+import { interactionMethods } from "./interactions.mjs";
 import { ABILITIES, coverage } from "./abilities.mjs";
 import { formationRoutes, validateFormation } from "./formations.mjs";
 import {
@@ -230,6 +237,7 @@ export class Game {
     };
   }
   newFloor(saved) {
+    this.pendingInteraction = null;
     this.map = saved?.map ?? generate(this.campaign.seed, this.campaign.depth);
     this.seen = saved?.seen ?? {};
     this.rng = new Random(this.campaign.seed + this.campaign.depth * 31);
@@ -263,7 +271,9 @@ export class Game {
     return this.party[this.selected];
   }
   get budget() {
-    return this.budgets[this.active.id];
+    return this.encounter?.current === this.active.id
+      ? this.budgets[this.active.id]
+      : undefined;
   }
   restrictions(h) {
     return this.R.conditionActionRestrictions(h.conditions ?? []);
@@ -759,6 +769,14 @@ export class Game {
     )
       return "Available on your combat turn.";
     if (h !== this.active) return "Select this hero when they can act.";
+    if (this.woundNotices?.length) return "Acknowledge the wound first.";
+    if (this.encounter.current && this.encounter.current !== h.id)
+      return "Finish the acting hero’s turn first.";
+    if (
+      !this.encounter.current &&
+      !this.R.availableParticipants(this.encounter).some((p) => p.id === h.id)
+    )
+      return "This hero has already acted this round.";
     if (!this.canAct(h))
       return "This hero cannot act; resolve survival or disabling conditions.";
     if (this.paths.get(h.id)?.length) return "Wait until movement finishes.";
@@ -935,12 +953,19 @@ export class Game {
   }
   select(i) {
     if (!this.party[i]) return;
-    if (
-      this.mode === "combat" &&
-      this.encounter.current &&
-      this.encounter.current !== this.party[i].id
-    )
-      throw new Error("Finish the current hero’s turn first.");
+    if (this.mode === "combat") {
+      if (this.busy || this.encounter.nextSide !== "players")
+        throw new Error("Wait for your company’s turn.");
+      if (this.encounter.current && this.encounter.current !== this.party[i].id)
+        throw new Error("Finish the current hero’s turn first.");
+      if (
+        !this.encounter.current &&
+        !this.R.availableParticipants(this.encounter).some(
+          (p) => p.id === this.party[i].id,
+        )
+      )
+        throw new Error("This hero has already acted this round.");
+    }
     this.selected = i;
     this.party.forEach((h, j) => (h.selected = i === j));
     if (
@@ -968,22 +993,50 @@ export class Game {
         ? this.party.find((h) => h.id === this.campaign.order[0])
         : this.active;
     if (h.survival.status !== "active") return [];
-    return pathfind(this.map, h, to, this.occupied(h.id));
+    const blockers = movementBlockers(this.party, this.enemies, h, (other) =>
+      this.canAct(other),
+    );
+    if (this.mode === "combat") {
+      if (this.occupied(h.id).has(key(to.x, to.z))) return [];
+      return leastCostPath(this.map, h, to, blockers, (p) => this.moveCost(p));
+    }
+    return pathfind(this.map, h, to, blockers);
+  }
+  moveCost(point) {
+    return traversalCost(
+      this.map,
+      [
+        ...this.party.filter((h) => h.survival.status !== "dead"),
+        ...this.enemies.filter((e) => e.hp > 0),
+      ],
+      point,
+    );
   }
   move(to) {
     if (this.busy) return;
-    if (this.mode === "combat" && !this.encounter.current) this.beginHero();
+    this.pendingInteraction = null;
+    if (
+      this.mode === "combat" &&
+      this.occupied(this.active.id).has(key(to.x, to.z))
+    )
+      throw new Error(
+        "Move through companions, but finish on an empty square.",
+      );
     const route = this.route(to);
     if (!route.length) return;
+    if (this.mode === "combat" && !this.encounter.current) this.beginHero();
     if (this.mode === "combat") {
       if (this.encounter.current !== this.active.id)
         throw new Error("Choose a hero whose turn is available.");
       const remaining = this.movementLeft();
-      if (route.length > remaining)
-        throw new Error(`Only ${remaining} squares remain.`);
+      const cost = route.reduce((n, p) => n + this.moveCost(p), 0);
+      if (cost > remaining)
+        throw new Error(
+          `This route costs ${cost} movement; only ${remaining} remains.`,
+        );
       this.budgets[this.active.id] = this.R.spendMovement(this.budget, {
         operationId: `move-${crypto.randomUUID()}`,
-        amount: route.length,
+        amount: cost,
         conditions: this.restrictions(this.active),
       });
       this.paths.clear();
@@ -1002,34 +1055,35 @@ export class Game {
   }
   step() {
     if (this.busy || !["exploration", "combat"].includes(this.mode)) return;
-    let moved = false;
     const marching =
       this.mode === "combat"
-        ? [this.active]
-        : this.campaign.order.map((id) => this.party.find((h) => h.id === id));
-    for (const h of marching) {
-      if (this.mode === "combat" && this.encounter.current !== h.id) continue;
-      const path = this.paths.get(h.id);
-      if (!path?.length) continue;
-      const next = path[0];
-      if (this.occupied(h.id).has(key(next.x, next.z))) {
-        // Companions wait for occupied cells, and take an alternative route when possible.
-        const alternative = pathfind(
-          this.map,
-          h,
-          path.at(-1),
-          this.occupied(h.id),
-        );
-        if (alternative.length) this.paths.set(h.id, alternative);
-        continue;
-      }
-      Object.assign(h, path.shift());
-      moved = true;
-      if (this.mode === "exploration" && this.detect()) break;
-    }
-    if (moved) {
-      this.emit("move");
-      this.collect();
+        ? this.encounter.current === this.active.id
+          ? [this.active]
+          : []
+        : this.campaign.order
+            .map((id) => this.party.find((h) => h.id === id))
+            .filter((h) => this.canAct(h));
+    const occupants = [
+      ...this.party.filter((h) => h.survival.status !== "dead"),
+      ...this.enemies.filter((e) => e.hp > 0),
+    ];
+    const steps = companyStep(marching, this.paths, occupants, (h) =>
+      movementBlockers(this.party, this.enemies, h, (other) =>
+        this.canAct(other),
+      ),
+    );
+    if (steps.length) {
+      this.emit("move", {
+        steps: steps.map(({ hero, points }) => ({ heroId: hero.id, points })),
+      });
+      if (this.mode === "exploration") this.detect();
+      this.checkInteractionArrival();
+    } else if (marching.some((h) => this.paths.get(h.id)?.length)) {
+      // Do not leave an impossible formation silently waiting forever.
+      this.paths.clear();
+      this.notify("The route is blocked. Choose another destination.");
+      this.emit("change");
+      this.checkInteractionArrival();
     }
   }
   detect() {
@@ -1140,6 +1194,8 @@ export class Game {
     }
     if (this.encounter.nextSide === "opposition") {
       this.busy = true;
+      this.party.forEach((h) => (h.selected = false));
+      this.emit("change");
       const expectedEncounter = this.encounter;
       setTimeout(() => {
         if (this.encounter !== expectedEncounter) return;
@@ -1158,10 +1214,26 @@ export class Game {
       }, 650);
     } else {
       const available = this.R.availableParticipants(this.encounter);
-      if (!available.some((p) => p.id === this.active.id))
-        this.selected = this.party.findIndex((h) =>
-          available.some((p) => p.id === h.id),
+      if (this.encounter.current) {
+        this.selected = this.party.findIndex(
+          (h) => h.id === this.encounter.current,
         );
+      } else {
+        const lastHero = [...this.encounter.history]
+          .reverse()
+          .find(
+            (e) => e.kind === "end" && this.party.some((h) => h.id === e.id),
+          );
+        const start = lastHero
+          ? (this.party.findIndex((h) => h.id === lastHero.id) + 1) %
+            this.party.length
+          : this.selected;
+        const next = Array.from(
+          { length: this.party.length },
+          (_, i) => (start + i) % this.party.length,
+        ).find((i) => available.some((p) => p.id === this.party[i].id));
+        if (next !== undefined) this.selected = next;
+      }
       this.party.forEach((h, i) => (h.selected = i === this.selected));
       this.emit("change");
     }
@@ -1315,29 +1387,6 @@ export class Game {
     this.note("A safe breath restores HP. Spent Grit does not return.");
     this.emit("change");
   }
-  collect() {
-    if (this.mode !== "exploration") return;
-    for (const c of this.map.chests)
-      if (!c.opened && this.party.some((h) => distance(h, c) <= 1)) {
-        c.opened = true;
-        this.campaign.haul += c.coins;
-        this.note(`Recovered ${c.coins} coins from a forgotten coffer.`);
-        this.emit("loot", { chest: c });
-      }
-    for (const c of this.campaign.caches)
-      if (
-        !c.recovered &&
-        c.depth === this.campaign.depth &&
-        this.party.some((h) => distance(h, c) <= 1)
-      ) {
-        c.recovered = true;
-        this.campaign.haul += c.coins;
-        this.note(
-          `Recovered ${c.coins} coins from expedition ${c.expedition}.`,
-        );
-      }
-    this.emit("change");
-  }
   extract() {
     if (
       this.mode !== "exploration" ||
@@ -1422,3 +1471,4 @@ export class Game {
 }
 
 Object.assign(Game.prototype, recoveryMethods);
+Object.assign(Game.prototype, interactionMethods);
