@@ -1,3 +1,5 @@
+import { ABILITIES, coverage } from "./abilities.mjs";
+import { formationRoutes, validateFormation } from "./formations.mjs";
 import {
   generate,
   Random,
@@ -54,6 +56,11 @@ export class Game {
         gritAvailable: preview.summary.gritGranted,
       }),
       wounds: [],
+      conditions: [],
+      buffs: {},
+      supplies: {},
+      earnedLevel: draft.progression?.level ?? 1,
+      milestones: [],
       preview,
     };
   }
@@ -66,6 +73,8 @@ export class Game {
       expeditions: 0,
       memorial: [],
       caches: [],
+      formation: "square",
+      order: drafts.map((_, i) => `hero-${i}`),
       party: drafts.map((d, i) => this.hero(d, i)),
     };
     this.newFloor();
@@ -78,14 +87,59 @@ export class Game {
       if (!p.valid)
         throw new Error("A saved hero no longer passes character validation.");
       h.preview = p;
+      h.conditions ??= [];
+      h.buffs ??= {};
+      h.supplies ??= {};
+      h.earnedLevel ??= p.state.level;
+      h.milestones ??= [];
       this.R.validateSurvival(h.survival);
+      this.R.validateContributions(h.conditions);
+      if (
+        !Number.isInteger(h.earnedLevel) ||
+        h.earnedLevel < p.state.level ||
+        h.earnedLevel > 100 ||
+        !Array.isArray(h.milestones) ||
+        h.milestones.some((d) => !Number.isInteger(d) || d < 1) ||
+        Object.values(h.supplies).some(
+          (d) => ![0, 4, 6, 8, 10, 12, 20].includes(d),
+        )
+      )
+        throw new Error("Saved development or supplies are invalid.");
     }
+    c.formation ??= "square";
+    c.order ??= c.party.map((h) => h.id);
+    validateFormation(c.formation, c.order, c.party);
     this.campaign = c;
+    this.selected =
+      Number.isInteger(c.selected) && c.selected >= 0 && c.selected < 4
+        ? c.selected
+        : 0;
+    this.busy = false;
+    this.pendingDefense = null;
     this.newFloor(c.floor);
     this.mode = c.mode ?? "town";
     if (this.mode === "combat") {
       this.encounter = c.encounter;
       this.budgets = c.budgets ?? {};
+      const actor = this.party.findIndex(
+        (h) => h.id === this.encounter.current,
+      );
+      if (actor >= 0) this.selected = actor;
+    }
+    this.party.forEach((h, i) => (h.selected = i === this.selected));
+    if (c.pendingDefense && this.mode === "combat") {
+      if (
+        !this.party.some((h) => h.id === c.pendingDefense.target) ||
+        !this.enemies.some((e) => e.id === c.pendingDefense.attacker) ||
+        this.encounter.current !== c.pendingDefense.attacker
+      )
+        throw new Error("Saved reaction is invalid.");
+      this.pendingDefense = c.pendingDefense;
+      this.busy = true;
+      this.emit("reaction", {
+        hero: this.party.find((h) => h.id === c.pendingDefense.target),
+        enemy: this.enemies.find((e) => e.id === c.pendingDefense.attacker),
+      });
     }
     this.emit("change");
     if (this.mode === "combat" && !this.encounter?.current) this.advance();
@@ -94,8 +148,10 @@ export class Game {
     return {
       ...this.campaign,
       mode: this.mode,
+      selected: this.selected,
       encounter: this.encounter,
       budgets: this.budgets,
+      pendingDefense: this.pendingDefense,
       floor: { map: this.map, seen: this.seen, enemies: this.enemies },
     };
   }
@@ -109,6 +165,7 @@ export class Game {
         ...e,
         hp: 10,
         maxHp: 10,
+        conditions: [],
         type: "creature-bone-sentry",
         name: "Bone sentry",
       }));
@@ -133,6 +190,441 @@ export class Game {
   }
   get budget() {
     return this.budgets[this.active.id];
+  }
+  restrictions(h) {
+    return this.R.conditionActionRestrictions(h.conditions ?? []);
+  }
+  movementLeft() {
+    return this.budget
+      ? this.R.movementRemaining(this.budget, this.restrictions(this.active))
+      : this.active.preview.summary.speed;
+  }
+  held(h, catalogId) {
+    return h.preview.inventory.items.find(
+      (i) => i.catalogId === catalogId && i.carried && i.held,
+    );
+  }
+  setFormation(name, order) {
+    if (!["town", "exploration"].includes(this.mode))
+      throw new Error("Change marching formation outside combat.");
+    validateFormation(name, order, this.party);
+    this.campaign.formation = name;
+    this.campaign.order = [...order];
+    this.paths.clear();
+    this.emit("change");
+  }
+  availableActions(h = this.active) {
+    return this.C.choices.filter(
+      (c) =>
+        ABILITIES[c.id] &&
+        (c.universal || h.preview.state.abilities.includes(c.id)),
+    );
+  }
+  useAbility(id, targetId) {
+    if (this.mode !== "combat" || this.busy)
+      throw new Error("Wait for your company’s turn.");
+    const spec = ABILITIES[id],
+      card = this.availableActions().find((c) => c.id === id),
+      h = this.active;
+    if (!spec || !card)
+      throw new Error("This hero has not learned that dungeon action.");
+    const target =
+      spec.target === "self"
+        ? h
+        : spec.target === "ally"
+          ? this.party.find((p) => p.id === targetId)
+          : this.enemies.find((e) => e.id === targetId && e.hp > 0);
+    if (!target)
+      throw new Error(
+        `Choose a ${spec.target === "ally" ? "Dying companion" : "living enemy"}.`,
+      );
+    if (
+      spec.target === "enemy" &&
+      !this.encounter.roster.some((p) => p.id === target.id && !p.withdrawn)
+    )
+      throw new Error("That creature is outside this encounter.");
+    if (
+      spec.range &&
+      (distance(h, target) > spec.range || !lineOfSight(this.map, h, target))
+    )
+      throw new Error(
+        `${card.name} needs line of sight within ${spec.range} square${spec.range === 1 ? "" : "s"}.`,
+      );
+    if (
+      id === "ability-stabilize" &&
+      (target === h || target.survival.status !== "dying")
+    )
+      throw new Error("Choose an adjacent Dying companion.");
+    let drawWeapon = null;
+    if (spec.weapon && !this.held(h, `item-ordinary-${spec.weapon}-weapon`)) {
+      const freeHands =
+        2 -
+        h.preview.inventory.items
+          .filter((i) => i.carried && i.held)
+          .reduce((n, i) => n + (i.hands ?? 0), 0);
+      drawWeapon = h.preview.inventory.items.find(
+        (i) =>
+          i.carried &&
+          i.catalogId === `item-ordinary-${spec.weapon}-weapon` &&
+          i.hands <= freeHands,
+      );
+      if (!drawWeapon)
+        throw new Error(
+          `Ready an owned ${spec.weapon} weapon on the character sheet first; its attack can draw it only with enough free hands.`,
+        );
+    }
+    const ammunition =
+      spec.weapon === "ranged"
+        ? h.preview.inventory.items.find(
+            (i) =>
+              i.catalogId === "item-ammunition-bundle" &&
+              i.carried &&
+              (h.supplies[i.instanceId] ?? i.inventoryDie) > 0,
+          )
+        : null;
+    if (spec.weapon === "ranged" && !ammunition)
+      throw new Error("No usable ammunition remains.");
+    this.spend(spec.category, id);
+    if (drawWeapon) {
+      h.draft.loadout ??= {};
+      h.draft.loadout[drawWeapon.instanceId] = {
+        ...h.draft.loadout[drawWeapon.instanceId],
+        held: true,
+        carried: true,
+      };
+      h.preview = this.R.workshopCharacter(h.draft, this.C);
+      this.emit("party");
+    }
+    if (id === "ability-defend") {
+      h.buffs.defend = true;
+      this.note(`${h.name} defends: +1 defense Boon until their next turn.`);
+    } else if (id === "ability-stabilize") {
+      target.survival = this.R.stabilize(target.survival);
+      this.note(
+        `${h.name} stabilizes ${target.name} at 0 HP; death marks cleared.`,
+      );
+    } else {
+      const sources = this.R.conditionRollSources(h.conditions ?? [], {
+        mode: "attack",
+        targetContributions: target.conditions ?? [],
+        perceivedSources: this.perceivedSources(h),
+      });
+      const boons = sources
+          .filter((s) => s.kind === "boon")
+          .reduce((n, s) => n + s.amount, 0),
+        banes = sources
+          .filter((s) => s.kind === "bane")
+          .reduce((n, s) => n + s.amount, 0);
+      const result = this.roll(
+          h.draft.attributes[spec.attribute],
+          boons,
+          banes,
+        ),
+        tier = ["weak", "standard", "strong"].indexOf(result.tier);
+      const damage = this.R.damageEvent({
+        components: [{ type: spec.type, amount: spec.damage[tier] }],
+        resistances: [{ type: "physical", value: 1 }],
+      });
+      target.hp = Math.max(0, target.hp - damage.total);
+      target.conditions ??= [];
+      for (const [condition, rating] of spec.conditions?.[tier] ?? [])
+        target.conditions.push({
+          id: `effect-${crypto.randomUUID()}`,
+          key: condition,
+          rating,
+          source: h.id,
+          order: this.encounter.serial,
+          persistence: condition === "prone" ? "binary" : "temporary",
+        });
+      this.note(
+        `${h.name} · ${card.name} (${spec.attribute}): ${result.retained.join(" + ")} ${h.draft.attributes[spec.attribute] >= 0 ? "+" : ""}${h.draft.attributes[spec.attribute]} → ${result.total} ${result.tier}; ${damage.total} ${spec.type} damage${result.natural ? ` · natural ${result.natural}` : ""}${target.hp === 0 ? " · sentry destroyed" : ""}.`,
+      );
+      if (spec.conditions?.[tier]?.length)
+        this.note(
+          `${target.name}: ${spec.conditions[tier].map(([k, r]) => `${k} ${r}`).join(", ")}.`,
+        );
+      if (ammunition) {
+        const die =
+          h.supplies[ammunition.instanceId] ?? ammunition.inventoryDie;
+        const check = this.R.inventoryCheck({
+          die,
+          retained: 1 + Math.floor(Math.random() * die),
+        });
+        h.supplies[ammunition.instanceId] = check.after;
+        this.note(
+          `Ammunition d${die}: ${check.retained}${check.after !== die ? (check.exhausted ? " · exhausted after this shot" : ` → d${check.after}`) : " · retained"}.`,
+        );
+      }
+      this.defeatEnemy(target);
+      this.emit("attack", {
+        attacker: h.id,
+        target: target.id,
+        damage: damage.total,
+        spell: spec.spell,
+        element: spec.type,
+        ranged: spec.weapon === "ranged",
+      });
+    }
+    this.advance();
+    this.emit("change");
+  }
+  perceivedSources(h) {
+    return [...this.party, ...this.enemies]
+      .filter((p) => distance(h, p) < 10 && lineOfSight(this.map, h, p))
+      .map((p) => p.id);
+  }
+  defeatEnemy(e) {
+    if (
+      e.hp === 0 &&
+      this.encounter.current !== e.id &&
+      this.encounter.roster.some((p) => p.id === e.id && !p.withdrawn)
+    )
+      this.encounter = this.R.changeRoster(this.encounter, {
+        id: e.id,
+        side: "opposition",
+        mode: "withdraw",
+        reason: "defeated",
+      });
+  }
+  enemySpeed(e) {
+    const summary = this.R.conditionSummary(e.conditions ?? []);
+    return Math.max(
+      0,
+      5 - summary.slowed.rating - (summary.prone.active ? 2 : 0),
+    );
+  }
+  finishEnemyConditions(e) {
+    // Sentries stand before acting when prone; this spends two movement squares.
+    if (5 - this.R.conditionSummary(e.conditions ?? []).slowed.rating >= 2)
+      e.conditions = (e.conditions ?? []).filter((c) => c.key !== "prone");
+    const plan = this.R.conditionEndPlan(e.conditions, {
+      turnId: `npc-${this.encounter.serial}`,
+      resistances: [{ type: "physical", value: 1 }],
+    });
+    if (!plan.ready)
+      throw new Error("This condition combination needs a duration ruling.");
+    for (const event of plan.events) {
+      e.hp = Math.max(0, e.hp - event.damage.total);
+      this.note(
+        `${e.name}: ${event.damage.total} ${event.condition} damage at turn end.`,
+      );
+    }
+    e.conditions = plan.contributions;
+    this.defeatEnemy(e);
+  }
+  canBlock(h) {
+    return (
+      h.survival.status === "active" &&
+      this.held(h, "item-ordinary-shield") &&
+      !h.buffs.shield &&
+      (this.budgets[h.id]?.remaining.reaction ?? 1) > 0
+    );
+  }
+  resolveReaction(block) {
+    if (!this.pendingDefense) throw new Error("There is no pending defense.");
+    const e = this.enemies.find((e) => e.id === this.pendingDefense.attacker),
+      h = this.party.find((h) => h.id === this.pendingDefense.target);
+    if (block) {
+      if (!this.canBlock(h))
+        throw new Error("Shield Block requires a held shield and a Reaction.");
+      this.budgets[h.id] ??= this.R.startTurn({
+        turnId: `opening-${h.id}`,
+        speed: h.preview.summary.speed,
+      });
+      this.budgets[h.id] = this.R.declareAction(this.budgets[h.id], {
+        operationId: `block-${crypto.randomUUID()}`,
+        sourceId: "ability-shield-block",
+        category: "reaction",
+        ownTurn: false,
+      });
+      h.buffs.shield = true;
+      this.note(
+        `${h.name} uses Shield Block: +1 defense Boon until their next turn.`,
+      );
+    }
+    this.pendingDefense = null;
+    this.resolveEnemyHit(e, h);
+    this.finishEnemyConditions(e);
+    this.encounter = this.R.finishTurn(this.encounter);
+    this.defeatEnemy(e);
+    this.busy = false;
+    this.advance();
+    this.emit("change");
+  }
+  resolveEnemyHit(e, h) {
+    const sources = [
+      ...this.R.conditionRollSources(h.conditions ?? [], {
+        mode: "defense",
+        perceivedSources: this.perceivedSources(h),
+      }),
+      ...this.R.passiveAncestryDefenseSources(h.draft.traitIds ?? []),
+    ];
+    const boons =
+        Number(!!h.buffs.defend) +
+        Number(!!h.buffs.shield) +
+        sources
+          .filter((s) => s.kind === "boon")
+          .reduce((n, s) => n + s.amount, 0),
+      banes = sources
+        .filter((s) => s.kind === "bane")
+        .reduce((n, s) => n + s.amount, 0);
+    const result = this.roll(h.draft.attributes.agility, boons, banes);
+    const damage = this.R.damageEvent({
+      components: [
+        {
+          type: "physical",
+          amount: { weak: 5, standard: 3, strong: 2 }[result.tier],
+        },
+      ],
+      resistances: Object.entries(h.preview.resistances).map(
+        ([type, value]) => ({ type, value }),
+      ),
+    });
+    const before = h.survival.wounds,
+      applied = this.R.sufferDamage(h.survival, damage.total);
+    h.survival = applied.state;
+    this.note(
+      `${h.name} defends (Agility, ${boons} Boon / ${banes} Bane): ${result.retained.join(" + ")} → ${result.total} ${result.tier}; suffers ${damage.total} damage.`,
+    );
+    this.emit("attack", { attacker: e.id, target: h.id, damage: damage.total });
+    if (applied.wound) {
+      const roll = this.R.woundRoll(before, this.dice(Math.min(5, 3 + before))),
+        wound = this.R.woundResult(this.C.wounds, "physical", roll.key);
+      h.wounds.push(wound);
+      if (wound.effects.some((e) => e.kind === "lastWords"))
+        h.survival = this.R.enterLastWords(h.survival);
+      this.note(`Wound ${roll.key}: ${wound.record.injury}.`);
+      this.mode = "wound-review";
+      this.emit("wound", { hero: h, wound });
+    }
+  }
+  stand() {
+    if (
+      this.mode !== "combat" ||
+      this.busy ||
+      this.active.survival.status !== "active"
+    )
+      throw new Error("Wait for an active hero’s turn.");
+    if (!this.encounter.current) this.beginHero();
+    if (!(this.active.conditions ?? []).some((c) => c.key === "prone"))
+      throw new Error("This hero is already standing.");
+    this.budgets[this.active.id] = this.R.spendMovement(this.budget, {
+      operationId: `stand-${crypto.randomUUID()}`,
+      amount: 2,
+      conditions: this.restrictions(this.active),
+    });
+    this.active.conditions = this.active.conditions.filter(
+      (c) => c.key !== "prone",
+    );
+    this.emit("change");
+  }
+  equip(index, instanceId) {
+    if (!["town", "exploration", "combat"].includes(this.mode) || this.busy)
+      throw new Error("Equipment cannot change right now.");
+    const h = this.party[index],
+      item = h.preview.inventory.items.find(
+        (i) => i.instanceId === instanceId && i.carried && i.hands > 0,
+      );
+    if (!item) throw new Error("Choose a carried weapon or shield.");
+    if (this.mode === "combat" && h !== this.active)
+      throw new Error("Only the acting hero can change equipment.");
+    if (this.mode === "combat")
+      this.spend("maneuver", "ability-handle-an-item");
+    // Proper stowing costs a Maneuver. Keep compatible one-handed gear.
+    const heldHands = h.preview.inventory.items
+      .filter((i) => i.held)
+      .reduce((n, i) => n + (i.hands ?? 0), 0);
+    const stow = heldHands + item.hands > 2;
+    h.draft.loadout ??= {};
+    for (const i of h.preview.inventory.items)
+      h.draft.loadout[i.instanceId] = {
+        ...h.draft.loadout[i.instanceId],
+        held: i.instanceId === instanceId || (!stow && i.held),
+      };
+    h.preview = this.R.workshopCharacter(h.draft, this.C);
+    this.note(
+      `${h.name} readies ${item.definition.name}${this.mode === "combat" ? " · Maneuver spent stowing equipment" : ""}.`,
+    );
+    this.emit("party");
+    this.emit("change");
+  }
+  develop(index, proposed) {
+    if (this.mode !== "town") throw new Error("Train in Greyhaven.");
+    const h = this.party[index],
+      next = structuredClone(h.draft),
+      progression = structuredClone(
+        proposed.progression ?? { level: 1, levels: {} },
+      );
+    if (
+      progression.level < h.preview.state.level ||
+      progression.level > h.earnedLevel
+    )
+      throw new Error(`This hero has earned level ${h.earnedLevel}.`);
+    const prior = h.draft.progression?.levels ?? {};
+    for (const [level, entry] of Object.entries(prior)) {
+      const candidate = progression.levels?.[level];
+      if (
+        !candidate ||
+        JSON.stringify(candidate.purchases.slice(0, entry.purchases.length)) !==
+          JSON.stringify(entry.purchases) ||
+        Object.entries(entry.signatures ?? {}).some(
+          ([k, v]) => candidate.signatures?.[k] !== v,
+        ) ||
+        Object.entries(entry.acquisitions ?? {}).some(
+          ([k, v]) =>
+            JSON.stringify(candidate.acquisitions?.[k]) !== JSON.stringify(v),
+        )
+      )
+        throw new Error(
+          "Committed development choices cannot be refunded or rewritten.",
+        );
+    }
+    for (const [level, entry] of Object.entries(progression.levels ?? {})) {
+      if (+level > progression.level)
+        throw new Error(
+          "Future development choices cannot be committed early.",
+        );
+      for (const purchase of entry.purchases.slice(
+        prior[level]?.purchases?.length ?? 0,
+      )) {
+        const choice = this.C.choices.find((c) => c.id === purchase.id);
+        if (
+          choice?.kind === "ability" &&
+          coverage(choice.id).status !== "included"
+        )
+          throw new Error(
+            `${choice.name} is not in the playable dungeon roster.`,
+          );
+      }
+    }
+    next.progression = progression;
+    const preview = this.R.workshopCharacter(next, this.C);
+    if (!preview.valid)
+      throw new Error(
+        preview.errors
+          .map(
+            (e) => e.text ?? e.reasons?.map((r) => r.text).join("; ") ?? e.code,
+          )
+          .join("\n"),
+      );
+    for (const id of preview.state.abilities.filter(
+      (id) => !h.preview.state.abilities.includes(id),
+    ))
+      if (coverage(id).status !== "included")
+        throw new Error(
+          `${this.C.choices.find((c) => c.id === id)?.name}: this card is not yet in the playable dungeon roster.`,
+        );
+    const hpDelta = preview.summary.maximumHp - h.preview.summary.maximumHp,
+      gritDelta = preview.summary.gritGranted - h.preview.summary.gritGranted;
+    h.survival.maxHp += hpDelta; // Training does not heal existing damage or refill spent Grit.
+    h.survival.gritAvailable += gritDelta;
+    h.draft = next;
+    h.preview = preview;
+    this.note(
+      `${h.name} trained to level ${preview.state.level}; ${preview.development.current} DP remain.`,
+    );
+    this.emit("party");
+    this.emit("change");
   }
   dice(n = 3) {
     return Array.from({ length: n }, () => 1 + Math.floor(Math.random() * 6));
@@ -188,9 +680,11 @@ export class Game {
   }
   route(to) {
     if (!["exploration", "combat"].includes(this.mode) || this.busy) return [];
-    const h = this.active;
-    if (h.survival.status !== "active" && h.survival.status !== "lastWords")
-      return [];
+    const h =
+      this.mode === "exploration"
+        ? this.party.find((h) => h.id === this.campaign.order[0])
+        : this.active;
+    if (h.survival.status !== "active") return [];
     return pathfind(this.map, h, to, this.occupied(h.id));
   }
   move(to) {
@@ -201,48 +695,49 @@ export class Game {
     if (this.mode === "combat") {
       if (this.encounter.current !== this.active.id)
         throw new Error("Choose a hero whose turn is available.");
-      const remaining = this.R.movementRemaining(this.budget);
+      const remaining = this.movementLeft();
       if (route.length > remaining)
         throw new Error(`Only ${remaining} squares remain.`);
       this.budgets[this.active.id] = this.R.spendMovement(this.budget, {
-        operationId: `move-${Date.now()}`,
+        operationId: `move-${crypto.randomUUID()}`,
         amount: route.length,
+        conditions: this.restrictions(this.active),
       });
+      this.paths.clear();
       this.paths.set(this.active.id, route);
     } else {
-      this.paths.set(this.active.id, route);
-      const reserved = new Set([key(to.x, to.z)]);
-      for (const h of this.party) {
-        if (h === this.active || h.survival.status !== "active") continue;
-        const destinations = Object.values(this.map.tiles)
-          .filter(
-            (p) =>
-              distance(p, to) < 3 &&
-              !reserved.has(key(p.x, p.z)) &&
-              !this.occupied(h.id).has(key(p.x, p.z)),
-          )
-          .sort((a, b) => distance(a, to) - distance(b, to));
-        for (const dest of destinations) {
-          const p = pathfind(this.map, h, dest, this.occupied(h.id));
-          if (p.length) {
-            this.paths.set(h.id, p);
-            reserved.add(key(dest.x, dest.z));
-            break;
-          }
-        }
-      }
+      this.paths = formationRoutes(
+        this.map,
+        this.party,
+        this.enemies,
+        this.campaign.formation,
+        this.campaign.order,
+        to,
+      );
     }
     this.emit("change");
   }
   step() {
     if (this.busy || !["exploration", "combat"].includes(this.mode)) return;
     let moved = false;
-    for (const h of this.party) {
+    const marching =
+      this.mode === "combat"
+        ? [this.active]
+        : this.campaign.order.map((id) => this.party.find((h) => h.id === id));
+    for (const h of marching) {
+      if (this.mode === "combat" && this.encounter.current !== h.id) continue;
       const path = this.paths.get(h.id);
       if (!path?.length) continue;
       const next = path[0];
       if (this.occupied(h.id).has(key(next.x, next.z))) {
-        this.paths.delete(h.id);
+        // Companions wait for occupied cells, and take an alternative route when possible.
+        const alternative = pathfind(
+          this.map,
+          h,
+          path.at(-1),
+          this.occupied(h.id),
+        );
+        if (alternative.length) this.paths.set(h.id, alternative);
         continue;
       }
       Object.assign(h, path.shift());
@@ -269,6 +764,10 @@ export class Game {
     const groups = new Set(visible.map((e) => e.group)),
       opposition = this.enemies.filter((e) => e.hp > 0 && groups.has(e.group));
     this.paths.clear();
+    this.budgets = {};
+    this.party.forEach((h) => {
+      h.buffs = {};
+    });
     this.mode = "combat";
     this.encounter = this.R.startEncounter(
       [
@@ -292,9 +791,11 @@ export class Game {
       throw new Error("The opposition is acting.");
     this.encounter = this.R.chooseParticipant(this.encounter, h.id);
     h.survival = this.R.startSurvivalTurn(h.survival, h.survival.ownTurn + 1);
+    h.buffs = {};
     this.budgets[h.id] = this.R.startTurn({
       turnId: `turn-${this.encounter.serial}`,
       speed: h.preview.summary.speed,
+      conditions: this.restrictions(h),
     });
     if (h.survival.status === "dying") this.emit("dying", { hero: h });
     this.emit("change");
@@ -321,14 +822,19 @@ export class Game {
     }
     if (this.encounter.nextSide === "opposition") {
       this.busy = true;
+      const expectedEncounter = this.encounter;
       setTimeout(() => {
+        if (this.encounter !== expectedEncounter) return;
         try {
           this.enemyTurn();
         } catch (e) {
           this.notify(e.message);
           this.note("Encounter paused: " + e.message);
         } finally {
-          this.busy = false;
+          this.busy =
+            !!this.pendingDefense ||
+            (this.mode === "combat" &&
+              this.encounter?.nextSide === "opposition");
           this.emit("change");
         }
       }, 650);
@@ -348,55 +854,22 @@ export class Game {
     if (this.encounter.current !== this.active.id) this.beginHero();
     if (this.active.survival.status === "dying")
       throw new Error("Resolve Dying first.");
-    if (!["active", "lastWords"].includes(this.active.survival.status))
+    if (this.active.survival.status !== "active")
       throw new Error("This hero cannot act.");
     if (!this.budget.remaining[category])
       throw new Error(`No ${category} action remains.`);
     this.budgets[this.active.id] = this.R.declareAction(this.budget, {
-      operationId: `action-${Date.now()}`,
+      operationId: `action-${crypto.randomUUID()}`,
       sourceId: id,
       category,
     });
   }
   attack(enemyId, kind = "melee") {
-    if (this.mode !== "combat" || this.busy) return;
-    const h = this.active,
-      e = this.enemies.find((e) => e.id === enemyId && e.hp > 0);
-    if (!e) return;
-    if (!this.encounter.roster.some((p) => p.id === enemyId && !p.withdrawn))
-      throw new Error("That creature is outside this encounter.");
-    if (distance(h, e) > 1 || !lineOfSight(this.map, h, e))
-      throw new Error("Move adjacent to the sentry first.");
-    const melee = h.preview.inventory.items.some(
-      (i) =>
-        i.carried && i.held && i.catalogId === "item-ordinary-melee-weapon",
+    const melee = this.held(this.active, "item-ordinary-melee-weapon");
+    return this.useAbility(
+      `ability-basic-${kind === "melee" && !melee ? "unarmed" : kind}`,
+      enemyId,
     );
-    if (kind === "melee" && !melee) kind = "unarmed";
-    this.spend("main", "ability-basic-" + kind);
-    const result = this.roll(h.draft.attributes.brawn);
-    const raw = (
-      kind === "melee"
-        ? { weak: 2, standard: 3, strong: 5 }
-        : { weak: 1, standard: 2, strong: 4 }
-    )[result.tier];
-    const damage = this.R.damageEvent({
-      components: [{ type: "physical", amount: raw }],
-      resistances: [{ type: "physical", value: 1 }],
-    });
-    e.hp = Math.max(0, e.hp - damage.total);
-    this.note(
-      `${h.name}: ${kind} ${result.retained.join(" + ")} → ${result.total} ${result.tier}; ${damage.total} damage${e.hp === 0 ? " · sentry destroyed" : ""}.`,
-    );
-    if (e.hp === 0)
-      this.encounter = this.R.changeRoster(this.encounter, {
-        id: e.id,
-        side: "opposition",
-        mode: "withdraw",
-        reason: "defeated",
-      });
-    this.emit("attack", { attacker: h.id, target: e.id, damage: damage.total });
-    this.advance();
-    this.emit("change");
   }
   enemyTurn() {
     if (this.mode !== "combat") return;
@@ -418,44 +891,21 @@ export class Game {
           .filter((p) => p.length)
           .sort((a, b) => a.length - b.length);
         const path = routes[0];
-        if (path?.length) Object.assign(e, path[Math.min(5, path.length) - 1]);
+        if (path?.length)
+          Object.assign(e, path[Math.min(this.enemySpeed(e), path.length) - 1]);
       }
       if (distance(e, h) <= 1 && lineOfSight(this.map, e, h)) {
-        const result = this.roll(h.draft.attributes.agility);
-        const raw = { weak: 5, standard: 3, strong: 2 }[result.tier],
-          damage = this.R.damageEvent({
-            components: [{ type: "physical", amount: raw }],
-            resistances: Object.entries(h.preview.resistances).map(
-              ([type, value]) => ({ type, value }),
-            ),
-          });
-        const before = h.survival.wounds;
-        const applied = this.R.sufferDamage(h.survival, damage.total);
-        h.survival = applied.state;
-        this.note(
-          `${h.name} defends: ${result.total} ${result.tier}; suffers ${damage.total} damage.`,
-        );
-        this.emit("attack", {
-          attacker: e.id,
-          target: h.id,
-          damage: damage.total,
-        });
-        if (applied.wound) {
-          const roll = this.R.woundRoll(
-            before,
-            this.dice(Math.min(5, 3 + before)),
-          );
-          const wound = this.R.woundResult(this.C.wounds, "physical", roll.key);
-          h.wounds.push(wound);
-          if (wound.effects.some((e) => e.kind === "lastWords"))
-            h.survival = this.R.enterLastWords(h.survival);
-          this.note(`Wound ${roll.key}: ${wound.record.injury}.`);
-          this.mode = "wound-review";
-          this.emit("wound", { hero: h, wound });
+        if (this.canBlock(h)) {
+          this.pendingDefense = { attacker: e.id, target: h.id };
+          this.emit("reaction", { hero: h, enemy: e });
+          return;
         }
+        this.resolveEnemyHit(e, h);
       }
     }
+    this.finishEnemyConditions(e);
     this.encounter = this.R.finishTurn(this.encounter);
+    this.defeatEnemy(e);
     this.advance();
   }
   survivalChoice(kind) {
@@ -480,13 +930,18 @@ export class Game {
     this.advance();
     this.emit("change");
   }
-  convert() {
+  convert(from = "maneuver") {
     if (this.mode !== "combat" || this.busy) return;
     if (!this.encounter.current) this.beginHero();
+    if (this.active.survival.status !== "active")
+      throw new Error("Only an active hero can convert actions.");
+    if (!this.budget.remaining[from])
+      throw new Error(`No ${from} action remains.`);
     this.budgets[this.active.id] = this.R.convertAction(this.budget, {
-      operationId: `convert-${Date.now()}`,
-      from: "maneuver",
-      to: "movement",
+      operationId: `convert-${crypto.randomUUID()}`,
+      from,
+      to: from === "main" ? "maneuver" : "movement",
+      conditions: this.restrictions(this.active),
     });
     this.emit("change");
   }
@@ -541,6 +996,19 @@ export class Game {
       )
     )
       throw new Error("Bring the party back to the entrance stairs.");
+    if (this.enemies.every((e) => e.hp === 0)) {
+      for (const h of this.party.filter(
+        (h) => h.survival.status === "active",
+      )) {
+        if (!h.milestones.includes(this.campaign.depth)) {
+          h.milestones.push(this.campaign.depth);
+          h.earnedLevel = Math.min(100, h.earnedLevel + 1);
+          this.note(
+            `${h.name} earned level ${h.earnedLevel}. Spend development points in town.`,
+          );
+        }
+      }
+    }
     this.campaign.bank += this.campaign.haul;
     this.campaign.haul = 0;
     this.mode = "town";
@@ -585,6 +1053,10 @@ export class Game {
   replace(index, draft) {
     if (!["town", "defeat"].includes(this.mode))
       throw new Error("Recruit heroes in town.");
+    if ((draft.progression?.level ?? 1) !== 1)
+      throw new Error(
+        "New recruits start at level 1. Use development for earned levels.",
+      );
     const previous = this.party[index];
     const replacement = this.hero(draft, index);
     Object.assign(replacement, {

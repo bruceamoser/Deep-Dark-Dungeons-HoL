@@ -603,3 +603,69 @@ p {
   height: 40px;
   object-fit: contain;
 }
+.attribute-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+.attribute-grid div {
+  border: 1px solid var(--line);
+  padding: 12px 4px;
+  text-align: center;
+  background: #0a151b;
+}
+.attribute-grid small {
+  display: block;
+  text-transform: uppercase;
+  font: 10px Arial;
+  letter-spacing: 1px;
+  color: var(--dim);
+}
+.attribute-grid b {
+  display: block;
+  font: 24px Cinzel;
+  color: var(--gold);
+  margin-top: 5px;
+}
+.equipment-list {
+  display: grid;
+  gap: 4px;
+}
+.equipment-list > div,
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.equipment-list span,
+.order-row span {
+  flex: 1;
+}
+.equipment-list small {
+  display: block;
+  font: 10px Arial;
+  color: var(--dim);
+  margin-top: 4px;
+}
+.equipment-list button,
+.order-row button {
+  padding: 5px 12px;
+}
+.dialog select {
+  padding: 8px;
+  margin: 12px;
+  color: var(--gold);
+  background: #101e25;
+  border: 1px solid var(--line);
+}
+.dialog input[type="range"] {
+  width: 70%;
+  margin: 20px;
+  accent-color: var(--gold);
+}
+.wound {
+  color: #e6a496;
+}

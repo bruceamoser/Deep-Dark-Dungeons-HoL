@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
+import { verifyControls } from "./control-check.mjs";
 
 // Exercise the user's launcher. Playwright's Electron launcher can supply
 // --no-sandbox and therefore cannot prove an ordinary Linux launch works.
@@ -10,16 +11,24 @@ if (process.platform !== "linux")
   throw new Error("This launcher regression check requires Linux.");
 const root = path.resolve(import.meta.dirname, "..");
 const userData = await fs.mkdtemp(path.join(os.tmpdir(), "ddd-native-check-"));
+// The desktop host has a userns-allowing AppArmor profile. A normal terminal
+// is unconfined and is subject to Ubuntu's userns restriction. Match the latter.
 const child = spawn(
-  path.join(root, "launch-game.sh"),
-  ["--remote-debugging-port=0"],
+  "/usr/bin/aa-exec",
+  [
+    "-p",
+    "unconfined",
+    "--",
+    path.join(root, "launch-game.sh"),
+    "--remote-debugging-port=0",
+  ],
   {
     cwd: root,
     detached: true,
     stdio: ["ignore", "ignore", "pipe"],
     env: {
       ...process.env,
-      CHROME_DEVEL_SANDBOX: "",
+      CHROME_DEVEL_SANDBOX: process.env.CHROME_DEVEL_SANDBOX ?? "",
       DDD_TEST_USER_DATA: userData,
     },
   },
@@ -62,6 +71,7 @@ try {
   const stored = await w.evaluate(() => window.desktop.load());
   expect(JSON.parse(stored).campaign.party).toHaveLength(4);
   await w.screenshot({ path: "test-results/native-dungeon.png" });
+  await verifyControls(w);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");
@@ -70,13 +80,17 @@ try {
   const mainArgs = (
     await fs.readFile(`/proc/${child.pid}/cmdline`, "utf8")
   ).split("\0");
-  expect(mainArgs).not.toContain("--no-sandbox");
+  expect(mainArgs.join(" ")).not.toMatch(/(?:^|\s)--no-sandbox(?:\s|$)/);
+  expect(await fs.readlink(`/proc/${child.pid}/exe`)).not.toMatch(/\s/);
+  expect(
+    (await fs.readFile(`/proc/${child.pid}/attr/current`, "utf8")).trim(),
+  ).toBe("unconfined");
   for (const renderer of renderers) {
     const status = await fs.readFile(`/proc/${renderer.id}/status`, "utf8");
     expect(Number(/Seccomp:\s+(\d+)/.exec(status)?.[1])).toBe(2);
   }
   console.log(
-    "Exact Linux launcher, rendered scene and disk save passed; renderers have seccomp filtering and no --no-sandbox flag.",
+    "Exact Linux launcher in the normal terminal AppArmor context, rendered scene and disk save passed; runtime path has no spaces, renderers have seccomp filtering and no --no-sandbox flag.",
   );
 } finally {
   await browser?.close();

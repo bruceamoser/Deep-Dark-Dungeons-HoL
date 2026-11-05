@@ -14,7 +14,9 @@
     "package:linux": "npm run build && electron-builder --linux dir",
     "package:windows": "npm run build && electron-builder --win zip",
     "test:play": "node scripts/play-check.mjs",
-    "test:native": "node scripts/native-check.mjs"
+    "test:native": "node scripts/native-check.mjs",
+    "test:controls": "node scripts/control-check.mjs",
+    "coverage:abilities": "node scripts/ability-coverage.mjs"
   },
   "build": {
     "appId": "com.bruceamoser.deepdarkdungeons",
