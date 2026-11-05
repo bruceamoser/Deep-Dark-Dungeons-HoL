@@ -147,7 +147,18 @@ export class Scene {
         canvas.style.cursor = "grabbing";
         this.showPath([]);
       }
-      if (e.button === 0 && this.hover) onClick(this.hover);
+      if (e.button === 0) {
+        // A click immediately after a camera drag must use the current camera,
+        // not the hover cell from before the drag.
+        this.pointer.set(
+          (e.clientX / innerWidth) * 2 - 1,
+          (-e.clientY / innerHeight) * 2 + 1,
+        );
+        this.ray.setFromCamera(this.pointer, this.camera);
+        const hit = new T.Vector3();
+        if (this.ray.ray.intersectPlane(this.plane, hit))
+          onClick({ x: Math.round(hit.x / TILE), z: Math.round(hit.z / TILE) });
+      }
     });
     canvas.addEventListener(
       "wheel",
