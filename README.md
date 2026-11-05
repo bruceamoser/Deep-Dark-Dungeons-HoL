@@ -14,6 +14,8 @@ npm run build
 npm start
 ```
 
+On Linux, use `./launch-game.sh` or the installed application-menu entry. The launcher can reuse a root-owned, mode-4755 sandbox helper from an installed Google Chrome or Chromium, scoped only to the game process. This supports Ubuntu's restricted user namespaces without `--no-sandbox`. Direct execution of an unpacked Electron binary can fail when its bundled helper has not been installed with the required ownership and permissions.
+
 For development, `npm run dev` opens a local browser-hosted renderer. Production uses a desktop Electron shell with isolated renderer permissions and local saves.
 
 ```sh
