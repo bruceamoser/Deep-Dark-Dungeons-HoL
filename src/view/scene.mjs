@@ -93,36 +93,23 @@ export class Scene {
     this.scene.add(this.pathGroup);
     this.follow = true;
     canvas.addEventListener("contextmenu", (e) => e.preventDefault());
-    const endPan = () => {
-      this.pan = null;
-      canvas.style.cursor = "";
-    };
-    canvas.addEventListener("pointerup", endPan);
-    canvas.addEventListener("pointercancel", endPan);
-    canvas.addEventListener("lostpointercapture", endPan);
+    window.addEventListener("pointerup", (e) => {
+      if (e.button === 2) this.endPan();
+    });
+    canvas.addEventListener("pointercancel", () => this.endPan());
+    window.addEventListener("blur", () => this.endPan());
+    window.addEventListener(
+      "pointermove",
+      (e) => {
+        if (this.pan && e.pointerId === this.pan.pointerId && e.buttons & 2)
+          this.panTo(e);
+      },
+      true,
+    );
     canvas.addEventListener("pointermove", (e) => {
-      if (this.pan) {
-        const scale = this.zoom / canvas.clientHeight;
-        const dx = (e.clientX - this.pan.x) * scale,
-          dz = ((e.clientY - this.pan.y) * scale * Math.hypot(32, 27)) / 27;
-        const delta = new T.Vector3(
-          -dx * Math.sin(this.angle) + dz * Math.cos(this.angle),
-          0,
-          dx * Math.cos(this.angle) + dz * Math.sin(this.angle),
-        );
-        this.focus.add(delta);
-        this.targetFocus = this.focus.clone();
-        this.camera.position.add(delta);
-        this.pan = { x: e.clientX, y: e.clientY };
-        return;
-      }
-      this.pointer.set(
-        (e.clientX / innerWidth) * 2 - 1,
-        (-e.clientY / innerHeight) * 2 + 1,
-      );
-      this.ray.setFromCamera(this.pointer, this.camera);
-      const hit = new T.Vector3();
-      if (this.ray.ray.intersectPlane(this.plane, hit)) {
+      if (this.pan) return;
+      const hit = this.groundAt(e);
+      if (hit) {
         this.hover = {
           x: Math.round(hit.x / TILE),
           z: Math.round(hit.z / TILE),
@@ -140,8 +127,11 @@ export class Scene {
     canvas.addEventListener("pointerdown", (e) => {
       if (e.button === 2) {
         e.preventDefault();
+        const anchor = this.groundAt(e);
+        if (!anchor) return;
         this.follow = false;
-        this.pan = { x: e.clientX, y: e.clientY };
+        this.manualCamera = true;
+        this.pan = { anchor, pointerId: e.pointerId, pointer: e };
         this.targetFocus = this.focus.clone();
         canvas.setPointerCapture(e.pointerId);
         canvas.style.cursor = "grabbing";
@@ -150,13 +140,8 @@ export class Scene {
       if (e.button === 0) {
         // A click immediately after a camera drag must use the current camera,
         // not the hover cell from before the drag.
-        this.pointer.set(
-          (e.clientX / innerWidth) * 2 - 1,
-          (-e.clientY / innerHeight) * 2 + 1,
-        );
-        this.ray.setFromCamera(this.pointer, this.camera);
-        const hit = new T.Vector3();
-        if (this.ray.ray.intersectPlane(this.plane, hit))
+        const hit = this.groundAt(e);
+        if (hit)
           onClick({ x: Math.round(hit.x / TILE), z: Math.round(hit.z / TILE) });
       }
     });
@@ -166,6 +151,7 @@ export class Scene {
         e.preventDefault();
         this.zoom = T.MathUtils.clamp(this.zoom + e.deltaY * 0.018, 13, 40);
         this.resize();
+        if (this.pan) this.panTo(this.pan.pointer);
       },
       { passive: false },
     );
@@ -177,6 +163,33 @@ export class Scene {
       this.tick(Math.min(0.05, this.clock.getDelta()));
     };
     this.frame();
+  }
+  groundAt(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    this.pointer.set(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      1 - ((e.clientY - rect.top) / rect.height) * 2,
+    );
+    this.camera.updateMatrixWorld();
+    this.ray.setFromCamera(this.pointer, this.camera);
+    return this.ray.ray.intersectPlane(this.plane, new T.Vector3());
+  }
+  panTo(e) {
+    const hit = this.groundAt(e);
+    if (!hit) return;
+    const delta = this.pan.anchor.clone().sub(hit);
+    this.focus.add(delta);
+    this.targetFocus = this.focus.clone();
+    this.camera.position.add(delta);
+    this.camera.updateMatrixWorld();
+    this.pan.pointer = e;
+  }
+  endPan() {
+    const pointerId = this.pan?.pointerId;
+    this.pan = null;
+    this.canvas.style.cursor = "";
+    if (pointerId !== undefined && this.canvas.hasPointerCapture(pointerId))
+      this.canvas.releasePointerCapture(pointerId);
   }
   async load() {
     const loader = new GLTFLoader();
@@ -410,6 +423,8 @@ export class Scene {
       }),
     );
     this.world.add(dust);
+    this.endPan();
+    this.manualCamera = false;
     this.focus.set(map.start.x * TILE, 0, map.start.z * TILE);
     this.targetFocus = this.focus.clone();
   }
@@ -526,10 +541,14 @@ export class Scene {
     this.targetFocus = this.focus.clone();
   }
   focusOn(p, enableFollow = true) {
+    if (this.pan) return;
+    this.manualCamera = false;
     if (enableFollow) this.follow = true;
     this.targetFocus = new T.Vector3(p.x * TILE, 0, p.z * TILE);
   }
   rotate(dir) {
+    if (this.pan) return;
+    this.manualCamera = false;
     this.angle += (dir * Math.PI) / 2;
   }
   showPath(path) {
@@ -608,18 +627,20 @@ export class Scene {
     for (const o of this.torches)
       o.light.intensity =
         28 + Math.sin(t * 5 + o.phase) * 3 + Math.sin(t * 11 + o.phase) * 1.5;
-    if (this.targetFocus)
-      this.focus.lerp(this.targetFocus, 1 - Math.exp(-dt * 5));
-    const offset = new T.Vector3(
-      Math.cos(this.angle) * 32,
-      27,
-      Math.sin(this.angle) * 32,
-    );
-    this.camera.position.lerp(
-      this.focus.clone().add(offset),
-      1 - Math.exp(-dt * 6),
-    );
-    this.camera.lookAt(this.focus);
+    if (!this.manualCamera) {
+      if (this.targetFocus)
+        this.focus.lerp(this.targetFocus, 1 - Math.exp(-dt * 5));
+      const offset = new T.Vector3(
+        Math.cos(this.angle) * 32,
+        27,
+        Math.sin(this.angle) * 32,
+      );
+      this.camera.position.lerp(
+        this.focus.clone().add(offset),
+        1 - Math.exp(-dt * 6),
+      );
+      this.camera.lookAt(this.focus);
+    }
     this.moon.position.copy(this.focus).add(new T.Vector3(-15, 35, -12));
     this.moon.target.position.copy(this.focus);
     const selected = [...this.entities.values()].find(

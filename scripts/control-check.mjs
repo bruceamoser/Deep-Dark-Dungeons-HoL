@@ -6,10 +6,57 @@ export async function verifyControls(page) {
     party: window.__ddd.game.party.map((h) => [h.x, h.z]),
     zoom: window.__ddd.scene.zoom,
   }));
+  const grab = async (start, end) => {
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down({ button: "right" });
+    const grabbed = await page.evaluate(({ x, y }) => {
+      const camera = window.__ddd.scene.camera,
+        rect = document.querySelector("#world").getBoundingClientRect();
+      const nx = ((x - rect.left) / rect.width) * 2 - 1,
+        ny = 1 - ((y - rect.top) / rect.height) * 2;
+      const near = camera.position.clone().set(nx, ny, -1).unproject(camera),
+        far = camera.position.clone().set(nx, ny, 1).unproject(camera);
+      const ground = near.clone().lerp(far, -near.y / (far.y - near.y));
+      return {
+        point: ground.toArray(),
+        quaternion: camera.quaternion.toArray(),
+        height: camera.position.y,
+      };
+    }, start);
+    await page.mouse.move(end.x, end.y, { steps: 8 });
+    const check = async () => {
+      const actual = await page.evaluate((point) => {
+        const camera = window.__ddd.scene.camera,
+          rect = document.querySelector("#world").getBoundingClientRect();
+        const projected = camera.position
+          .clone()
+          .fromArray(point)
+          .project(camera);
+        return {
+          x: rect.left + ((projected.x + 1) * rect.width) / 2,
+          y: rect.top + ((1 - projected.y) * rect.height) / 2,
+          quaternion: camera.quaternion.toArray(),
+          height: camera.position.y,
+        };
+      }, grabbed.point);
+      expect(Math.abs(actual.x - end.x)).toBeLessThan(0.5);
+      expect(Math.abs(actual.y - end.y)).toBeLessThan(0.5);
+      expect(actual.quaternion).toEqual(grabbed.quaternion);
+      expect(actual.height).toBeCloseTo(grabbed.height, 8);
+    };
+    await check();
+    await page.waitForTimeout(150);
+    await check();
+    await page.mouse.up({ button: "right" });
+    await page.waitForTimeout(250);
+    await check();
+  };
+  await grab({ x: 850, y: 400 }, { x: 1010, y: 470 });
+  // Start another grab while a rotation is still easing. Grabbing stops that
+  // motion, and pointer capture keeps the anchor even over the party sidebar.
+  await page.keyboard.press("e");
+  await grab({ x: 800, y: 400 }, { x: 180, y: 320 });
   await page.mouse.move(850, 400);
-  await page.mouse.down({ button: "right" });
-  await page.mouse.move(1010, 470, { steps: 8 });
-  await page.mouse.up({ button: "right" });
   await page.mouse.wheel(0, -240);
   const after = await page.evaluate(() => ({
     focus: window.__ddd.scene.focus.toArray(),
