@@ -41,9 +41,14 @@ export const tacticMethods = {
           break;
         Object.assign(h, point);
       }
-    if (effects.reveal)
+    if (effects.reveal) {
+      this.map.surveyed ??= {};
       for (const p of Object.values(this.map.tiles))
-        if (distance(actor, p) <= 8) this.seen[key(p.x, p.z)] = true;
+        if (distance(actor, p) <= 8) {
+          this.seen[key(p.x, p.z)] = true;
+          this.map.surveyed[key(p.x, p.z)] = true;
+        }
+    }
     const persistent = Object.fromEntries(
       Object.entries(effects).filter(
         ([k]) =>

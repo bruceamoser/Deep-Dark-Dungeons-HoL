@@ -1,5 +1,9 @@
 import { traitsOf } from "../core/ancestry-game.mjs";
-import { partyCanSee, naturallyLit, terrainVisible } from "../core/lighting.mjs";
+import {
+  partyCanSee,
+  naturallyLit,
+  terrainVisible,
+} from "../core/lighting.mjs";
 import { conditionVisuals } from "./conditions.mjs";
 import { CREATURE_MODELS } from "../core/creature-roster.mjs";
 import * as T from "three";
@@ -710,15 +714,21 @@ export class Scene {
       p.obj.visible = !!seen[key(Math.round(p.x), Math.round(p.z))];
     for (const t of this.torches)
       t.light.visible = !!seen[key(Math.round(t.x), Math.round(t.z))];
-    for (const { obj, item } of this.interactables.values())
-      obj.visible =
+    this.map.knownInteractions ??= {};
+    for (const { obj, item } of this.interactables.values()) {
+      if (
         visible(item) ||
+        this.map.surveyed?.[key(item.x, item.z)] ||
         (item.kind === "descent" &&
           party.some(
             (h) =>
               h.survival.status === "active" &&
               traitsOf(h).some((t) => t.stairs),
-          ));
+          ))
+      )
+        this.map.knownInteractions[item.id] = true;
+      obj.visible = !!this.map.knownInteractions[item.id];
+    }
     for (const e of this.entities.values())
       if (e.isEnemy)
         e.group.visible =
