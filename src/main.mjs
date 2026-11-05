@@ -1,3 +1,5 @@
+import { workshopScreen } from "./ui/workshop.mjs";
+import { campScreen } from "./ui/camp.mjs";
 import { SaveLibrary, browserSaveStorage } from "./core/save-library.mjs";
 import { runsScreen } from "./ui/runs.mjs";
 import { bestiaryScreen } from "./ui/bestiary.mjs";
@@ -140,6 +142,9 @@ async function init() {
   await scene.load();
   game.listeners.push((type, data) => {
     if (type === "feedback") scene.floatingText(data);
+    if (["time", "light", "change"].includes(type) && scene.map)
+      scene.updateVisibility(game.party, game.seen);
+    if (type === "supply") queueMicrotask(showSupplyNotice);
     if (type === "floor") {
       scene.clearFloatingText();
       scene.tilesDetail = [];
@@ -190,6 +195,7 @@ async function init() {
       sound.play("loot");
     }
     if (!runsOpen && type === "reaction") reaction(data);
+    if (!runsOpen && type === "opportunity") opportunity(data);
     if (!runsOpen && type === "dying") dying(data.hero);
     if (!runsOpen && type === "wound") woundReview(data);
     if (!runsOpen && type === "turnchoices") turnChoices(data);
@@ -226,10 +232,12 @@ async function init() {
   // Demo starts from legal published characters, never randomized partial builds.
   scene.updateVisibility(game.party, game.seen);
   render();
+  showSupplyNotice();
   setInterval(() => {
     if (!modal.children.length) game.step();
   }, 170);
   document.addEventListener("keydown", (e) => {
+    if (supplyDialog) return;
     if (e.key === "Escape" && runsOpen) {
       e.preventDefault();
       if (library.active && !runsBusy) resumeRun();
@@ -239,6 +247,7 @@ async function init() {
     if (
       e.key === "Escape" &&
       (game.pendingDefense ||
+        game.pendingProvocation ||
         game.woundNotices?.length ||
         (game.mode === "combat" && game.active.survival.status === "dying"))
     ) {
@@ -250,6 +259,7 @@ async function init() {
       e.key === "Escape" &&
       modal.children.length &&
       !game.pendingDefense &&
+      !game.pendingProvocation &&
       !["wound-review"].includes(game.mode) &&
       !game.woundNotices?.length &&
       !(
@@ -327,11 +337,11 @@ function render() {
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">EARLY PLAYABLE · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("The workshop", "workshop", "DOWNTIME CRAFTING")}${button("Camp & supplies", "camp", "REST & PROVISIONS")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">EARLY PLAYABLE · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
     if (scene.follow)
       scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
   } else {
@@ -437,6 +447,19 @@ function action(a) {
       closeModal();
       bestiaryScreen({ root: modal, game, close: closeModal });
       break;
+    case "workshop":
+      closeModal();
+      workshopScreen({ root: modal, game, close: closeModal, attempt });
+      break;
+    case "camp":
+      closeModal();
+      modalCleanup = campScreen({
+        root: modal,
+        game,
+        close: closeModal,
+        attempt,
+      });
+      break;
     case "shop":
       shop();
       break;
@@ -495,6 +518,15 @@ function drawMap() {
   }
   ctx.fillStyle = "#b99860";
   ctx.fillRect(game.map.start.x * scale, game.map.start.z * scale, 3, 3);
+  if (
+    game.seen[key(game.map.exit.x, game.map.exit.z)] ||
+    game.party.some(
+      (h) => game.canAct(h) && game.traits(h).some((t) => t.stairs),
+    )
+  ) {
+    ctx.fillStyle = "#78ead3";
+    ctx.fillText("▼", game.map.exit.x * scale - 3, game.map.exit.z * scale + 4);
+  }
 }
 function clickTile(p, interactionId, event) {
   if (modal.children.length) return;
@@ -669,6 +701,13 @@ function activateAction(id) {
     if (reason) throw new Error(reason);
     closeModal();
     cancelTargeting(false);
+    if (
+      id === "ability-lantern-in-the-palm" ||
+      (ABILITIES[id]?.exploration && game.mode === "exploration")
+    ) {
+      game.useAbility(id);
+      return;
+    }
     if (id === "ability-reduce-a-condition") {
       dialog(
         "Reduce a condition",
@@ -732,7 +771,7 @@ function actions() {
       .map((c) => {
         const a = ABILITIES[c.id];
         const reason = game.actionReason(c.id);
-        return `<button data-card="${c.id}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c)}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
+        return `<button data-card="${c.id}" title="${esc(coverage(c.id).reason)}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c)}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
       })
       .join("")}</div>`,
     '<button id="main-convert">Main → Maneuver</button><button id="stand">Stand · 2 movement</button>',
@@ -992,6 +1031,7 @@ function resumeRun() {
   runsOpen = false;
   game.resume();
   render();
+  showSupplyNotice();
 }
 async function openRuns() {
   if (runsOpen) return;
@@ -1063,3 +1103,44 @@ init().catch((e) => {
   console.error(e);
   ui.innerHTML = `<div class="loading-screen"><h1>The gate could not open</h1><p>${esc(e.message)}</p></div>`;
 });
+
+let supplyDialog, supplyWasSuspended;
+function showSupplyNotice() {
+  if (!game?.campaign?.supplyNotices?.length || runsOpen || supplyDialog)
+    return;
+  const notice = game.campaign.supplyNotices[0];
+  supplyWasSuspended = game.suspended;
+  game.pause();
+  supplyDialog = document.createElement("div");
+  supplyDialog.className = "supply-alert veil";
+  supplyDialog.innerHTML = `<section role="alertdialog" aria-modal="true" aria-label="Supply warning"><span class="eyebrow">EXPEDITION SUPPLIES</span><h2>${esc(notice.item)}</h2><h3>${esc(notice.name)}</h3><p>${esc(notice.message)}</p><button class="primary">Continue</button></section>`;
+  document.body.append(supplyDialog);
+  const button = supplyDialog.querySelector("button");
+  button.onclick = () => {
+    game.acknowledgeSupply(notice.id);
+    supplyDialog.remove();
+    supplyDialog = null;
+    if (!supplyWasSuspended) game.resume();
+    showSupplyNotice();
+  };
+  button.focus();
+}
+
+function opportunity({ hero, enemy }) {
+  dialog(
+    "Opportunity attack",
+    `<p>${esc(enemy.name)} provokes ${esc(hero.name)}. Spend this hero’s Reaction to make a Basic Melee attack before the creature continues?</p>`,
+    '<button id="skip-opportunity">Keep Reaction</button><button id="take-opportunity" class="primary">Basic Melee · Reaction</button>',
+  );
+  modal.querySelector(".close").onclick = () =>
+    toast("Choose whether to take this opportunity.");
+  for (const [id, use] of [
+    ["skip-opportunity", false],
+    ["take-opportunity", true],
+  ])
+    modal.querySelector(`#${id}`).onclick = () =>
+      attempt(() => {
+        closeModal();
+        game.resolveOpportunity(use);
+      });
+}

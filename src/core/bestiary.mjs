@@ -253,8 +253,8 @@ export const bestiaryMethods = {
     else if (maneuvers.includes("Defend")) e.defending = true;
     // Selecting Defend is the AI policy; it does not grant unprinted Stalking Step or shield effects.
   },
-  moveCreatureIntoRange(e, h, range) {
-    if (distance(e, h) <= range && lineOfSight(this.map, e, h)) return;
+  moveCreatureIntoRange(e, h, range, planOnly = false) {
+    if (distance(e, h) <= range && lineOfSight(this.map, e, h)) return [];
     const blocked = this.occupied(e.id),
       candidates = Object.values(this.map.tiles).filter(
         (p) =>
@@ -270,8 +270,9 @@ export const bestiaryMethods = {
       .sort((a, b) => a.length - b.length);
     const route = routes[0],
       speed = this.enemySpeed(e);
-    if (route?.length && speed > 0)
-      Object.assign(e, route[Math.min(speed, route.length) - 1]);
+    const points = (route ?? []).slice(0, speed);
+    if (!planOnly && points.length) Object.assign(e, points.at(-1));
+    return points;
   },
   creatureAfterHit(e, h, spec, damage) {
     if (e.type === "creature-emberling" && spec.type === "cold")

@@ -165,6 +165,40 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     shield.name = "Readied shield";
     left.add(shield);
   }
+  if (!enemy && hero.torch?.held) {
+    const hand = melee ? left : held("item-ordinary-shield") ? right : right;
+    if (hand) {
+      const torch = new T.Group();
+      torch.name = "Readied torch";
+      const wood = new T.MeshStandardMaterial({
+        color: 0x6a3820,
+        roughness: 1,
+      });
+      const iron = new T.MeshStandardMaterial({
+        color: 0x44342d,
+        metalness: 0.6,
+      });
+      const glow = new T.MeshStandardMaterial({
+        color: 0xffb651,
+        emissive: 0xff761b,
+        emissiveIntensity: 4,
+      });
+      const shaft = new T.CylinderGeometry(0.035, 0.045, 0.6, 8);
+      const head = new T.CylinderGeometry(0.085, 0.06, 0.15, 8);
+      const flameGeo = new T.ConeGeometry(0.09, 0.29, 7);
+      owned.push(wood, iron, glow, shaft, head, flameGeo);
+      const stick = new T.Mesh(shaft, wood),
+        cap = new T.Mesh(head, iron),
+        flame = new T.Mesh(flameGeo, glow);
+      stick.position.y = 0.15;
+      cap.position.y = 0.48;
+      flame.position.y = 0.66;
+      flame.name = "Torch flame";
+      flame.visible = !!hero.torch.lit;
+      torch.add(stick, cap, flame);
+      hand.add(torch);
+    }
+  }
   model.userData.equipment = {
     armor: tier,
     weapon: ranged

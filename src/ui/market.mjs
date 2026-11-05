@@ -14,14 +14,14 @@ export function marketScreen({ root, game, close, attempt }) {
         ? stock
             .map(
               (e) =>
-                `<article class="stock-card ${e.item.rarity ?? ""}"><div class="stock-title">${icon(itemIcon(e.item))}<div><h4>${esc(e.item.definition.name)}</h4><small>${e.item.quantity} Bulk · ${e.quantity} in stock</small></div></div>${enchantmentDetails(h, e.item)}${e.item.kind === "scroll" ? "<p>A two-way passage to town. Read outside combat with a free hand; return to the same preserved floor.</p>" : ""}<button data-buy="${esc(e.id)}" ${!e.quantity || game.campaign.bank < e.item.definition.price ? "disabled" : ""}>${icon("coins")} ${e.item.definition.price} · Buy</button></article>`,
+                `<article class="stock-card ${e.item.rarity ?? ""}"><div class="stock-title">${icon(itemIcon(e.item))}<div><h4>${esc(e.item.definition.name)}</h4><small>${e.item.quantity} Bulk · ${e.quantity} in stock</small></div></div>${enchantmentDetails(h, e.item)}${e.item.kind === "scroll" ? "<p>A two-way passage to town. Read outside combat with a free hand; return to the same preserved floor.</p>" : ""}<button data-buy="${esc(e.id)}" ${!e.quantity || game.campaign.bank < game.buyPrice(h, e.item) ? "disabled" : ""}>${icon("coins")} ${game.buyPrice(h, e.item)} · Buy</button></article>`,
             )
             .join("")
         : h.preview.inventory.items
             .filter((i) => i.carried && i.definition.price > 0)
             .map(
               (i) =>
-                `<article class="stock-card"><div class="stock-title">${icon(itemIcon(i))}<div><h4>${esc(i.definition.name)}</h4><small>${i.held || i.worn ? "Remove or stow before selling" : "Half listed value"}</small></div></div><button data-sell="${esc(i.instanceId)}" ${i.held || i.worn ? "disabled" : ""}>Sell · ${Math.floor(i.definition.price / 2)} coins</button></article>`,
+                `<article class="stock-card"><div class="stock-title">${icon(itemIcon(i))}<div><h4>${esc(i.definition.name)}</h4><small>${i.held || i.worn ? "Remove or stow before selling" : "Your sale price"}</small></div></div><button data-sell="${esc(i.instanceId)}" ${i.held || i.worn ? "disabled" : ""}>Sell · ${game.sellPrice(h, i)} coins</button></article>`,
             )
             .join("")
     }</div></main></div><footer>Stock refreshes when a new expedition begins. Buying equipment grants no training or discipline ranks.</footer></section></div>`;

@@ -1,6 +1,6 @@
 {
   "name": "deep-dark-dungeons-hol",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "A four-hero Heroes of Legend dungeon RPG",
@@ -11,7 +11,7 @@
     "start": "electron .",
     "test": "node --test tests/*.test.mjs",
     "test:visual": "node scripts/visual-check.mjs",
-    "package:linux": "npm run build && electron-builder --linux AppImage --x64 --publish never",
+    "package:linux": "npm run build && electron-builder --linux AppImage deb --x64 --publish never -c.productName=deep-dark-dungeons-hol",
     "package:windows": "npm run build && electron-builder --win nsis --x64 --publish never",
     "test:play": "node scripts/play-check.mjs",
     "test:native": "node scripts/native-check.mjs",
@@ -32,10 +32,17 @@
     ],
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "deb"
       ],
       "category": "Game",
-      "executableName": "deep-dark-dungeons-hol"
+      "executableName": "deep-dark-dungeons-hol",
+      "desktop": {
+        "entry": {
+          "Name": "Deep Dark Dungeons - HoL"
+        }
+      },
+      "maintainer": "Bruce A. Moser <bruceamoser@users.noreply.github.com>"
     },
     "win": {
       "target": [
@@ -65,6 +72,24 @@
       "createDesktopShortcut": true,
       "deleteAppDataOnUninstall": false,
       "artifactName": "Deep-Dark-Dungeons-HoL-Setup-${version}-${arch}.${ext}"
+    },
+    "deb": {
+      "afterInstall": "desktop/deb-after-install.sh",
+      "depends": [
+        "libgtk-3-0 | libgtk-3-0t64",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0 | libatspi2.0-0t64",
+        "libuuid1",
+        "libsecret-1-0",
+        "libgbm1",
+        "libasound2 | libasound2t64",
+        "pkexec"
+      ],
+      "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}"
     }
   },
   "dependencies": {

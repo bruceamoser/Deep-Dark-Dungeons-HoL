@@ -20,7 +20,41 @@ export function characterSheet({
     filter = "all",
     query = "",
     selection = null,
+    selectedSlot = null,
     view;
+  const gearOperation = (item) => {
+    const wearable =
+      /item-ordinary-(light|medium|heavy)-armor/.test(item.catalogId) ||
+      (item.slot && !item.hands);
+    return wearable
+      ? item.worn
+        ? "remove"
+        : "wear"
+      : item.hands
+        ? item.held
+          ? "stow"
+          : "ready"
+        : null;
+  };
+  const slotMatches = (item) =>
+    !selectedSlot ||
+    slotOf(item) === selectedSlot ||
+    (item.slot === "ring" && selectedSlot.startsWith("ring-")) ||
+    (selectedSlot === "off" && item.hands === 2);
+  const changeGear = (item, operation, ringSlot = selectedSlot) => {
+    const scroll = root.querySelector(".sheet-content")?.scrollTop ?? 0;
+    game.equip(
+      index,
+      item.instanceId,
+      operation,
+      item.slot === "ring" ? ringSlot : null,
+    );
+    if (game.pendingProvocation || game.pendingDefense) return;
+    selection = item.instanceId;
+    view.update(game.party[index]);
+    draw();
+    root.querySelector(".sheet-content").scrollTop = scroll;
+  };
   const name = (id) => C.choices.find((c) => c.id === id)?.name ?? id;
   const shell = () => {
     const h = game.party[index],
@@ -51,6 +85,7 @@ export function characterSheet({
           view?.dispose();
           index = +b.dataset.companion;
           selection = null;
+          selectedSlot = null;
           shell();
         }),
     );
@@ -86,11 +121,12 @@ export function characterSheet({
           i.catalogId !== "item-travel-clothes",
       ) ?? (slot === "off" ? items.find((i) => i.held && i.hands === 2) : null),
       g,
+      slot,
     ]);
     root.querySelector(".gear-slots").innerHTML = slots
       .map(
-        ([label, i, g]) =>
-          `<button class="gear-slot ${i ? "filled" : ""} ${i?.rarity ?? ""}" data-slot="${esc(i?.instanceId ?? "")}" title="${label}: ${esc(i?.definition.name ?? "Empty")}">${icon(i ? itemIcon(i) : g)}<small>${label}</small></button>`,
+        ([label, i, g, slot]) =>
+          `<button class="gear-slot ${i ? "filled" : ""} ${selectedSlot === slot ? "chosen" : ""} ${i?.rarity ?? ""}" data-slot="${esc(i?.instanceId ?? "")}" data-slot-kind="${slot}" aria-label="${label}: ${esc(i?.definition.name ?? "Empty · choose equipment")}" title="${label}: ${esc(i?.definition.name ?? "Empty · choose equipment")}">${icon(i ? itemIcon(i) : g)}<small>${label}</small></button>`,
       )
       .join("");
     root.querySelector(".attribute-grid").innerHTML = Object.entries(
@@ -106,6 +142,8 @@ export function characterSheet({
         (b.onclick = () => {
           tab = "equipment";
           filter = "all";
+          query = "";
+          selectedSlot = b.dataset.slotKind;
           selection = b.dataset.slot || null;
           draw();
         }),
@@ -119,7 +157,7 @@ export function characterSheet({
       if (!items.some((i) => i.instanceId === selection))
         selection =
           items.find((i) => i.held)?.instanceId ?? items[0]?.instanceId;
-      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">PREPARE FOR THE DEPTHS</span><h3>Inventory</h3></div><div class="pack-weight ${p.inventory.encumbrance ? "overweight" : ""}">${icon("pack")}<b>${p.inventory.bulk}</b> / ${p.inventory.capacity}<small>BULK</small></div></div><div class="pack-toolbar"><div class="filter-tabs">${[
+      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">PREPARE FOR THE DEPTHS</span><h3>Inventory</h3></div><div class="pack-weight ${p.inventory.encumbrance ? "overweight" : ""}">${icon("pack")}<b>${p.inventory.bulk}</b> / ${p.inventory.capacity}<small>BULK</small></div></div><div class="torch-controls"><span>☀ <b>${h.torch?.held ? (h.torch.lit ? "Torch burning" : "Torch doused in light") : "Torch stowed"}</b> · ${game.freeHands(h)} free hand${game.freeHands(h) === 1 ? "" : "s"}</span><button id="sheet-torch" ${game.torchReason(index) ? "disabled" : ""} title="${esc(game.torchReason(index))}">${h.torch?.held ? "Stow torch" : "Ready torch"}</button></div><div class="pack-toolbar"><div class="filter-tabs">${[
         ["all", "All"],
         ["weapons", "Weapons"],
         ["armor", "Armor"],
@@ -132,10 +170,17 @@ export function characterSheet({
         )
         .join(
           "",
-        )}</div><input id="pack-search" type="search" placeholder="Search pack…" aria-label="Search inventory" value="${esc(query)}"></div><div class="inventory-workspace"><div class="inventory-grid equipment-list"></div><aside class="item-inspector"></aside></div><div class="pack-note">${p.inventory.encumbrance ? `Overburdened · Speed reduced by ${p.inventory.encumbrance}.` : "Everything you need. Nothing you can’t carry."}</div>`;
+        )}</div><input id="pack-search" type="search" placeholder="Search pack…" aria-label="Search inventory" value="${esc(query)}"></div><p class="equipment-help">Use <b>Equip / Ready</b> on any item. <b>Unequip / Stow</b> returns it to your backpack. Click a slot beside your hero to find matching gear.</p>${selectedSlot ? `<div class="slot-filter"><span>Choosing equipment · <b>${esc(EQUIPMENT_SLOTS.find(([id]) => id === selectedSlot)?.[1])}</b></span><button id="clear-slot">Show all slots</button></div>` : ""}<div class="inventory-workspace"><div class="inventory-grid equipment-list"></div><aside class="item-inspector"></aside></div><div class="pack-note">${p.inventory.encumbrance ? `Overburdened · Speed reduced by ${p.inventory.encumbrance}.` : "Unequipping keeps the item. Replaced gear goes back into your backpack."}</div>`;
+      root.querySelector("#sheet-torch").onclick = () =>
+        attempt(() => {
+          game.toggleTorch(index);
+          view.update(h);
+          draw();
+        });
       const drawItems = () => {
         const list = items.filter(
           (i) =>
+            slotMatches(i) &&
             (filter === "all" ||
               (filter === "weapons" && /weapon|shield/.test(i.catalogId)) ||
               (filter === "armor" && /armor|clothes/.test(i.catalogId)) ||
@@ -144,13 +189,44 @@ export function characterSheet({
                 !/weapon|shield|armor|clothes/.test(i.catalogId))) &&
             i.definition.name.toLowerCase().includes(query.toLowerCase()),
         );
+        if (!list.some((i) => i.instanceId === selection))
+          selection = list[0]?.instanceId;
         root.querySelector(".inventory-grid").innerHTML =
-          list
-            .map(
-              (i) =>
-                `<button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.quantity > 1 ? "×" + i.quantity : ""}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>`,
-            )
-            .join("") || '<p class="empty-state">No matching equipment.</p>';
+          [true, false]
+            .map((equipped) => {
+              const group = list.filter(
+                (i) => !!(i.held || i.worn) === equipped,
+              );
+              if (!group.length) return "";
+              return (
+                `<h4 class="pack-group">${equipped ? "Readied & worn" : "Backpack"}<small>${group.length} items</small></h4>` +
+                group
+                  .map((i) => {
+                    const operation = gearOperation(i),
+                      reason = operation
+                        ? game.gearReason(index, i.instanceId, operation)
+                        : "";
+                    const label = {
+                      ready: "Ready",
+                      stow: "Stow",
+                      wear: "Equip",
+                      remove: "Unequip",
+                    }[operation];
+                    const plan = operation
+                      ? game.gearPlan(
+                          index,
+                          i.instanceId,
+                          operation,
+                          selectedSlot,
+                        )
+                      : null;
+                    return `<div class="inventory-card"><button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.quantity > 1 ? "×" + i.quantity : "BACKPACK"}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>${operation ? `<button class="quick-equip" data-quick-gear="${esc(i.instanceId)}" data-operation="${operation}" aria-label="${label} ${esc(i.definition.name)}" title="${esc(reason || (plan.stow.length ? "Returns replaced gear to your backpack." : ""))}" ${reason ? "disabled" : ""}>${icon(equipped ? "pack" : "hand")}${label}${game.mode === "combat" ? `<small>${plan.cost} M</small>` : ""}</button>` : '<span class="supply-label">Select to use or inspect</span>'}${reason ? `<small class="quick-gear-reason">${esc(reason)}</small>` : ""}</div>`;
+                  })
+                  .join("")
+              );
+            })
+            .join("") ||
+          '<p class="empty-state">No matching equipment in this hero’s pack.</p>';
         root.querySelectorAll("[data-item]").forEach(
           (b) =>
             (b.onclick = () => {
@@ -160,6 +236,20 @@ export function characterSheet({
             }),
         );
       };
+      root.querySelector("#clear-slot")?.addEventListener("click", () => {
+        selectedSlot = null;
+        draw();
+      });
+      root
+        .querySelector(".inventory-grid")
+        .addEventListener("click", (event) => {
+          const button = event.target.closest("[data-quick-gear]");
+          if (!button || button.disabled) return;
+          const item = items.find(
+            (i) => i.instanceId === button.dataset.quickGear,
+          );
+          attempt(() => changeGear(item, button.dataset.operation));
+        });
       const inspect = () => {
         const i = items.find((i) => i.instanceId === selection),
           host = root.querySelector(".item-inspector");
@@ -200,6 +290,12 @@ export function characterSheet({
             "beforeend",
             '<label class="creator-field"><span>Ring slot</span><select id="ring-slot"><option value="ring-left">Left ring</option><option value="ring-right">Right ring</option></select></label>',
           );
+        if (host.querySelector("#ring-slot"))
+          host.querySelector("#ring-slot").value = selectedSlot?.startsWith(
+            "ring-",
+          )
+            ? selectedSlot
+            : (plan.slot ?? "ring-left");
         if (
           h.treasure?.some((t) => t.instanceId === i.instanceId) &&
           game.mode !== "combat"
@@ -232,9 +328,7 @@ export function characterSheet({
             });
         }
         if (game.R.HEALING_POTION_IDS.includes(i.catalogId)) {
-          const free =
-            2 -
-            items.filter((i) => i.held).reduce((n, i) => n + (i.hands ?? 0), 0);
+          const free = game.freeHands(h);
           host.insertAdjacentHTML(
             "beforeend",
             `<label class="creator-field"><span>Give to</span><select id="potion-recipient">${game.party.map((p) => `<option value="${p.id}" ${p === h ? "selected" : ""}>${esc(p.name)} · ${p.survival.hp}/${p.survival.maxHp} HP</option>`).join("")}</select></label><button id="drink-potion" class="primary equip-button" ${free < 1 || h.supplies[i.instanceId] === 0 ? "disabled" : ""}>${icon("potion")} Use potion</button><p class="cost-note">${free < 1 ? "Stow equipment to free one hand." : game.mode === "combat" ? "Maneuver · An active ally also spends a Reaction." : "Restores its printed HP. Check d4 after use."}</p>`,
@@ -251,14 +345,11 @@ export function characterSheet({
         }
         host.querySelector("[data-gear]")?.addEventListener("click", () =>
           attempt(() => {
-            game.equip(
-              index,
-              i.instanceId,
+            changeGear(
+              i,
               operation,
-              host.querySelector("#ring-slot")?.value,
+              host.querySelector("#ring-slot")?.value ?? selectedSlot,
             );
-            view.update(game.party[index]);
-            draw();
           }),
         );
       };
@@ -266,12 +357,14 @@ export function characterSheet({
         (b) =>
           (b.onclick = () => {
             filter = b.dataset.filter;
+            selectedSlot = null;
             draw();
           }),
       );
       root.querySelector("#pack-search").oninput = (e) => {
         query = e.target.value;
         drawItems();
+        inspect();
       };
       drawItems();
       inspect();
@@ -281,15 +374,31 @@ export function characterSheet({
           c.kind === "ability" &&
           (p.state.abilities.includes(c.id) || c.universal),
       );
-      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">YOUR COMBAT REPERTOIRE</span><h3>Abilities & favorites</h3></div><span class="favorite-count">${icon("star")} ${(h.favorites ?? []).length} / 8</span></div><p class="section-intro">Pin actions to your combat bar. Select a card for its cost, range and full rules.</p><div class="ability-library">${cards
+      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">YOUR COMBAT REPERTOIRE</span><h3>Abilities & favorites</h3></div><span class="favorite-count">${icon("star")} ${(h.favorites ?? []).length} / 8</span></div><p class="section-intro">Pin actions to your combat bar. Select a card for its cost, range and full rules.</p><h3 class="subheading">Ancestry gifts</h3><div class="ancestry-gifts">${game
+        .traits(h)
+        .map(
+          (t) =>
+            `<article class="trait-choice"><strong>${esc(name(t.id))}</strong><p>${esc(t.text)}</p>${t.daily || t.debt ? `<button data-prepare-trait="${t.id}" aria-pressed="${h.preparedTraits?.includes(t.id) ?? false}" ${h.traitUses?.[t.id] === game.clock().day ? "disabled" : ""}>${h.traitUses?.[t.id] === game.clock().day ? "Used today" : h.preparedTraits?.includes(t.id) ? "Prepared · click to cancel" : "Prepare for next eligible roll"}</button>` : "<small>PASSIVE · AUTOMATIC</small>"}</article>`,
+        )
+        .join(
+          "",
+        )}</div><h3 class="subheading">Learned actions</h3><div class="ability-library">${cards
         .sort((a, b) => Number(!!ABILITIES[b.id]) - Number(!!ABILITIES[a.id]))
         .map((c) => {
           const a = ABILITIES[c.id],
             f = h.favorites?.includes(c.id),
             status = coverage(c.id);
-          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules">${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
+          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule"><b>Dungeon version</b> ${esc(status.reason)}</p><details class="choice-reference"><summary>Original HoL rules</summary>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}</details>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
         })
         .join("")}</div>`;
+      root.querySelectorAll("[data-prepare-trait]").forEach(
+        (b) =>
+          (b.onclick = () =>
+            attempt(() => {
+              game.prepareTrait(index, b.dataset.prepareTrait);
+              draw();
+            })),
+      );
       root.querySelectorAll("[data-favorite]").forEach(
         (b) =>
           (b.onclick = () =>
@@ -320,7 +429,7 @@ export function characterSheet({
                     .treatmentOptions(h, w)
                     .map(
                       (o) =>
-                        `<button data-treat="${w.id}" data-healer="${o.healer}" data-treatment="${o.card.id}" ${w.treatment?.attempts.some((a) => a.dayKey === `day-${Math.floor((game.campaign.hours ?? 0) / 24) + 1}`) ? "disabled" : ""}>${esc(game.party[o.healer].name)} · ${esc(name(o.card.catalogId))} · 1 hour</button>`,
+                        `<button data-treat="${w.id}" data-healer="${o.healer}" data-treatment="${o.card.id}" ${w.treatment?.attempts.some((a) => a.dayKey === `day-${game.clock().day}`) ? "disabled" : ""}>${esc(game.party[o.healer].name)} · ${esc(name(o.card.catalogId))} · 1 hour</button>`,
                     )
                     .join("")
                 : ""
@@ -328,7 +437,40 @@ export function characterSheet({
         )
         .join(
           "",
-        )}${game.mode === "town" && h.wounds.length ? `<p class="cost-note">Campaign day ${Math.floor((game.campaign.hours ?? 0) / 24) + 1} · One attempt per wound per day across all healers.</p><button id="next-care-day">Wait until next treatment day</button>` : ""}`;
+        )}${game.mode === "town" && h.wounds.length ? `<p class="cost-note">Campaign day ${game.clock().day} · One attempt per wound per day across all healers.</p><button id="next-care-day">Wait until next treatment day</button>` : ""}`;
+      const retired = game.retiredPurchases(h);
+      if (retired.length)
+        content.insertAdjacentHTML(
+          "beforeend",
+          `<h3 class="subheading">Retired training</h3><p class="section-intro">Replace these source purchases at no coin cost. Each replacement must satisfy its original purchase stage and DP cost. Acquired equipment, XP and injuries stay with your hero.</p>${retired.map((r, n) => `<article class="trait-choice"><strong>${esc(name(r.id))}</strong>${game.mode === "town" ? `<button data-retrain-open="${n}">Choose replacement</button><div data-retrain-options="${n}"></div>` : "<p>Return to Greyhaven to retrain.</p>"}</article>`).join("")}`,
+        );
+      root.querySelectorAll("[data-retrain-open]").forEach(
+        (b) =>
+          (b.onclick = () =>
+            attempt(() => {
+              const n = +b.dataset.retrainOpen,
+                receipt = retired[n],
+                options = game.retrainingOptions(index, receipt),
+                host = root.querySelector(`[data-retrain-options="${n}"]`);
+              host.innerHTML = options.length
+                ? `<select aria-label="Replacement ability">${options.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select><p class="cost-note"></p><button>Commit free retraining</button>`
+                : "<p>No compatible replacement at this stage. Your purchase and its original benefits remain preserved.</p>";
+              if (options.length) {
+                const select = host.querySelector("select");
+                const describe = () =>
+                  (host.querySelector("p").textContent = coverage(
+                    select.value,
+                  ).reason);
+                select.onchange = describe;
+                describe();
+                host.querySelector("button").onclick = () =>
+                  attempt(() => {
+                    game.retrain(index, receipt, select.value);
+                    draw();
+                  });
+              }
+            })),
+      );
       root.querySelectorAll("[data-treat]").forEach(
         (b) =>
           (b.onclick = () =>

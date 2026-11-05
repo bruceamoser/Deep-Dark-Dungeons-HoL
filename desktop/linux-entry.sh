@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-game_app_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+game_app_dir="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
 # AppImage mounts are read-only. Reuse only a trusted, installed sandbox helper.
 game_helper=""
-for candidate in "${CHROME_DEVEL_SANDBOX:-}" /opt/google/chrome/chrome-sandbox /usr/lib/chromium/chrome-sandbox /usr/lib/chromium-browser/chrome-sandbox; do
+for candidate in "$game_app_dir/chrome-sandbox" "${CHROME_DEVEL_SANDBOX:-}" /opt/google/chrome/chrome-sandbox /usr/lib/chromium/chrome-sandbox /usr/lib/chromium-browser/chrome-sandbox; do
   if [[ -n "$candidate" && -f "$candidate" && "$(stat -Lc '%u:%a' -- "$candidate")" == "0:4755" ]]; then
     game_helper="$candidate"
     break

@@ -1,3 +1,5 @@
+import { traitsOf } from "../core/ancestry-game.mjs";
+import { partyCanSee, naturallyLit, terrainVisible } from "../core/lighting.mjs";
 import { conditionVisuals } from "./conditions.mjs";
 import { CREATURE_MODELS } from "../core/creature-roster.mjs";
 import * as T from "three";
@@ -192,12 +194,13 @@ export class Scene {
   interactionAt(e) {
     this.groundAt(e);
     this.world.updateMatrixWorld(true);
+    this.entityGroup.updateMatrixWorld(true);
     const visible = (obj) => {
       for (let p = obj; p; p = p.parent) if (!p.visible) return false;
       return true;
     };
     const hit = this.ray
-      .intersectObject(this.world, true)
+      .intersectObjects([this.world, this.entityGroup], true)
       .find((h) => h.object.isMesh && visible(h.object));
     for (let obj = hit?.object; obj; obj = obj.parent)
       if (obj.userData.interactionId) return obj.userData.interactionId;
@@ -463,6 +466,7 @@ export class Scene {
         [r.x + r.w - 1.1, r.z + 0.1],
       ]) {
         this.prop("pillar", x, z, 3.4);
+        if (!naturallyLit(map, { x: r.cx, z: r.cz })) continue;
         this.prop("torch", x + 0.35, z + 0.25, 1.25);
         const light = new T.PointLight(0xffb05d, 30, 12, 2);
         light.position.set((x + 0.4) * TILE, 2.2, (z + 0.4) * TILE);
@@ -559,6 +563,11 @@ export class Scene {
       action: null,
       lock: 0,
     };
+    if (!isEnemy) {
+      entity.torchLight = new T.PointLight(0xffa346, 0, 5.8 * TILE, 2);
+      entity.torchLight.position.set(0, 1.65, 0);
+      group.add(entity.torchLight);
+    }
     this.entities.set(data.id, entity);
     this.animate(data.id, "Idle");
     return entity;
@@ -685,11 +694,9 @@ export class Scene {
     }
   }
   updateVisibility(party, seen) {
-    const alive = party.filter((h) => h.survival.status === "active");
-    const visible = (p) =>
-      alive.some((h) => distance(h, p) < 10 && lineOfSight(this.map, h, p));
+    const visible = (p) => partyCanSee(this.map, party, p);
     this.tiles.forEach((p, i) => {
-      const v = visible(p);
+      const v = terrainVisible(this.map, party, p);
       if (v) seen[key(p.x, p.z)] = true;
       const explored = seen[key(p.x, p.z)];
       const c = new T.Color(v ? 0xffffff : explored ? 0x444d55 : 0x020407);
@@ -703,6 +710,15 @@ export class Scene {
       p.obj.visible = !!seen[key(Math.round(p.x), Math.round(p.z))];
     for (const t of this.torches)
       t.light.visible = !!seen[key(Math.round(t.x), Math.round(t.z))];
+    for (const { obj, item } of this.interactables.values())
+      obj.visible =
+        visible(item) ||
+        (item.kind === "descent" &&
+          party.some(
+            (h) =>
+              h.survival.status === "active" &&
+              traitsOf(h).some((t) => t.stairs),
+          ));
     for (const e of this.entities.values())
       if (e.isEnemy)
         e.group.visible =
@@ -713,6 +729,17 @@ export class Scene {
     const t = this.clock.elapsedTime;
     for (const e of this.entities.values()) {
       e.mixer.update(dt);
+      if (e.torchLight) {
+        e.torchLight.intensity =
+          e.data.torch?.lit || e.data.lantern
+            ? 24 + Math.sin(t * 11) * 2 + Math.sin(t * 17)
+            : 0;
+        const flame = e.model.getObjectByName("Torch flame");
+        if (flame) {
+          flame.visible = !!e.data.torch?.lit;
+          flame.scale.y = 1 + Math.sin(t * 13) * 0.12;
+        }
+      }
       e.statusVisuals.sync(
         e.data.conditions ?? [],
         e.isEnemy ? e.data.hp > 0 : e.data.survival.status !== "dead",

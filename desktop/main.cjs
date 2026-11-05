@@ -6,7 +6,13 @@ const {
   ipcMain,
   shell,
 } = require("electron");
-const { autoUpdater } = require("electron-updater");
+const electronUpdater = require("electron-updater");
+// Multi-target Linux builds may contain a package-type marker. APPIMAGE is
+// authoritative when running the portable release; Debian installs use dpkg.
+const autoUpdater = process.env.APPIMAGE
+  ? new electronUpdater.AppImageUpdater()
+  : electronUpdater.autoUpdater;
+const fs = require("node:fs");
 const { createUpdates } = require("./updates.cjs");
 const path = require("node:path");
 const { createSaveStorage } = require("./save-storage.cjs");
@@ -93,7 +99,12 @@ app.whenReady().then(async () => {
     supported:
       app.isPackaged &&
       (process.platform === "win32" ||
-        (process.platform === "linux" && !!process.env.APPIMAGE)),
+        (process.platform === "linux" &&
+          (!!process.env.APPIMAGE ||
+            (process.execPath.startsWith("/opt/deep-dark-dungeons-hol/") &&
+              fs.existsSync(
+                path.join(process.resourcesPath, "package-type"),
+              ))))),
     publish: (status) => {
       if (!win.isDestroyed()) win.webContents.send("updates:status", status);
     },

@@ -1,3 +1,5 @@
+import { DUNGEON_TRAITS } from "../core/ancestry-game.mjs";
+import { CRAFT_MATERIALS } from "../core/crafting.mjs";
 import { originGrant, originPicker } from "./origins.mjs";
 import {
   disciplineIcon,
@@ -63,7 +65,7 @@ export function creationScreen({
   const field = (label, html) =>
     `<label class="creator-field"><span>${label}</span>${html}</label>`;
   const info = (c) =>
-    `<details class="choice-reference" data-rules="${esc(c?.id)}"><summary>Read rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
+    `<p class="dungeon-rule"><b>${DUNGEON_TRAITS[c?.id]?.decision === "keep" ? "Dungeon rule" : "Dungeon version"}</b> ${esc(DUNGEON_TRAITS[c?.id]?.text ?? (c?.kind === "ability" ? coverage(c.id).reason : ""))}</p><details class="choice-reference" data-rules="${esc(c?.id)}"><summary>Original HoL rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
   const changed = ({ preserveScroll = true } = {}) => {
     const scroll = preserveScroll
       ? [".creation-content", ".purchase-scroll"].map((selector) => ({
@@ -434,7 +436,8 @@ export function creationScreen({
             .filter(
               ({ c, e }) =>
                 showAll ||
-                e.eligible ||
+                (e.eligible &&
+                  (!isAbility || coverage(c.id).status === "included")) ||
                 (c.purchasePolicy === "new-recipe" &&
                   e.reasons.every((r) => r.code === "recipe")),
             )
@@ -447,13 +450,11 @@ export function creationScreen({
             records
               .map(({ c, e }) => {
                 const unsupported =
-                  development &&
-                  isAbility &&
-                  coverage(c.id).status !== "included";
+                  isAbility && coverage(c.id).status !== "included";
                 const requirements = (c.requirements ?? []).filter(
                   (r) => r.kind === "discipline",
                 );
-                return `<article class="purchase-card ${!e.eligible || unsupported ? "unavailable" : ""}" data-choice="${c.id}"><div class="purchase-card-heading">${isAbility ? abilityType(c) : disciplineIcon(c.id)}<div><h3>${esc(c.name)}</h3><small>${isAbility ? requirements.map((r) => `${esc(name(r.id))} ${r.rank}`).join(" · ") || "General ability" : `Rank ${state.ranks[c.id] ?? 0} → ${e.rank ?? "—"}`}</small></div></div><p class="purchase-description">${esc(c.reference?.flavor?.[0] ?? (isAbility ? "Read the full card below." : "Develop your training in " + c.name + "."))}</p>${isAbility ? `<div class="purchase-card-meta">${requirements.map((r) => `<span>${disciplineIcon(r.id)}${esc(name(r.id))} ${r.rank}</span>`).join("")}<span>Level ${c.minimumLevel}</span><span>${esc(coverage(c.id).status)}</span></div>${info(c)}` : ""}${
+                return `<article class="purchase-card ${!e.eligible || unsupported ? "unavailable" : ""}" data-choice="${c.id}"><div class="purchase-card-heading">${isAbility ? abilityType(c) : disciplineIcon(c.id)}<div><h3>${esc(c.name)}</h3><small>${isAbility ? requirements.map((r) => `${esc(name(r.id))} ${r.rank}`).join(" · ") || "General ability" : `Rank ${state.ranks[c.id] ?? 0} → ${e.rank ?? "—"}`}</small></div></div><p class="purchase-description">${esc((isAbility ? coverage(c.id).reason : c.reference?.flavor?.[0]) ?? (isAbility ? "Read the full card below." : "Develop your training in " + c.name + "."))}</p>${isAbility ? `<div class="purchase-card-meta">${requirements.map((r) => `<span>${disciplineIcon(r.id)}${esc(name(r.id))} ${r.rank}</span>`).join("")}<span>Level ${c.minimumLevel}</span><span>${esc(coverage(c.id).status)}</span></div>${info(c)}` : ""}${
                   c.purchasePolicy === "new-recipe"
                     ? `<div class="recipe-study">${[0, 1]
                         .map(
@@ -461,6 +462,7 @@ export function creationScreen({
                             `<select data-study="${c.id}" data-number="${n}">${options(
                               C.inventory.recipes.filter(
                                 (r) =>
+                                  CRAFT_MATERIALS[r.id] &&
                                   state.compatibleRecipes.includes(r.id) &&
                                   !state.recipes.includes(r.id),
                               ),
@@ -470,7 +472,7 @@ export function creationScreen({
                         )
                         .join("")}</div>`
                     : ""
-                }<div class="purchase-card-bottom"><small>${unsupported ? "Not available for dungeon training." : esc(e.reasons.map((r) => r.text).join(" "))}</small><button data-buy="${c.id}" ${unsupported || (!e.eligible && c.purchasePolicy !== "new-recipe") ? "disabled" : ""}>${e.cost ?? "—"} DP · ${isAbility ? "Learn" : "Purchase rank"}</button></div></article>`;
+                }<div class="purchase-card-bottom"><small>${unsupported ? esc(coverage(c.id).reason) : esc(e.reasons.map((r) => r.text).join(" "))}</small><button data-buy="${c.id}" ${unsupported || (!e.eligible && c.purchasePolicy !== "new-recipe") ? "disabled" : ""}>${e.cost ?? "—"} DP · ${isAbility ? "Learn" : "Purchase rank"}</button></div></article>`;
               })
               .join("") ||
             '<p class="empty-state">No matching purchases. Change the discipline filter or show unavailable choices.</p>';
@@ -486,6 +488,11 @@ export function creationScreen({
                     selection.recipeIds = [
                       ...overlay.querySelectorAll(`[data-study="${c.id}"]`),
                     ].map((s) => s.value);
+                  if (
+                    c.kind === "ability" &&
+                    coverage(c.id).status !== "included"
+                  )
+                    throw new Error(coverage(c.id).reason);
                   const check = R.purchaseEligibility(
                     c,
                     state,
@@ -595,7 +602,9 @@ export function creationScreen({
                         `<select data-acquire="${id}" data-key="recipes" data-recipe-index="${n}">${options(
                           C.inventory.recipes.filter(
                             (r) =>
-                              r.genericChoice && r.permissions.includes(id),
+                              r.genericChoice &&
+                              CRAFT_MATERIALS[r.id] &&
+                              r.permissions.includes(id),
                           ),
                           selected.recipes?.[n],
                         )}</select>`,
@@ -667,7 +676,7 @@ export function creationScreen({
       const unsupported = p.state.abilities.filter(
         (id) => coverage(id).status !== "included",
       );
-      host.innerHTML = `<div class="review-heading">${icon(p.valid ? "shield" : "book")}<h3>${p.valid ? "Ready to write a new chapter" : "A few choices remain"}</h3></div>${p.errors.length ? `<div class="creation-errors">${p.errors.map((e) => `<p>${esc(e.text ?? e.code)}</p>`).join("")}</div>` : '<p class="section-intro">This character passes the complete HoL creation and advancement validators.</p>'}<div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(draft.culture?.id))}</h3><p>${esc(name(draft.background?.id))}</p><p>${esc((p.summary?.languages ?? []).map((l) => l.name).join(", "))}</p></div><div><span class="eyebrow">RESOURCES</span><h3>${p.summary?.maximumHp ?? "—"} HP · ${p.summary?.gritGranted ?? "—"} Grit</h3><p>${p.development.spent} DP spent · ${p.development.expired} creation DP expired</p><p>${p.inventory.remainingCoins} coins · ${p.inventory.bulk} bulk</p></div></div><h3 class="subheading">Dungeon ability coverage</h3><p class="section-intro">${p.state.abilities.length - unsupported.length} learned cards currently supported. These source choices are retained but do not yet have dungeon actions:</p><div class="coverage-tags">${unsupported.map((id) => `<span>${esc(name(id))} <small>${esc(coverage(id).status)}</small></span>`).join("") || "<span>All learned cards supported.</span>"}</div>`;
+      host.innerHTML = `<div class="review-heading">${icon(p.valid ? "shield" : "book")}<h3>${p.valid ? "Ready to write a new chapter" : "A few choices remain"}</h3></div>${p.errors.length ? `<div class="creation-errors">${p.errors.map((e) => `<p>${esc(e.text ?? e.code)}</p>`).join("")}</div>` : '<p class="section-intro">This character passes the complete HoL creation and advancement validators.</p>'}<div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(draft.culture?.id))}</h3><p>${esc(name(draft.background?.id))}</p><p>${esc((p.summary?.languages ?? []).map((l) => l.name).join(", "))}</p></div><div><span class="eyebrow">RESOURCES</span><h3>${p.summary?.maximumHp ?? "—"} HP · ${p.summary?.gritGranted ?? "—"} Grit</h3><p>${p.development.spent} DP spent · ${p.development.expired} creation DP expired</p><p>${p.inventory.remainingCoins} coins · ${p.inventory.bulk} bulk</p></div></div><h3 class="subheading">Dungeon ability coverage</h3><p class="section-intro">${p.state.abilities.length - unsupported.length} learned cards currently supported. These source choices are retired from dungeon training; existing purchases can be retrained in town:</p><div class="coverage-tags">${unsupported.map((id) => `<span>${esc(name(id))} <small>${esc(coverage(id).status)}</small></span>`).join("") || "<span>All learned cards supported.</span>"}</div>`;
     }
     if (step !== 7) {
       const errors = development ? p.errors : R.creationStepErrors(p, step);

@@ -103,6 +103,21 @@ export function generate(seed, depth = 1) {
       opened: false,
     })),
   };
+  for (const tile of Object.values(tiles))
+    if (distance(tile, start) > 5) {
+      const room = rooms.find(
+        (r) =>
+          tile.x >= r.x &&
+          tile.x < r.x + r.w &&
+          tile.z >= r.z &&
+          tile.z < r.z + r.h,
+      );
+      const hash = ((tile.x * 31 + tile.z * 17 + seed) >>> 0) % 23;
+      if (hash === 0) {
+        if (room) tile.difficult = true;
+        else tile.low = true;
+      }
+    }
   // Admit scenery only if every remaining walkable cell stays connected.
   const candidates = Object.keys(map.obstacles);
   map.obstacles = {};

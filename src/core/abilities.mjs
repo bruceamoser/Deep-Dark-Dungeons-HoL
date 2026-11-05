@@ -1,3 +1,7 @@
+import { FIELD_ABILITIES } from "./field-abilities.mjs";
+import { gameDescription } from "./signatures.mjs";
+import { SIGNATURES } from "./signatures.mjs";
+import { CURATED_ATTACKS } from "./curated-attacks.mjs";
 // Explicit dungeon adapters. Source cards remain immutable under vendor/hol.
 const attack = (attribute, range, damage, type = "physical", extra = {}) => ({
   category: "main",
@@ -9,6 +13,49 @@ const attack = (attribute, range, damage, type = "physical", extra = {}) => ({
   ...extra,
 });
 export const ABILITIES = Object.freeze({
+  ...CURATED_ATTACKS,
+  ...SIGNATURES,
+  ...FIELD_ABILITIES,
+  "ability-sustain-the-failing": {
+    category: "main",
+    target: "ally",
+    range: 3,
+    attribute: "reason",
+    hpCost: 3,
+    freeHand: true,
+    healing: [5, 10, 15],
+    reduce: "poisoned",
+    reduction: [0, 0, 1],
+  },
+  "ability-bank-the-embers": {
+    category: "maneuver",
+    target: "ally",
+    range: 1,
+    reduce: "burning",
+    reduction: [2, 2, 2],
+    spell: true,
+  },
+  "ability-urgent-bandaging": {
+    category: "maneuver",
+    target: "ally",
+    range: 1,
+    attribute: "knowledge",
+    reduce: "bleeding",
+    reduction: [2, 3, 4],
+    freeHand: true,
+    cloth: true,
+  },
+  "ability-press-and-bind": {
+    category: "maneuver",
+    target: "ally",
+    range: 1,
+    reduce: "bleeding",
+    reduction: [1, 1, 1],
+    freeHand: true,
+    cloth: true,
+  },
+  "ability-lantern-in-the-palm": { category: "maneuver", target: "self" },
+  "ability-disengage": { category: "maneuver", target: "self" },
   "ability-basic-melee": attack("brawn", 1, [2, 3, 5], "physical", {
     weapon: "melee",
   }),
@@ -133,29 +180,14 @@ export const ABILITIES = Object.freeze({
   "ability-defend": { category: "maneuver", target: "self" },
   "ability-stabilize": { category: "maneuver", target: "ally", range: 1 },
 });
-export const CURATION = Object.freeze({
-  "ability-tell-a-worthy-story": {
-    status: "excluded",
-    reason:
-      "Open-ended storytelling has no encounter resolver in this dungeon game. Retained in the source sheet; unavailable for new dungeon training.",
-  },
-  "ability-borrow-a-voice": {
-    status: "review",
-    reason:
-      "Needs authored impersonation targets and dialogue checks before it can offer meaningful dungeon choices.",
-  },
-  "ability-forage-woodland": {
-    status: "adaptation-planned",
-    reason:
-      "Candidate for gathering from suitable underground biomes; no automatic conversion or woodland benefit underground.",
-  },
-  "ability-speak-with-the-hearth": {
-    status: "adaptation-planned",
-    reason:
-      "Candidate for information at authored hearths. Requires exploration content and a defined information reward.",
-  },
-});
 export const SUPPORT_ACTIONS = new Set([
+  "ability-opportunity-attack",
+  "ability-trail-workshop",
+  "ability-make-something-useful",
+  "ability-bottled-morning",
+  "ability-ordinary-recipe-study",
+  "ability-signature-intellect-predict-the-motion",
+  "ability-wake-the-iron-rune",
   "ability-treat-soft-tissue",
   "ability-treat-bone",
   "ability-treat-mental-trauma",
@@ -172,8 +204,8 @@ export function coverage(id) {
   if (ABILITIES[id])
     return {
       status: "included",
-      reason:
-        "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      decision: ABILITIES[id].adapted ? "replace" : "keep",
+      reason: gameDescription(ABILITIES[id]),
     };
   if (SUPPORT_ACTIONS.has(id))
     return {
@@ -183,6 +215,7 @@ export function coverage(id) {
     };
   if (
     [
+      "ability-quick-exit",
       "ability-conditioned-body",
       "ability-one-more-dawn",
       "ability-wear-light-armor",
@@ -195,10 +228,10 @@ export function coverage(id) {
       reason:
         "Applied through the pinned character/development or passive-defense calculator.",
     };
-  return (
-    CURATION[id] ?? {
-      status: "review",
-      reason: "Awaiting dungeon design review; source text is reference only.",
-    }
-  );
+  return {
+    status: "retired",
+    decision: "cut",
+    reason:
+      "Removed from dungeon training: this card depends on narrative adjudication or systems outside this game's tactical roster. Existing purchases can be retrained in town at no coin cost; original source rules remain available.",
+  };
 }

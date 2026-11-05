@@ -63,7 +63,7 @@ function fresh() {
 function fight(index = 0, type = null) {
   const g = fresh();
   g.selected = index;
-  g.map = { ...g.map, tiles: {}, obstacles: {}, chests: [] };
+  g.map = { ...g.map, tiles: {}, obstacles: {}, chests: [], lights:[{x:4,z:4,radius:9}] };
   for (let x = 0; x < 12; x++)
     for (let z = 0; z < 12; z++) g.map.tiles[key(x, z)] = { x, z };
   g.party.forEach((h, i) => Object.assign(h, { x: 3 + i, z: 6 }));

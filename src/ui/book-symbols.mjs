@@ -1,3 +1,4 @@
+import { ABILITIES } from "../core/abilities.mjs";
 import { esc } from "./icons.mjs";
 const disciplines = new Set([
   "arms",
@@ -27,8 +28,14 @@ export function disciplineIcon(id) {
 }
 export function abilityType(record) {
   const action =
+    (ABILITIES[record.id]
+      ? { main: "Main Action", maneuver: "Maneuver", reaction: "Reaction" }[
+          ABILITIES[record.id].category
+        ]
+      : null) ??
     record.reference?.rules?.details?.find((d) => d.label === "Action")
-      ?.value ?? "";
+      ?.value ??
+    "";
   const codes = [
     [/Main Action/i, "A"],
     [/Maneuver/i, "M"],
