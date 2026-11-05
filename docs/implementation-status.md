@@ -77,3 +77,9 @@ Added 58 procedurally selected source creatures, player/depth CV budgets, a guar
 Runs provides named independent campaigns, Save a separate copy, rename/delete, new company, resume, Save & exit run and desktop Save & quit. Slots retain repository, Hall, XP, gear, loot, treasury, market, return passage, combat budgets, pending reactions/wounds and in-progress movement. Legacy saves migrate without removing the original file. The current run autosaves; a copy stays unchanged until played. There is no fixed slot-count cap (browser builds remain subject to local-storage quota).
 
 Remaining production work includes full creature alternate-action coverage, opportunity attacks, most hero abilities/signatures, larger creature footprints, long-term encounter/economy/XP balance and bespoke ancestry/creature/gear art. These remain a playable development build, not final high-end art or complete HoL automation.
+
+## Origin grant visibility and creation continuity
+
+Culture/background names now open searchable game-styled choosers for all 18 cultures and 32 backgrounds. Each origin shows both discipline–ability pairs, discipline rank and book icon, A/M/R/P badge, ability description and full rules, dungeon support status and starting coins. Browsing/canceling does not change the draft; explicitly choosing a pair commits it. The Origins page retains a readable receipt for each selected pair.
+
+Early training visibly locks discipline purchasing until level 1, matching the existing pinned validator. Granted origin disciplines remain available at level 0 and ability purchases retain source prerequisites. Same-step edits preserve the creator and purchase-list scroll offsets, expanded source rules and equipment grip selections; deliberate step changes and starting blank reset the view. No source rules or grant/refund arithmetic changed.
