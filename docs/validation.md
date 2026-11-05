@@ -1,0 +1,29 @@
+# Validation — development preview 0.1
+
+## Automated rules and state checks
+
+`npm test`: **11 passed**. Includes 100 reproducible generated-floor connectivity cases with scenery obstacles; blocked-corner movement; all four published example characters passing full creation validation; immutable source hashes for 317 HoL inputs; all 280 wound entries; Boon/Bane caps and natural extremes; safe-breath Grit retention; combat action/movement budgets; save round-trips and malformed save rejection; validated replacement preserving position.
+
+## Rendered interaction checks
+
+`npm run test:play` against the local dev server passed:
+
+- Open the embedded Character Workshop, change a hero's name, recruit using full rules validation.
+- Click the actual 3D ground to move the hero in real time.
+- Introduce a deterministic nearby enemy fixture, then use the rendered interface to attack and end the turn.
+- Verify the attack's fixed damage/resistance and spent Main Action, opponent defense resolution, alternating side order and saved combat state.
+- No JavaScript page errors in the checked flow.
+
+`npm run test:visual` previously captured the town/dungeon and found no JavaScript or console errors. Screenshots were inspected; this establishes rendering, not final art-quality acceptance.
+
+The packaged Linux executable was launched and exercised with Playwright's Electron driver. Native scene rendering and disk saving passed. The final test runner uses an isolated user-data directory. Windows x64 ZIP packaging passed; **Windows execution remains untested**.
+
+`npm audit --omit=dev`: zero runtime dependency advisories at the time of checking. Build-tool dependencies still report moderate advisories; this is not a security certification.
+
+## Artcraft
+
+Initialize/tools-list handshakes passed for PhotoCraft 0.18.0, VectorCraft 0.19.0 and SolidCraft 0.29.0. After relocating the project, the probes passed again. VectorCraft successfully opened the seal SVG, saved its editable document and exported the PNG used by the game.
+
+## Limits
+
+No balance or complete-game acceptance is established. Wound consequences and most learned abilities are not automated in the dungeon runtime; the explicit implementation boundary is documented in `implementation-status.md`. No sustained performance or controller/accessibility certification was attempted. Review was by the implementing agent, not an independent reviewer.

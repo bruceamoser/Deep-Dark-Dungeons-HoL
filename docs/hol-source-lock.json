@@ -1,0 +1,1592 @@
+{
+  "repository": "https://github.com/bruceamoser/heroes-of-legend-foundry",
+  "commit": "137cbd9afaf00d5e1520f920c2aadba57d7ea3d2",
+  "bookCommit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+  "records": [
+    {
+      "source": "src/rules/ability-definitions.mjs",
+      "destination": "rules/ability-definitions.mjs",
+      "sha256": "49851830222fa617c2a6348623ea2143859ca333f597fa2fc14187c1ac4226b6"
+    },
+    {
+      "source": "src/rules/ability-roll-relevance.mjs",
+      "destination": "rules/ability-roll-relevance.mjs",
+      "sha256": "9db966b2ecd5de1d5ddbf9be0833bb117d37b0777d9d8fff4804ac0395091c51"
+    },
+    {
+      "source": "src/rules/ability-roll.mjs",
+      "destination": "rules/ability-roll.mjs",
+      "sha256": "4b370c1713a5d09ec7216f3f31bad4936906373b771f6cd090e29042c04a2114"
+    },
+    {
+      "source": "src/rules/acquisition.mjs",
+      "destination": "rules/acquisition.mjs",
+      "sha256": "5ef090410b1d8598f7aaae1e8ce8f872a2af09d0c3745b34ca2c5bc22707f20c"
+    },
+    {
+      "source": "src/rules/actions.mjs",
+      "destination": "rules/actions.mjs",
+      "sha256": "c990abaab80d418b4e175031c153c75832fb6a094075949bd060187360ab504b"
+    },
+    {
+      "source": "src/rules/advancement.mjs",
+      "destination": "rules/advancement.mjs",
+      "sha256": "dc0b39cf159184c7a76defc305cfa2baf0d0c84d776e28a8a54ab3cd6fb7042a"
+    },
+    {
+      "source": "src/rules/ancestry-token.mjs",
+      "destination": "rules/ancestry-token.mjs",
+      "sha256": "e0ee5a49d4a3665599d7f4aaa27a12ab8b53e35e5941b26e17b7720e58de6cbe"
+    },
+    {
+      "source": "src/rules/ancestry.mjs",
+      "destination": "rules/ancestry.mjs",
+      "sha256": "c2ee5b8dad602d7ad33c3f1816b40c0d31637af95359a2ba01187f20665383ee"
+    },
+    {
+      "source": "src/rules/attack-outcomes.mjs",
+      "destination": "rules/attack-outcomes.mjs",
+      "sha256": "c22634d4887bd8eb58afbc6af611be183160a524239fab57441a8762d7b03dd6"
+    },
+    {
+      "source": "src/rules/character-languages.mjs",
+      "destination": "rules/character-languages.mjs",
+      "sha256": "f267ca3eeecde2789d319406676d1fb90b644362fe0f7bca2089dae42536f6c8"
+    },
+    {
+      "source": "src/rules/character-token-merge.mjs",
+      "destination": "rules/character-token-merge.mjs",
+      "sha256": "2642dafbb5951ec2b42f9397d142fbca35eebccf2dc30714faf390c9ce42c83c"
+    },
+    {
+      "source": "src/rules/character.mjs",
+      "destination": "rules/character.mjs",
+      "sha256": "920822e2a4bf9534211d9838463f99ae32d003fb6c9256f92a27af99067517c3"
+    },
+    {
+      "source": "src/rules/choice-source.mjs",
+      "destination": "rules/choice-source.mjs",
+      "sha256": "5a34c45bbda6e401ebf55006f932a2663ec5fd3ba150bf7af3c33b5515c0d8cf"
+    },
+    {
+      "source": "src/rules/condition-turn.mjs",
+      "destination": "rules/condition-turn.mjs",
+      "sha256": "6aacf768da51384a42a1e12c555eea1aedc83876f993ad88f01d78c4d7768c35"
+    },
+    {
+      "source": "src/rules/conditions.mjs",
+      "destination": "rules/conditions.mjs",
+      "sha256": "ee9906fe0e7f68ace7edacdbbf744a68fcb6835b0b67f8d9b6bc1d4b79d13399"
+    },
+    {
+      "source": "src/rules/creation.mjs",
+      "destination": "rules/creation.mjs",
+      "sha256": "8a2c92004528ebcd373550049d0da73677422206ae7902506fc52f3ade8bbc09"
+    },
+    {
+      "source": "src/rules/creature-actions.mjs",
+      "destination": "rules/creature-actions.mjs",
+      "sha256": "55cd67d0e4829c7f86ebc391d19c1ff3699d65922a509d350aa4bcb516f8eb9d"
+    },
+    {
+      "source": "src/rules/creature-sheet-profile.mjs",
+      "destination": "rules/creature-sheet-profile.mjs",
+      "sha256": "b7682983140b1e7c6ae1e8e4dfe86b4971b97ebeb0dd8b32853f520558038161"
+    },
+    {
+      "source": "src/rules/damage.mjs",
+      "destination": "rules/damage.mjs",
+      "sha256": "85b3dd2f89678d069cf5ca436768c03dc8d0ca6ba25de02080c9a39a92b50b0b"
+    },
+    {
+      "source": "src/rules/debt-reroll.mjs",
+      "destination": "rules/debt-reroll.mjs",
+      "sha256": "034d25984bc0298cfeb4916d59474c7b1f3f4bcc8bc06b001b3432134715a701"
+    },
+    {
+      "source": "src/rules/defense-abilities.mjs",
+      "destination": "rules/defense-abilities.mjs",
+      "sha256": "081dc27936600e6b6306daf93fac7b2ac7860510c5aa1c5dfd594ce52a001201"
+    },
+    {
+      "source": "src/rules/defense-benefits.mjs",
+      "destination": "rules/defense-benefits.mjs",
+      "sha256": "db60a1db40b9df16f7383541b7be1745ddeb5b5c854f1e278670464355d21ded"
+    },
+    {
+      "source": "src/rules/defense-substitutions.mjs",
+      "destination": "rules/defense-substitutions.mjs",
+      "sha256": "b25d73fb3d0bc36f163ab43a421fb5801c08398f1492b518b94b3112936be956"
+    },
+    {
+      "source": "src/rules/development.mjs",
+      "destination": "rules/development.mjs",
+      "sha256": "f39458b84b7fab92287511ae29a959f5c217ccf63cbc9ddd906518839b0ebea6"
+    },
+    {
+      "source": "src/rules/draft-play.mjs",
+      "destination": "rules/draft-play.mjs",
+      "sha256": "1e3714a363f189c6a76cde4cc41a8ca6c026368a903fe8eab9136c964bb418cc"
+    },
+    {
+      "source": "src/rules/encounter.mjs",
+      "destination": "rules/encounter.mjs",
+      "sha256": "b353f830d0a0831176ef04d53b0e25bb62045151f45530b1bb14fbdd57430dd2"
+    },
+    {
+      "source": "src/rules/equipment-eligibility.mjs",
+      "destination": "rules/equipment-eligibility.mjs",
+      "sha256": "1431b752e0e03e06962d8d357ffe56f9a77ee33efdefd92862c1fd1f5e7d9138"
+    },
+    {
+      "source": "src/rules/equipment-identity.mjs",
+      "destination": "rules/equipment-identity.mjs",
+      "sha256": "4daee663eb271f7bfd1ccb498b4915014a809227228b3d0ac3a78a013f57fd7a"
+    },
+    {
+      "source": "src/rules/hands.mjs",
+      "destination": "rules/hands.mjs",
+      "sha256": "3bde440efbaf27b5fdd442848041f99b1021bd9869b048f926ffe3d4bcfe4530"
+    },
+    {
+      "source": "src/rules/identity.mjs",
+      "destination": "rules/identity.mjs",
+      "sha256": "cfbbab88262862c1ad1eaba1eff9d4d381e57c369a2b1161d135cdb556c638c6"
+    },
+    {
+      "source": "src/rules/inventory.mjs",
+      "destination": "rules/inventory.mjs",
+      "sha256": "9ce886ada8ff85162450c6db79e3a4819fce61c71dec053f78a8a49ab2a79fda"
+    },
+    {
+      "source": "src/rules/item-construction.mjs",
+      "destination": "rules/item-construction.mjs",
+      "sha256": "2af40fe4900341baacd53b6fc6b35b74bcc4153d98cec674a808d9f54f197e83"
+    },
+    {
+      "source": "src/rules/item-icons.mjs",
+      "destination": "rules/item-icons.mjs",
+      "sha256": "01a27ed120bda9af29caf43c810558fe37ecf58e6915fddefb89b7c644520d75"
+    },
+    {
+      "source": "src/rules/languages.mjs",
+      "destination": "rules/languages.mjs",
+      "sha256": "8169f5580b45b801182d964cd6c043236bc3def0a870a2d9764f149932d57dbf"
+    },
+    {
+      "source": "src/rules/movement-budget.mjs",
+      "destination": "rules/movement-budget.mjs",
+      "sha256": "81adf5f65020445cab944f0543deadea7622e77f6322db855361616a4f295aa6"
+    },
+    {
+      "source": "src/rules/movement-plan.mjs",
+      "destination": "rules/movement-plan.mjs",
+      "sha256": "26af3add755ee3ce829cbbae771c1e23f0261a99ea7b28c22db6c053e6b8d5d9"
+    },
+    {
+      "source": "src/rules/native-adjacency.mjs",
+      "destination": "rules/native-adjacency.mjs",
+      "sha256": "ec932d82a39d15b92512a9ce6674fe7c024f273fafaa4b8775ed91e54b91f255"
+    },
+    {
+      "source": "src/rules/native-character-state.mjs",
+      "destination": "rules/native-character-state.mjs",
+      "sha256": "eb9e195dcff472e22b41a3b3727e25fb15e8dc57e470876f57270ed62a195257"
+    },
+    {
+      "source": "src/rules/native-play-import.mjs",
+      "destination": "rules/native-play-import.mjs",
+      "sha256": "060b5386ed8c7daee03ee9c02fbc4869cdec17994a88534a4ca40d74cae56a32"
+    },
+    {
+      "source": "src/rules/numeric-creature-actions.mjs",
+      "destination": "rules/numeric-creature-actions.mjs",
+      "sha256": "3b2d072aa71551e5d9d0a6b4f1faa22f3be7c6a515fdb5642f904524d94b45f0"
+    },
+    {
+      "source": "src/rules/numeric-creature-manifest.mjs",
+      "destination": "rules/numeric-creature-manifest.mjs",
+      "sha256": "78b739bc0498c67545746114d5c0a8485ffb6725ddcc26d37da504203bf2aae9"
+    },
+    {
+      "source": "src/rules/one-dp-play.mjs",
+      "destination": "rules/one-dp-play.mjs",
+      "sha256": "a4a93b629d8edd5ca3298531239697511e05d5ee63a3aa6a2fd2b960695a79ce"
+    },
+    {
+      "source": "src/rules/outcome-effects.mjs",
+      "destination": "rules/outcome-effects.mjs",
+      "sha256": "04b7be4b8d73291ef4d44fcdd2db21e9ab831844bda35ed981477f8d53f045dd"
+    },
+    {
+      "source": "src/rules/passive-defenses.mjs",
+      "destination": "rules/passive-defenses.mjs",
+      "sha256": "081d44cc9cb23e2cf06e783a2941a27c598fa9dc33e2530db3c5310240b5623e"
+    },
+    {
+      "source": "src/rules/player-attacks.mjs",
+      "destination": "rules/player-attacks.mjs",
+      "sha256": "d56832c62db023e26b51ab4cf88fbb574f912d21f3c04f83d86cfce17b012092"
+    },
+    {
+      "source": "src/rules/portable-character.mjs",
+      "destination": "rules/portable-character.mjs",
+      "sha256": "fe9931de4c38f9bd5fa4a304c04b43607d0467827db17c0a73a51c40fb76d803"
+    },
+    {
+      "source": "src/rules/potion-operation.mjs",
+      "destination": "rules/potion-operation.mjs",
+      "sha256": "767f371d5e0b9cba41bd22ed23f0325ade3982cfb236a5360c30c1c49830ccde"
+    },
+    {
+      "source": "src/rules/potion-targets.mjs",
+      "destination": "rules/potion-targets.mjs",
+      "sha256": "a1221fd7b7c2600e4258251e609ba6b57fa3da047f16f8951d87a733a026a488"
+    },
+    {
+      "source": "src/rules/potions.mjs",
+      "destination": "rules/potions.mjs",
+      "sha256": "50ea07fee65e67b3b3fdabdff47874429353d8d7240f884eacbf2980e24cd758"
+    },
+    {
+      "source": "src/rules/profile-update.mjs",
+      "destination": "rules/profile-update.mjs",
+      "sha256": "5add85f8ed500b6a15698597b0dc0cd84d83b29bd461e0ac3e8ee7673304ac94"
+    },
+    {
+      "source": "src/rules/recovery.mjs",
+      "destination": "rules/recovery.mjs",
+      "sha256": "1884f4bf7cebb6e04c6d750455da4663bcbb5edc9de3f7c8cf51aa633222d3b4"
+    },
+    {
+      "source": "src/rules/resource-input.mjs",
+      "destination": "rules/resource-input.mjs",
+      "sha256": "ac246e2a72f857367c55335b46f2bb387c6976e30df462857818d82cbe14f761"
+    },
+    {
+      "source": "src/rules/roll-sources.mjs",
+      "destination": "rules/roll-sources.mjs",
+      "sha256": "3aba64e861d5fdbd977ed86334fca1c55ea71fee257943f3945cf24d66b248d3"
+    },
+    {
+      "source": "src/rules/roll-ui.mjs",
+      "destination": "rules/roll-ui.mjs",
+      "sha256": "d0dde6d14c4035c6eb89545fa6f63a56f29832c36df737d53f2699bd522b64c2"
+    },
+    {
+      "source": "src/rules/roll.mjs",
+      "destination": "rules/roll.mjs",
+      "sha256": "fb185c6c1d34f487c08e6e40d6cb00d33b8a380621ad7078cd498e5b8be4f449"
+    },
+    {
+      "source": "src/rules/rule-reference-view.mjs",
+      "destination": "rules/rule-reference-view.mjs",
+      "sha256": "67851d94017c4afc792ed49818cb2c08e0e4f0e6421577eaf32ee5da228af44c"
+    },
+    {
+      "source": "src/rules/signatures.mjs",
+      "destination": "rules/signatures.mjs",
+      "sha256": "997a8f561f8ee78bdb2a4207bb904426179f8c4ad463ce7427795550653406d7"
+    },
+    {
+      "source": "src/rules/situational-adjustment.mjs",
+      "destination": "rules/situational-adjustment.mjs",
+      "sha256": "635ebe211a54b54d72a68310941aef422de20b9dfe00dd01e78f929625556db4"
+    },
+    {
+      "source": "src/rules/summon-lifecycle.mjs",
+      "destination": "rules/summon-lifecycle.mjs",
+      "sha256": "fadecd4923b81ab15caeff9de38b1f83816e1aa4e1d133856bf76027c30ff70e"
+    },
+    {
+      "source": "src/rules/summon-profile.mjs",
+      "destination": "rules/summon-profile.mjs",
+      "sha256": "60daf2c9a1282242ac11626157dd775fd6d46d3d8d9076551f2fe8a936a286b3"
+    },
+    {
+      "source": "src/rules/survival.mjs",
+      "destination": "rules/survival.mjs",
+      "sha256": "2f39743f1db73340d9a11390f14932f757867353d298db57df2cd48d4858f773"
+    },
+    {
+      "source": "src/rules/treatment.mjs",
+      "destination": "rules/treatment.mjs",
+      "sha256": "f0082b997da9ef859af5dd0c7f31ae44b4bda665e23c704cd67d1d2db3108ec5"
+    },
+    {
+      "source": "src/rules/workshop-card-view.mjs",
+      "destination": "rules/workshop-card-view.mjs",
+      "sha256": "c4a68bced0c64d8a82c50c0e2f1faefd6bbf7db6d394c0fd7f3bd53346d813a4"
+    },
+    {
+      "source": "src/rules/workshop-character.mjs",
+      "destination": "rules/workshop-character.mjs",
+      "sha256": "26a1300c589eb70ff06065160fa1d0316a273205c5d5179b6f5651b626d512fc"
+    },
+    {
+      "source": "src/rules/workshop-crafting.mjs",
+      "destination": "rules/workshop-crafting.mjs",
+      "sha256": "7554d874ecc02c3186a094335e692309a7374e13f32be2b88969770b606b42f1"
+    },
+    {
+      "source": "src/rules/workshop-play.mjs",
+      "destination": "rules/workshop-play.mjs",
+      "sha256": "21fe53dbaed4bf8e8a2aecd29819982a2cc214bece8f18955016b3530ebf6f43"
+    },
+    {
+      "source": "src/rules/workshop-resources.mjs",
+      "destination": "rules/workshop-resources.mjs",
+      "sha256": "d1a7bd40e5afb17796cfd90ec2e24378e957ee8f045cc4a832439b38247fd5b8"
+    },
+    {
+      "source": "src/rules/workshop-vitals.mjs",
+      "destination": "rules/workshop-vitals.mjs",
+      "sha256": "cc0135a8a5bc82c09548a36f2812ecb927df8915129cf55a8f727cf367da87aa"
+    },
+    {
+      "source": "src/rules/wound-contributions.mjs",
+      "destination": "rules/wound-contributions.mjs",
+      "sha256": "c6fbbea766c99917fea5c96facfea1373224699188308ca60193226dfa1b4f75"
+    },
+    {
+      "source": "src/rules/wounds.mjs",
+      "destination": "rules/wounds.mjs",
+      "sha256": "c0dce45abab939718499b5f624321f6d181c9ebd44b871ec7f7350c740e009b0"
+    },
+    {
+      "source": "static/data/choices.json",
+      "destination": "data/choices.json",
+      "sha256": "fdaa751f89943eba4809c8c1b5417b109b3280b981f7dcfcad9073c57109d7aa"
+    },
+    {
+      "source": "static/data/creatures.json",
+      "destination": "data/creatures.json",
+      "sha256": "3904f347795b0eb2a2bdfc61df40e51f4d6c4347183f94543a62642c2c0b64ee"
+    },
+    {
+      "source": "static/data/inventory.json",
+      "destination": "data/inventory.json",
+      "sha256": "0f55cd9fb8eda0bb5152d9933b366bf7ba07cf2ae123c243108f659b969d3071"
+    },
+    {
+      "source": "static/data/wounds.json",
+      "destination": "data/wounds.json",
+      "sha256": "870ff61a8bd15924136b1733326912bd2193217069a3e017086fca370c850fbd"
+    },
+    {
+      "source": "static/fonts/Cinzel.ttf",
+      "destination": "fonts/Cinzel.ttf",
+      "sha256": "f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34"
+    },
+    {
+      "source": "static/fonts/EBGaramond.ttf",
+      "destination": "fonts/EBGaramond.ttf",
+      "sha256": "ef9512f92f6d579e5dc75af59a5a4b1b8b47d2eda89e00b954d44520e5369027"
+    },
+    {
+      "source": "static/fonts/cinzel-OFL.txt",
+      "destination": "fonts/cinzel-OFL.txt",
+      "sha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83"
+    },
+    {
+      "source": "static/fonts/ebgaramond-OFL.txt",
+      "destination": "fonts/ebgaramond-OFL.txt",
+      "sha256": "0985066662eb755ed3683ae5482a81a9195b49ce3f7e165cc2388b3dbece7dd7"
+    },
+    {
+      "source": "web/assets/armor.webp",
+      "destination": "assets/armor.webp",
+      "sha256": "81f2735aa8dfcc6f3f7e69f257b1c80e2001e237a7016838b2d6f2f2a2a06d68"
+    },
+    {
+      "source": "web/assets/arms.webp",
+      "destination": "assets/arms.webp",
+      "sha256": "6d38fbd7dbadd60601bb1a70932c3c2cce4b7b135c72593958dcbaa061ccd64e"
+    },
+    {
+      "source": "web/assets/athletics.webp",
+      "destination": "assets/athletics.webp",
+      "sha256": "a007de9f0b63d1a99d3bc05a3dbff8af4a970df8aea799a43c28d2a0a9a0434a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-adder.webp",
+      "destination": "assets/bestiary/creature-adder.webp",
+      "sha256": "2d6399dae2dda97076931324e6f901df47dd3bdaed3ca4e4c6153bccd7fdebf7"
+    },
+    {
+      "source": "web/assets/bestiary/creature-air-elemental.webp",
+      "destination": "assets/bestiary/creature-air-elemental.webp",
+      "sha256": "9a26a0e9ed43360fa8e99f7ab529309702732e93ca3ccb687acdcd673a020b59"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ancestor-guardian.webp",
+      "destination": "assets/bestiary/creature-ancestor-guardian.webp",
+      "sha256": "e609541931cf1fca58fa9380d4e5adb839b396c55050e6910ffb7aaa3addee6e"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ancient-mammoth.webp",
+      "destination": "assets/bestiary/creature-ancient-mammoth.webp",
+      "sha256": "0fb7815f97ae08f3ca49663ed96e667dda99f7ebd4be5c6768f7b1d8f78b3abe"
+    },
+    {
+      "source": "web/assets/bestiary/creature-animated-armor.webp",
+      "destination": "assets/bestiary/creature-animated-armor.webp",
+      "sha256": "214d7b80c078047502b44808a669ecfabf7bbad620b6039ab346e288f46363c0"
+    },
+    {
+      "source": "web/assets/bestiary/creature-animated-statue.webp",
+      "destination": "assets/bestiary/creature-animated-statue.webp",
+      "sha256": "6c4eae108f3966b63fbc430721299ddf9c0e8d438c53a8cc3ab9ee7280d619a6"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ash-demon.webp",
+      "destination": "assets/bestiary/creature-ash-demon.webp",
+      "sha256": "47217e793da1416aef203104e7033fa1015b8e207f3bcf928782a516dcdb504e"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ash-revenant.webp",
+      "destination": "assets/bestiary/creature-ash-revenant.webp",
+      "sha256": "20af4d6c0073ac66c0ae740969b0403fe2fc7b0dd75282b1267f4c9a3b9f9166"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bandit-bow.webp",
+      "destination": "assets/bestiary/creature-bandit-bow.webp",
+      "sha256": "cb57b5b7c64f35d095bb7443c74c3bf827a0b669eade782bcda42bf6096a5618"
+    },
+    {
+      "source": "web/assets/bestiary/creature-banshee.webp",
+      "destination": "assets/bestiary/creature-banshee.webp",
+      "sha256": "ff030ad98a83b906462116c3a0df4279b5c4ba6249b9e4279ad6972ced5203c9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-barrow-guard.webp",
+      "destination": "assets/bestiary/creature-barrow-guard.webp",
+      "sha256": "d195e0fed6f002e15446b62d0b5bea8b4095586ffbd82c4779d17039c60ef188"
+    },
+    {
+      "source": "web/assets/bestiary/creature-basilisk.webp",
+      "destination": "assets/bestiary/creature-basilisk.webp",
+      "sha256": "5fb2b752156b626f78a0973ec32915138c9f8f44c9f5eafeac9ce410a7e2d534"
+    },
+    {
+      "source": "web/assets/bestiary/creature-battle-chaplain.webp",
+      "destination": "assets/bestiary/creature-battle-chaplain.webp",
+      "sha256": "975e28c81f69def8778bd30808f1aa10037da2303712a804c45dbe6715ef3722"
+    },
+    {
+      "source": "web/assets/bestiary/creature-black-dragon.webp",
+      "destination": "assets/bestiary/creature-black-dragon.webp",
+      "sha256": "bdb1591fa271905cae09a103d2b325aedd4a12dd970d779e659c36a63c6a2973"
+    },
+    {
+      "source": "web/assets/bestiary/creature-black-pudding.webp",
+      "destination": "assets/bestiary/creature-black-pudding.webp",
+      "sha256": "4a55d4fad8f4f8a0645901841c25ab68c446ffa11a7f3b279a88eb8abbc59131"
+    },
+    {
+      "source": "web/assets/bestiary/creature-blood-bat-swarm.webp",
+      "destination": "assets/bestiary/creature-blood-bat-swarm.webp",
+      "sha256": "d399df61eddc0eb208b37f72e7c1bc387740de1433f1faf018aa358a6dce9b9a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-blood-courtier.webp",
+      "destination": "assets/bestiary/creature-blood-courtier.webp",
+      "sha256": "6b44299b18c09ed8e8128eb45e72e0773ff34cbc83006f7e4d93e971cf2018ab"
+    },
+    {
+      "source": "web/assets/bestiary/creature-blue-dragon.webp",
+      "destination": "assets/bestiary/creature-blue-dragon.webp",
+      "sha256": "f9372f4ca8c20a9bcd0ac8a09958999077189a0faa47f977fea9856e1958b7ac"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bone-archer.webp",
+      "destination": "assets/bestiary/creature-bone-archer.webp",
+      "sha256": "3f05b931f977831448a5023b1c6a08ba068b7f1f7716c92c335a131f5cc392a9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bone-colossus.webp",
+      "destination": "assets/bestiary/creature-bone-colossus.webp",
+      "sha256": "22de464085b64137f1b440c17a2a91685eaafa6fcf9bab5e59cbf351b2d86a6c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bone-sentry.webp",
+      "destination": "assets/bestiary/creature-bone-sentry.webp",
+      "sha256": "7ea34c173324063b9af2e84a802e496ac28fa753d325eab868b308cb5aa9211b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-briar-knight.webp",
+      "destination": "assets/bestiary/creature-briar-knight.webp",
+      "sha256": "8db2e1d33ddd58e67206d949b221da196e6cf11d4b40422177f73a324a658f01"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bridge-troll.webp",
+      "destination": "assets/bestiary/creature-bridge-troll.webp",
+      "sha256": "4786b779ff9eb1988a769895e378684365685e97925377a56b597be31ba71962"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bronze-dragon.webp",
+      "destination": "assets/bestiary/creature-bronze-dragon.webp",
+      "sha256": "28e53a826146818e6a4a005599c02b7010e7bc9df8f32f71decf92940a6fd0ef"
+    },
+    {
+      "source": "web/assets/bestiary/creature-brown-bear.webp",
+      "destination": "assets/bestiary/creature-brown-bear.webp",
+      "sha256": "338716a8c7059192a919719deaacd7025c6fc6252550873fcd290a6f368276e5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-bugbear-ambusher.webp",
+      "destination": "assets/bestiary/creature-bugbear-ambusher.webp",
+      "sha256": "c52c869080e5a0cbb84cc1ae09c90d7fcca95f2fa472224e95e38af82ea7f91a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-burrowing-maw.webp",
+      "destination": "assets/bestiary/creature-burrowing-maw.webp",
+      "sha256": "c53314a921fc601f717fce71def2ad28bc7c1edf1f9dc1f1b826eb37c6c4dc86"
+    },
+    {
+      "source": "web/assets/bestiary/creature-carrion-rat-swarm.webp",
+      "destination": "assets/bestiary/creature-carrion-rat-swarm.webp",
+      "sha256": "4acc4b7bfe35131a8416d6ae09663f8a37dba5af4dfcedabd6cc8c592742e133"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cave-bat.webp",
+      "destination": "assets/bestiary/creature-cave-bat.webp",
+      "sha256": "03aa96153cb57b7f1c14faed34310f9afb14089ed2b361e7131bf4a3781e474f"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cavern-lurker.webp",
+      "destination": "assets/bestiary/creature-cavern-lurker.webp",
+      "sha256": "7b86feab0b728fd101440a9775f6ae6afcafe76747ef9f1119cd8a795e111cdf"
+    },
+    {
+      "source": "web/assets/bestiary/creature-centaur-scout.webp",
+      "destination": "assets/bestiary/creature-centaur-scout.webp",
+      "sha256": "9b0b59f9ff3651017f900eb5ba4cb21b991817f7aea3c2eca471e6e3c0aa9998"
+    },
+    {
+      "source": "web/assets/bestiary/creature-chain-jailer.webp",
+      "destination": "assets/bestiary/creature-chain-jailer.webp",
+      "sha256": "82fb2a5129a0faa786c5b1b50ceff3d267ba09287c15932af97358864403e8bc"
+    },
+    {
+      "source": "web/assets/bestiary/creature-chimera.webp",
+      "destination": "assets/bestiary/creature-chimera.webp",
+      "sha256": "0d99627cdce0422a51e38830849ebe8009fc6e461c789ed8423c4d60bbb00d93"
+    },
+    {
+      "source": "web/assets/bestiary/creature-chorus-maw.webp",
+      "destination": "assets/bestiary/creature-chorus-maw.webp",
+      "sha256": "584e86574f66253eef97e041bff21d5a03aa3f240c49709f352e6e612f93eb31"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cinder-imp.webp",
+      "destination": "assets/bestiary/creature-cinder-imp.webp",
+      "sha256": "1ca235a3fb739dbada8ec18af1089eda38e92e18ef96a057de655421a1ad0a00"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cinder-strider.webp",
+      "destination": "assets/bestiary/creature-cinder-strider.webp",
+      "sha256": "728473b69964b3c21627e8159c253815afe6de20f9ef62daa0566de6c06fb1a9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-clay-golem.webp",
+      "destination": "assets/bestiary/creature-clay-golem.webp",
+      "sha256": "7fcf5622d671b6c7a784e0f7925baea18df842fafe57545e507e68f12608ca72"
+    },
+    {
+      "source": "web/assets/bestiary/creature-clay-helper.webp",
+      "destination": "assets/bestiary/creature-clay-helper.webp",
+      "sha256": "31c2d02666aee62df430c17076a9aace697767251fb6d6f4ab6731528c3d48a5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-clockwork-scout.webp",
+      "destination": "assets/bestiary/creature-clockwork-scout.webp",
+      "sha256": "924d7c5c195f97c59e0a48080c0e84b82c5ba6dc414da2cd2e8baa34a4b03910"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cloud-giant.webp",
+      "destination": "assets/bestiary/creature-cloud-giant.webp",
+      "sha256": "2983eee884112fc9f7fe97e037b2eb6226d5e867720de8d7933a6c65dd47a1da"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cockatrice.webp",
+      "destination": "assets/bestiary/creature-cockatrice.webp",
+      "sha256": "5d1c5391ddc12356dcd16cc1884134d3a16c9e40a62458d3037d5e7cc63ec82d"
+    },
+    {
+      "source": "web/assets/bestiary/creature-crypt-ghoul.webp",
+      "destination": "assets/bestiary/creature-crypt-ghoul.webp",
+      "sha256": "c804c934a411a27a115f3c38c7d1c8aebf77895aac45bbd2c7b4db53536312c1"
+    },
+    {
+      "source": "web/assets/bestiary/creature-crystal-ooze.webp",
+      "destination": "assets/bestiary/creature-crystal-ooze.webp",
+      "sha256": "fa12239e324cec742e10e670e85c4dd735c77d73587db27d5747b308a6d80cfd"
+    },
+    {
+      "source": "web/assets/bestiary/creature-cyclops.webp",
+      "destination": "assets/bestiary/creature-cyclops.webp",
+      "sha256": "ddd641b64f15e0ffa7db1f09706c4c378b26780eb3ce4a4cc450ce9c4cdbc24e"
+    },
+    {
+      "source": "web/assets/bestiary/creature-dawn-emissary.webp",
+      "destination": "assets/bestiary/creature-dawn-emissary.webp",
+      "sha256": "774cef05eb6c784718b4ddf1bc5707ac0f781a3ff927bf71d78c3e10ab9d9d0c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-death-knight.webp",
+      "destination": "assets/bestiary/creature-death-knight.webp",
+      "sha256": "e28ab617c7d7b7017ccaefea592c387b31aa81efef42fab1cfbd30991fdd77a7"
+    },
+    {
+      "source": "web/assets/bestiary/creature-deep-elf-webweaver.webp",
+      "destination": "assets/bestiary/creature-deep-elf-webweaver.webp",
+      "sha256": "6ae1a54c9b14201c1681685c65bf6bdf6252b2e2e9c204b261213419ef33328a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-dire-wolf.webp",
+      "destination": "assets/bestiary/creature-dire-wolf.webp",
+      "sha256": "a91f72904bd58909057cf7d611078a01975e8a449b48bf0061c51f9e8188e022"
+    },
+    {
+      "source": "web/assets/bestiary/creature-dryad.webp",
+      "destination": "assets/bestiary/creature-dryad.webp",
+      "sha256": "9500dc9a8f6c9ac95c691307c699b271baea97e20b1165d8d5c04474990dc824"
+    },
+    {
+      "source": "web/assets/bestiary/creature-earth-elemental.webp",
+      "destination": "assets/bestiary/creature-earth-elemental.webp",
+      "sha256": "d07db5e0ace11474b4fb141c28a57b8b81081deb245e8360fb4c3193dc8ed730"
+    },
+    {
+      "source": "web/assets/bestiary/creature-emberling.webp",
+      "destination": "assets/bestiary/creature-emberling.webp",
+      "sha256": "a1e8cc0a52908f3054158737a7e7e9ec24177f2772e72cdb46a4fac1a40791a4"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ettin.webp",
+      "destination": "assets/bestiary/creature-ettin.webp",
+      "sha256": "081557e424b96ad5ce5def6704ea3411669b934fd2b73a99d2bf14330d9a5e3b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-faceless-envoy.webp",
+      "destination": "assets/bestiary/creature-faceless-envoy.webp",
+      "sha256": "a5464a8a206cf7ede7486c3c44d21ac43a330a1a9bdda6a300874c791d2bb40e"
+    },
+    {
+      "source": "web/assets/bestiary/creature-fire-giant.webp",
+      "destination": "assets/bestiary/creature-fire-giant.webp",
+      "sha256": "6a229795b65a84ac268cc58dbf809ee60a044673558871d02230aa1f74952481"
+    },
+    {
+      "source": "web/assets/bestiary/creature-flesh-golem.webp",
+      "destination": "assets/bestiary/creature-flesh-golem.webp",
+      "sha256": "a380e43fa24956b36e3bb98c24d41f315419ba4c37e2b3f3867953012ded736b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-frost-giant.webp",
+      "destination": "assets/bestiary/creature-frost-giant.webp",
+      "sha256": "ed94f5f757303bd823f29797cf0a9ab3c56d0f360e9feefc31d5e9540fbc71e1"
+    },
+    {
+      "source": "web/assets/bestiary/creature-gargoyle.webp",
+      "destination": "assets/bestiary/creature-gargoyle.webp",
+      "sha256": "8548650c77c80c444d7e2897baf9c14f29c05887d2dfb9d90c5a477297289987"
+    },
+    {
+      "source": "web/assets/bestiary/creature-gate-archon.webp",
+      "destination": "assets/bestiary/creature-gate-archon.webp",
+      "sha256": "f7c5a258cc27296bf501190ec0535b587a57442f59f54301d42f820be5eba2f3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-gelatinous-cube.webp",
+      "destination": "assets/bestiary/creature-gelatinous-cube.webp",
+      "sha256": "587c2e46f44ec53db4b62b555b5e1e1c2e1fd5a16bc4e18a7527e2518e8d1f4c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ghast.webp",
+      "destination": "assets/bestiary/creature-ghast.webp",
+      "sha256": "c2dbaa845e19fcd172ae539e23310fe9156f0256a455567d51f3b29afe7f17f3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-boar.webp",
+      "destination": "assets/bestiary/creature-giant-boar.webp",
+      "sha256": "0bb51926357fa35c7ee424f41ba8f8c84d38c2c3a38421f688280e53135589ad"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-constrictor.webp",
+      "destination": "assets/bestiary/creature-giant-constrictor.webp",
+      "sha256": "05efe3a5e8f561ebff32dde3a6ad2a4eff11b6ab7240bebc2f62ebcf589f13d1"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-eagle.webp",
+      "destination": "assets/bestiary/creature-giant-eagle.webp",
+      "sha256": "d9e7ab2075afcee9a8325ce84cd0981f455b0277b12600db9c18a03f0da964fc"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-flytrap.webp",
+      "destination": "assets/bestiary/creature-giant-flytrap.webp",
+      "sha256": "39c4176ac879e4867815b7ff09440a9a8625ecd907972f6e37793713e18093a1"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-octopus.webp",
+      "destination": "assets/bestiary/creature-giant-octopus.webp",
+      "sha256": "01ffa711061555868b2e7444c48341e9ec32e09f9b3d1e449c1427e8caeed3c5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-rat.webp",
+      "destination": "assets/bestiary/creature-giant-rat.webp",
+      "sha256": "36c2e6f987fd7fcb2e4be36f7729685551c69a560115eba49509835a58658622"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-scorpion.webp",
+      "destination": "assets/bestiary/creature-giant-scorpion.webp",
+      "sha256": "e0a11d6c069f1e097b3e24e29981e00c60141e5fbb1955efb1f0834355fbd8c8"
+    },
+    {
+      "source": "web/assets/bestiary/creature-giant-spider.webp",
+      "destination": "assets/bestiary/creature-giant-spider.webp",
+      "sha256": "3f49bb54a73c61c3edab69c79105c571da82f7b456baa0a9491afa61c73a3265"
+    },
+    {
+      "source": "web/assets/bestiary/creature-glass-sentinel.webp",
+      "destination": "assets/bestiary/creature-glass-sentinel.webp",
+      "sha256": "bd00d277ba28c05f3f0ced7538fd72902f05516874444ed3f373a98881d6660c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-gnoll-bonecaller.webp",
+      "destination": "assets/bestiary/creature-gnoll-bonecaller.webp",
+      "sha256": "efe4d7ace2733121aed85978fee53f5e203a65ec5bfb498834ff553a0f7f9c87"
+    },
+    {
+      "source": "web/assets/bestiary/creature-gnoll-tracker.webp",
+      "destination": "assets/bestiary/creature-gnoll-tracker.webp",
+      "sha256": "e236ca415df412ffd72aaf1ffd1895b53e4089f0ec5ba6cf392770a8e62498b6"
+    },
+    {
+      "source": "web/assets/bestiary/creature-goblin-boss.webp",
+      "destination": "assets/bestiary/creature-goblin-boss.webp",
+      "sha256": "ec79d0676cadafa8ecf8f5a748e9a775247e47b4bab4d8ed240d5999e1c04b9f"
+    },
+    {
+      "source": "web/assets/bestiary/creature-goblin-firestarter.webp",
+      "destination": "assets/bestiary/creature-goblin-firestarter.webp",
+      "sha256": "3b5455fb2e049014fda3222caf4fac04fbceeabc54fa0091561eeb408c9847ed"
+    },
+    {
+      "source": "web/assets/bestiary/creature-goblin-rattlechanter.webp",
+      "destination": "assets/bestiary/creature-goblin-rattlechanter.webp",
+      "sha256": "5bcbb82434651a60cc60f98d9c7f2fab655351d747615d576bb8cebaad199522"
+    },
+    {
+      "source": "web/assets/bestiary/creature-goblin-scrapper.webp",
+      "destination": "assets/bestiary/creature-goblin-scrapper.webp",
+      "sha256": "dc3358805136489a5ae07408fdc811c97ce9906ff31f8410e6b098f78eac3490"
+    },
+    {
+      "source": "web/assets/bestiary/creature-goblin-smoke-slinger.webp",
+      "destination": "assets/bestiary/creature-goblin-smoke-slinger.webp",
+      "sha256": "3d344e58002742f56f2def93f13398c6c72c3ff01fc63785cbe705d404afc7d0"
+    },
+    {
+      "source": "web/assets/bestiary/creature-goblin-spearhand.webp",
+      "destination": "assets/bestiary/creature-goblin-spearhand.webp",
+      "sha256": "aab27d207034c8798e110e57e493ec89094a6f2816cb79e9d8a4ab16604c4601"
+    },
+    {
+      "source": "web/assets/bestiary/creature-gold-dragon.webp",
+      "destination": "assets/bestiary/creature-gold-dragon.webp",
+      "sha256": "6d7a17b5d30d3a1f5b42f2abc281257fcc555502dfee4d3459ecfe7823808671"
+    },
+    {
+      "source": "web/assets/bestiary/creature-grave-cultist.webp",
+      "destination": "assets/bestiary/creature-grave-cultist.webp",
+      "sha256": "0a52c66290c8a59b37f90251162d8b90d125032aef0d5cfbff78281acd153a44"
+    },
+    {
+      "source": "web/assets/bestiary/creature-grave-wisp.webp",
+      "destination": "assets/bestiary/creature-grave-wisp.webp",
+      "sha256": "ee8fd184f9ae8d01db17f7aa9e67dd050c316ea427e6eb5e6e70651200753055"
+    },
+    {
+      "source": "web/assets/bestiary/creature-great-cat.webp",
+      "destination": "assets/bestiary/creature-great-cat.webp",
+      "sha256": "a9c3204d0453455a1681f79561b829e4404d4f8aa12d2d784a23d2a881f54247"
+    },
+    {
+      "source": "web/assets/bestiary/creature-great-stag.webp",
+      "destination": "assets/bestiary/creature-great-stag.webp",
+      "sha256": "c3b51fd3fb34ee6d5184f61774f1bfa92466179cf9ca778e383463e1bf78e43a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-green-dragon.webp",
+      "destination": "assets/bestiary/creature-green-dragon.webp",
+      "sha256": "3304da57ed5a589f86011678ee1327ec2488d0f1246d55d461648ccf9f807770"
+    },
+    {
+      "source": "web/assets/bestiary/creature-green-hag.webp",
+      "destination": "assets/bestiary/creature-green-hag.webp",
+      "sha256": "1ba41524051a4e063a4dc0d8528228b054df6bf8cf76c493ace89134fd539ce8"
+    },
+    {
+      "source": "web/assets/bestiary/creature-griffin.webp",
+      "destination": "assets/bestiary/creature-griffin.webp",
+      "sha256": "5f9941d143c30409b67fd8be28648f99b2c8f25f020763212eb6f424c24c148f"
+    },
+    {
+      "source": "web/assets/bestiary/creature-harbor-siren.webp",
+      "destination": "assets/bestiary/creature-harbor-siren.webp",
+      "sha256": "170678e639cd0263bcb781c1f03bfdd2d87890c2c80f9e04cac76e3be440ab7a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-harpy.webp",
+      "destination": "assets/bestiary/creature-harpy.webp",
+      "sha256": "66537d368ed766506fc4b0a677dc4c29e7654ba93903d4f1c39677dc3490df96"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hearth-brownie.webp",
+      "destination": "assets/bestiary/creature-hearth-brownie.webp",
+      "sha256": "e68b8026277ecedfca913624771f9881a9fdca5ef3a16c6a1c359062598668a2"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hedge-sorcerer.webp",
+      "destination": "assets/bestiary/creature-hedge-sorcerer.webp",
+      "sha256": "8527d350e26c06e584a1a2d6bd9701be7a9dd0dba55cd48cbd8f89686870208b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hedge-sprite.webp",
+      "destination": "assets/bestiary/creature-hedge-sprite.webp",
+      "sha256": "ab6bf7160731c7544c817fe3e124cf9414ad40e9c6b851519e526a72f0c11dc3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hell-hound.webp",
+      "destination": "assets/bestiary/creature-hell-hound.webp",
+      "sha256": "5577609c05a41662eee028921e08d0326cc6cac96eacfa47a2cedd017f0a505b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hill-giant.webp",
+      "destination": "assets/bestiary/creature-hill-giant.webp",
+      "sha256": "a3e6aca371d83ff89ba057caf0a012a5611b79ea628869df68eea4006fe216d0"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hill-ogre.webp",
+      "destination": "assets/bestiary/creature-hill-ogre.webp",
+      "sha256": "d497ffb5d61a41d818eba9b17a02975436c3569659566e4699190e055de4e6c9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hobgoblin-longbow.webp",
+      "destination": "assets/bestiary/creature-hobgoblin-longbow.webp",
+      "sha256": "493c1cce981c4d0f77ed69db174f2d357d315cfc473a1e46933258a5e3981864"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hobgoblin-marshal.webp",
+      "destination": "assets/bestiary/creature-hobgoblin-marshal.webp",
+      "sha256": "272a811a40bb2038ede28f09bf12076b596e1e8af2f7e246c643a3d4056fb28e"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hobgoblin-shieldguard.webp",
+      "destination": "assets/bestiary/creature-hobgoblin-shieldguard.webp",
+      "sha256": "568428576cdf6cf2c2c16ce439bb591eb0263d66660b12891bc200e44cd6e7c9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hook-beak.webp",
+      "destination": "assets/bestiary/creature-hook-beak.webp",
+      "sha256": "16876db0cf759982aa1aa6884ab4588899ab2ed154c0424a87e2f3e1b4f16aaf"
+    },
+    {
+      "source": "web/assets/bestiary/creature-horned-devil.webp",
+      "destination": "assets/bestiary/creature-horned-devil.webp",
+      "sha256": "9d2bbfcd272547ee7388a967069f693695a1251e27aa66dbb938e882d9de8516"
+    },
+    {
+      "source": "web/assets/bestiary/creature-hydra.webp",
+      "destination": "assets/bestiary/creature-hydra.webp",
+      "sha256": "18127b7805e5f633ddffda92162a117bf161a2781071205b15834a7c83e6e368"
+    },
+    {
+      "source": "web/assets/bestiary/creature-icebound-warden.webp",
+      "destination": "assets/bestiary/creature-icebound-warden.webp",
+      "sha256": "445fed744b128b49a937ea8a3a05d12c2d37a12a0bac24d7b9b4ddc41a6003dd"
+    },
+    {
+      "source": "web/assets/bestiary/creature-iron-gatekeeper.webp",
+      "destination": "assets/bestiary/creature-iron-gatekeeper.webp",
+      "sha256": "193f62716a4035403d58cd9a045302ceb02dd94a5a9f7b3985355f82caec10bd"
+    },
+    {
+      "source": "web/assets/bestiary/creature-kobold-emberkeeper.webp",
+      "destination": "assets/bestiary/creature-kobold-emberkeeper.webp",
+      "sha256": "71f70bacaf708b327efe3ea6f31b35116e3cde68d62be839272ee262e90253af"
+    },
+    {
+      "source": "web/assets/bestiary/creature-kobold-trapkeeper.webp",
+      "destination": "assets/bestiary/creature-kobold-trapkeeper.webp",
+      "sha256": "ade3c911913f32d19fde7616401512063ad1a0142a1a6f83c50d81b2afaf1486"
+    },
+    {
+      "source": "web/assets/bestiary/creature-kobold-tunnel-scout.webp",
+      "destination": "assets/bestiary/creature-kobold-tunnel-scout.webp",
+      "sha256": "dc7ed712621dc510862eaf5ffa46104b10a7b9cf66135543f48239ffd9ac588a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-lantern-angel.webp",
+      "destination": "assets/bestiary/creature-lantern-angel.webp",
+      "sha256": "293a885360a9ce8057eb14ada1e803b597e69a6161ef1b4fbc5a80e804807ad2"
+    },
+    {
+      "source": "web/assets/bestiary/creature-lantern-spirit.webp",
+      "destination": "assets/bestiary/creature-lantern-spirit.webp",
+      "sha256": "fffc4df4c551abeed55bd75694cfb6d43cf0ec3877a60b57d129ee50f8b7d395"
+    },
+    {
+      "source": "web/assets/bestiary/creature-lizardfolk-reedguard.webp",
+      "destination": "assets/bestiary/creature-lizardfolk-reedguard.webp",
+      "sha256": "2b88823dafefd846a70227c3bc5bdf54b86c7d727dcb99fb90628f2d47298d52"
+    },
+    {
+      "source": "web/assets/bestiary/creature-lizardfolk-starspeaker.webp",
+      "destination": "assets/bestiary/creature-lizardfolk-starspeaker.webp",
+      "sha256": "798da0c7df3948985d59961ed8cbadb1ce0e1357bb271a7e17da91fcf053ded4"
+    },
+    {
+      "source": "web/assets/bestiary/creature-manticore.webp",
+      "destination": "assets/bestiary/creature-manticore.webp",
+      "sha256": "044fd9e965b407649a292f5599393c72d7fe8c071e08a9f87497584a81189049"
+    },
+    {
+      "source": "web/assets/bestiary/creature-many-headed-marsh-wyrm.webp",
+      "destination": "assets/bestiary/creature-many-headed-marsh-wyrm.webp",
+      "sha256": "d619039783d5628487960da69106c13b7fec6472ab9a86102a3358646086a420"
+    },
+    {
+      "source": "web/assets/bestiary/creature-marsh-crocodile.webp",
+      "destination": "assets/bestiary/creature-marsh-crocodile.webp",
+      "sha256": "32d4fa00b3f5bd70a04ead61d8d0b01cb4033edb518ff209f4a8c9b3282aae43"
+    },
+    {
+      "source": "web/assets/bestiary/creature-masked-duelist.webp",
+      "destination": "assets/bestiary/creature-masked-duelist.webp",
+      "sha256": "0b4f8c1ea99c57c9fd0a7f35e5e30896e2792a63ff9536398c2b073f222eaeab"
+    },
+    {
+      "source": "web/assets/bestiary/creature-medusa.webp",
+      "destination": "assets/bestiary/creature-medusa.webp",
+      "sha256": "acb3e64ff7b554f9972f5d88941db09dfc8e306e35255115567f6056bef98ff0"
+    },
+    {
+      "source": "web/assets/bestiary/creature-merfolk-tideguard.webp",
+      "destination": "assets/bestiary/creature-merfolk-tideguard.webp",
+      "sha256": "fcb50b6967d17711a5635fd3bf4a4b273ef515a16ce0af043465c3f67c123c83"
+    },
+    {
+      "source": "web/assets/bestiary/creature-mimic-chest.webp",
+      "destination": "assets/bestiary/creature-mimic-chest.webp",
+      "sha256": "117d849164fb65564a55e810a35dd1d7b2a5f7881a45453fb93e95104a424547"
+    },
+    {
+      "source": "web/assets/bestiary/creature-minotaur.webp",
+      "destination": "assets/bestiary/creature-minotaur.webp",
+      "sha256": "7545db38c3597ec456b77fea4c040e98379eaff86d7211655967cfa8deff86f7"
+    },
+    {
+      "source": "web/assets/bestiary/creature-mire-ooze.webp",
+      "destination": "assets/bestiary/creature-mire-ooze.webp",
+      "sha256": "18da6ede5229d9a17b8d56c1f14849fc9d2ced5d056a32094fbc1ebd6bf70d21"
+    },
+    {
+      "source": "web/assets/bestiary/creature-moon-hart.webp",
+      "destination": "assets/bestiary/creature-moon-hart.webp",
+      "sha256": "8c3bad69bcef318e3b36962bb6f09c954ba5438bfe35449425058ac5c94ca885"
+    },
+    {
+      "source": "web/assets/bestiary/creature-mourning-bell.webp",
+      "destination": "assets/bestiary/creature-mourning-bell.webp",
+      "sha256": "e9eecfe8a1feeae235eb8743278bcf12e67267759fad8aed1eae8f2649ead68b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-mummy-king.webp",
+      "destination": "assets/bestiary/creature-mummy-king.webp",
+      "sha256": "2d418cfd415f0b4d59936539528c940664a81126681d02945dee99ee862d6633"
+    },
+    {
+      "source": "web/assets/bestiary/creature-mummy.webp",
+      "destination": "assets/bestiary/creature-mummy.webp",
+      "sha256": "c09c8ea07eb8e1586c337f6b17c58d3332302e7adae913d471ebce60fc19d61f"
+    },
+    {
+      "source": "web/assets/bestiary/creature-night-hag.webp",
+      "destination": "assets/bestiary/creature-night-hag.webp",
+      "sha256": "2e4acf3bf9d27cbf1f0ecb942b158c55e18fb88997fd625050c9a01f9a5c826b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-nightmare.webp",
+      "destination": "assets/bestiary/creature-nightmare.webp",
+      "sha256": "304f2bde7726a5e094097056c822ab64a65c37e03069cbd84079035700161399"
+    },
+    {
+      "source": "web/assets/bestiary/creature-oath-devourer.webp",
+      "destination": "assets/bestiary/creature-oath-devourer.webp",
+      "sha256": "3ac52ecd93a8dda83298fa855590ce6c3c81ca2f2ac1cbafc6e8040260614c88"
+    },
+    {
+      "source": "web/assets/bestiary/creature-oath-flame.webp",
+      "destination": "assets/bestiary/creature-oath-flame.webp",
+      "sha256": "0ae5b64a74aa6bd95d2e9552d1f8706fbb5d9e82d2496c6b863f50e07949e75b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ochre-jelly.webp",
+      "destination": "assets/bestiary/creature-ochre-jelly.webp",
+      "sha256": "313c5458f2b4a8075dd16009153736b8f8eca3dc0b2b8aadee7bfc20042e81ec"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ogre-glutton.webp",
+      "destination": "assets/bestiary/creature-ogre-glutton.webp",
+      "sha256": "7bf92c08161fcc67330d2c3a32f294fc72035639a5a62b42f4acf5b7fa11e5d5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ogre-hookhand.webp",
+      "destination": "assets/bestiary/creature-ogre-hookhand.webp",
+      "sha256": "ff1f76f02cf6a304622a1e59e7e5771fa6da66b5f2ff42324f14d105e092a761"
+    },
+    {
+      "source": "web/assets/bestiary/creature-ogre-taskmaster.webp",
+      "destination": "assets/bestiary/creature-ogre-taskmaster.webp",
+      "sha256": "5d0065df17225a5dd7cc102bf81cc8a90d0e84fdd1fe2e608e79034e6ce15720"
+    },
+    {
+      "source": "web/assets/bestiary/creature-old-root-guardian.webp",
+      "destination": "assets/bestiary/creature-old-root-guardian.webp",
+      "sha256": "7ecc1a788827b5a674ad09cbc953282198991f2bf85a1f3d63fb82f7e7b85849"
+    },
+    {
+      "source": "web/assets/bestiary/creature-orc-outrider.webp",
+      "destination": "assets/bestiary/creature-orc-outrider.webp",
+      "sha256": "87ea1ad231d3465f7e685106d53f11ac4b57ac62a294162d8f46e1e7846966c6"
+    },
+    {
+      "source": "web/assets/bestiary/creature-orc-shieldbreaker.webp",
+      "destination": "assets/bestiary/creature-orc-shieldbreaker.webp",
+      "sha256": "9d66123c31e653fc08363a58a1578a7d34575537c5457793f8c1dff6df79fce3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-orc-warcaller.webp",
+      "destination": "assets/bestiary/creature-orc-warcaller.webp",
+      "sha256": "718f134b7f21f139a2f1075729f141cc0f84c13955cd9ae7c5d6f0990838a4cc"
+    },
+    {
+      "source": "web/assets/bestiary/creature-owlbear.webp",
+      "destination": "assets/bestiary/creature-owlbear.webp",
+      "sha256": "a2ba33e9ff675e1ae9564ddae684aa6ed0c4f9286ece6c2a259d79bf225a26aa"
+    },
+    {
+      "source": "web/assets/bestiary/creature-pact-broker.webp",
+      "destination": "assets/bestiary/creature-pact-broker.webp",
+      "sha256": "2b4d6e1bf5c45dd34730387d2a555498fb7044ec639281cd26100819eba4c738"
+    },
+    {
+      "source": "web/assets/bestiary/creature-pegasus.webp",
+      "destination": "assets/bestiary/creature-pegasus.webp",
+      "sha256": "7fe099f7eb848b3ac4dca2a6b46e1d27397cb447ba85a5332822a9b5f5140257"
+    },
+    {
+      "source": "web/assets/bestiary/creature-plague-zombie.webp",
+      "destination": "assets/bestiary/creature-plague-zombie.webp",
+      "sha256": "83892797a3844bf613ceae52fd67e2bdb9a0766cd1bf0da4a4f2b5d08e96b189"
+    },
+    {
+      "source": "web/assets/bestiary/creature-poltergeist.webp",
+      "destination": "assets/bestiary/creature-poltergeist.webp",
+      "sha256": "389eb9208d047b106209f7f97d67fdc23b28bcb2bedd36a2a73886c6054883db"
+    },
+    {
+      "source": "web/assets/bestiary/creature-raven.webp",
+      "destination": "assets/bestiary/creature-raven.webp",
+      "sha256": "a26d31c1ff527d54c20e800d8589ec6efcfd5c419fd716fe598b3ad689aafbeb"
+    },
+    {
+      "source": "web/assets/bestiary/creature-red-dragon.webp",
+      "destination": "assets/bestiary/creature-red-dragon.webp",
+      "sha256": "0c2511fb0f4be37bb7fb5add3c4059d08195ffa89db77be796b90db21a429ac0"
+    },
+    {
+      "source": "web/assets/bestiary/creature-redcap.webp",
+      "destination": "assets/bestiary/creature-redcap.webp",
+      "sha256": "68ba33ff7d417639830073b8443e3026a2ccd79d50132f9c7fbed7728505cbb6"
+    },
+    {
+      "source": "web/assets/bestiary/creature-reed-piper.webp",
+      "destination": "assets/bestiary/creature-reed-piper.webp",
+      "sha256": "90ef1b4ed3dca0c530f27b4389360e7548cebc6cbfb80e45f51fe37b336c70de"
+    },
+    {
+      "source": "web/assets/bestiary/creature-reef-hunter.webp",
+      "destination": "assets/bestiary/creature-reef-hunter.webp",
+      "sha256": "dafd7ae407bf2c576d6649c829bc83a437fe0ae000f02e89259fa4264071b430"
+    },
+    {
+      "source": "web/assets/bestiary/creature-restless-corpse.webp",
+      "destination": "assets/bestiary/creature-restless-corpse.webp",
+      "sha256": "f95b94d561fdc4a8259f5affeac4beaf645a7ca15f2039b855016de8c5878f56"
+    },
+    {
+      "source": "web/assets/bestiary/creature-rill-sprite.webp",
+      "destination": "assets/bestiary/creature-rill-sprite.webp",
+      "sha256": "fe338cb7f341ee3a7a80c3ccbefc3093e5c5d2672b32f491507633ee22641ff4"
+    },
+    {
+      "source": "web/assets/bestiary/creature-rime-dragon.webp",
+      "destination": "assets/bestiary/creature-rime-dragon.webp",
+      "sha256": "f647a19fa16c917d204fbce23d1876f2f6ed8493f389ff1299fa3d279849f4c8"
+    },
+    {
+      "source": "web/assets/bestiary/creature-river-serpent.webp",
+      "destination": "assets/bestiary/creature-river-serpent.webp",
+      "sha256": "b5158c6cf4a464ee1ac10990f539c663134023a4df68cdf0d4adc663b1b3d14b"
+    },
+    {
+      "source": "web/assets/bestiary/creature-road-bandit.webp",
+      "destination": "assets/bestiary/creature-road-bandit.webp",
+      "sha256": "74fd1c81aad028c7e5786f0684c022f59290b53b26ae98b18e55d572a0741554"
+    },
+    {
+      "source": "web/assets/bestiary/creature-roc.webp",
+      "destination": "assets/bestiary/creature-roc.webp",
+      "sha256": "653666c0c58b61c83337e55661891598bf08ae2c34de02d5f57474d6fe7769ad"
+    },
+    {
+      "source": "web/assets/bestiary/creature-rust-eater.webp",
+      "destination": "assets/bestiary/creature-rust-eater.webp",
+      "sha256": "516f06342dc919feaa509b87c699e5c69ad0ac533479077b3a7b0c0ecc88288c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-satyr.webp",
+      "destination": "assets/bestiary/creature-satyr.webp",
+      "sha256": "b2ce53e959224d01c87e0680e441d8ae310c5c81e52abb950012ba7ec6546fdd"
+    },
+    {
+      "source": "web/assets/bestiary/creature-sea-hag.webp",
+      "destination": "assets/bestiary/creature-sea-hag.webp",
+      "sha256": "c0fc787c18ce63a31911430805d3e8de05f8e0e0ff55aff5f05fdf01b3e17975"
+    },
+    {
+      "source": "web/assets/bestiary/creature-shadow.webp",
+      "destination": "assets/bestiary/creature-shadow.webp",
+      "sha256": "1bc1ecafc4fee725f0ec50f5d4ad1d81122fa7575923d466e7f13a5c532631ed"
+    },
+    {
+      "source": "web/assets/bestiary/creature-shambling-mound.webp",
+      "destination": "assets/bestiary/creature-shambling-mound.webp",
+      "sha256": "3c8362319bd154c5d9f62523c8b530667aa537c8f4131d1e960769005b947777"
+    },
+    {
+      "source": "web/assets/bestiary/creature-shield-soldier.webp",
+      "destination": "assets/bestiary/creature-shield-soldier.webp",
+      "sha256": "1ab06f27f0ad4939b4815b0d9fb823ebeab7d2369a06fe400ba2d945082064a1"
+    },
+    {
+      "source": "web/assets/bestiary/creature-skeleton-champion.webp",
+      "destination": "assets/bestiary/creature-skeleton-champion.webp",
+      "sha256": "f9dc1c69a5fa97593e74941dbca616b338039e371faa0919c5e8bf34e5983742"
+    },
+    {
+      "source": "web/assets/bestiary/creature-skeleton-giant.webp",
+      "destination": "assets/bestiary/creature-skeleton-giant.webp",
+      "sha256": "8552e930545c34d5dc16f9f5bdbddbc359445db8e78ac1ed2ba17534599ccf8c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-skeleton-horse.webp",
+      "destination": "assets/bestiary/creature-skeleton-horse.webp",
+      "sha256": "c32ba1e9ce1297f4ebe931f3f92ba4ae851492f8cf63299eb1ee02f9f9011eb1"
+    },
+    {
+      "source": "web/assets/bestiary/creature-sorrow-ghost.webp",
+      "destination": "assets/bestiary/creature-sorrow-ghost.webp",
+      "sha256": "a2a455e303a151f87b66d8b24139dd7ab87ef1a59dee9c9465dc33831c6e47c3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-sphinx.webp",
+      "destination": "assets/bestiary/creature-sphinx.webp",
+      "sha256": "cd82b2f04fdda6c8b5314e7bae9b13d7541dca79cb15e99f779efecccfd03f9d"
+    },
+    {
+      "source": "web/assets/bestiary/creature-spore-shepherd.webp",
+      "destination": "assets/bestiary/creature-spore-shepherd.webp",
+      "sha256": "0ded07ec5181bb682886eaacd397a808039647e9a3d929836021c9d8ca2946cb"
+    },
+    {
+      "source": "web/assets/bestiary/creature-starless-oracle.webp",
+      "destination": "assets/bestiary/creature-starless-oracle.webp",
+      "sha256": "426b9a9d27d28949214ec48cc10a1cdee45a40242a5dba6b68c53101643bfe65"
+    },
+    {
+      "source": "web/assets/bestiary/creature-stone-giant.webp",
+      "destination": "assets/bestiary/creature-stone-giant.webp",
+      "sha256": "cd074afc766ec1b3944de31dc665feeb834aba21ce07ac8e53701196879c715c"
+    },
+    {
+      "source": "web/assets/bestiary/creature-stone-golem.webp",
+      "destination": "assets/bestiary/creature-stone-golem.webp",
+      "sha256": "311ae71b5f9804e9a2f6472fa5601c12e6762eec5183383a9bf1b85e5fb2f0e8"
+    },
+    {
+      "source": "web/assets/bestiary/creature-stone-knuckle.webp",
+      "destination": "assets/bestiary/creature-stone-knuckle.webp",
+      "sha256": "d561483c61f4d3c8959511f5ccdf82ebef572caed79a4054e206a09f36b75bc5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-storm-column.webp",
+      "destination": "assets/bestiary/creature-storm-column.webp",
+      "sha256": "03f774435df5fe3a756e970b9a6d248574f1877f8365137e213cc6052cd10ee3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-storm-giant.webp",
+      "destination": "assets/bestiary/creature-storm-giant.webp",
+      "sha256": "5844690d40d974b9a3378f8106e0cbb20edaa3380dc98906112865ab02ac4809"
+    },
+    {
+      "source": "web/assets/bestiary/creature-succubus.webp",
+      "destination": "assets/bestiary/creature-succubus.webp",
+      "sha256": "1e5b6c5a5b3e024496512a5335c034b04dabb44d29a43db1cb3870e0cf779f36"
+    },
+    {
+      "source": "web/assets/bestiary/creature-sword-angel.webp",
+      "destination": "assets/bestiary/creature-sword-angel.webp",
+      "sha256": "cfd42d5e6b256bddb2995e05d1f9a3f785baa4f9578551004ab056295db2d7bb"
+    },
+    {
+      "source": "web/assets/bestiary/creature-thorn-lurker.webp",
+      "destination": "assets/bestiary/creature-thorn-lurker.webp",
+      "sha256": "02e720e3259e8a50bc25401c9d7f1859bb82dffcc79033a3fef507109908553e"
+    },
+    {
+      "source": "web/assets/bestiary/creature-thorn-queen.webp",
+      "destination": "assets/bestiary/creature-thorn-queen.webp",
+      "sha256": "7747949092cef585e12283aa674a63be705b7413d5f98a12ed88e6b30567320d"
+    },
+    {
+      "source": "web/assets/bestiary/creature-thought-leech.webp",
+      "destination": "assets/bestiary/creature-thought-leech.webp",
+      "sha256": "54edaffc1b087fd2c6269940144f9a90bcd2be43ed37d4e376df00534f4817e5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-tomb-sage.webp",
+      "destination": "assets/bestiary/creature-tomb-sage.webp",
+      "sha256": "ff053ad6d13c3b22bf6adc454811f2ed0390dd9b8865abd464469d9a8ac3fb4d"
+    },
+    {
+      "source": "web/assets/bestiary/creature-trail-hound.webp",
+      "destination": "assets/bestiary/creature-trail-hound.webp",
+      "sha256": "d9b5e32c7f7eb976b710be2f66587201353f3007814315650eb5a7a17ccf4fef"
+    },
+    {
+      "source": "web/assets/bestiary/creature-unicorn.webp",
+      "destination": "assets/bestiary/creature-unicorn.webp",
+      "sha256": "60671e4f779480c50835e5955befa32fdbe0edf24dd464ce78339e296d7f9d40"
+    },
+    {
+      "source": "web/assets/bestiary/creature-vampire-spawn.webp",
+      "destination": "assets/bestiary/creature-vampire-spawn.webp",
+      "sha256": "6af31c6b182f5d2b81cc683b2e124ce2e62b24cb998a33deb8c06d5d997024fc"
+    },
+    {
+      "source": "web/assets/bestiary/creature-veteran-captain.webp",
+      "destination": "assets/bestiary/creature-veteran-captain.webp",
+      "sha256": "d37e2dc02e23e4a53d5d1ddf697f09ecb9ee124b4317c5c9eea16811851c03fd"
+    },
+    {
+      "source": "web/assets/bestiary/creature-walking-furnace.webp",
+      "destination": "assets/bestiary/creature-walking-furnace.webp",
+      "sha256": "f457ad6c3cb10b004ca51cfe45bd63b27379d8716341d2319195f2f8c5d8d910"
+    },
+    {
+      "source": "web/assets/bestiary/creature-walking-thorn.webp",
+      "destination": "assets/bestiary/creature-walking-thorn.webp",
+      "sha256": "6fde7cc2b55ac5f350d194925802a5ed80189264b850afdff87dd8edde19b1e3"
+    },
+    {
+      "source": "web/assets/bestiary/creature-warhorse.webp",
+      "destination": "assets/bestiary/creature-warhorse.webp",
+      "sha256": "de630956a0a98b2025344c280cb45beef27e1d387bf5352030f68b13060887e4"
+    },
+    {
+      "source": "web/assets/bestiary/creature-water-elemental.webp",
+      "destination": "assets/bestiary/creature-water-elemental.webp",
+      "sha256": "c62ae778c1a21a69b4a51d88c4c934576b2b759b8f6702acb9de5afded9bf8f9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-werebear.webp",
+      "destination": "assets/bestiary/creature-werebear.webp",
+      "sha256": "895e0bc3263339ff4bd82fe132307026195b92e0dfaa3048c2409b19e163d2a9"
+    },
+    {
+      "source": "web/assets/bestiary/creature-wererat.webp",
+      "destination": "assets/bestiary/creature-wererat.webp",
+      "sha256": "b84d64d5767863b929aadfa0bac8fa87fb3d5603d659852bcefabfbe44875253"
+    },
+    {
+      "source": "web/assets/bestiary/creature-werewolf.webp",
+      "destination": "assets/bestiary/creature-werewolf.webp",
+      "sha256": "328f48a164e2e021b52a4bdcbe8c52045e6c97cf5a80a8be1de088a612a1e55a"
+    },
+    {
+      "source": "web/assets/bestiary/creature-wight.webp",
+      "destination": "assets/bestiary/creature-wight.webp",
+      "sha256": "4e626c597108d9482b276679226822822fc8bf00caa25e97689d35a1df2b23f6"
+    },
+    {
+      "source": "web/assets/bestiary/creature-wild-boar.webp",
+      "destination": "assets/bestiary/creature-wild-boar.webp",
+      "sha256": "3bbd3b943fcca008a3d06c240fd116c161dbff4da6adc4d2c4e310fb4f829834"
+    },
+    {
+      "source": "web/assets/bestiary/creature-winter-wolf.webp",
+      "destination": "assets/bestiary/creature-winter-wolf.webp",
+      "sha256": "84c09a089b2167aa36b8b3415c36df1da9f10c67dbe72cca55189610882f1a17"
+    },
+    {
+      "source": "web/assets/bestiary/creature-wolf.webp",
+      "destination": "assets/bestiary/creature-wolf.webp",
+      "sha256": "e683ed46b5a264287a2aca5bf7d28af8e922d500bb5206a4d2fc36c233ce8af2"
+    },
+    {
+      "source": "web/assets/bestiary/creature-wraith.webp",
+      "destination": "assets/bestiary/creature-wraith.webp",
+      "sha256": "2a05ec49655fb42477267610517747fa874e5b864a13dde0acb6c25dae9f22f7"
+    },
+    {
+      "source": "web/assets/bestiary/creature-wyvern.webp",
+      "destination": "assets/bestiary/creature-wyvern.webp",
+      "sha256": "02b21cef568d078d8345da24fff00b3993de76c138b367557fae9647d05709a5"
+    },
+    {
+      "source": "web/assets/bestiary/creature-young-ember-drake.webp",
+      "destination": "assets/bestiary/creature-young-ember-drake.webp",
+      "sha256": "5228f4693895917ec486d64f377413eacddfe553ffbc04a3662ac61652a13bae"
+    },
+    {
+      "source": "web/assets/bestiary/creature-zombie-brute.webp",
+      "destination": "assets/bestiary/creature-zombie-brute.webp",
+      "sha256": "6709c7f0d693d31f8186f996561aa18902cc96a67294a0e537cd48864a8e8580"
+    },
+    {
+      "source": "web/assets/calling.webp",
+      "destination": "assets/calling.webp",
+      "sha256": "6bdd19fc16c7288bd3daa5c89c5aa7bd3a0d9b594ba9522bc1bcf1ebf2d58be3"
+    },
+    {
+      "source": "web/assets/craft.webp",
+      "destination": "assets/craft.webp",
+      "sha256": "b200719ffcc22991123a7a50191296389c444ea177bb73366290fb80947815f1"
+    },
+    {
+      "source": "web/assets/crest.webp",
+      "destination": "assets/crest.webp",
+      "sha256": "a7d19c3bc9d0f7fef1f0670b8d25430e85fd47eb16f15bc4985ceb1c77143c88"
+    },
+    {
+      "source": "web/assets/flame.webp",
+      "destination": "assets/flame.webp",
+      "sha256": "571df53ed7f913a6b4eb6ca45594670a667ae98e33aa54d1e40f1f621871fc1a"
+    },
+    {
+      "source": "web/assets/frost.webp",
+      "destination": "assets/frost.webp",
+      "sha256": "7aa199e2e25a02931f4a3f9754b74177bc38d6a0c9212a23aadf7826c3a99076"
+    },
+    {
+      "source": "web/assets/guard.webp",
+      "destination": "assets/guard.webp",
+      "sha256": "50e33a211a24420b3275dfb0ac5dee65aebd14b1a11ffa0a6da4234550fd5461"
+    },
+    {
+      "source": "web/assets/influence.webp",
+      "destination": "assets/influence.webp",
+      "sha256": "c1959053d73f1340b4fa2afbb8e16b06c946c43d507e0e1c10df2c653f506bb9"
+    },
+    {
+      "source": "web/assets/life.webp",
+      "destination": "assets/life.webp",
+      "sha256": "e2dd70b7b1e83bdf765d0fc514bbe0b96416a7bfefeb340a64502ae345b38fd4"
+    },
+    {
+      "source": "web/assets/marksmanship.webp",
+      "destination": "assets/marksmanship.webp",
+      "sha256": "7d9176a932c856f61db5d3513d7e5de20fb2f734bed59c91d4774343052ef849"
+    },
+    {
+      "source": "web/assets/medicine.webp",
+      "destination": "assets/medicine.webp",
+      "sha256": "cf97a33f7f3d8e41c0544445ea6865ae977195a0c7534e6f196be39a1ad4ac78"
+    },
+    {
+      "source": "web/assets/mind.webp",
+      "destination": "assets/mind.webp",
+      "sha256": "c375f0931871ef7b10800074fbd95f8124a6a1dfef365493062491a93552a614"
+    },
+    {
+      "source": "web/assets/provenance.json",
+      "destination": "assets/provenance.json",
+      "sha256": "e6336e9da7b26196fe49d10224247f521262a7b2a54a567865ea4f0eb65802e2"
+    },
+    {
+      "source": "web/assets/radiance.webp",
+      "destination": "assets/radiance.webp",
+      "sha256": "372b652e456031f521c2fccc0d159a788c638ce296b4e1be210f1827a469c15e"
+    },
+    {
+      "source": "web/assets/scholarship.webp",
+      "destination": "assets/scholarship.webp",
+      "sha256": "5fd9277b6338043b13d3b6671052469312d487b9eca2897681126b87c82e99d2"
+    },
+    {
+      "source": "web/assets/storm.webp",
+      "destination": "assets/storm.webp",
+      "sha256": "254b0d5b6003f1e39bed51e9a01bed54d341a001fc70c0c49cdf50a812935e08"
+    },
+    {
+      "source": "web/assets/subterfuge.webp",
+      "destination": "assets/subterfuge.webp",
+      "sha256": "1e94e7010ad92d5ddb396da9e835c429f447e70c3e7b18d345cafa11a9f86f55"
+    },
+    {
+      "source": "web/assets/wilderness.webp",
+      "destination": "assets/wilderness.webp",
+      "sha256": "89d3e73668976951627d4d16d6aa821cfea9926706b963763e747e0b8de01504"
+    },
+    {
+      "source": "web/chat-cards.css",
+      "destination": "chat-cards.css",
+      "sha256": "1f87ebb5b4ebf3aa1ec153ffeda52671d4917cd265d24eeb6c21a0befade26b8"
+    },
+    {
+      "source": "web/chat-cards.mjs",
+      "destination": "chat-cards.mjs",
+      "sha256": "5a1b736ab1250457efef917901066be14ad4c3596f69d2e40249d3a9c884d32d"
+    },
+    {
+      "source": "web/chat-preview.mjs",
+      "destination": "chat-preview.mjs",
+      "sha256": "d4de7decce0fc10c6cb47e5169717628642313ee879eb14a9f6dcefd0d02b51c"
+    },
+    {
+      "source": "web/chat.html",
+      "destination": "chat.html",
+      "sha256": "108239f33a3fc74db59eb7dcff7e73701fc59b8aa1453308df714305623c940d"
+    },
+    {
+      "source": "web/combat.html",
+      "destination": "combat.html",
+      "sha256": "e2eb91ae67bbb01f0d5f3927eab5503cb515391a0520187caf233e09db1703cd"
+    },
+    {
+      "source": "web/crafting-attempt.mjs",
+      "destination": "crafting-attempt.mjs",
+      "sha256": "7c12dcc61c90a54bfeb38c3c47f96c5671fee5da8ab2412778de27f0c0d6470b"
+    },
+    {
+      "source": "web/crafting.html",
+      "destination": "crafting.html",
+      "sha256": "b606997405132a478d030f9504b3a28682f1c4fcb9cb5e2b571c52803b28c753"
+    },
+    {
+      "source": "web/creature.html",
+      "destination": "creature.html",
+      "sha256": "a454c833f9ddbed71cda9a27dd632f66204cbeed1b2ddbaf5c553390b1a84d66"
+    },
+    {
+      "source": "web/data/journals.json",
+      "destination": "data/journals.json",
+      "sha256": "92fc3aeb8a93fbc10229d5cca60318e93b20191529a039aa7d7d49ed47a52dd4"
+    },
+    {
+      "source": "web/data/references.json",
+      "destination": "data/references.json",
+      "sha256": "3ab118a1cfd43417d5779034c85622a6347bed681aae1dc7e544d3b677f412e3"
+    },
+    {
+      "source": "web/data/sheet-art.json",
+      "destination": "data/sheet-art.json",
+      "sha256": "328ef09566c9e12249f0bbc3faad5ac568dad2352383705454bdaf81894007c3"
+    },
+    {
+      "source": "web/index.html",
+      "destination": "index.html",
+      "sha256": "5c3b655a3f5624065f5f64f611d34eede051d5df2b06a31e1a88d31cc779e2df"
+    },
+    {
+      "source": "web/item.html",
+      "destination": "item.html",
+      "sha256": "035e6e14f9ae39ad82681dc28dd957ce529f9c0142571800befae173175d61fd"
+    },
+    {
+      "source": "web/journal.html",
+      "destination": "journal.html",
+      "sha256": "d1f744e6bbedccb1d12efabbee3ae5f117dd5be3c6add4ca88dd9ed251477348"
+    },
+    {
+      "source": "web/npc.html",
+      "destination": "npc.html",
+      "sha256": "cc18cff2c7f6a1064f89c8eb67bf1c41cb3ef439a2422f12c9139c8cb31285f5"
+    },
+    {
+      "source": "web/recovery.html",
+      "destination": "recovery.html",
+      "sha256": "a8002f3d15b614e2a6bc938ad36e24dcd57fa895772a0ad16de7f84f0ca04725"
+    },
+    {
+      "source": "web/roll-preview.mjs",
+      "destination": "roll-preview.mjs",
+      "sha256": "c1681078c5929ba3c9a6d532eab5cd3276cc4b5050f6471f2fcde5a7d7d57aef"
+    },
+    {
+      "source": "web/roll-ui.css",
+      "destination": "roll-ui.css",
+      "sha256": "ed97d7ddc9fa15af707ea5b22d9faaceae41e537d2494d264c47b1ca4e9aab6e"
+    },
+    {
+      "source": "web/roll-ui.mjs",
+      "destination": "roll-ui.mjs",
+      "sha256": "fabb586c09fe932af01742d413ec313464d7292b3f9ed3ee5167b5e770d08013"
+    },
+    {
+      "source": "web/roll.html",
+      "destination": "roll.html",
+      "sha256": "f1f19b0d88c1fc4136b4a51478be50f4ef532653e6b82c76ca09d255c9e1f867"
+    },
+    {
+      "source": "web/rules-view.mjs",
+      "destination": "rules-view.mjs",
+      "sha256": "f778e5fae1dbc99ed5368d95d6357e3f2c17edc6070ba539e3c0c89ae35d949e"
+    },
+    {
+      "source": "web/sheets.css",
+      "destination": "sheets.css",
+      "sha256": "dc59f54954ed20a4a151042a306887fafeb1fb94bfc29647d114bc2c30023cf4"
+    },
+    {
+      "source": "web/sheets.mjs",
+      "destination": "sheets.mjs",
+      "sha256": "512454ddc0539f4176a4c7bfcb97bfc16f7572ab6e8603f397c7d1497b5a3943"
+    },
+    {
+      "source": "web/tools.css",
+      "destination": "tools.css",
+      "sha256": "074de5dd7fd5149734d513347f7152bf48b02bad70a59125a0dfb6815d8e11d8"
+    },
+    {
+      "source": "web/tools.mjs",
+      "destination": "tools.mjs",
+      "sha256": "0269d315d871b52b18151d7c268e5f63a16ce4c66a05a3b0812aea602c8536f5"
+    },
+    {
+      "source": "web/workshop.css",
+      "destination": "workshop.css",
+      "sha256": "91876b665778cb2c4c0df6fd8a5b7c9102465192f2b67cbf86b4066380d452fd"
+    },
+    {
+      "source": "web/workshop.mjs",
+      "destination": "workshop.mjs",
+      "sha256": "67261dedb534a635e4c18846014002df84644c996da2532838d2a13b12a9f408"
+    }
+  ]
+}

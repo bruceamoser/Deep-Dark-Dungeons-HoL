@@ -28,11 +28,10 @@ The target is a cohesive, polished desktop game. A greybox or collection of unre
 
 The first floor is a quality benchmark, not a declaration that the whole game is finished. Do not silently narrow the final requirement to a handful of classes or attacks.
 
-## Decisions still to settle
+## Confirmed platform and expedition direction
 
-- Death and expedition failure: permanent party loss, recoverable losses, or save/reload.
-- Persistent town and expedition structure versus a continuous descent.
-- Initial desktop OS and hardware performance target.
-- How automated Dungeon Architect judgments are exposed where HoL requires contextual rulings.
+Linux and Windows desktop; single-player control of four heroes. Bruce has dual RTX 3090 GPUs; the renderer targets a single GPU and does not depend on multi-GPU features. A persistent town supports repeated descents. Defeat should support recovery with roguelike replacement parties; exact rescue/loss terms remain proposals.
 
-Godot is an engine candidate; final selection follows integration and asset checks. No paid asset purchase is authorized yet.
+Electron and Three.js were selected after confirming that the existing complete HoL Character Workshop and pure rules modules can run locally without Foundry. This avoids a second independent character-creation implementation. Native Godot was evaluated as a candidate but is not the selected runtime.
+
+Free assets initially. No paid asset purchase is authorized. The first visual pass is not final quality acceptance.

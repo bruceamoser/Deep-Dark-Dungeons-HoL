@@ -1,0 +1,51 @@
+{
+  "name": "deep-dark-dungeons-hol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A four-hero Heroes of Legend dungeon RPG",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "start": "electron .",
+    "test": "node --test tests/*.test.mjs",
+    "test:visual": "node scripts/visual-check.mjs",
+    "package:linux": "npm run build && electron-builder --linux dir",
+    "package:windows": "npm run build && electron-builder --win zip",
+    "test:play": "node scripts/play-check.mjs",
+    "test:native": "node scripts/native-check.mjs"
+  },
+  "build": {
+    "appId": "com.bruceamoser.deepdarkdungeons",
+    "productName": "Deep Dark Dungeons - HoL",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": "dir",
+      "category": "Game"
+    },
+    "win": {
+      "target": "zip",
+      "signAndEditExecutable": false
+    },
+    "icon": "public/art/greyhaven-seal.png"
+  },
+  "dependencies": {
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0",
+    "prettier": "3.9.10",
+    "vite": "8.3.6"
+  },
+  "author": "Bruce A. Moser"
+}
