@@ -28,7 +28,7 @@ const esc = (s) =>
         c
       ],
   );
-let toastTimer, modalCleanup;
+let toastTimer, modalCleanup, updateStatus;
 function closeModal() {
   modalCleanup?.();
   modalCleanup = null;
@@ -289,10 +289,20 @@ async function init() {
   window.desktop?.onClose(() =>
     attempt(async () => {
       game.pause();
-      await save();
-      window.desktop.close();
+      try {
+        await save();
+        window.desktop.close();
+      } catch (error) {
+        window.desktop.cancelClose(error.message);
+        if (!runsOpen) game.resume();
+        throw error;
+      }
     }),
   );
+  if (window.desktop?.updates) {
+    window.desktop.updates.subscribe(receiveUpdateStatus);
+    receiveUpdateStatus(await window.desktop.updates.status());
+  }
   if (!library.active) await openRuns();
   window.__ddd = {
     game,
@@ -317,11 +327,11 @@ function render() {
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">DEVELOPMENT BUILD 0.1 · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">EARLY PLAYABLE · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
     if (scene.follow)
       scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
   } else {
@@ -432,6 +442,9 @@ function action(a) {
       break;
     case "help":
       help();
+      break;
+    case "updates":
+      updatesScreen();
       break;
     case "sheet":
       sheet(game.selected);
@@ -818,6 +831,58 @@ function audioSettings() {
         ? "Muted — toggle mute to hear audio"
         : `Audio ${sound.context.state} · volume ${Math.round(sound.volume * 100)}%`;
     });
+}
+function receiveUpdateStatus(status) {
+  const previous = updateStatus?.phase;
+  updateStatus = status;
+  if (status.phase === "error" && previous === "installing" && !runsOpen)
+    game.resume();
+  const control = ui.querySelector('[data-action="updates"]');
+  if (control) {
+    control.textContent =
+      status.phase === "downloaded" ? "Update ready" : "Updates";
+    control.classList.toggle("update-ready", status.phase === "downloaded");
+  }
+  if (modal.querySelector("#update-panel")) drawUpdateStatus();
+  if (status.phase === "downloaded" && previous !== "downloaded")
+    toast(`Version ${status.next} is ready. Open Updates to save and restart.`);
+}
+function updatesScreen() {
+  dialog("Keep the lantern lit", '<div id="update-panel"></div>');
+  drawUpdateStatus();
+}
+function drawUpdateStatus() {
+  const s = updateStatus ?? { phase: "idle" };
+  const busy = ["checking", "downloading", "saving", "installing"].includes(
+    s.phase,
+  );
+  const descriptions = {
+    idle: "Checks for new releases when the game opens and every four hours.",
+    checking: "Checking GitHub Releases…",
+    current:
+      "You have the latest release. Your lantern is ready for the depths.",
+    available: "A new release is available.",
+    downloading:
+      "Downloading your update in the background. You can keep playing.",
+    downloaded:
+      "Your update is ready. Save this journey and restart whenever you are ready.",
+    saving: "Saving your journey before installing…",
+    installing: "Installing the update and restarting…",
+    unsupported:
+      "This is a development build. Install the release version to receive updates in the game.",
+    error:
+      "The update could not finish. You can keep playing and try again later.",
+  };
+  modal.querySelector("#update-panel").innerHTML =
+    `<div class="update-version"><img src="/art/greyhaven-seal.png" alt=""><div><span class="eyebrow">DEEP DARK DUNGEONS · RELEASES</span><h3>Version ${esc(s.current ?? "—")}</h3>${s.next ? `<small>New release · ${esc(s.next)}</small>` : ""}</div></div><p role="status">${descriptions[s.phase] ?? descriptions.idle}</p>${s.phase === "downloading" ? `<progress max="100" value="${s.percent ?? 0}" aria-label="Update download progress"></progress><p>${Math.floor(s.percent ?? 0)}% downloaded</p>` : ""}${s.error ? `<p class="update-error">${esc(s.error)}</p>` : ""}<p class="update-note">Updates download automatically from our GitHub releases. Installation waits for you; saved journeys and heroes stay on this computer.</p><footer>${s.phase === "unsupported" ? "" : `<button id="check-update" ${busy || s.phase === "downloaded" ? "disabled" : ""}>Check for updates</button>`}${s.phase === "downloaded" ? '<button id="install-update" class="primary">Save & restart to install</button>' : ""}<button id="release-page">View releases</button></footer>`;
+  const check = modal.querySelector("#check-update");
+  if (check)
+    check.onclick = () => attempt(() => window.desktop.updates.check());
+  const install = modal.querySelector("#install-update");
+  if (install)
+    install.onclick = () => attempt(() => window.desktop.updates.install());
+  modal.querySelector("#release-page").onclick = () =>
+    attempt(() => window.desktop.updates.releases());
 }
 function shop() {
   closeModal();

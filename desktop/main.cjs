@@ -1,4 +1,13 @@
-const { app, BrowserWindow, protocol, net, ipcMain } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  protocol,
+  net,
+  ipcMain,
+  shell,
+} = require("electron");
+const { autoUpdater } = require("electron-updater");
+const { createUpdates } = require("./updates.cjs");
 const path = require("node:path");
 const { createSaveStorage } = require("./save-storage.cjs");
 const { pathToFileURL } = require("node:url");
@@ -35,8 +44,12 @@ app.whenReady().then(async () => {
   });
   const storage = createSaveStorage(app.getPath("userData"));
   const trusted = (event) => {
-    if (!event.senderFrame.url.startsWith("dungeon://game/"))
-      throw new Error("Invalid save sender");
+    if (
+      event.sender !== win.webContents ||
+      event.senderFrame !== event.sender.mainFrame ||
+      !event.senderFrame.url.startsWith("dungeon://game/")
+    )
+      throw new Error("Invalid desktop sender");
   };
   for (const method of ["get", "set", "remove", "keys"])
     ipcMain.handle(`saves:${method}`, (event, ...args) => {
@@ -71,10 +84,46 @@ app.whenReady().then(async () => {
     if (!url.startsWith("dungeon://game/")) e.preventDefault();
   });
   let closing = false,
-    readyToSave = false;
+    readyToSave = false,
+    pendingUpdate = false,
+    updateTimer;
+  const updates = createUpdates({
+    updater: autoUpdater,
+    version: app.getVersion(),
+    supported:
+      app.isPackaged &&
+      (process.platform === "win32" ||
+        (process.platform === "linux" && !!process.env.APPIMAGE)),
+    publish: (status) => {
+      if (!win.isDestroyed()) win.webContents.send("updates:status", status);
+    },
+  });
+  for (const method of ["status", "check"])
+    ipcMain.handle(`updates:${method}`, (event) => {
+      trusted(event);
+      return updates[method]();
+    });
+  ipcMain.handle("updates:releases", (event) => {
+    trusted(event);
+    return shell.openExternal(
+      "https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest",
+    );
+  });
+  ipcMain.handle("updates:install", (event) => {
+    trusted(event);
+    if (!readyToSave)
+      throw new Error("Wait for your journey to finish loading.");
+    updates.prepareInstall();
+    pendingUpdate = true;
+    win.webContents.send("save:closing", "update");
+  });
   ipcMain.on("save:ready", (event) => {
     trusted(event);
+    if (readyToSave) return;
     readyToSave = true;
+    setTimeout(() => updates.check(), 6000).unref();
+    updateTimer = setInterval(() => updates.check(), 4 * 60 * 60 * 1000);
+    updateTimer.unref();
   });
   win.on("close", (event) => {
     if (closing || !readyToSave) return;
@@ -83,9 +132,22 @@ app.whenReady().then(async () => {
   });
   ipcMain.on("save:closed", (event) => {
     trusted(event);
+    if (pendingUpdate) {
+      closing = updates.installAfterSave();
+      pendingUpdate = false;
+      return;
+    }
     closing = true;
     win.close();
   });
+  ipcMain.on("save:failed", (event, message) => {
+    trusted(event);
+    pendingUpdate = false;
+    updates.cancelInstall(
+      `Your journey could not be saved: ${String(message).slice(0, 500)}`,
+    );
+  });
+  win.on("closed", () => clearInterval(updateTimer));
   await win.loadURL("dungeon://game/");
 });
 app.on("window-all-closed", () => app.quit());

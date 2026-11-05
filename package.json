@@ -1,6 +1,6 @@
 {
   "name": "deep-dark-dungeons-hol",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "A four-hero Heroes of Legend dungeon RPG",
@@ -11,12 +11,13 @@
     "start": "electron .",
     "test": "node --test tests/*.test.mjs",
     "test:visual": "node scripts/visual-check.mjs",
-    "package:linux": "npm run build && electron-builder --linux dir",
-    "package:windows": "npm run build && electron-builder --win zip",
+    "package:linux": "npm run build && electron-builder --linux AppImage --x64 --publish never",
+    "package:windows": "npm run build && electron-builder --win nsis --x64 --publish never",
     "test:play": "node scripts/play-check.mjs",
     "test:native": "node scripts/native-check.mjs",
     "test:controls": "node scripts/control-check.mjs",
-    "coverage:abilities": "node scripts/ability-coverage.mjs"
+    "coverage:abilities": "node scripts/ability-coverage.mjs",
+    "package:dir": "npm run build && electron-builder --linux dir --publish never"
   },
   "build": {
     "appId": "com.bruceamoser.deepdarkdungeons",
@@ -30,16 +31,44 @@
       "package.json"
     ],
     "linux": {
-      "target": "dir",
-      "category": "Game"
+      "target": [
+        "AppImage"
+      ],
+      "category": "Game",
+      "executableName": "deep-dark-dungeons-hol"
     },
     "win": {
-      "target": "zip",
+      "target": [
+        "nsis"
+      ],
       "signAndEditExecutable": false
     },
-    "icon": "public/art/greyhaven-seal.png"
+    "icon": "public/art/greyhaven-seal.png",
+    "afterPack": "scripts/after-pack.cjs",
+    "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}",
+    "publish": {
+      "provider": "github",
+      "owner": "bruceamoser",
+      "repo": "Deep-Dark-Dungeons-HoL",
+      "releaseType": "release"
+    },
+    "toolsets": {
+      "appimage": "1.0.3"
+    },
+    "appImage": {
+      "executableArgs": []
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Deep-Dark-Dungeons-HoL-Setup-${version}-${arch}.${ext}"
+    }
   },
   "dependencies": {
+    "electron-updater": "6.8.11",
     "three": "0.187.0"
   },
   "devDependencies": {
@@ -49,5 +78,9 @@
     "prettier": "3.9.10",
     "vite": "8.3.6"
   },
-  "author": "Bruce A. Moser"
+  "author": "Bruce A. Moser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL.git"
+  }
 }

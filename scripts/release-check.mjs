@@ -1,0 +1,84 @@
+// Smoke-test the actual AppImage or installed Windows executable, with real IPC,
+// an isolated save directory, and Chromium's renderer sandbox enabled.
+import fs from "node:fs/promises";
+import path from "node:path";
+import os from "node:os";
+import { spawn } from "node:child_process";
+import { chromium, expect } from "@playwright/test";
+const executable = path.resolve(process.argv[2]);
+const { version } = JSON.parse(
+  await fs.readFile(new URL("../package.json", import.meta.url), "utf8"),
+);
+const userData = await fs.mkdtemp(path.join(os.tmpdir(), "ddd-release-"));
+const linux = process.platform === "linux";
+const command = linux ? "/usr/bin/aa-exec" : executable;
+const args = [
+  ...(linux ? ["-p", "unconfined", "--", executable] : []),
+  "--remote-debugging-port=0",
+  "--inspect=0",
+  ...(process.env.CI
+    ? [
+        "--ozone-platform=x11",
+        "--use-angle=swiftshader",
+        "--enable-unsafe-swiftshader",
+      ]
+    : []),
+];
+const child = spawn(command, args, {
+  env: { ...process.env, DDD_TEST_USER_DATA: userData },
+  stdio: ["ignore", "ignore", "pipe"],
+});
+let browser,
+  log = "";
+try {
+  child.stderr.on("data", (chunk) => {
+    log += chunk;
+  });
+  await expect
+    .poll(() => log.match(/DevTools listening on (ws:\/\/\S+)/)?.[1], {
+      timeout: 60000,
+    })
+    .toBeTruthy();
+  browser = await chromium.connectOverCDP(
+    log.match(/DevTools listening on (ws:\/\/\S+)/)[1],
+  );
+  const page = browser.contexts()[0].pages()[0];
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.waitForFunction(() => window.__ddd, { timeout: 60000 });
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  const saved = await page.evaluate(() => window.desktop.load());
+  expect(JSON.parse(saved).campaign.party.length).toBe(4);
+  await page.getByRole("button", { name: "Updates", exact: true }).click();
+  await expect(page.locator("#update-panel")).toContainText(
+    `Version ${version}`,
+  );
+  expect(
+    (await page.evaluate(() => window.desktop.updates.status())).phase,
+  ).not.toBe("unsupported");
+  if (linux) {
+    const cdp = await browser.newBrowserCDPSession();
+    const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");
+    for (const proc of processInfo.filter((p) => p.type === "renderer")) {
+      const status = await fs.readFile(`/proc/${proc.id}/status`, "utf8");
+      expect(Number(/Seccomp:\s+(\d+)/.exec(status)[1])).toBe(2);
+      expect(
+        await fs.readFile(`/proc/${proc.id}/cmdline`, "utf8"),
+      ).not.toContain("--no-sandbox");
+    }
+  }
+  await fs.mkdir("test-results", { recursive: true });
+  await page.screenshot({
+    path: `test-results/release-${process.platform}.png`,
+  });
+  expect(errors).toEqual([]);
+  console.log(
+    "Release executable opened, rendered, saved to disk, and exposed supported update controls.",
+  );
+} catch (error) {
+  console.error(log);
+  throw error;
+} finally {
+  await browser?.close().catch(() => {});
+  child.kill();
+}
