@@ -50,8 +50,16 @@ Replaced the scrolling reference sheet and embedded character mancer with a game
 
 Wounds apply numerical penalties and typed conditions, offer a displacement direction where required, and continue after acknowledgement. Hero turns resolve condition damage/decay, Dazed action choices, survival and Last Words. Forced movement handles Stability and collision chains. The six treatment capabilities use one-hour, once-per-wound-per-day source procedures and retain scar counts; the Journey panel exposes eligible healers and recovery progress. Healing bottles and nine additional combat/recovery cards have explicit adapters. Source boundaries and adjudications are listed in `computer-game-deltas.md`.
 
-Remaining material gaps include opportunity attacks and most reactions, higher-level signatures, special anatomical remedies, stealth/unnoticed targeting, healing-harmed creatures, prone-occupant traversal, difficult-terrain generation and persistent town shopping. No claim is made that 36 included cards equals complete HoL automation.
+Remaining material gaps include opportunity attacks and most reactions, higher-level signatures, special anatomical remedies, stealth/unnoticed targeting, healing-harmed creatures, difficult-terrain generation and persistent town shopping. No claim is made that 36 included cards equals complete HoL automation.
 
 ## Physical attack presentation
 
 Ranged attacks now nock and release the modeled arrow from an upright bow with a drawn string, follow an arcing flight and resolve visual contact on arrival. Sword attacks use the actual held weapon, a short visual lunge and a fading ribbon sampled from the animated blade. One/two-handed melee, unarmed strikes and shield bashes select corresponding rig clips. Fire, frost and life magic have separate shard/ribbon silhouettes. Sound and hit reactions follow release/contact; lethal targets remain visible until impact. These are presentation changes; HoL outcomes, tactical positions and action costs remain authoritative.
+
+## Creation purchasing and combat usability
+
+New recruitment opens a blank character; saved draft resumption and published presets are explicit choices. Ability and discipline purchases have separate game-styled dialogs, current-rank headers, the book's discipline symbols and A/M/R/P type badges. Ability browsing filters by individual disciplines, owned disciplines or general abilities. The equipment step lists the actual granted and purchased inventory, grant sources, unresolved acquisition choices and owned quantities before offering additional purchases.
+
+Combat actions can be switched or cancelled before use, including a confirmation step for self actions. Movement completion refreshes action availability; new player-side turns select an eligible hero and clear old targeting/budget displays. Ally passage, prone-square costs and coordinated exploration movement are covered by the explicit adaptation above. The older blanket limitation on prone-occupant traversal is superseded; opportunity attacks, stealth, special remedies and the other listed gaps remain.
+
+Coffers, recovery caches and stairs now have mesh-based pointer picking, a colored hover glow and contextual interaction menus. Lost caches have visible coffer models. Nearby loot is collected deliberately, and Approach routes the company before reopening the menu. Collected coffers remain inspectable as empty; recovered caches disappear. Generic equipment drops and container contents remain future inventory work.

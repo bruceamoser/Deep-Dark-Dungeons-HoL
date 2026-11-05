@@ -14,6 +14,8 @@ try {
   await page.getByRole("button", { name: "The company register" }).click();
   await page.locator('[data-edit="0"]').click();
   await expect(page.locator("#hero-name")).toBeVisible();
+  await expect(page.locator("#hero-name")).toHaveValue("");
+  await page.locator('[data-preset="borin-bridgekeeper"]').click();
   await page.locator("#hero-name").fill("Borin of Greyhaven");
   await page.locator("#hero-name").blur();
   await page.locator('[data-step="7"]').click();

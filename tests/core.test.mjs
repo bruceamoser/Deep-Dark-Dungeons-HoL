@@ -815,3 +815,231 @@ test("forced collision damage precedes the contacted creature Stability deductio
   assert.equal(a.x, 2);
   assert.equal(b.x, 4);
 });
+
+function corridorFixture() {
+  const g = combatFixture();
+  g.map.tiles = Object.fromEntries(
+    Array.from({ length: 14 }, (_, x) => [key(x, 0), { x, z: 0 }]),
+  );
+  g.map.obstacles = {};
+  g.map.chests = [];
+  g.map.start = { x: 0, z: 0 };
+  g.map.exit = { x: 13, z: 0 };
+  g.party.forEach((h, i) => Object.assign(h, { x: i, z: 0 }));
+  g.enemies[0].x = 13;
+  g.enemies[0].z = 0;
+  return g;
+}
+test("combat crosses willing companions, preserves their squares and never saves stacked actors", () => {
+  const g = corridorFixture(),
+    before = g.party.slice(1).map((h) => [h.x, h.z]);
+  assert.equal(g.route({ x: 4, z: 0 }).length, 4);
+  g.move({ x: 4, z: 0 });
+  assert.equal(g.movementLeft(), 1);
+  g.step();
+  assert.equal(g.active.x, 4);
+  assert.deepEqual(
+    g.party.slice(1).map((h) => [h.x, h.z]),
+    before,
+  );
+  assert.equal(g.budget.remaining.main, 1);
+  const save = deserialize(serialize(g.snapshot()));
+  assert.equal(new Set(save.party.map((h) => key(h.x, h.z))).size, 4);
+  assert.throws(() => g.move({ x: 1, z: 0 }), /empty square/);
+});
+test("prone occupied squares and difficult terrain cost two, standing enemies still block", () => {
+  const g = corridorFixture();
+  g.party[1].conditions = [
+    {
+      id: "down",
+      key: "prone",
+      rating: 1,
+      persistence: "binary",
+      source: "fixture",
+    },
+  ];
+  g.map.tiles["3,0"].difficult = true;
+  assert.throws(() => g.move({ x: 4, z: 0 }), /costs 6/);
+  assert.equal(g.movementLeft(), g.active.preview.summary.speed);
+  g.map.tiles["3,0"].difficult = false;
+  g.move({ x: 4, z: 0 });
+  assert.equal(g.movementLeft(), 0);
+  g.step();
+  const blocked = corridorFixture();
+  blocked.enemies[0].x = 4;
+  assert.deepEqual(blocked.route({ x: 5, z: 0 }), []);
+  blocked.enemies[0].conditions = [
+    {
+      id: "enemy-down",
+      key: "prone",
+      rating: 1,
+      persistence: "binary",
+      source: "fixture",
+    },
+  ];
+  assert.equal(blocked.route({ x: 5, z: 0 }).length, 5);
+  assert.deepEqual(blocked.route({ x: 4, z: 0 }), []);
+});
+test("collecting coins and reversing a formation in a corridor do not deadlock", () => {
+  const g = corridorFixture();
+  g.mode = "exploration";
+  g.enemies = [];
+  g.setFormation(
+    "column",
+    g.party.map((h) => h.id),
+  );
+  g.map.chests = [{ id: "coins", x: 5, z: 0, coins: 17, opened: false }];
+  const before = g.campaign.haul;
+  g.move({ x: 5, z: 0 });
+  for (let i = 0; i < 20; i++) g.step();
+  assert.equal(g.campaign.haul, before);
+  g.interact("coffer:coins");
+  for (const x of [9, 0, 10, 1]) {
+    g.move({ x, z: 0 });
+    for (let i = 0; i < 60; i++) {
+      g.step();
+      assert.equal(new Set(g.party.map((h) => key(h.x, h.z))).size, 4);
+    }
+    assert.equal(g.party[0].x, x);
+    assert.ok([...g.paths.values()].every((p) => !p.length));
+  }
+  assert.equal(g.campaign.haul, before + 17);
+  assert.throws(() => g.interact("coffer:coins"), /Already collected/);
+});
+test("companions can atomically trade occupied destinations without overlapping", () => {
+  const g = corridorFixture();
+  g.mode = "exploration";
+  g.enemies = [];
+  g.paths.set("hero-0", [{ x: 1, z: 0 }]);
+  g.paths.set("hero-1", [{ x: 0, z: 0 }]);
+  g.step();
+  assert.deepEqual(
+    g.party.map((h) => h.x),
+    [1, 0, 2, 3],
+  );
+});
+test("a new round selects the next eligible hero and shows fresh movement instead of an old budget", () => {
+  const g = combatFixture();
+  delete g.advance;
+  g.enemies[0].hp = 100;
+  for (const h of g.party) {
+    g.encounter = R.chooseParticipant(g.encounter, h.id);
+    g.encounter = R.finishTurn(g.encounter);
+    if (g.encounter.nextSide === "opposition") {
+      g.encounter = R.chooseParticipant(g.encounter, "sentry");
+      g.encounter = R.finishTurn(g.encounter);
+    }
+  }
+  assert.equal(g.encounter.round, 2);
+  g.selected = 3;
+  g.budgets["hero-0"] = {
+    remaining: { main: 0, maneuver: 0, reaction: 0 },
+    speed: 5,
+    movementSpent: 5,
+  };
+  g.advance();
+  assert.equal(g.selected, 0);
+  assert.equal(g.budget, undefined);
+  assert.equal(g.movementLeft(), g.active.preview.summary.speed);
+  assert.equal(g.actionReason("ability-basic-unarmed"), "");
+  g.beginHero();
+  g.encounter = R.finishTurn(g.encounter);
+  // Keep the fixture on the player side to test an already-acted selection.
+  g.encounter.nextSide = "players";
+  g.advance();
+  assert.equal(g.selected, 1);
+  assert.throws(() => g.select(0), /already acted/);
+  assert.equal(g.selected, 1);
+});
+test("all formations continue through generated floors after successive loot destinations", () => {
+  for (const seed of [7, 17, 29])
+    for (const formation of ["square", "column", "wedge", "line"]) {
+      const g = fresh();
+      g.campaign.seed = seed;
+      g.newFloor();
+      g.enemies = [];
+      g.mode = "exploration";
+      g.setFormation(
+        formation,
+        g.party.map((h) => h.id),
+      );
+      for (const room of [g.map.rooms[1], g.map.rooms[0], g.map.rooms[2]]) {
+        const dest = { x: room.cx, z: room.cz };
+        g.move(dest);
+        for (
+          let i = 0;
+          i < 300 && [...g.paths.values()].some((p) => p.length);
+          i++
+        ) {
+          g.step();
+          assert.equal(new Set(g.party.map((h) => key(h.x, h.z))).size, 4);
+        }
+        assert.deepEqual(
+          { x: g.party[0].x, z: g.party[0].z },
+          dest,
+          `${seed} ${formation}`,
+        );
+      }
+    }
+});
+
+test("world loot requires deliberate nearby interaction and survives save/load without duplication", () => {
+  const g = corridorFixture();
+  g.mode = "exploration";
+  g.enemies = [];
+  g.map.chests = [{ id: "sealed", x: 8, z: 0, coins: 21, opened: false }];
+  const before = g.campaign.haul;
+  assert.throws(() => g.interact("coffer:sealed"), /beside/);
+  const arrivals = [];
+  g.listeners.push((type, data) => {
+    if (type === "interact-ready") arrivals.push(data.id);
+  });
+  g.approachInteraction("coffer:sealed");
+  for (let i = 0; i < 50; i++) g.step();
+  assert.deepEqual(arrivals, ["coffer:sealed"]);
+  assert.equal(g.campaign.haul, before);
+  g.mode = "combat";
+  assert.throws(() => g.interact("coffer:sealed"), /Finish combat/);
+  g.mode = "exploration";
+  g.interact("coffer:sealed");
+  const loaded = fresh();
+  loaded.load(deserialize(serialize(g.snapshot())));
+  assert.equal(loaded.campaign.haul, before + 21);
+  assert.throws(() => loaded.interact("coffer:sealed"), /Already collected/);
+});
+
+test("lost caches are recoverable once on the matching floor and stairs enforce gathering", () => {
+  const g = fresh();
+  g.descend();
+  g.enemies = [];
+  g.campaign.caches = [
+    {
+      x: g.active.x,
+      z: g.active.z,
+      depth: 1,
+      coins: 9,
+      expedition: 1,
+      recovered: false,
+    },
+    {
+      x: g.active.x,
+      z: g.active.z,
+      depth: 2,
+      coins: 50,
+      expedition: 2,
+      recovered: false,
+    },
+  ];
+  g.interact("cache:0");
+  assert.equal(g.campaign.haul, 9);
+  assert.equal(
+    g.worldInteractions().some((i) => i.kind === "cache"),
+    false,
+  );
+  assert.throws(() => g.interact("cache:0"), /no longer here/);
+  assert.throws(() => g.interact("cache:1"), /no longer here/);
+  assert.throws(() => g.interact("stairs:descent"), /Gather/);
+  g.interact("stairs:entrance");
+  assert.equal(g.mode, "town");
+  assert.equal(g.campaign.bank, 9);
+});

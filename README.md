@@ -34,12 +34,14 @@ The Linux executable is `release/linux-unpacked/deep-dark-dungeons-hol`. Windows
 - Click an enemy to attack with the readied melee weapon or bow, or use Basic Unarmed with empty hands. Space ends a turn.
 - Right-drag pans the camera; Q/E rotate; wheel zooms; F recenters and resumes exploration follow. Combat movement keeps the camera fixed.
 - Formation chooses two by two, single file, wedge or line, with editable marching order.
-- Actions opens the acting hero’s supported cards. Choose one, then click its target; Esc cancels targeting.
+- Hover a coffer, lost expedition cache or stairs to highlight it. Click for Inspect, Approach, Collect/Recover or travel, and Leave. Loot is collected deliberately through this menu; walking past it does not collect it.
+- Actions opens the acting hero’s supported cards. Choose one, then click its target; self actions offer Use on self. Choose a different action to switch, or use Cancel, Escape or the same action again to leave targeting without spending.
+- Heroes can pass willing companions but must end on an empty square. Prone occupied squares cost 2 movement. This is an explicit companion-passage adaptation; standing enemies still block.
 - C / I opens the character command screen: animated equipment preview, pack, quick ready/stow, abilities and Journey. Star favorite actions to put them on the combat bar; 5–9 activate the first five. Shield Block is offered before eligible enemy attacks.
 - Sound opens master volume, mute and a test sound. Audio starts on the first click or key press.
 - Clear a depth and return to Greyhaven to earn a level. Develop this hero opens training; committed choices, damage, injuries and spent Grit persist.
 - Return to entrance stairs to extract; gather at far stairs to descend.
-- The company register opens the eight-step creator; Recruit validates both creation stages before replacing a slot.
+- The company register opens a blank eight-step creator; saved drafts and example characters are explicit choices. Separate discipline/ability purchase dialogs show owned ranks, book symbols and action letters. Equipment lists granted gear before additional shopping. Recruit validates both creation stages before replacing a slot.
 - Journey offers matching one-hour wound treatment in town, with one attempt per wound per campaign day. Healing potions are usable from inventory or the combat action bar.
 
 Saves use the desktop application's user-data directory. Development saves use browser local storage. Save before replacing or resetting a party.

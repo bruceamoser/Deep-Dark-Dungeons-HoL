@@ -19,6 +19,7 @@ export class Scene {
     this.torches = [];
     this.entities = new Map();
     this.props = [];
+    this.interactables = new Map();
     this.effects = [];
     this.assets = new Map();
     this.angle = Math.PI / 4;
@@ -123,7 +124,7 @@ export class Scene {
         );
         this.cursor.visible =
           !!this.map?.tiles[key(this.hover.x, this.hover.z)];
-        onHover?.(this.hover);
+        onHover?.(this.hover, this.interactionAt(e), e);
       }
     });
     canvas.addEventListener("pointerdown", (e) => {
@@ -137,6 +138,8 @@ export class Scene {
         this.targetFocus = this.focus.clone();
         canvas.setPointerCapture(e.pointerId);
         canvas.style.cursor = "grabbing";
+        this.highlightInteraction(null);
+        onHover?.(null);
         this.showPath([]);
       }
       if (e.button === 0) {
@@ -144,8 +147,16 @@ export class Scene {
         // not the hover cell from before the drag.
         const hit = this.groundAt(e);
         if (hit)
-          onClick({ x: Math.round(hit.x / TILE), z: Math.round(hit.z / TILE) });
+          onClick(
+            { x: Math.round(hit.x / TILE), z: Math.round(hit.z / TILE) },
+            this.interactionAt(e),
+            e,
+          );
       }
+    });
+    canvas.addEventListener("pointerleave", () => {
+      this.highlightInteraction(null);
+      onHover?.(null);
     });
     canvas.addEventListener(
       "wheel",
@@ -175,6 +186,81 @@ export class Scene {
     this.camera.updateMatrixWorld();
     this.ray.setFromCamera(this.pointer, this.camera);
     return this.ray.ray.intersectPlane(this.plane, new T.Vector3());
+  }
+  interactionAt(e) {
+    this.groundAt(e);
+    this.world.updateMatrixWorld(true);
+    const visible = (obj) => {
+      for (let p = obj; p; p = p.parent) if (!p.visible) return false;
+      return true;
+    };
+    const hit = this.ray
+      .intersectObject(this.world, true)
+      .find((h) => h.object.isMesh && visible(h.object));
+    for (let obj = hit?.object; obj; obj = obj.parent)
+      if (obj.userData.interactionId) return obj.userData.interactionId;
+    return null;
+  }
+  highlightInteraction(id) {
+    if (this.highlightedInteraction === id) return;
+    for (const [mesh, original] of this.highlightMaterials ?? []) {
+      const temporary = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
+      temporary.forEach((m) => m.dispose());
+      mesh.material = original;
+    }
+    this.highlightMaterials = [];
+    this.highlightedInteraction = id;
+    const entry = this.interactables.get(id);
+    this.canvas.style.cursor = this.pan ? "grabbing" : entry ? "pointer" : "";
+    this.cursor.material.color.setHex(entry ? 0x7ae2d3 : color.gold);
+    if (!entry) return;
+    this.showPath([]);
+    entry.obj.traverse((mesh) => {
+      if (!mesh.isMesh) return;
+      const original = mesh.material;
+      const highlight = (m) => {
+        const copy = m.clone();
+        copy.emissive?.setHex(
+          entry.item.kind === "cache" ? 0x8766d8 : 0x31aa92,
+        );
+        copy.emissiveIntensity = 0.7;
+        return copy;
+      };
+      mesh.material = Array.isArray(original)
+        ? original.map(highlight)
+        : highlight(original);
+      this.highlightMaterials.push([mesh, original]);
+    });
+  }
+  syncInteractions(items) {
+    const ids = new Set(items.map((i) => i.id));
+    for (const [id, entry] of this.interactables)
+      if (!ids.has(id)) {
+        if (id === this.highlightedInteraction) this.highlightInteraction(null);
+        this.world.remove(entry.obj);
+        this.props = this.props.filter((p) => p.obj !== entry.obj);
+        this.interactables.delete(id);
+      }
+    for (const item of items) {
+      let entry = this.interactables.get(item.id);
+      if (!entry) {
+        const stairs = ["entrance", "descent"].includes(item.kind);
+        const obj = this.prop(
+          stairs ? "stairs" : "chest",
+          item.x,
+          item.z - (item.kind === "entrance" ? 2 : 0),
+          stairs ? 1.2 : 0.9,
+          item.kind === "entrance" ? Math.PI : 0,
+        );
+        obj.userData.interactionId = item.id;
+        entry = { obj, item };
+        this.interactables.set(item.id, entry);
+      }
+      entry.item = item;
+      entry.obj.userData.empty = item.available === false;
+    }
   }
   panTo(e) {
     const hit = this.groundAt(e);
@@ -276,6 +362,8 @@ export class Scene {
   }
   build(map) {
     this.clearEffects();
+    this.highlightInteraction(null);
+    this.interactables.clear();
     this.map = map;
     for (const p of this.world.children.slice()) this.world.remove(p);
     this.props = [];
@@ -398,9 +486,6 @@ export class Scene {
         rng.next() * 6,
       );
     }
-    for (const chest of map.chests) this.prop("chest", chest.x, chest.z, 0.9);
-    this.prop("stairs", map.start.x, map.start.z - 2, 1.2, Math.PI);
-    this.prop("stairs", map.exit.x, map.exit.z, 1.2);
     const portal = new T.PointLight(0x70d9d3, 30, 10, 2);
     portal.position.set(map.exit.x * TILE, 2, map.exit.z * TILE);
     this.world.add(portal);
@@ -511,8 +596,20 @@ export class Scene {
     for (const effect of this.effects) effect.dispose();
     this.effects.length = 0;
   }
+  queueMovement(steps) {
+    for (const { heroId, points } of steps) {
+      const entity = this.entities.get(heroId);
+      if (!entity) continue;
+      entity.travel ??= [];
+      for (const p of points) {
+        const point = new T.Vector3(p.x * TILE, 0.04, p.z * TILE);
+        if (!entity.travel.at(-1)?.equals(point)) entity.travel.push(point);
+      }
+    }
+  }
   freezePositions() {
     for (const e of this.entities.values()) {
+      e.travel = [];
       e.group.position.set(e.data.x * TILE, 0.04, e.data.z * TILE);
       this.animate(e.data.id, "Idle");
     }
@@ -569,15 +666,22 @@ export class Scene {
       e.mixer.update(dt);
       e.lock = Math.max(0, e.lock - dt);
       e.deathGrace = Math.max(0, (e.deathGrace ?? 0) - dt);
-      const target = new T.Vector3(e.data.x * TILE, 0.04, e.data.z * TILE),
+      const target =
+          e.travel?.[0] ??
+          new T.Vector3(e.data.x * TILE, 0.04, e.data.z * TILE),
         delta = target.clone().sub(e.group.position);
       const moving = delta.length() > 0.02;
       // Resolve a pushed target visually after contact, even though the rules
       // have already committed its new square.
       if (moving && !e.pendingImpacts) {
         e.group.rotation.y = Math.atan2(delta.x, delta.z);
-        e.group.position.lerp(target, 1 - Math.exp(-dt * 12));
+        e.group.position.addScaledVector(
+          delta,
+          Math.min(1, (dt * 16) / delta.length()),
+        );
       }
+      if (e.travel?.length && e.group.position.distanceTo(target) <= 0.02)
+        e.travel.shift();
       if (!e.lock && !e.pendingImpacts) {
         const dead = e.isEnemy
           ? e.data.hp <= 0

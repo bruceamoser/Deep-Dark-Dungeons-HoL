@@ -1,3 +1,8 @@
+import {
+  disciplineIcon,
+  disciplineStrip,
+  abilityType,
+} from "./book-symbols.mjs";
 import { icon, esc, itemIcon } from "./icons.mjs";
 import { coverage } from "../core/abilities.mjs";
 import { readyExample } from "../core/presets.mjs";
@@ -17,7 +22,12 @@ export function creationScreen({
 }) {
   const original = game.party[slot],
     key = `ddd.recruit.${slot}`;
-  let draft = structuredClone(original.draft),
+  let draft = development
+      ? structuredClone(original.draft)
+      : R.newCreationDraft(),
+    resumeDraft = null,
+    purchaseKind = null,
+    disciplineFilter = "all",
     step = development ? 5 : 0,
     search = "",
     showAll = false,
@@ -30,7 +40,7 @@ export function creationScreen({
     );
   } else {
     try {
-      draft = JSON.parse(localStorage.getItem(key)) ?? draft;
+      resumeDraft = JSON.parse(localStorage.getItem(key));
     } catch {}
     delete draft.progression;
   }
@@ -53,7 +63,10 @@ export function creationScreen({
   const info = (c) =>
     `<details class="choice-reference"><summary>Read rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
   const changed = () => {
-    if (!development) localStorage.setItem(key, JSON.stringify(draft));
+    if (!development) {
+      localStorage.setItem(key, JSON.stringify(draft));
+      resumeDraft = null;
+    }
     draw();
   };
   const bind = (selector, event, fn) =>
@@ -86,16 +99,19 @@ export function creationScreen({
     });
     root.querySelector(".close").onclick = close;
     bind("[data-step]", "click", (e) => {
+      purchaseKind = null;
       step = +e.dataset.step;
       search = "";
       draw();
     });
     root.querySelector("#creator-back").onclick = () => {
+      purchaseKind = null;
       step = visibleSteps[visibleSteps.indexOf(step) - 1];
       search = "";
       draw();
     };
     root.querySelector("#creator-next")?.addEventListener("click", () => {
+      purchaseKind = null;
       step = visibleSteps[visibleSteps.indexOf(step) + 1];
       search = "";
       draw();
@@ -119,7 +135,7 @@ export function creationScreen({
       }),
     );
     if (step === 0) {
-      host.innerHTML = `<p class="section-intro">Choose a name and assign your six attributes. Values range from −2 to +2 and must total +3.</p>${field("Hero name", `<input id="hero-name" maxlength="80" value="${esc(draft.name)}" placeholder="A name for the register">`)}<div class="attribute-allocation">${Object.entries(
+      host.innerHTML = `${resumeDraft ? `<button id="resume-recruit" class="resume-draft">Resume saved draft · ${esc(resumeDraft.name || "Unnamed adventurer")}</button>` : ""}<p class="section-intro">Choose a name and assign your six attributes. Values range from −2 to +2 and must total +3.</p>${field("Hero name", `<input id="hero-name" maxlength="80" value="${esc(draft.name)}" placeholder="A name for the register">`)}<div class="attribute-allocation">${Object.entries(
         draft.attributes,
       )
         .map(
@@ -135,6 +151,11 @@ export function creationScreen({
           draft.languages.home,
         )}</select>`,
       )}<h3 class="subheading">Or begin with a complete adventurer</h3><div class="preset-grid">${examples.map((e) => `<button data-preset="${e.id}">${esc(e.draft.name)}<small>${esc(name(e.draft.classId))}</small></button>`).join("")}</div>`;
+      root.querySelector("#resume-recruit")?.addEventListener("click", () => {
+        draft = structuredClone(resumeDraft);
+        delete draft.progression;
+        changed();
+      });
       root.querySelector("#hero-name").onchange = (e) => {
         draft.name = e.target.value;
         changed();
@@ -235,7 +256,7 @@ export function creationScreen({
               C.choices.filter((c) => c.originType === type),
               draft[type]?.id,
             )}</select>`,
-          )}<div class="choice-grid">${(selected?.pairs ?? []).map((pair, i) => `<button data-pair="${i}" data-origin-type="${type}" class="choice-card ${draft[type]?.pair === i ? "chosen" : ""}"><strong>${esc(name(pair.disciplineId))} ${pair.rank}</strong><small>${esc(name(pair.abilityId))} · ${esc(coverage(pair.abilityId).status)}</small></button>`).join("")}</div>${selected?.pairs?.[draft[type]?.pair] ? info(record(selected.pairs[draft[type].pair].abilityId)) : ""}`;
+          )}<div class="choice-grid">${(selected?.pairs ?? []).map((pair, i) => `<button data-pair="${i}" data-origin-type="${type}" class="choice-card ${draft[type]?.pair === i ? "chosen" : ""}">${disciplineIcon(pair.disciplineId)}<strong>${esc(name(pair.disciplineId))} ${pair.rank}</strong><small>${esc(name(pair.abilityId))} · ${esc(coverage(pair.abilityId).status)}</small></button>`).join("")}</div>${selected?.pairs?.[draft[type]?.pair] ? info(record(selected.pairs[draft[type].pair].abilityId)) : ""}`;
         })
         .join("")}`;
       bind("[data-origin]", "change", (e) => {
@@ -255,7 +276,7 @@ export function creationScreen({
         })
         .join(
           "",
-        )}</div>${cls ? `<h3 class="subheading">Starting disciplines · Choose two</h3><div class="choice-grid">${cls.startingDisciplines.map((id) => `<button data-class-discipline="${id}" class="choice-card ${draft.classDisciplines.includes(id) ? "chosen" : ""}">${esc(name(id))}</button>`).join("")}</div><h3 class="subheading">Signature</h3><div class="trait-list">${cls.signatures[1].map((id) => `<article class="trait-choice ${draft.signatureId === id ? "chosen" : ""}"><button data-signature="${id}">${draft.signatureId === id ? "◆" : "◇"} ${esc(name(id))}<small>${esc(coverage(id).status)}</small></button>${info(record(id))}</article>`).join("")}</div>` : ""}`;
+        )}</div>${cls ? `<h3 class="subheading">Starting disciplines · Choose two</h3><div class="choice-grid">${cls.startingDisciplines.map((id) => `<button data-class-discipline="${id}" class="choice-card ${draft.classDisciplines.includes(id) ? "chosen" : ""}">${disciplineIcon(id)}${esc(name(id))}</button>`).join("")}</div><h3 class="subheading">Signature</h3><div class="trait-list">${cls.signatures[1].map((id) => `<article class="trait-choice ${draft.signatureId === id ? "chosen" : ""}"><button data-signature="${id}">${draft.signatureId === id ? "◆" : "◇"} ${esc(name(id))}<small>${esc(coverage(id).status)}</small></button>${abilityType(record(id))}${info(record(id))}</article>`).join("")}</div>` : ""}`;
       bind("[data-class]", "click", (e) => {
         draft.classId = e.dataset.class;
         draft.classDisciplines = [];
@@ -312,84 +333,149 @@ export function creationScreen({
                 .join("")}</select>`,
             )
           : ""
-      }<div class="purchase-receipts">${purchases.map((x, i) => `<span>${esc(name(x.id))}${x.rank ? " " + x.rank : ""}${i >= locked ? `<button data-remove-purchase="${i}" aria-label="Remove ${esc(name(x.id))}">×</button>` : ""}</span>`).join("") || "<span>No DP spent in this stage.</span>"}</div><div class="pack-toolbar"><input id="training-search" type="search" placeholder="Find a discipline or ability…" aria-label="Search training" value="${esc(search)}"><label class="show-all"><input id="training-all" type="checkbox" ${showAll ? "checked" : ""}> Show unavailable</label></div><div id="training-choices"></div><div id="acquisition-choices"></div>`;
-      const drawChoices = () => {
-        const records = C.choices
-          .filter(
-            (c) =>
-              ["ability", "discipline"].includes(c.kind) &&
-              !c.universal &&
-              c.name.toLowerCase().includes(search.toLowerCase()),
-          )
-          .map((c) => {
-            const e = R.purchaseEligibility(c, state, C.choices);
-            return { c, e };
-          })
-          .filter(
-            ({ c, e }) =>
-              showAll ||
-              e.eligible ||
-              (c.purchasePolicy === "new-recipe" &&
-                e.reasons.every((r) => r.code === "recipe")),
-          )
-          .sort(
-            (a, b) =>
-              Number(b.e.eligible) - Number(a.e.eligible) ||
-              a.c.name.localeCompare(b.c.name),
-          );
-        root.querySelector("#training-choices").innerHTML =
-          records
-            .map(({ c, e }) => {
-              const unsupported =
-                development &&
-                c.kind === "ability" &&
-                coverage(c.id).status !== "included";
-              return `<article class="training-choice"><div><strong>${esc(c.name)}${e.rank ? " · Rank " + e.rank : ""}</strong><small>${c.kind === "ability" ? esc(coverage(c.id).status) : "DISCIPLINE"}${!e.eligible ? " · " + esc(e.reasons.map((r) => r.text).join(" ")) : ""}${unsupported ? " · Not available for dungeon training" : ""}</small>${
-                c.purchasePolicy === "new-recipe"
-                  ? `<div class="recipe-study">${[0, 1]
-                      .map(
-                        (n) =>
-                          `<select data-study="${c.id}" data-number="${n}">${options(
-                            C.inventory.recipes.filter(
-                              (r) =>
-                                state.compatibleRecipes.includes(r.id) &&
-                                !state.recipes.includes(r.id),
-                            ),
-                            null,
-                            "Choose recipe " + (n + 1),
-                          )}</select>`,
-                      )
-                      .join("")}</div>`
-                  : ""
-              }${c.kind === "ability" ? info(c) : ""}</div><button data-buy="${c.id}" ${unsupported || (!e.eligible && c.purchasePolicy !== "new-recipe") ? "disabled" : ""}>${e.cost ?? "—"} DP <b>+</b></button></article>`;
-            })
-            .join("") ||
-          '<p class="empty-state">No available purchases. Check your origins, discipline ranks or DP.</p>';
-        bind("[data-buy]", "click", (e) => {
-          const c = record(e.dataset.buy),
-            selection = { id: c.id };
-          if (c.kind === "discipline")
-            selection.rank = (state.ranks[c.id] ?? 0) + 1;
-          if (c.purchasePolicy === "new-recipe")
-            selection.recipeIds = [
-              ...root.querySelectorAll(`[data-study="${c.id}"]`),
-            ].map((s) => s.value);
-          const check = R.purchaseEligibility(c, state, C.choices, selection);
-          if (!check.eligible)
-            throw new Error(check.reasons.map((r) => r.text).join(" "));
-          purchases.push(selection);
-          changed();
+      }<div class="purchase-receipts">${purchases.map((x, i) => `<span>${esc(name(x.id))}${x.rank ? " " + x.rank : ""}${i >= locked ? `<button data-remove-purchase="${i}" aria-label="Remove ${esc(name(x.id))}">×</button>` : ""}</span>`).join("") || "<span>No DP spent in this stage.</span>"}</div>${disciplineStrip(state, C.choices)}<div class="purchase-gateways"><button data-purchase-kind="discipline">${disciplineIcon("discipline-arms")}<span>Purchase disciplines<small>${stage === 0 && !development ? "Available after choosing your calling" : "Learn a discipline or raise a rank"}</small></span>${icon("arrow")}</button><button data-purchase-kind="ability">${icon("book")}<span>Purchase abilities<small>Browse by discipline and action type</small></span>${icon("arrow")}</button></div><div id="acquisition-choices"></div>`;
+      bind("[data-purchase-kind]", "click", (e) => {
+        purchaseKind = e.dataset.purchaseKind;
+        search = "";
+        showAll = purchaseKind === "discipline";
+        disciplineFilter = "all";
+        drawPicker();
+      });
+      function drawPicker() {
+        root.querySelector(".purchase-overlay")?.remove();
+        if (!purchaseKind) return;
+        const isAbility = purchaseKind === "ability";
+        const overlay = document.createElement("div");
+        overlay.className = "purchase-overlay";
+        overlay.innerHTML = `<section class="purchase-window" role="dialog" aria-modal="true" aria-label="Purchase ${isAbility ? "abilities" : "disciplines"}"><header><div><span class="eyebrow">${esc(draft.name || "YOUR NEXT LEGEND")} · ${development ? "ADVANCEMENT" : stage === 0 ? "EARLY TRAINING" : "HERO TRAINING"}</span><h2>Purchase ${isAbility ? "abilities" : "disciplines"}</h2></div><div class="purchase-dp"><b>${state.dp}</b> DP available</div><button data-close-picker class="icon-button" aria-label="Close purchases">${icon("close")}</button></header>${disciplineStrip(state, C.choices, isAbility, disciplineFilter)}<div class="purchase-tools"><input id="training-search" type="search" placeholder="Search ${isAbility ? "abilities" : "disciplines"}…" aria-label="Search training" value="${esc(search)}">${isAbility ? `<label>Discipline<select id="discipline-filter">${options([{ id: "all", name: "All disciplines" }, { id: "owned", name: "My disciplines" }, { id: "general", name: "General abilities" }, ...C.choices.filter((c) => c.kind === "discipline")], disciplineFilter).replace('<option value="">Choose…</option>', "")}</select></label>` : ""}<label class="show-all"><input id="training-all" type="checkbox" ${showAll ? "checked" : ""}> Show unavailable</label></div><div class="purchase-scroll"><div id="training-choices" class="purchase-cards"></div></div><footer><span>A · Action &nbsp; M · Maneuver &nbsp; R · Reaction &nbsp; P · Passive</span><button data-close-picker class="primary">Done</button></footer></section>`;
+        root.querySelector(".veil").append(overlay);
+        const closePicker = () => {
+          purchaseKind = null;
+          overlay.remove();
+          root
+            .querySelector(
+              `[data-purchase-kind="${isAbility ? "ability" : "discipline"}"]`,
+            )
+            ?.focus();
+        };
+        overlay
+          .querySelectorAll("[data-close-picker]")
+          .forEach((b) => (b.onclick = closePicker));
+        overlay.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            e.stopPropagation();
+            closePicker();
+          }
         });
-      };
-      drawChoices();
-      root.querySelector("#training-search").oninput = (e) => {
-        search = e.target.value;
+        const drawChoices = () => {
+          const records = C.choices
+            .filter((c) => c.kind === purchaseKind && !c.universal)
+            .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
+            .filter((c) => {
+              if (!isAbility || disciplineFilter === "all") return true;
+              const reqs = (c.requirements ?? []).filter(
+                (r) => r.kind === "discipline",
+              );
+              if (disciplineFilter === "general") return !reqs.length;
+              if (disciplineFilter === "owned")
+                return !reqs.length || reqs.some((r) => state.ranks[r.id] > 0);
+              return reqs.some((r) => r.id === disciplineFilter);
+            })
+            .map((c) => ({ c, e: R.purchaseEligibility(c, state, C.choices) }))
+            .filter(
+              ({ c, e }) =>
+                showAll ||
+                e.eligible ||
+                (c.purchasePolicy === "new-recipe" &&
+                  e.reasons.every((r) => r.code === "recipe")),
+            )
+            .sort(
+              (a, b) =>
+                Number(b.e.eligible) - Number(a.e.eligible) ||
+                a.c.name.localeCompare(b.c.name),
+            );
+          overlay.querySelector("#training-choices").innerHTML =
+            records
+              .map(({ c, e }) => {
+                const unsupported =
+                  development &&
+                  isAbility &&
+                  coverage(c.id).status !== "included";
+                const requirements = (c.requirements ?? []).filter(
+                  (r) => r.kind === "discipline",
+                );
+                return `<article class="purchase-card ${!e.eligible || unsupported ? "unavailable" : ""}" data-choice="${c.id}"><div class="purchase-card-heading">${isAbility ? abilityType(c) : disciplineIcon(c.id)}<div><h3>${esc(c.name)}</h3><small>${isAbility ? requirements.map((r) => `${esc(name(r.id))} ${r.rank}`).join(" · ") || "General ability" : `Rank ${state.ranks[c.id] ?? 0} → ${e.rank ?? "—"}`}</small></div></div><p class="purchase-description">${esc(c.reference?.flavor?.[0] ?? (isAbility ? "Read the full card below." : "Develop your training in " + c.name + "."))}</p>${isAbility ? `<div class="purchase-card-meta">${requirements.map((r) => `<span>${disciplineIcon(r.id)}${esc(name(r.id))} ${r.rank}</span>`).join("")}<span>Level ${c.minimumLevel}</span><span>${esc(coverage(c.id).status)}</span></div>${info(c)}` : ""}${
+                  c.purchasePolicy === "new-recipe"
+                    ? `<div class="recipe-study">${[0, 1]
+                        .map(
+                          (n) =>
+                            `<select data-study="${c.id}" data-number="${n}">${options(
+                              C.inventory.recipes.filter(
+                                (r) =>
+                                  state.compatibleRecipes.includes(r.id) &&
+                                  !state.recipes.includes(r.id),
+                              ),
+                              null,
+                              "Choose recipe " + (n + 1),
+                            )}</select>`,
+                        )
+                        .join("")}</div>`
+                    : ""
+                }<div class="purchase-card-bottom"><small>${unsupported ? "Not available for dungeon training." : esc(e.reasons.map((r) => r.text).join(" "))}</small><button data-buy="${c.id}" ${unsupported || (!e.eligible && c.purchasePolicy !== "new-recipe") ? "disabled" : ""}>${e.cost ?? "—"} DP · ${isAbility ? "Learn" : "Purchase rank"}</button></div></article>`;
+              })
+              .join("") ||
+            '<p class="empty-state">No matching purchases. Change the discipline filter or show unavailable choices.</p>';
+          overlay.querySelectorAll("[data-buy]").forEach(
+            (b) =>
+              (b.onclick = () =>
+                attempt(() => {
+                  const c = record(b.dataset.buy),
+                    selection = { id: c.id };
+                  if (c.kind === "discipline")
+                    selection.rank = (state.ranks[c.id] ?? 0) + 1;
+                  if (c.purchasePolicy === "new-recipe")
+                    selection.recipeIds = [
+                      ...overlay.querySelectorAll(`[data-study="${c.id}"]`),
+                    ].map((s) => s.value);
+                  const check = R.purchaseEligibility(
+                    c,
+                    state,
+                    C.choices,
+                    selection,
+                  );
+                  if (!check.eligible)
+                    throw new Error(check.reasons.map((r) => r.text).join(" "));
+                  purchases.push(selection);
+                  changed();
+                })),
+          );
+        };
         drawChoices();
-      };
-      root.querySelector("#training-all").onchange = (e) => {
-        showAll = e.target.checked;
-        drawChoices();
-      };
+        overlay.querySelector("#training-search").oninput = (e) => {
+          search = e.target.value;
+          drawChoices();
+        };
+        overlay.querySelector("#training-all").onchange = (e) => {
+          showAll = e.target.checked;
+          drawChoices();
+        };
+        overlay
+          .querySelector("#discipline-filter")
+          ?.addEventListener("change", (e) => {
+            disciplineFilter = e.target.value;
+            drawChoices();
+          });
+        overlay.querySelectorAll("[data-filter-discipline]").forEach(
+          (b) =>
+            (b.onclick = () => {
+              disciplineFilter = b.dataset.filterDiscipline;
+              drawPicker();
+            }),
+        );
+        overlay.querySelector("[data-close-picker]").focus();
+      }
+      if (purchaseKind) drawPicker();
       root.querySelector("#training-level")?.addEventListener("change", (e) => {
         draft.progression.level = +e.target.value;
         changed();
@@ -426,7 +512,8 @@ export function creationScreen({
           if (!a) return "";
           const selected = acquisitions[id] ?? {};
           const needsHands =
-            a.items.includes("item-ordinary-melee-weapon") || a.weaponChoice;
+            a.items.includes("item-ordinary-melee-weapon") ||
+            (a.weaponChoice && selected.weapon === "melee");
           return a.weaponChoice ||
             needsHands ||
             a.recipeChoices ||
@@ -490,7 +577,26 @@ export function creationScreen({
       const goods = C.inventory.equipment.filter(
         (i) => !i.specialOrder && !i.grantOnly && Number.isFinite(i.price),
       );
-      host.innerHTML = `<div class="training-banner"><div><b>${p.inventory.remainingCoins}</b><span>COINS REMAINING</span></div><p>Starting purse ${p.inventory.startingCoins} · Spent ${p.inventory.spent}<br>Bulk ${p.inventory.bulk} / ${p.inventory.capacity}. Travel clothes are granted.</p></div><div class="purchase-receipts">${draft.shopping.map((x, i) => `<span>${x.quantity} × ${esc(C.inventory.equipment.find((c) => c.id === x.id)?.name)}<button data-remove-item="${i}" aria-label="Remove purchased item">×</button></span>`).join("")}</div><div class="shop-grid">${goods.map((i) => `<article>${icon(itemIcon(i))}<strong>${esc(i.name)}</strong><small>${i.price} coins · ${i.bulk} bulk${i.inventoryDie ? " · d" + i.inventoryDie : ""}</small>${i.handChoices.length > 1 ? `<select data-shop-hands="${i.id}">${i.handChoices.map((n) => `<option value="${n}">${n} hand${n === 2 ? "s" : ""}</option>`).join("")}</select>` : ""}<button data-shop="${i.id}" ${i.price > p.inventory.remainingCoins ? "disabled" : ""}>Add to pack</button></article>`).join("")}</div>`;
+      const owned = (id) =>
+        p.inventory.items
+          .filter((i) => i.catalogId === id)
+          .reduce((n, i) => n + i.quantity, 0);
+      const granted = (id) =>
+        p.inventory.items
+          .filter((i) => i.catalogId === id && i.source !== "coins")
+          .reduce((n, i) => n + i.quantity, 0);
+      const incomplete = p.errors.filter(
+        (e) => e.code === "acquisition" && !e.equipment,
+      );
+      host.innerHTML = `<div class="training-banner"><div><b>${p.inventory.remainingCoins}</b><span>COINS REMAINING</span></div><p>Starting purse ${p.inventory.startingCoins} · Spent ${p.inventory.spent}<br>Bulk ${p.inventory.bulk} / ${p.inventory.capacity}. Granted gear costs no coins.</p></div><h3 class="subheading">Already in your pack</h3><div class="creation-pack">${p.inventory.items.map((i) => `<article data-owned-item="${i.catalogId}" data-source="${esc(i.source)}">${icon(itemIcon(i))}<div><strong>${i.quantity} × ${esc(i.definition.name)}</strong><small>${i.source === "coins" ? "Purchased with coins" : i.source === "creation" ? "Starting outfit · Granted" : `Granted by ${esc(name(i.source))}`}${i.hands ? ` · ${i.hands} hand${i.hands === 2 ? "s" : ""}` : ""}${i.inventoryDie ? ` · d${i.inventoryDie}` : ""}</small></div><span>${i.source === "coins" ? "BOUGHT" : "GRANTED"}</span></article>`).join("")}</div>${incomplete.length ? `<div class="creation-errors"><b>Finish your granted equipment choices</b>${incomplete.map((e) => `<p>${esc(name(e.id))}: ${esc(e.text ?? e.reasons?.map((r) => r.text).join(" ") ?? "Choose the granted equipment.")} <button data-finish-grant="${e.id}">Complete choice</button></p>`).join("")}</div>` : ""}<div class="purchase-receipts">${draft.shopping.map((x, i) => `<span>${x.quantity} × ${esc(C.inventory.equipment.find((c) => c.id === x.id)?.name)}<button data-remove-item="${i}" aria-label="Remove purchased item">×</button></span>`).join("")}</div><h3 class="subheading">Buy additional equipment</h3><div class="shop-grid">${goods.map((i) => `<article data-stock="${i.id}">${icon(itemIcon(i))}<strong>${esc(i.name)}</strong><small>${i.price} coins · ${i.bulk} bulk${i.inventoryDie ? " · d" + i.inventoryDie : ""}</small><span class="owned-count ${owned(i.id) ? "has-owned" : ""}">Owned ${owned(i.id)}${granted(i.id) ? ` · ${granted(i.id)} granted` : ""}</span>${i.handChoices.length > 1 ? `<select data-shop-hands="${i.id}">${i.handChoices.map((n) => `<option value="${n}">${n} hand${n === 2 ? "s" : ""}</option>`).join("")}</select>` : ""}<button data-shop="${i.id}" ${i.price > p.inventory.remainingCoins ? "disabled" : ""}>${owned(i.id) ? "Buy another" : "Buy"} · ${i.price} coins</button></article>`).join("")}</div>`;
+      bind("[data-finish-grant]", "click", (e) => {
+        step = p.stages[0].abilities.includes(e.dataset.finishGrant) ? 3 : 5;
+        purchaseKind = null;
+        draw();
+        root
+          .querySelector(`[data-acquire="${e.dataset.finishGrant}"]`)
+          ?.focus();
+      });
       bind("[data-shop]", "click", (e) => {
         const i = goods.find((x) => x.id === e.dataset.shop);
         draft.shopping.push({
