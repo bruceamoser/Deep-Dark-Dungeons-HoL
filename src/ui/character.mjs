@@ -71,7 +71,7 @@ export function characterSheet({
     root.querySelector(".hero-vitals").innerHTML =
       `<div><span>${icon("heart")} HEALTH</span><b>${h.survival.hp}<small> / ${h.survival.maxHp}</small></b><div class="bar"><span style="width:${(h.survival.hp / h.survival.maxHp) * 100}%"></span></div></div><div><span>${icon("bolt")} GRIT</span><b>${h.survival.gritAvailable}<small> / ${p.summary.gritGranted}</small></b><div class="grit-pips">${Array.from({ length: p.summary.gritGranted }, (_, i) => `<i class="${i < h.survival.gritAvailable ? "full" : ""}"></i>`).join("")}</div></div>`;
     root.querySelector(".dossier-footer").innerHTML =
-      `<span>${icon("boot")} Speed <b>${p.summary.speed}</b></span><span>${icon("shield")} Physical resistance <b>${p.resistances.physical ?? 0}</b></span>`;
+      `<span>${icon("boot")} Speed <b>${game.speed(h)}</b></span><span>${icon("shield")} Physical resistance <b>${p.resistances.physical ?? 0}</b></span>`;
     const armor = items.find((i) => i.worn && /armor/.test(i.catalogId)),
       held = items.filter((i) => i.held);
     const slots = [
@@ -101,7 +101,7 @@ export function characterSheet({
     );
     root.querySelector(".sheet-timing").textContent =
       game.mode === "combat"
-        ? "Weapon change · 1 Maneuver"
+        ? "Proper stowing · 1 Maneuver per item"
         : "Equipment changes available";
     const content = root.querySelector(".sheet-content");
     if (tab === "equipment") {
@@ -168,14 +168,27 @@ export function characterSheet({
           reason = canHandle
             ? game.gearReason(index, i.instanceId, operation)
             : "";
-        const replaces =
-          operation === "ready" &&
-          items.filter((x) => x.held).reduce((n, x) => n + x.hands, 0) +
-            i.hands >
-            2
-            ? items.filter((x) => x.held)
-            : [];
-        host.innerHTML = `<div class="inspector-icon">${icon(itemIcon(i))}</div><span class="eyebrow">${i.held ? "IN HAND" : i.worn ? "EQUIPPED" : "IN YOUR PACK"}</span><h3>${esc(i.definition.name)}</h3><div class="item-facts"><span>Bulk<b>${i.bulk}</b></span>${i.hands ? `<span>Hands<b>${i.hands}</b></span>` : ""}${i.inventoryDie ? `<span>Supply<b>${h.supplies[i.instanceId] === 0 ? "Empty" : "d" + (h.supplies[i.instanceId] ?? i.inventoryDie)}</b></span>` : ""}</div><p>${isArmor ? "Requires the matching armor training. Worn armor contributes its printed resistance." : i.hands === 2 ? "Two-handed equipment occupies both hands." : /shield/.test(i.catalogId) ? "Hold to use Shield Block when an enemy attacks." : /melee/.test(i.catalogId) ? "Ready for melee attacks and weapon techniques." : /ranged/.test(i.catalogId) ? "A ranged weapon needs usable ammunition." : "Carried equipment and supplies contribute to bulk."}</p>${replaces.length ? `<p class="swap-note">Stows: ${replaces.map((x) => esc(x.definition.name)).join(", ")}</p>` : ""}${canHandle ? `<button data-gear="${operation}" class="primary equip-button" ${reason ? "disabled" : ""}>${icon(operation === "ready" ? "hand" : itemIcon(i))}${{ ready: "Ready weapon / gear", stow: "Stow in pack", wear: "Wear armor", remove: "Remove armor" }[operation]}</button><p class="cost-note">${esc(reason || (game.mode === "combat" ? "Costs 1 Maneuver" : "No combat action required"))}</p>` : '<p class="cost-note">Supply checks occur after successful use.</p>'}`;
+        const plan = game.gearPlan(index, i.instanceId, operation),
+          replaces = items.filter((i) => plan.stow.includes(i.instanceId));
+        host.innerHTML = `<div class="inspector-icon">${icon(itemIcon(i))}</div><span class="eyebrow">${i.held ? "IN HAND" : i.worn ? "EQUIPPED" : "IN YOUR PACK"}</span><h3>${esc(i.definition.name)}</h3><div class="item-facts"><span>Bulk<b>${i.bulk}</b></span>${i.hands ? `<span>Hands<b>${i.hands}</b></span>` : ""}${i.inventoryDie ? `<span>Supply<b>${h.supplies[i.instanceId] === 0 ? "Empty" : "d" + (h.supplies[i.instanceId] ?? i.inventoryDie)}</b></span>` : ""}</div><p>${isArmor ? "Requires the matching armor training. Worn armor contributes its printed resistance." : i.hands === 2 ? "Two-handed equipment occupies both hands." : /shield/.test(i.catalogId) ? "Hold to use Shield Block when an enemy attacks." : /melee/.test(i.catalogId) ? "Ready for melee attacks and weapon techniques." : /ranged/.test(i.catalogId) ? "A ranged weapon needs usable ammunition." : "Carried equipment and supplies contribute to bulk."}</p>${replaces.length ? `<p class="swap-note">Stows: ${replaces.map((x) => esc(x.definition.name)).join(", ")}</p>` : ""}${canHandle ? `<button data-gear="${operation}" class="primary equip-button" ${reason ? "disabled" : ""}>${icon(operation === "ready" ? "hand" : itemIcon(i))}${{ ready: "Ready weapon / gear", stow: "Stow in pack", wear: "Wear armor", remove: "Remove armor" }[operation]}</button><p class="cost-note">${esc(reason || (game.mode === "combat" ? `Costs ${plan.cost} Maneuver${plan.cost === 1 ? "" : "s"}` : "No combat action required"))}</p>` : '<p class="cost-note">Supply checks occur after successful use.</p>'}`;
+        if (game.R.HEALING_POTION_IDS.includes(i.catalogId)) {
+          const free =
+            2 -
+            items.filter((i) => i.held).reduce((n, i) => n + (i.hands ?? 0), 0);
+          host.insertAdjacentHTML(
+            "beforeend",
+            `<label class="creator-field"><span>Give to</span><select id="potion-recipient">${game.party.map((p) => `<option value="${p.id}" ${p === h ? "selected" : ""}>${esc(p.name)} · ${p.survival.hp}/${p.survival.maxHp} HP</option>`).join("")}</select></label><button id="drink-potion" class="primary equip-button" ${free < 1 || h.supplies[i.instanceId] === 0 ? "disabled" : ""}>${icon("potion")} Use potion</button><p class="cost-note">${free < 1 ? "Stow equipment to free one hand." : game.mode === "combat" ? "Maneuver · An active ally also spends a Reaction." : "Restores its printed HP. Check d4 after use."}</p>`,
+          );
+          host.querySelector("#drink-potion").onclick = () =>
+            attempt(() => {
+              game.drinkPotion(
+                index,
+                i.instanceId,
+                host.querySelector("#potion-recipient").value,
+              );
+              draw();
+            });
+        }
         host.querySelector("[data-gear]")?.addEventListener("click", () =>
           attempt(() => {
             game.equip(index, i.instanceId, operation);
@@ -233,7 +246,43 @@ export function characterSheet({
         )
         .join(
           "",
-        )}</div><h3 class="subheading">Condition & injuries</h3><p>${esc(h.survival.status)} · ${h.survival.marks} death marks · ${h.wounds.length} wounds</p><div class="condition-tags">${h.conditions.map((c) => `<span>${esc(c.key)} ${c.rating ?? ""}</span>`).join("") || "<span>No active conditions</span>"}</div>${h.wounds.map((w) => `<article class="wound"><h3>${esc(w.record.injury)}</h3><p>${esc(w.record.remedy)}</p></article>`).join("")}`;
+        )}</div><h3 class="subheading">Condition & injuries</h3><p>${esc(h.survival.status)} · ${h.survival.marks} death marks · ${h.wounds.length} wounds</p><div class="condition-tags">${h.conditions.map((c) => `<span>${esc(c.key)} ${c.rating ?? ""}</span>`).join("") || "<span>No active conditions</span>"}</div>${h.wounds
+        .map(
+          (w) =>
+            `<article class="wound"><h3>${esc(w.record.injury)}</h3><p>${esc(w.record.remedy)}</p><p class="cost-note">${w.record.recoveryValue ? `Recovery ${w.treatment?.progress ?? 0}/${w.record.recoveryValue}${w.treatment?.completed ? " · Treated; scar remains" : ""}` : "Requires the printed exceptional remedy."}</p>${
+              game.mode === "town" && !w.treatment?.completed
+                ? game
+                    .treatmentOptions(h, w)
+                    .map(
+                      (o) =>
+                        `<button data-treat="${w.id}" data-healer="${o.healer}" data-treatment="${o.card.id}" ${w.treatment?.attempts.some((a) => a.dayKey === `day-${Math.floor((game.campaign.hours ?? 0) / 24) + 1}`) ? "disabled" : ""}>${esc(game.party[o.healer].name)} · ${esc(name(o.card.catalogId))} · 1 hour</button>`,
+                    )
+                    .join("")
+                : ""
+            }</article>`,
+        )
+        .join(
+          "",
+        )}${game.mode === "town" && h.wounds.length ? `<p class="cost-note">Campaign day ${Math.floor((game.campaign.hours ?? 0) / 24) + 1} · One attempt per wound per day across all healers.</p><button id="next-care-day">Wait until next treatment day</button>` : ""}`;
+      root.querySelectorAll("[data-treat]").forEach(
+        (b) =>
+          (b.onclick = () =>
+            attempt(() => {
+              game.treatWound(
+                index,
+                b.dataset.treat,
+                +b.dataset.healer,
+                b.dataset.treatment,
+              );
+              draw();
+            })),
+      );
+      root.querySelector("#next-care-day")?.addEventListener("click", () =>
+        attempt(() => {
+          game.nextTreatmentDay();
+          draw();
+        }),
+      );
       root
         .querySelector("#train-hero")
         ?.addEventListener("click", () => train(index));

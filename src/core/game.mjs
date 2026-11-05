@@ -1,3 +1,4 @@
+import { recoveryMethods } from "./recovery.mjs";
 import { ABILITIES, coverage } from "./abilities.mjs";
 import { formationRoutes, validateFormation } from "./formations.mjs";
 import {
@@ -81,12 +82,14 @@ export class Game {
     };
   }
   fresh(drafts) {
+    this.woundNotices = [];
     this.campaign = {
       seed: Math.floor(Math.random() * 2147483647),
       depth: 1,
       bank: 0,
       haul: 0,
       expeditions: 0,
+      hours: 0,
       memorial: [],
       caches: [],
       formation: "square",
@@ -98,6 +101,8 @@ export class Game {
     this.note("Four names in the register. One road beneath the earth.");
   }
   load(c) {
+    c.woundNotices ??= [];
+    if (c.mode === "wound-review" && c.encounter) c.mode = "combat";
     for (const h of c.party) {
       const p = this.R.workshopCharacter(h.draft, this.C);
       if (!p.valid)
@@ -118,6 +123,29 @@ export class Game {
       ].slice(0, 8);
       h.earnedLevel ??= p.state.level;
       h.milestones ??= [];
+      for (const w of h.wounds ?? []) {
+        if (
+          !w.applied &&
+          w.record?.id &&
+          this.C.wounds.records.some((r) => r.id === w.record.id)
+        ) {
+          w.id ??= `wound-${crypto.randomUUID()}`;
+          w.source ??= h.id;
+          w.applied = true;
+          for (const e of w.effects ?? [])
+            if (e.kind === "condition")
+              h.conditions.push({
+                id: `injury-${crypto.randomUUID()}`,
+                key: e.key,
+                rating: e.rating,
+                persistence: e.persistence,
+                source: e.requiresSource ? w.source : w.id,
+                woundId: w.id,
+              });
+          if (!c.woundNotices.some((n) => n.woundId === w.id))
+            c.woundNotices.push({ heroId: h.id, woundId: w.id });
+        }
+      }
       this.R.validateSurvival(h.survival);
       this.R.validateContributions(h.conditions);
       if (
@@ -132,6 +160,9 @@ export class Game {
       )
         throw new Error("Saved development or supplies are invalid.");
     }
+    c.hours ??= 0;
+    if (!Number.isSafeInteger(c.hours) || c.hours < 0)
+      throw new Error("Invalid campaign time.");
     c.formation ??= "square";
     c.order ??= c.party.map((h) => h.id);
     validateFormation(c.formation, c.order, c.party);
@@ -142,6 +173,7 @@ export class Game {
         : 0;
     this.busy = false;
     this.pendingDefense = null;
+    this.woundNotices = c.woundNotices ?? [];
     this.newFloor(c.floor);
     this.mode = c.mode ?? "town";
     if (this.mode === "combat") {
@@ -168,7 +200,22 @@ export class Game {
       });
     }
     this.emit("change");
-    if (this.mode === "combat" && !this.encounter?.current) this.advance();
+    if (this.woundNotices.length) {
+      const n = this.woundNotices[0],
+        h = this.party.find((h) => h.id === n.heroId);
+      this.emit("wound", {
+        hero: h,
+        wound: h.wounds.find((w) => w.id === n.woundId),
+      });
+    } else if (
+      this.mode === "combat" &&
+      this.encounter.current &&
+      this.active.survival.status === "dying" &&
+      this.active.survival.due === this.active.survival.ownTurn &&
+      !this.active.survival.choice?.resolved
+    )
+      this.emit("dying", { hero: this.active });
+    else if (this.mode === "combat" && !this.encounter?.current) this.advance();
   }
   snapshot() {
     return {
@@ -178,6 +225,7 @@ export class Game {
       encounter: this.encounter,
       budgets: this.budgets,
       pendingDefense: this.pendingDefense,
+      woundNotices: this.woundNotices ?? [],
       floor: { map: this.map, seen: this.seen, enemies: this.enemies },
     };
   }
@@ -222,8 +270,11 @@ export class Game {
   }
   movementLeft() {
     return this.budget
-      ? this.R.movementRemaining(this.budget, this.restrictions(this.active))
-      : this.active.preview.summary.speed;
+      ? this.R.movementRemaining(
+          { ...this.budget, speed: this.speed(this.active) },
+          this.restrictions(this.active),
+        )
+      : this.speed(this.active);
   }
   held(h, catalogId) {
     return h.preview.inventory.items.find(
@@ -246,7 +297,25 @@ export class Game {
         (c.universal || h.preview.state.abilities.includes(c.id)),
     );
   }
-  useAbility(id, targetId) {
+  useAbility(id, targetId, options = {}) {
+    if (id === "ability-use-a-healing-potion") {
+      const i = this.active.preview.inventory.items.find(
+        (i) =>
+          i.carried &&
+          this.R.HEALING_POTION_IDS.includes(i.catalogId) &&
+          (this.active.supplies[i.instanceId] ?? i.inventoryDie) > 0,
+      );
+      return this.drinkPotion(
+        this.selected,
+        options.instanceId ?? i?.instanceId,
+        targetId ?? this.active.id,
+      );
+    }
+    if (id === "ability-reduce-a-condition")
+      return this.reduceCondition(
+        targetId ?? this.active.id,
+        options.condition,
+      );
     if (this.mode !== "combat" || this.busy)
       throw new Error("Wait for your company’s turn.");
     const spec = ABILITIES[id],
@@ -281,6 +350,26 @@ export class Game {
       (target === h || target.survival.status !== "dying")
     )
       throw new Error("Choose an adjacent Dying companion.");
+    if (spec.shield && !this.held(h, "item-ordinary-shield"))
+      throw new Error("Ready a shield first.");
+    if (
+      spec.flanking &&
+      !this.party.some(
+        (p) =>
+          p !== h && p.survival.status === "active" && distance(p, target) <= 1,
+      )
+    )
+      throw new Error(
+        "Blade in the Back needs a companion adjacent to the target.",
+      );
+    if (spec.healing || spec.reduce) return this.recoveryAbility(id, targetId);
+    if (
+      spec.target === "enemy" &&
+      this.R.conditionSummary(h.conditions).blinded.active
+    )
+      throw new Error(
+        "This attack needs a visible target; resolve Blinded first.",
+      );
     let drawWeapon = null;
     if (spec.weapon && !this.held(h, `item-ordinary-${spec.weapon}-weapon`)) {
       const freeHands =
@@ -330,11 +419,14 @@ export class Game {
         `${h.name} stabilizes ${target.name} at 0 HP; death marks cleared.`,
       );
     } else {
-      const sources = this.R.conditionRollSources(h.conditions ?? [], {
-        mode: "attack",
-        targetContributions: target.conditions ?? [],
-        perceivedSources: this.perceivedSources(h),
-      });
+      const sources = [
+        ...this.woundRollSources(h, spec.attribute),
+        ...this.R.conditionRollSources(h.conditions ?? [], {
+          mode: "attack",
+          targetContributions: target.conditions ?? [],
+          perceivedSources: this.perceivedSources(h),
+        }),
+      ];
       const boons = sources
           .filter((s) => s.kind === "boon")
           .reduce((n, s) => n + s.amount, 0),
@@ -381,6 +473,12 @@ export class Game {
           `Ammunition d${die}: ${check.retained}${check.after !== die ? (check.exhausted ? " · exhausted after this shot" : ` → d${check.after}`) : " · retained"}.`,
         );
       }
+      if (spec.push?.[tier] && target.hp > 0)
+        this.forceMove(
+          target,
+          { x: Math.sign(target.x - h.x), z: Math.sign(target.z - h.z) },
+          spec.push[tier],
+        );
       this.defeatEnemy(target);
       this.emit("attack", {
         attacker: h.id,
@@ -401,6 +499,7 @@ export class Game {
   }
   defeatEnemy(e) {
     if (
+      this.encounter &&
       e.hp === 0 &&
       this.encounter.current !== e.id &&
       this.encounter.roster.some((p) => p.id === e.id && !p.withdrawn)
@@ -440,7 +539,7 @@ export class Game {
   }
   canBlock(h) {
     return (
-      h.survival.status === "active" &&
+      this.canAct(h) &&
       this.held(h, "item-ordinary-shield") &&
       !h.buffs.shield &&
       (this.budgets[h.id]?.remaining.reaction ?? 1) > 0
@@ -455,7 +554,7 @@ export class Game {
         throw new Error("Shield Block requires a held shield and a Reaction.");
       this.budgets[h.id] ??= this.R.startTurn({
         turnId: `opening-${h.id}`,
-        speed: h.preview.summary.speed,
+        speed: this.speed(h),
       });
       this.budgets[h.id] = this.R.declareAction(this.budgets[h.id], {
         operationId: `block-${crypto.randomUUID()}`,
@@ -484,6 +583,7 @@ export class Game {
         perceivedSources: this.perceivedSources(h),
       }),
       ...this.R.passiveAncestryDefenseSources(h.draft.traitIds ?? []),
+      ...this.woundRollSources(h, "agility"),
     ];
     const boons =
         Number(!!h.buffs.defend) +
@@ -506,34 +606,20 @@ export class Game {
         ([type, value]) => ({ type, value }),
       ),
     });
-    const before = h.survival.wounds,
-      applied = this.R.sufferDamage(h.survival, damage.total);
-    h.survival = applied.state;
+    this.suffer(h, damage.total, "physical", e);
     this.note(
       `${h.name} defends (Agility, ${boons} Boon / ${banes} Bane): ${result.retained.join(" + ")} → ${result.total} ${result.tier}; suffers ${damage.total} damage.`,
     );
     this.emit("attack", { attacker: e.id, target: h.id, damage: damage.total });
-    if (applied.wound) {
-      const roll = this.R.woundRoll(before, this.dice(Math.min(5, 3 + before))),
-        wound = this.R.woundResult(this.C.wounds, "physical", roll.key);
-      h.wounds.push(wound);
-      if (wound.effects.some((e) => e.kind === "lastWords"))
-        h.survival = this.R.enterLastWords(h.survival);
-      this.note(`Wound ${roll.key}: ${wound.record.injury}.`);
-      this.mode = "wound-review";
-      this.emit("wound", { hero: h, wound });
-    }
   }
   stand() {
-    if (
-      this.mode !== "combat" ||
-      this.busy ||
-      this.active.survival.status !== "active"
-    )
+    if (this.mode !== "combat" || this.busy || !this.canAct(this.active))
       throw new Error("Wait for an active hero’s turn.");
     if (!this.encounter.current) this.beginHero();
     if (!(this.active.conditions ?? []).some((c) => c.key === "prone"))
       throw new Error("This hero is already standing.");
+    if (this.movementLeft() < 2)
+      throw new Error("Standing requires 2 movement.");
     this.budgets[this.active.id] = this.R.spendMovement(this.budget, {
       operationId: `stand-${crypto.randomUUID()}`,
       amount: 2,
@@ -560,6 +646,30 @@ export class Game {
     }
     this.emit("change");
   }
+  gearPlan(index, instanceId, operation = "ready") {
+    const items = this.party[index].preview.inventory.items,
+      item = items.find((i) => i.instanceId === instanceId),
+      held = items.filter((i) => i.held && i !== item);
+    if (!item) return { stow: [], cost: 0 };
+    const stow = [];
+    let occupied = held.reduce((n, i) => n + i.hands, 0);
+    if (operation === "ready")
+      for (const i of [...held].sort(
+        (a, b) =>
+          Number(/shield/.test(a.catalogId)) -
+          Number(/shield/.test(b.catalogId)),
+      )) {
+        if (occupied + item.hands <= 2) break;
+        stow.push(i.instanceId);
+        occupied -= i.hands;
+      }
+    return {
+      stow,
+      cost: ["wear", "remove"].includes(operation)
+        ? 0
+        : Math.max(1, stow.length),
+    };
+  }
   gearReason(index, instanceId, operation = "ready") {
     const h = this.party[index],
       item = h?.preview.inventory.items.find(
@@ -568,8 +678,7 @@ export class Game {
     if (!item?.carried) return "This item must be carried.";
     if (!["town", "exploration", "combat"].includes(this.mode) || this.busy)
       return "Wait for your company’s turn.";
-    if (h.survival.status !== "active")
-      return "This hero cannot handle equipment.";
+    if (!this.canAct(h)) return "This hero cannot handle equipment.";
     if (operation === "wear" || operation === "remove") {
       if (this.mode === "combat") return "Change armor outside combat.";
       const tier = item.catalogId.match(
@@ -591,11 +700,12 @@ export class Game {
         return "Only the acting hero can change equipment.";
       if (this.paths.get(h.id)?.length) return "Wait until movement finishes.";
       if (
-        this.encounter.current === h.id &&
-        !this.budgets[h.id]?.remaining.maneuver
+        (this.encounter.current === h.id
+          ? (this.budgets[h.id]?.remaining.maneuver ?? 0)
+          : 1) < this.gearPlan(index, instanceId, operation).cost
       )
-        return "No Maneuver remains.";
-      if (this.restrictions(h).helpless) return "This hero cannot act.";
+        return `Requires ${this.gearPlan(index, instanceId, operation).cost} Maneuver${this.gearPlan(index, instanceId, operation).cost === 1 ? "" : "s"}; convert Main if needed.`;
+      if (!this.canAct(h)) return "This hero cannot act.";
     }
     return "";
   }
@@ -605,6 +715,7 @@ export class Game {
     const h = this.party[index],
       items = h.preview.inventory.items,
       item = items.find((i) => i.instanceId === instanceId);
+    const plan = this.gearPlan(index, instanceId, operation);
     const draft = structuredClone(h.draft);
     draft.loadout ??= {};
     const set = (i, values) =>
@@ -620,21 +731,21 @@ export class Game {
     } else if (operation === "remove") set(item, { worn: false });
     else if (operation === "stow") set(item, { held: false });
     else {
-      const stow =
-        items.filter((i) => i.held).reduce((n, i) => n + i.hands, 0) +
-          item.hands >
-        2;
-      for (const i of items) set(i, { held: i === item || (!stow && i.held) });
+      for (const i of items)
+        set(i, {
+          held: i === item || (!plan.stow.includes(i.instanceId) && i.held),
+        });
     }
     const preview = this.R.workshopCharacter(draft, this.C);
     if (!preview.valid)
       throw new Error(preview.errors.map((e) => e.text).join("; "));
     if (this.mode === "combat")
-      this.spend("maneuver", "ability-handle-an-item");
+      for (let n = 0; n < plan.cost; n++)
+        this.spend("maneuver", "ability-handle-an-item");
     h.draft = draft;
     h.preview = preview;
     this.note(
-      `${h.name} ${{ ready: "readies", stow: "stows", wear: "puts on", remove: "removes" }[operation]} ${item.definition.name}${this.mode === "combat" ? " · Maneuver spent" : ""}.`,
+      `${h.name} ${{ ready: "readies", stow: "stows", wear: "puts on", remove: "removes" }[operation]} ${item.definition.name}${this.mode === "combat" ? ` · ${plan.cost} Maneuver${plan.cost === 1 ? "" : "s"} spent` : ""}.`,
     );
     this.emit("party");
     this.emit("change");
@@ -647,14 +758,47 @@ export class Game {
     )
       return "Available on your combat turn.";
     if (h !== this.active) return "Select this hero when they can act.";
-    if (h.survival.status !== "active")
-      return "Resolve survival before acting.";
+    if (!this.canAct(h))
+      return "This hero cannot act; resolve survival or disabling conditions.";
     if (this.paths.get(h.id)?.length) return "Wait until movement finishes.";
     const a = ABILITIES[id];
     if (!a || !this.availableActions(h).some((c) => c.id === id))
       return "Not learned.";
     if (this.encounter.current === h.id && !this.budget?.remaining[a.category])
       return `No ${a.category} remains.`;
+    if (id === "ability-use-a-healing-potion") {
+      if (
+        !h.preview.inventory.items.some(
+          (i) =>
+            i.carried &&
+            this.R.HEALING_POTION_IDS.includes(i.catalogId) &&
+            (h.supplies[i.instanceId] ?? i.inventoryDie) > 0,
+        )
+      )
+        return "No usable healing potion remains.";
+      if (
+        h.preview.inventory.items
+          .filter((i) => i.held)
+          .reduce((n, i) => n + (i.hands ?? 0), 0) >= 2
+      )
+        return "Free a hand to use a potion.";
+    }
+    if (a.hpCost && h.survival.hp <= a.hpCost)
+      return "Life magic must leave the caster above 0 HP.";
+    if (a.shield && !this.held(h, "item-ordinary-shield"))
+      return "Ready a shield first.";
+    if (
+      a.freeHand &&
+      h.preview.inventory.items
+        .filter((i) => i.held)
+        .reduce((n, i) => n + i.hands, 0) >= 2
+    )
+      return "Free a hand first.";
+    if (
+      a.target === "enemy" &&
+      this.R.conditionSummary(h.conditions).blinded.active
+    )
+      return "This attack needs a visible target.";
     if (a.weapon && !this.held(h, `item-ordinary-${a.weapon}-weapon`)) {
       const hands =
         2 -
@@ -775,7 +919,10 @@ export class Game {
     if (this.mode !== "town")
       throw new Error("Return to town before beginning an expedition.");
     if (
-      this.party.some((h) => h.survival.status !== "active" || h.wounds.length)
+      this.party.some(
+        (h) =>
+          h.survival.status !== "active" || h.wounds.some((w) => !w.applied),
+      )
     )
       throw new Error("Replace or resolve injured heroes before descending.");
     this.campaign.expeditions++;
@@ -920,27 +1067,62 @@ export class Game {
     this.advance();
     return true;
   }
-  beginHero() {
+  beginHero(retained) {
     const h = this.active;
     if (this.encounter.nextSide !== "players")
       throw new Error("The opposition is acting.");
+    const restriction = Math.min(
+      3,
+      Math.max(this.restrictions(h).dazed, this.restrictions(h).grappled),
+    );
+    if (restriction > 0 && restriction < 3 && !retained) {
+      this.emit("turnchoices", { hero: h, count: 3 - restriction });
+      throw new Error("Choose the action categories this hero retains.");
+    }
+    retained ??= restriction === 3 ? [] : ["main", "maneuver", "reaction"];
     this.encounter = this.R.chooseParticipant(this.encounter, h.id);
     h.survival = this.R.startSurvivalTurn(h.survival, h.survival.ownTurn + 1);
     h.buffs = {};
     this.budgets[h.id] = this.R.startTurn({
       turnId: `turn-${this.encounter.serial}`,
-      speed: h.preview.summary.speed,
+      retained,
+      speed: this.speed(h),
       conditions: this.restrictions(h),
     });
     if (h.survival.status === "dying") this.emit("dying", { hero: h });
     this.emit("change");
   }
   advance() {
-    if (this.mode !== "combat") return;
+    if (this.mode !== "combat" || this.woundNotices?.length) return;
+    for (const h of this.party.filter((h) => h.survival.status === "dead")) {
+      if (
+        this.encounter.current !== h.id &&
+        this.encounter.roster.some((r) => r.id === h.id && !r.withdrawn)
+      )
+        this.encounter = this.R.changeRoster(this.encounter, {
+          id: h.id,
+          mode: "withdraw",
+          reason: "Final death",
+        });
+    }
+    if (this.party.every((h) => h.survival.status === "dead")) {
+      this.fail();
+      return;
+    }
     const ids = this.encounter.roster
       .filter((r) => r.side === "opposition" && !r.withdrawn)
       .map((r) => r.id);
-    if (!this.enemies.some((e) => e.hp > 0 && ids.includes(e.id))) {
+    if (
+      !this.enemies.some((e) => e.hp > 0 && ids.includes(e.id)) &&
+      !this.party.some(
+        (h) =>
+          ["dying", "lastWords"].includes(h.survival.status) ||
+          (h.survival.status !== "dead" &&
+            h.conditions.some((c) =>
+              ["burning", "freezing", "bleeding"].includes(c.key),
+            )),
+      )
+    ) {
       this.mode = "exploration";
       this.encounter = null;
       this.note(
@@ -984,22 +1166,32 @@ export class Game {
     }
   }
   spend(category, id) {
+    if (
+      this.mode !== "combat" ||
+      this.busy ||
+      this.woundNotices?.length ||
+      this.encounter.nextSide !== "players"
+    )
+      throw new Error("Wait for your company’s turn.");
     if (this.paths.get(this.active.id)?.length)
       throw new Error("Wait until movement finishes.");
     if (this.encounter.current !== this.active.id) this.beginHero();
     if (this.active.survival.status === "dying")
       throw new Error("Resolve Dying first.");
-    if (this.active.survival.status !== "active")
-      throw new Error("This hero cannot act.");
+    if (!this.canAct(this.active)) throw new Error("This hero cannot act.");
     if (!this.budget.remaining[category])
       throw new Error(`No ${category} action remains.`);
     this.budgets[this.active.id] = this.R.declareAction(this.budget, {
       operationId: `action-${crypto.randomUUID()}`,
       sourceId: id,
       category,
+      conditions: this.restrictions(this.active),
     });
   }
-  attack(enemyId, kind = "melee") {
+  attack(enemyId, kind = null) {
+    kind ??= this.held(this.active, "item-ordinary-ranged-weapon")
+      ? "ranged"
+      : "melee";
     const melee = this.held(this.active, "item-ordinary-melee-weapon");
     return this.useAbility(
       `ability-basic-${kind === "melee" && !melee ? "unarmed" : kind}`,
@@ -1045,9 +1237,11 @@ export class Game {
   }
   survivalChoice(kind) {
     const h = this.active;
+    const result =
+      kind === "roll" ? this.heroRoll(h, "fortitude", "death") : null;
     h.survival = this.R.resolveSurvival(
       this.R.chooseSurvival(h.survival, kind),
-      { retained: this.dice(), fortitude: h.draft.attributes.fortitude },
+      { retained: result?.retained, fortitude: h.draft.attributes.fortitude },
     );
     this.note(
       `${h.name}: ${h.survival.status}, ${h.survival.marks} death marks, ${h.survival.gritAvailable} Grit.`,
@@ -1056,20 +1250,27 @@ export class Game {
   }
   endTurn() {
     if (this.mode !== "combat" || this.busy) return;
+    if (this.woundNotices?.length)
+      throw new Error("Acknowledge the wound first.");
     if (this.paths.get(this.active.id)?.length)
       throw new Error("Wait until movement finishes.");
     if (!this.encounter.current) this.beginHero();
     const h = this.active;
+    this.R.endSurvivalTurn(h.survival, h.survival.ownTurn); // Validate a due choice before any tick.
+    this.tickHeroConditions(h);
     h.survival = this.R.endSurvivalTurn(h.survival, h.survival.ownTurn);
     this.encounter = this.R.finishTurn(this.encounter);
     this.advance();
     this.emit("change");
   }
   convert(from = "maneuver") {
-    if (this.mode !== "combat" || this.busy) return;
+    if (this.mode !== "combat" || this.busy || this.woundNotices?.length)
+      return;
     if (!this.encounter.current) this.beginHero();
-    if (this.active.survival.status !== "active")
-      throw new Error("Only an active hero can convert actions.");
+    if (!this.canAct(this.active))
+      throw new Error("Only a capable active hero can convert actions.");
+    if (from === "main" && !this.budget.retained.includes("maneuver"))
+      throw new Error("Maneuver was not retained this turn.");
     if (!this.budget.remaining[from])
       throw new Error(`No ${from} action remains.`);
     this.budgets[this.active.id] = this.R.convertAction(this.budget, {
@@ -1093,9 +1294,23 @@ export class Game {
       )
     )
       throw new Error("Enemies are too close.");
-    if (this.party.some((h) => h.wounds.length))
+    if (this.party.some((h) => h.wounds.some((w) => !w.applied)))
       throw new Error("Resolve outstanding wounds before resting.");
-    this.party.forEach((h) => (h.survival = this.R.safeBreath(h.survival)));
+    if (
+      this.party.some((h) =>
+        h.conditions.some((c) =>
+          ["burning", "freezing", "bleeding"].includes(c.key),
+        ),
+      )
+    )
+      throw new Error("Resolve ongoing harm before a safe breath.");
+    if (
+      this.party.some((h) => ["dying", "lastWords"].includes(h.survival.status))
+    )
+      throw new Error("Resolve survival before taking a safe breath.");
+    this.party
+      .filter((h) => h.survival.status !== "dead")
+      .forEach((h) => (h.survival = this.R.safeBreath(h.survival)));
     this.note("A safe breath restores HP. Spent Grit does not return.");
     this.emit("change");
   }
@@ -1204,3 +1419,5 @@ export class Game {
     this.emit("change");
   }
 }
+
+Object.assign(Game.prototype, recoveryMethods);

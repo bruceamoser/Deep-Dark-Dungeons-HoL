@@ -504,7 +504,14 @@ export class Scene {
       to.data.x - from.data.x,
       to.data.z - from.data.z,
     );
-    const tint = element === "cold" ? 0x7ed9ff : spell ? 0xff9b42 : 0xe9cd8b;
+    const tint =
+      element === "cold"
+        ? 0x7ed9ff
+        : element === "life"
+          ? 0x91ddb5
+          : spell
+            ? 0xff9b42
+            : 0xe9cd8b;
     const mesh = new T.Mesh(
       new T.SphereGeometry(spell ? 0.16 : 0.07, 8, 6),
       new T.MeshBasicMaterial({ color: tint, transparent: true }),

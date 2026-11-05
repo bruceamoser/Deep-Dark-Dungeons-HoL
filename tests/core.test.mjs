@@ -18,6 +18,8 @@ for (const name of [
   "conditions",
   "inventory",
   "passive-defenses",
+  "potions",
+  "treatment",
 ])
   Object.assign(R, await import(`../public/vendor/hol/rules/${name}.mjs`));
 const data = (n) =>
@@ -454,4 +456,362 @@ test("armor wear checks training and swaps resistance without granting HP or Gri
   h.draft.coinOverride = true;
   h.preview = R.workshopCharacter(h.draft, C);
   assert.match(g.gearReason(0, "test-heavy", "wear"), /training/);
+});
+test("new wounds apply conditions and penalties; safe breath preserves scars and Grit", () => {
+  const g = fresh(),
+    h = g.party[0];
+  g.enemies = [];
+  g.dice = (n) => Array(n).fill(2);
+  h.survival.hp = 1;
+  h.survival.gritAvailable = 0;
+  g.suffer(h, 3, "physical", "fixture");
+  assert.equal(h.survival.status, "dying");
+  assert.equal(h.wounds.length, 1);
+  assert.equal(h.survival.wounds, 1);
+  assert.ok(h.wounds[0].applied);
+  assert.equal(g.woundNotices.length, 1);
+  g.acknowledgeWound({ x: 1, z: 0 });
+  assert.equal(g.woundNotices.length, 0);
+  h.survival = R.receiveHealing(h.survival, 1);
+  g.mode = "exploration";
+  g.enemies = [];
+  h.conditions = [];
+  g.rest();
+  assert.equal(h.survival.hp, h.survival.maxHp);
+  assert.equal(h.survival.gritAvailable, 0);
+  assert.equal(h.survival.wounds, 1);
+  assert.equal(h.wounds.length, 1);
+});
+test("hero turn-end harm uses separate damage events, Bleeding bypasses resistance, and stars persist", () => {
+  const g = fresh(),
+    h = g.party[0];
+  h.preview.resistances.physical = 3;
+  h.preview.resistances.fire = 2;
+  const hp = h.survival.hp;
+  h.conditions = [
+    {
+      id: "burn",
+      key: "burning",
+      rating: 3,
+      persistence: "temporary",
+      source: "fire",
+    },
+    {
+      id: "bleed",
+      key: "bleeding",
+      rating: 2,
+      persistence: "temporary",
+      source: "blade",
+    },
+    {
+      id: "blind",
+      key: "blinded",
+      rating: 1,
+      persistence: "starred",
+      source: "scar",
+    },
+  ];
+  g.tickHeroConditions(h);
+  assert.equal(h.survival.hp, hp - 3);
+  assert.equal(h.conditions.find((c) => c.key === "burning").rating, 2);
+  assert.equal(h.conditions.find((c) => c.key === "bleeding").rating, 1);
+  assert.equal(h.conditions.find((c) => c.key === "blinded").rating, 1);
+});
+test("potion use checks hands and applies the final healing before d4 exhaustion", () => {
+  const g = fresh(),
+    h = g.party[0],
+    i = h.preview.inventory.items.find(
+      (i) => i.catalogId === "item-lesser-healing-bottle",
+    );
+  h.survival.hp = 2;
+  h.survival.gritAvailable = 0;
+  g.supplyDie = () => 1;
+  // Fresh test drafts have free hands; printed lesser healing is six.
+  g.drinkPotion(0, i.instanceId);
+  assert.equal(h.survival.hp, 8);
+  assert.equal(h.supplies[i.instanceId], 0);
+  assert.equal(h.survival.gritAvailable, 0);
+  assert.throws(() => g.drinkPotion(0, i.instanceId), /exhausted/);
+  assert.equal(h.survival.hp, 8);
+});
+test("daily treatment uses correct capability, keeps scar count and cannot be repeated by another healer", () => {
+  const g = fresh(),
+    h = g.party[0],
+    record = C.wounds.records.find(
+      (w) =>
+        w.table === "physical" &&
+        w.capability === "Soft Tissue" &&
+        w.recoveryValue >= 3 &&
+        w.effects.some((e) => e.kind === "movementPenalty"),
+    );
+  const w = {
+    ...R.woundResult(C.wounds, "physical", record.key),
+    id: "injury-test",
+    applied: true,
+  };
+  h.wounds = [w];
+  h.survival.wounds = 1;
+  h.survival.gritAvailable = 0;
+  const speed = g.speed(h);
+  g.dice = (n) => Array(n).fill(4);
+  g.treatWound(0, w.id, 0, "treat-soft-tissue");
+  assert.equal(w.treatment.progress, 2);
+  assert.equal(g.campaign.hours, 1);
+  assert.throws(
+    () => g.treatWound(0, w.id, 0, "treat-soft-tissue"),
+    /campaign day/,
+  );
+  assert.equal(w.treatment.progress, 2);
+  while (!w.treatment.completed) {
+    g.nextTreatmentDay();
+    g.treatWound(0, w.id, 0, "treat-soft-tissue");
+  }
+  assert.ok(g.speed(h) > speed);
+  assert.equal(h.survival.wounds, 1);
+  assert.equal(h.wounds.length, 1);
+  assert.equal(h.survival.gritAvailable, 0);
+  const loaded = fresh();
+  loaded.load(deserialize(serialize(g.snapshot())));
+  assert.deepEqual(loaded.party[0].wounds[0].treatment, w.treatment);
+});
+test("forced movement consumes Stability once and uses remaining budget on collision before resistance", () => {
+  const g = fresh(),
+    h = g.party[0];
+  g.map = {
+    tiles: Object.fromEntries(
+      Array.from({ length: 8 }, (_, x) => [`${x},0`, { x, z: 0 }]),
+    ),
+    obstacles: {},
+  };
+  g.enemies = [];
+  g.party.forEach((p, i) => Object.assign(p, { x: i ? 6 : 1, z: i ? 10 : 0 }));
+  h.preview.summary.stability = 1;
+  g.forceMove(h, { x: 1, z: 0 }, 3);
+  assert.equal(h.x, 3);
+  const hp = h.survival.hp;
+  g.map.obstacles["4,0"] = true;
+  g.forceMove(h, { x: 1, z: 0 }, 3);
+  assert.equal(h.survival.hp, hp - 3);
+  assert.equal(h.x, 2);
+});
+test("Dazed retains chosen categories; helpless actors cannot convert or use an action", () => {
+  const g = combatFixture(),
+    h = g.active;
+  h.conditions = [
+    {
+      id: "daze",
+      key: "dazed",
+      rating: 2,
+      persistence: "temporary",
+      source: "test",
+    },
+  ];
+  assert.throws(() => g.beginHero(), /categories/);
+  assert.equal(g.encounter.current, null);
+  g.beginHero(["main"]);
+  assert.deepEqual(g.budget.remaining, { main: 1, maneuver: 0, reaction: 0 });
+  assert.throws(() => g.convert("main"), /not retained/);
+  assert.equal(g.budget.remaining.main, 1);
+  h.conditions.push({
+    id: "sleep",
+    key: "asleep",
+    rating: 1,
+    persistence: "temporary",
+    source: "test",
+  });
+  assert.throws(
+    () => g.useAbility("ability-basic-unarmed", "sentry"),
+    /cannot act/,
+  );
+  assert.equal(g.budget.remaining.main, 1);
+  assert.equal(g.movementLeft(), 0);
+});
+test("spell healing pays HP first, needs a free hand, respects Life resistance and never removes wounds", () => {
+  const g = combatFixture(3),
+    h = g.active,
+    target = g.party[2];
+  h.preview.state.abilities.push("ability-shared-breath");
+  Object.assign(target, { x: h.x + 1, z: h.z });
+  target.survival.hp = 1;
+  target.survival.wounds = 2;
+  target.preview.resistances.life = 3;
+  const before = h.survival.hp;
+  g.useAbility("ability-shared-breath", target.id);
+  assert.equal(h.survival.hp, before - 1);
+  assert.equal(target.survival.hp, 7);
+  assert.equal(target.survival.wounds, 2);
+  assert.equal(g.budget.remaining.main, 0);
+  const second = combatFixture(3);
+  second.active.preview.state.abilities.push("ability-shared-breath");
+  second.active.survival.hp = 1;
+  assert.throws(
+    () => second.useAbility("ability-shared-breath", second.active.id),
+    /above 0/,
+  );
+  assert.equal(second.active.survival.hp, 1);
+});
+test("final enemy death retains turn order until Dying and ongoing harm resolve", () => {
+  const g = combatFixture(),
+    h = g.active;
+  delete g.advance;
+  g.enemies[0].hp = 0;
+  g.defeatEnemy(g.enemies[0]);
+  h.survival = R.survivalState({
+    hp: 0,
+    maxHp: h.survival.maxHp,
+    gritAvailable: 1,
+    status: "dying",
+  });
+  g.advance();
+  assert.equal(g.mode, "combat");
+  g.beginHero();
+  g.survivalChoice("grit");
+  g.endTurn();
+  assert.equal(g.mode, "exploration");
+  assert.equal(h.survival.gritAvailable, 0);
+});
+test("wound acknowledgement and daily treatment survive saves without duplicate penalties", () => {
+  const g = combatFixture(),
+    h = g.active;
+  h.survival.hp = 1;
+  g.dice = (n) => Array(n).fill(3);
+  g.suffer(h, 3, "physical", "sentry");
+  const saved = deserialize(serialize(g.snapshot())),
+    copy = fresh();
+  copy.load(saved);
+  assert.equal(copy.woundNotices.length, 1);
+  assert.deepEqual(copy.party[0].conditions, h.conditions);
+  copy.acknowledgeWound({ x: 1, z: 0 });
+  assert.equal(copy.party[0].wounds.length, 1);
+  assert.equal(copy.party[0].survival.wounds, 1);
+});
+test("a two-item stow is atomic and costs two Maneuvers, while a one-handed swap keeps the shield", () => {
+  const g = combatFixture(),
+    h = g.active,
+    items = h.preview.inventory.items,
+    weapon = items.find((i) => i.catalogId === "item-ordinary-melee-weapon"),
+    shield = items.find((i) => i.catalogId === "item-ordinary-shield");
+  weapon.held = true;
+  shield.held = true;
+  items.push({
+    instanceId: "bow-fixture",
+    catalogId: "item-ordinary-ranged-weapon",
+    carried: true,
+    hands: 2,
+    held: false,
+  });
+  assert.equal(g.gearPlan(0, "bow-fixture").cost, 2);
+  assert.equal(g.gearPlan(0, "bow-fixture").stow.length, 2);
+  assert.throws(() => g.equip(0, "bow-fixture"), /Requires 2/);
+  assert.equal(g.encounter.current, null);
+  items.push({
+    instanceId: "sword-fixture",
+    catalogId: "item-ordinary-melee-weapon",
+    carried: true,
+    hands: 1,
+    held: false,
+  });
+  assert.deepEqual(g.gearPlan(0, "sword-fixture"), {
+    stow: [weapon.instanceId],
+    cost: 1,
+  });
+});
+test("death of the entire company reaches defeat even when the final enemy also dies", () => {
+  const g = combatFixture();
+  delete g.advance;
+  g.party.forEach((h) => {
+    h.survival.status = "dead";
+    h.survival.hp = 0;
+  });
+  g.enemies[0].hp = 0;
+  g.advance();
+  assert.equal(g.mode, "defeat");
+  assert.equal(g.campaign.memorial.length, 1);
+});
+test("potion recipient Reaction and free-hand failures spend no action or supply", () => {
+  const g = combatFixture(),
+    h = g.active,
+    target = g.party[1],
+    potion = h.preview.inventory.items.find(
+      (i) => i.catalogId === "item-lesser-healing-bottle",
+    );
+  target.survival.hp = 2;
+  g.beginHero();
+  target.conditions = [
+    {
+      id: "paralyzed",
+      key: "paralyzed",
+      rating: 1,
+      persistence: "temporary",
+      source: "test",
+    },
+  ];
+  assert.throws(
+    () => g.drinkPotion(0, potion.instanceId, target.id),
+    /Reaction/,
+  );
+  assert.equal(g.budget.remaining.maneuver, 1);
+  assert.equal(h.supplies[potion.instanceId], undefined);
+  target.conditions = [];
+  const held = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-ordinary-melee-weapon",
+  );
+  held.held = true;
+  held.hands = 2;
+  assert.throws(
+    () => g.drinkPotion(0, potion.instanceId, target.id),
+    /free hand/,
+  );
+  assert.equal(g.budget.remaining.maneuver, 1);
+  held.held = false;
+  g.supplyDie = () => 1;
+  g.drinkPotion(0, potion.instanceId, target.id);
+  assert.equal(target.survival.hp, 8);
+  assert.equal(g.budget.remaining.maneuver, 0);
+  assert.equal(g.budgets[target.id].remaining.reaction, 0);
+  assert.equal(h.supplies[potion.instanceId], 0);
+});
+test("legacy wound-review saves migrate the original injury exactly once", () => {
+  const g = combatFixture(),
+    h = g.active;
+  h.survival.hp = 1;
+  g.dice = (n) => Array(n).fill(3);
+  g.suffer(h, 3, "physical", "sentry");
+  delete h.wounds[0].applied;
+  delete h.wounds[0].id;
+  h.conditions = [];
+  g.woundNotices = [];
+  g.mode = "wound-review";
+  const copy = fresh();
+  copy.load(deserialize(serialize(g.snapshot())));
+  assert.equal(copy.mode, "combat");
+  assert.equal(copy.party[0].wounds.length, 1);
+  assert.equal(copy.woundNotices.length, 1);
+  const conditions = structuredClone(copy.party[0].conditions);
+  const next = fresh();
+  next.load(deserialize(serialize(copy.snapshot())));
+  assert.deepEqual(next.party[0].conditions, conditions);
+  assert.equal(next.party[0].survival.wounds, 1);
+});
+test("forced collision damage precedes the contacted creature Stability deduction", () => {
+  const g = fresh(),
+    [a, b] = g.party;
+  g.enemies = [];
+  g.map = {
+    tiles: Object.fromEntries(
+      Array.from({ length: 8 }, (_, x) => [`${x},0`, { x, z: 0 }]),
+    ),
+    obstacles: {},
+  };
+  g.party.forEach((p, i) =>
+    Object.assign(p, { x: i === 0 ? 1 : i === 1 ? 3 : 7, z: i < 2 ? 0 : 10 }),
+  );
+  a.preview.summary.stability = 1;
+  b.preview.summary.stability = 2;
+  const hp = [a.survival.hp, b.survival.hp];
+  g.forceMove(a, { x: 1, z: 0 }, 5);
+  assert.equal(a.survival.hp, hp[0] - 3);
+  assert.equal(b.survival.hp, hp[1] - 3);
+  assert.equal(a.x, 2);
+  assert.equal(b.x, 4);
 });

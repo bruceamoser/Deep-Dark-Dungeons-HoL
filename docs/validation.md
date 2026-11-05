@@ -49,3 +49,9 @@ The corrected native test runs the launcher through `aa-exec -p unconfined`, ass
 ## Character command screen
 
 Author review and checks: 26 core tests; browser control and recruitment/combat checks; `scripts/character-check.mjs` exercises wear/remove resistance and appearance, readying a visible bow, favorite save/load, and a blank-to-valid character through the new interface. The same character check runs inside packaged Linux through the exact launcher under `aa-exec -p unconfined`, followed by camera/formation/audio/turn/training/disk-save checks. Inspected rendered sheet, bow and creation screenshots. Windows execution remains untested.
+
+## Injury, recovery and curated actions
+
+Author review: **40 core tests passed**, including typed wound consequences, forced-movement collisions, daily treatment limits, persistent scars, final-use healing potions, recipient reactions, action-category choices, Last Words/defeat progression, save migration and immutable source hashes. Browser recruitment/combat checks passed.
+
+The packaged Linux test passed through the exact terminal launcher and normal AppArmor context. It exercised native character creation, armor and bow appearance, saved favorites, earned training with spent HP/Grit preserved, camera/formation/audio, spells and actor-only movement. The added recovery interaction acknowledged an eye wound, used an ally's potion, treated the injury across separate days, removed its blindness penalty, retained the scar and restored that state from disk. Screenshots of the sheet, combat and treated wound were inspected. Linux and Windows ZIP packaging passed; **Windows execution remains untested**. These checks establish the documented subset, not complete automation or balance of HoL.
