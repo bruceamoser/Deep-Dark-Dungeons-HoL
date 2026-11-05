@@ -17,7 +17,7 @@ This is a first playable foundation, not the completed game or the final visual 
 - The curated action subset below is playable. Most cards, higher-level class signatures, opportunity attacks and contextual exploration checks still need design and adapters.
 - All 280 wound entries and the upstream survival/recovery modules are bundled. Numerical wound effects, typed conditions, Dying/Last Words and daily treatment are now integrated. Exceptional anatomical consequences/remedies, additional reactions and expedition rescue need further work.
 - Town shopping currently opens creation shopping. Persistent vault-funded shopping is not implemented.
-- Failed-party caches and replacement parties are a proposal; the complete defeat/rescue loop is not yet reachable through fully automated harm play.
+- Full-party death now reaches defeat and records the company and its coin cache. Cache collection and replacement-company controls exist; a complete expedition rescue experience and balance remain unfinished.
 - Four class-associated free model appearances are available. Armor tiers and held weapons/shields now drive both world models and the animated sheet preview. Full ancestry/body/outfit customization remains unimplemented; current appearances remain a first art pass.
 - Scenery remains a first art pass. A designed town, authored room variety, animation blending polish, real sound design, accessibility/options and performance budgets remain necessary.
 - Windows is packaged but has not been run on Windows. Linux desktop and headless Chromium checks are separate evidence.
@@ -51,3 +51,7 @@ Replaced the scrolling reference sheet and embedded character mancer with a game
 Wounds apply numerical penalties and typed conditions, offer a displacement direction where required, and continue after acknowledgement. Hero turns resolve condition damage/decay, Dazed action choices, survival and Last Words. Forced movement handles Stability and collision chains. The six treatment capabilities use one-hour, once-per-wound-per-day source procedures and retain scar counts; the Journey panel exposes eligible healers and recovery progress. Healing bottles and nine additional combat/recovery cards have explicit adapters. Source boundaries and adjudications are listed in `computer-game-deltas.md`.
 
 Remaining material gaps include opportunity attacks and most reactions, higher-level signatures, special anatomical remedies, stealth/unnoticed targeting, healing-harmed creatures, prone-occupant traversal, difficult-terrain generation and persistent town shopping. No claim is made that 36 included cards equals complete HoL automation.
+
+## Physical attack presentation
+
+Ranged attacks now nock and release the modeled arrow from an upright bow with a drawn string, follow an arcing flight and resolve visual contact on arrival. Sword attacks use the actual held weapon, a short visual lunge and a fading ribbon sampled from the animated blade. One/two-handed melee, unarmed strikes and shield bashes select corresponding rig clips. Fire, frost and life magic have separate shard/ribbon silhouettes. Sound and hit reactions follow release/contact; lethal targets remain visible until impact. These are presentation changes; HoL outcomes, tactical positions and action costs remain authoritative.

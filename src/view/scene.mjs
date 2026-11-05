@@ -1,4 +1,5 @@
 import * as T from "three";
+import { createAttackEffect } from "./combat-effects.mjs";
 import { equipmentAppearance } from "./appearance.mjs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
@@ -203,6 +204,7 @@ export class Scene {
       sword: "/assets/adventurer/Assets/gltf/sword_1handed.gltf",
       staff: "/assets/adventurer/Assets/gltf/staff.gltf",
       bow: "/assets/adventurer/Assets/gltf/crossbow_2handed.gltf",
+      arrow: "/assets/adventurer/Assets/gltf/arrow.gltf",
       shield: "/assets/adventurer/Assets/gltf/shield_round_color.gltf",
       floor: asset("floor_tile_large"),
       pillar: asset("pillar_decorated"),
@@ -237,6 +239,8 @@ export class Scene {
               "Mage",
               "Barbarian",
               "Skeleton",
+              "sword",
+              "arrow",
               "floor",
             ].includes(name)
           )
@@ -271,6 +275,7 @@ export class Scene {
     return obj;
   }
   build(map) {
+    this.clearEffects();
     this.map = map;
     for (const p of this.world.children.slice()) this.world.remove(p);
     this.props = [];
@@ -466,6 +471,7 @@ export class Scene {
     return entity;
   }
   resetEntities(party, enemies) {
+    this.clearEffects();
     for (const e of this.entities.values()) {
       e.mixer.stopAllAction();
       e.mixer.uncacheRoot(e.model);
@@ -486,47 +492,24 @@ export class Scene {
     const clip =
       e.clips.find((c) => c.name === name) ??
       e.clips.find((c) => c.name === "Idle");
-    if (!clip || e.action?.getClip() === clip) return;
+    if (!clip || (!once && e.action?.getClip() === clip)) return;
     const next = e.mixer.clipAction(clip);
     next.reset().setLoop(once ? T.LoopOnce : T.LoopRepeat, once ? 1 : Infinity);
     next.clampWhenFinished = once;
     next.play();
-    e.action?.fadeOut(0.18);
+    if (e.action && e.action !== next) e.action.fadeOut(0.18);
     next.fadeIn(0.18);
     e.action = next;
     if (once) e.lock = clip.duration;
   }
-  attackEffect({ attacker, target, spell, element, ranged }) {
-    const from = this.entities.get(attacker),
-      to = this.entities.get(target);
-    if (!from || !to) return;
-    from.group.rotation.y = Math.atan2(
-      to.data.x - from.data.x,
-      to.data.z - from.data.z,
-    );
-    const tint =
-      element === "cold"
-        ? 0x7ed9ff
-        : element === "life"
-          ? 0x91ddb5
-          : spell
-            ? 0xff9b42
-            : 0xe9cd8b;
-    const mesh = new T.Mesh(
-      new T.SphereGeometry(spell ? 0.16 : 0.07, 8, 6),
-      new T.MeshBasicMaterial({ color: tint, transparent: true }),
-    );
-    const start = from.group.position.clone().add(new T.Vector3(0, 1.1, 0)),
-      end = to.group.position.clone().add(new T.Vector3(0, 1, 0));
-    mesh.position.copy(start);
-    this.scene.add(mesh);
-    this.effects.push({
-      mesh,
-      start,
-      end,
-      age: 0,
-      duration: spell || ranged ? 0.35 : 0.15,
-    });
+  attackEffect(data, callbacks) {
+    const effect = createAttackEffect(this, data, callbacks);
+    if (effect) this.effects.push(effect);
+    return effect;
+  }
+  clearEffects() {
+    for (const effect of this.effects) effect.dispose();
+    this.effects.length = 0;
   }
   freezePositions() {
     for (const e of this.entities.values()) {
@@ -575,39 +558,27 @@ export class Scene {
     for (const t of this.torches)
       t.light.visible = !!seen[key(Math.round(t.x), Math.round(t.z))];
     for (const e of this.entities.values())
-      if (e.isEnemy) e.group.visible = e.data.hp > 0 && visible(e.data);
+      if (e.isEnemy)
+        e.group.visible =
+          (e.data.hp > 0 || e.pendingImpacts > 0 || e.deathGrace > 0) &&
+          visible(e.data);
   }
   tick(dt) {
     const t = this.clock.elapsedTime;
-    for (const e of [...this.effects]) {
-      e.age += dt;
-      e.mesh.position.lerpVectors(
-        e.start,
-        e.end,
-        Math.min(1, e.age / e.duration),
-      );
-      if (e.age > e.duration) {
-        e.mesh.scale.setScalar(1 + (e.age - e.duration) * 7);
-        e.mesh.material.opacity = Math.max(0, 1 - (e.age - e.duration) * 4);
-      }
-      if (e.age > e.duration + 0.25) {
-        this.scene.remove(e.mesh);
-        e.mesh.geometry.dispose();
-        e.mesh.material.dispose();
-        this.effects.splice(this.effects.indexOf(e), 1);
-      }
-    }
     for (const e of this.entities.values()) {
       e.mixer.update(dt);
       e.lock = Math.max(0, e.lock - dt);
+      e.deathGrace = Math.max(0, (e.deathGrace ?? 0) - dt);
       const target = new T.Vector3(e.data.x * TILE, 0.04, e.data.z * TILE),
         delta = target.clone().sub(e.group.position);
       const moving = delta.length() > 0.02;
-      if (moving) {
+      // Resolve a pushed target visually after contact, even though the rules
+      // have already committed its new square.
+      if (moving && !e.pendingImpacts) {
         e.group.rotation.y = Math.atan2(delta.x, delta.z);
         e.group.position.lerp(target, 1 - Math.exp(-dt * 12));
       }
-      if (!e.lock) {
+      if (!e.lock && !e.pendingImpacts) {
         const dead = e.isEnemy
           ? e.data.hp <= 0
           : ["dying", "stable", "dead"].includes(e.data.survival.status);
@@ -616,8 +587,17 @@ export class Scene {
           dead ? "Death_A_Pose" : moving ? "Walking_A" : "Idle",
         );
       }
+      if (e.isEnemy && e.data.hp <= 0 && !e.pendingImpacts && !e.deathGrace)
+        e.group.visible = false;
       e.ring.material.opacity = e.data.selected ? 0.95 : 0.35;
       e.ring.scale.setScalar(e.data.selected ? 1.15 : 1);
+    }
+    // Sample animated weapon transforms after advancing the rig for this frame.
+    for (const effect of [...this.effects]) {
+      if (!effect.update(dt)) {
+        effect.dispose();
+        this.effects.splice(this.effects.indexOf(effect), 1);
+      }
     }
     for (const o of this.torches)
       o.light.intensity =

@@ -33,6 +33,14 @@ export class GameAudio {
       gain.gain.value = 0.2;
       source.connect(filter).connect(gain).connect(this.master);
       source.start();
+      this.transientNoise = c.createBuffer(
+        1,
+        Math.ceil(c.sampleRate * 0.4),
+        c.sampleRate,
+      );
+      const transient = this.transientNoise.getChannelData(0);
+      for (let i = 0; i < transient.length; i++)
+        transient[i] = Math.random() * 2 - 1;
     }
     await this.context.resume();
   }
@@ -59,12 +67,47 @@ export class GameAudio {
     const presets = {
       step: [130, 55, 0.075, 0.1],
       hit: [180, 42, 0.18, 0.3],
+      bow: [280, 85, 0.16, 0.14],
+      "arrow-hit": [120, 48, 0.09, 0.16],
+      swing: [95, 45, 0.12, 0.035],
       spell: [720, 140, 0.45, 0.12],
       loot: [520, 1040, 0.3, 0.13],
       combat: [90, 38, 0.8, 0.25],
       ui: [440, 660, 0.12, 0.1],
     };
     const [from, to, duration, level] = presets[kind] ?? presets.ui;
+    if (["swing", "bow", "arrow-hit", "hit"].includes(kind)) {
+      const noise = c.createBufferSource(),
+        filter = c.createBiquadFilter(),
+        envelope = c.createGain();
+      noise.buffer = this.transientNoise;
+      filter.type = kind === "swing" ? "bandpass" : "lowpass";
+      filter.frequency.setValueAtTime(
+        kind === "swing" ? 2400 : kind === "bow" ? 3200 : 1400,
+        c.currentTime,
+      );
+      filter.frequency.exponentialRampToValueAtTime(
+        250,
+        c.currentTime + duration,
+      );
+      envelope.gain.setValueAtTime(0.001, c.currentTime);
+      envelope.gain.linearRampToValueAtTime(
+        kind === "swing" ? 0.22 : 0.12,
+        c.currentTime + 0.015,
+      );
+      envelope.gain.exponentialRampToValueAtTime(
+        0.001,
+        c.currentTime + duration,
+      );
+      noise.connect(filter).connect(envelope).connect(this.master);
+      noise.start();
+      noise.stop(c.currentTime + duration);
+      noise.onended = () => {
+        noise.disconnect();
+        filter.disconnect();
+        envelope.disconnect();
+      };
+    }
     const osc = c.createOscillator(),
       gain = c.createGain();
     osc.type = kind === "hit" || kind === "step" ? "triangle" : "sine";

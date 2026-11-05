@@ -119,24 +119,18 @@ async function init() {
       scene.updateVisibility(game.party, game.seen);
     }
     if (type === "attack") {
-      scene.animate(
-        data.attacker,
-        data.spell
-          ? "Spellcast_Shoot"
-          : data.ranged
-            ? "2H_Ranged_Shoot"
-            : "1H_Melee_Attack_Slice_Diagonal",
-        true,
-      );
-      if (data.damage > 0) scene.animate(data.target, "Hit_A", true);
-      scene.attackEffect(data);
-      sound.play(
-        data.element === "life" && data.damage === 0
-          ? "loot"
-          : data.spell
-            ? "spell"
-            : "hit",
-      );
+      scene.attackEffect(data, {
+        release: (kind) =>
+          sound.play(data.spell ? "spell" : kind === "arrow" ? "bow" : "swing"),
+        impact: (kind) =>
+          sound.play(
+            data.element === "life" && data.damage === 0
+              ? "loot"
+              : kind === "arrow"
+                ? "arrow-hit"
+                : "hit",
+          ),
+      });
     }
     if (type === "combat") {
       sound.play("combat");

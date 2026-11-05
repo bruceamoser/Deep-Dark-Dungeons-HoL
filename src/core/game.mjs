@@ -483,6 +483,7 @@ export class Game {
       this.emit("attack", {
         attacker: h.id,
         target: target.id,
+        ability: id,
         damage: damage.total,
         spell: spec.spell,
         element: spec.type,

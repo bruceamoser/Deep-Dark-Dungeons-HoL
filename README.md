@@ -30,6 +30,7 @@ The Linux executable is `release/linux-unpacked/deep-dark-dungeons-hol`. Windows
 
 - Click ground to move; 1–4 select a hero.
 - Near opposition, movement stops and HoL alternating turns begin.
+- Bow attacks fire modeled arrows; melee swings show the held blade and its trail. Fire, frost and life spells have distinct effects.
 - Click an enemy to attack with the readied melee weapon or bow, or use Basic Unarmed with empty hands. Space ends a turn.
 - Right-drag pans the camera; Q/E rotate; wheel zooms; F recenters and resumes exploration follow. Combat movement keeps the camera fixed.
 - Formation chooses two by two, single file, wedge or line, with editable marching order.

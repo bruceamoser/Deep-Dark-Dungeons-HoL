@@ -26,7 +26,7 @@ Initialize/tools-list handshakes passed for PhotoCraft 0.18.0, VectorCraft 0.19.
 
 ## Limits
 
-No balance or complete-game acceptance is established. Wound consequences and most learned abilities are not automated in the dungeon runtime; the explicit implementation boundary is documented in `implementation-status.md`. No sustained performance or controller/accessibility certification was attempted. Review was by the implementing agent, not an independent reviewer.
+No balance or complete-game acceptance is established. The original preview lacked automated wounds; later passes below supersede that limitation. Most learned abilities still require adapters; current boundaries are documented in `implementation-status.md`. No sustained performance or controller/accessibility certification was attempted. Review was by the implementing agent, not an independent reviewer.
 
 ## Second-pass regression evidence
 
@@ -55,3 +55,9 @@ Author review and checks: 26 core tests; browser control and recruitment/combat 
 Author review: **40 core tests passed**, including typed wound consequences, forced-movement collisions, daily treatment limits, persistent scars, final-use healing potions, recipient reactions, action-category choices, Last Words/defeat progression, save migration and immutable source hashes. Browser recruitment/combat checks passed.
 
 The packaged Linux test passed through the exact terminal launcher and normal AppArmor context. It exercised native character creation, armor and bow appearance, saved favorites, earned training with spent HP/Grit preserved, camera/formation/audio, spells and actor-only movement. The added recovery interaction acknowledged an eye wound, used an ally's potion, treated the injury across separate days, removed its blindness penalty, retained the scar and restored that state from disk. Screenshots of the sheet, combat and treated wound were inspected. Linux and Windows ZIP packaging passed; **Windows execution remains untested**. These checks establish the documented subset, not complete automation or balance of HoL.
+
+## Weapon and spell presentation
+
+Author-reviewed physical effects replace the earlier traveling spheres. The rendered effects check clicks the actual enemy target with a readied bow and sword, then advances deterministic animation frames to inspect the nocked arrow, flight, blade ribbon and contact. It verifies delayed hit presentation on lethal targets, cleanup after flight and entity rebuild, repeated one-shot animation restart, a lunge that preserves the actor's tactical coordinates, and a forced push that waits visually for contact. Fire, frost, life and self-target recovery effects render without projectile spheres. Screenshots of arrow flight, sword contact and the character screen were inspected.
+
+The full packaged Linux launcher check passed again with these effects, character creation/equipment/favorites, camera/formation/audio, advancement, combat, wound treatment and disk-save checks. Renderer seccomp filtering remains enabled under the ordinary terminal AppArmor context. The core suite remains at 40 passing tests. Linux and Windows ZIP builds passed; Windows runtime, final audiovisual quality and comprehensive animation coverage remain unverified.
