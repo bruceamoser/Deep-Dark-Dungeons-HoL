@@ -16,7 +16,7 @@
 
 `npm run test:visual` previously captured the town/dungeon and found no JavaScript or console errors. Screenshots were inspected; this establishes rendering, not final art-quality acceptance.
 
-The packaged Linux executable was launched and exercised with Playwright's Electron driver. Native scene rendering and disk saving passed. The final test runner uses an isolated user-data directory. Windows x64 ZIP packaging passed; **Windows execution remains untested**.
+The original Playwright Electron-driver check masked the normal-launch sandbox failure reported by Bruce. It did not prove a terminal launch worked. The corrected native test spawns the exact `launch-game.sh` command and attaches via CDP, without injecting sandbox-disabling flags. It checks renderer seccomp filtering as well as scene rendering and disk saving, in an isolated user-data directory. Windows x64 ZIP packaging passed; **Windows execution remains untested**.
 
 `npm audit --omit=dev`: zero runtime dependency advisories at the time of checking. Build-tool dependencies still report moderate advisories; this is not a security certification.
 
