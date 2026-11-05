@@ -17,6 +17,7 @@ export class Scene {
     this.torches = [];
     this.entities = new Map();
     this.props = [];
+    this.effects = [];
     this.assets = new Map();
     this.angle = Math.PI / 4;
     this.zoom = 21;
@@ -90,7 +91,31 @@ export class Scene {
     });
     this.pathGroup = new T.Group();
     this.scene.add(this.pathGroup);
+    this.follow = true;
+    canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+    const endPan = () => {
+      this.pan = null;
+      canvas.style.cursor = "";
+    };
+    canvas.addEventListener("pointerup", endPan);
+    canvas.addEventListener("pointercancel", endPan);
+    canvas.addEventListener("lostpointercapture", endPan);
     canvas.addEventListener("pointermove", (e) => {
+      if (this.pan) {
+        const scale = this.zoom / canvas.clientHeight;
+        const dx = (e.clientX - this.pan.x) * scale,
+          dz = ((e.clientY - this.pan.y) * scale * Math.hypot(32, 27)) / 27;
+        const delta = new T.Vector3(
+          -dx * Math.sin(this.angle) + dz * Math.cos(this.angle),
+          0,
+          dx * Math.cos(this.angle) + dz * Math.sin(this.angle),
+        );
+        this.focus.add(delta);
+        this.targetFocus = this.focus.clone();
+        this.camera.position.add(delta);
+        this.pan = { x: e.clientX, y: e.clientY };
+        return;
+      }
       this.pointer.set(
         (e.clientX / innerWidth) * 2 - 1,
         (-e.clientY / innerHeight) * 2 + 1,
@@ -113,6 +138,15 @@ export class Scene {
       }
     });
     canvas.addEventListener("pointerdown", (e) => {
+      if (e.button === 2) {
+        e.preventDefault();
+        this.follow = false;
+        this.pan = { x: e.clientX, y: e.clientY };
+        this.targetFocus = this.focus.clone();
+        canvas.setPointerCapture(e.pointerId);
+        canvas.style.cursor = "grabbing";
+        this.showPath([]);
+      }
       if (e.button === 0 && this.hover) onClick(this.hover);
     });
     canvas.addEventListener(
@@ -143,6 +177,8 @@ export class Scene {
       Skeleton: "/assets/skeleton/Characters/gltf/Skeleton_Warrior.glb",
       sword: "/assets/adventurer/Assets/gltf/sword_1handed.gltf",
       staff: "/assets/adventurer/Assets/gltf/staff.gltf",
+      bow: "/assets/adventurer/Assets/gltf/crossbow_2handed.gltf",
+      shield: "/assets/adventurer/Assets/gltf/shield_round_color.gltf",
       floor: asset("floor_tile_large"),
       pillar: asset("pillar_decorated"),
       wall: asset("wall"),
@@ -400,20 +436,22 @@ export class Scene {
     };
     this.entities.set(data.id, entity);
     this.animate(data.id, "Idle");
-    let right;
+    let right, left;
     model.traverse((o) => {
-      if (o.name === "handslotr" || o.name === "handslot.r") right = o;
+      if (["handslotr", "handslot.r"].includes(o.name)) right = o;
+      if (["handslotl", "handslot.l"].includes(o.name)) left = o;
     });
-    const holdsMelee =
-      isEnemy ||
+    const held = (id) =>
       data.preview?.inventory.items.some(
-        (i) => i.held && i.catalogId === "item-ordinary-melee-weapon",
+        (i) => i.carried && i.held && i.catalogId === id,
       );
-    const weapon = "sword";
-    if (holdsMelee && right && this.assets.has(weapon)) {
-      const item = this.model(weapon);
-      right.add(item);
+    if (right) {
+      if (isEnemy || held("item-ordinary-melee-weapon"))
+        right.add(this.model("sword"));
+      else if (held("item-ordinary-ranged-weapon"))
+        right.add(this.model("bow"));
     }
+    if (left && held("item-ordinary-shield")) left.add(this.model("shield"));
     return entity;
   }
   resetEntities(party, enemies) {
@@ -444,7 +482,40 @@ export class Scene {
     e.action = next;
     if (once) e.lock = clip.duration;
   }
-  focusOn(p) {
+  attackEffect({ attacker, target, spell, element, ranged }) {
+    const from = this.entities.get(attacker),
+      to = this.entities.get(target);
+    if (!from || !to) return;
+    from.group.rotation.y = Math.atan2(
+      to.data.x - from.data.x,
+      to.data.z - from.data.z,
+    );
+    const tint = element === "cold" ? 0x7ed9ff : spell ? 0xff9b42 : 0xe9cd8b;
+    const mesh = new T.Mesh(
+      new T.SphereGeometry(spell ? 0.16 : 0.07, 8, 6),
+      new T.MeshBasicMaterial({ color: tint, transparent: true }),
+    );
+    const start = from.group.position.clone().add(new T.Vector3(0, 1.1, 0)),
+      end = to.group.position.clone().add(new T.Vector3(0, 1, 0));
+    mesh.position.copy(start);
+    this.scene.add(mesh);
+    this.effects.push({
+      mesh,
+      start,
+      end,
+      age: 0,
+      duration: spell || ranged ? 0.35 : 0.15,
+    });
+  }
+  freezePositions() {
+    for (const e of this.entities.values()) {
+      e.group.position.set(e.data.x * TILE, 0.04, e.data.z * TILE);
+      this.animate(e.data.id, "Idle");
+    }
+    this.targetFocus = this.focus.clone();
+  }
+  focusOn(p, enableFollow = true) {
+    if (enableFollow) this.follow = true;
     this.targetFocus = new T.Vector3(p.x * TILE, 0, p.z * TILE);
   }
   rotate(dir) {
@@ -483,6 +554,24 @@ export class Scene {
   }
   tick(dt) {
     const t = this.clock.elapsedTime;
+    for (const e of [...this.effects]) {
+      e.age += dt;
+      e.mesh.position.lerpVectors(
+        e.start,
+        e.end,
+        Math.min(1, e.age / e.duration),
+      );
+      if (e.age > e.duration) {
+        e.mesh.scale.setScalar(1 + (e.age - e.duration) * 7);
+        e.mesh.material.opacity = Math.max(0, 1 - (e.age - e.duration) * 4);
+      }
+      if (e.age > e.duration + 0.25) {
+        this.scene.remove(e.mesh);
+        e.mesh.geometry.dispose();
+        e.mesh.material.dispose();
+        this.effects.splice(this.effects.indexOf(e), 1);
+      }
+    }
     for (const e of this.entities.values()) {
       e.mixer.update(dt);
       e.lock = Math.max(0, e.lock - dt);
@@ -522,7 +611,12 @@ export class Scene {
     this.camera.lookAt(this.focus);
     this.moon.position.copy(this.focus).add(new T.Vector3(-15, 35, -12));
     this.moon.target.position.copy(this.focus);
-    this.partyLight.position.copy(this.focus).add(new T.Vector3(0, 4, 0));
+    const selected = [...this.entities.values()].find(
+      (e) => !e.isEnemy && e.data.selected,
+    );
+    this.partyLight.position
+      .copy(selected?.group.position ?? this.focus)
+      .add(new T.Vector3(0, 4, 0));
     this.composer.render();
   }
   resize() {

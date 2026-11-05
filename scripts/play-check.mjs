@@ -79,11 +79,12 @@ try {
   await expect(page.locator(".phase")).toContainText("YOUR COMPANY");
   await page.waitForTimeout(1800);
   await click(await page.evaluate(() => window.__ddd.game.enemies[0]));
-  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 6);
+  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 6, {timeout:5000}).catch(async e=>{ console.log(await page.evaluate(()=>({toast:document.querySelector("#toast").textContent,mode:window.__ddd.game.mode,log:window.__ddd.game.log,hp:window.__ddd.game.enemies[0].hp,selected:window.__ddd.game.selected})));throw e; });
   expect(
     await page.evaluate(() => window.__ddd.game.budget.remaining.main),
   ).toBe(0);
   await page.getByRole("button", { name: "End turn" }).click();
+  await page.getByRole("button", { name: "Shield Block", exact: true }).click();
   await page.waitForFunction(
     () =>
       !window.__ddd.game.busy &&

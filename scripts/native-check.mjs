@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
+import { verifyControls } from "./control-check.mjs";
 
 // Exercise the user's launcher. Playwright's Electron launcher can supply
 // --no-sandbox and therefore cannot prove an ordinary Linux launch works.
@@ -19,7 +20,7 @@ const child = spawn(
     stdio: ["ignore", "ignore", "pipe"],
     env: {
       ...process.env,
-      CHROME_DEVEL_SANDBOX: "",
+      CHROME_DEVEL_SANDBOX: process.env.CHROME_DEVEL_SANDBOX ?? "",
       DDD_TEST_USER_DATA: userData,
     },
   },
@@ -62,6 +63,7 @@ try {
   const stored = await w.evaluate(() => window.desktop.load());
   expect(JSON.parse(stored).campaign.party).toHaveLength(4);
   await w.screenshot({ path: "test-results/native-dungeon.png" });
+  await verifyControls(w);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");

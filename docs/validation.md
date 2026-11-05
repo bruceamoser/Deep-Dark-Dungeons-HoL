@@ -27,3 +27,13 @@ Initialize/tools-list handshakes passed for PhotoCraft 0.18.0, VectorCraft 0.19.
 ## Limits
 
 No balance or complete-game acceptance is established. Wound consequences and most learned abilities are not automated in the dungeon runtime; the explicit implementation boundary is documented in `implementation-status.md`. No sustained performance or controller/accessibility certification was attempted. Review was by the implementing agent, not an independent reviewer.
+
+## Second-pass regression evidence
+
+Core regression suite adds single-hero movement, formation ordering/save compatibility, Cinder Cast/Burning, Rime Grip/Slowed/Freezing, invalid-action non-spending, Defend plus Shield Block timing, stabilization resource preservation, Last Words gates, immutable/earned development and final-use ammunition checks. Every pinned source hash remains checked.
+
+`test:controls` exercises right-drag and wheel input, formation selection/reordering, rendered sheets, spell targeting and single-hero movement through actual mouse controls. It also commits earned advancement through the original Workshop iframe and checks HP/Grit preservation. Web Audio is required to be running with a nonzero analyser signal, then silent after muting; this verifies generated/routed audio, not physical speaker audibility.
+
+The same controls routine runs inside `test:native`, attached to the exact launcher with sandboxing enabled. A deliberately invalid inherited `CHROME_DEVEL_SANDBOX` is used for the launch regression. The packaged helper path is repaired to the installed root-owned helper. Windows packaging is checked separately; Windows execution remains untested.
+
+Latest results: 24 core tests, browser recruitment/combat and controls checks, sandboxed Linux native controls, Linux packaging and Windows ZIP packaging passed. Screenshots in ignored `test-results/` were visually inspected for the dungeon and expanded character sheet.

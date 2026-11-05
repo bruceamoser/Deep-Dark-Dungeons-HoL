@@ -1,0 +1,3000 @@
+{
+  "sourceCommit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+  "counts": {
+    "review": 405,
+    "included": 19,
+    "adaptation-planned": 2,
+    "excluded": 1
+  },
+  "abilities": [
+    {
+      "id": "ability-a-bough-for-the-fallen",
+      "name": "A Bough for the Fallen",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-bough-for-the-fallen.md"
+    },
+    {
+      "id": "ability-a-breath-beneath-the-water",
+      "name": "A Breath beneath the Water",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-breath-beneath-the-water.md"
+    },
+    {
+      "id": "ability-a-camp-without-a-trace",
+      "name": "A Camp without a Trace",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-camp-without-a-trace.md"
+    },
+    {
+      "id": "ability-a-coal-for-a-promise",
+      "name": "A Coal for a Promise",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-coal-for-a-promise.md"
+    },
+    {
+      "id": "ability-a-common-tongue",
+      "name": "A Common Tongue",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-common-tongue.md"
+    },
+    {
+      "id": "ability-a-company-of-reflections",
+      "name": "A Company of Reflections",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-company-of-reflections.md"
+    },
+    {
+      "id": "ability-a-courtesy-unanswered",
+      "name": "A Courtesy Unanswered",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-courtesy-unanswered.md"
+    },
+    {
+      "id": "ability-a-door-that-is-not-there",
+      "name": "A Door That Is Not There",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-door-that-is-not-there.md"
+    },
+    {
+      "id": "ability-a-friend-beneath-the-door",
+      "name": "Call Fey: Novice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-friend-beneath-the-door.md"
+    },
+    {
+      "id": "ability-a-good-place-to-stop",
+      "name": "A Good Place to Stop",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-good-place-to-stop.md"
+    },
+    {
+      "id": "ability-a-hand-from-before",
+      "name": "A Hand from Before",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-hand-from-before.md"
+    },
+    {
+      "id": "ability-a-knot-you-can-trust",
+      "name": "A Knot You Can Trust",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-knot-you-can-trust.md"
+    },
+    {
+      "id": "ability-a-line-for-everyone",
+      "name": "A Line for Everyone",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-line-for-everyone.md"
+    },
+    {
+      "id": "ability-a-lock-has-a-language",
+      "name": "A Lock Has a Language",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-lock-has-a-language.md"
+    },
+    {
+      "id": "ability-a-marvel-on-wheels",
+      "name": "A Marvel on Wheels",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-marvel-on-wheels.md"
+    },
+    {
+      "id": "ability-a-name-worth-knowing",
+      "name": "A Name Worth Knowing",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-name-worth-knowing.md"
+    },
+    {
+      "id": "ability-a-party-piece",
+      "name": "A Party Piece",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-party-piece.md"
+    },
+    {
+      "id": "ability-a-place-at-any-fire",
+      "name": "A Place at Any Fire",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-place-at-any-fire.md"
+    },
+    {
+      "id": "ability-a-ribcage-for-a-shield",
+      "name": "A Ribcage for a Shield",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-ribcage-for-a-shield.md"
+    },
+    {
+      "id": "ability-a-road-through-rain",
+      "name": "A Road through Rain",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-road-through-rain.md"
+    },
+    {
+      "id": "ability-a-roof-before-nightfall",
+      "name": "A Roof before Nightfall",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-roof-before-nightfall.md"
+    },
+    {
+      "id": "ability-a-shadow-at-the-heart",
+      "name": "A Shadow at the Heart",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-shadow-at-the-heart.md"
+    },
+    {
+      "id": "ability-a-shelter-of-light",
+      "name": "A Shelter of Light",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-shelter-of-light.md"
+    },
+    {
+      "id": "ability-a-sign-against-harm",
+      "name": "A Sign against Harm",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-sign-against-harm.md"
+    },
+    {
+      "id": "ability-a-small-and-watchful-shape",
+      "name": "A Small and Watchful Shape",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-small-and-watchful-shape.md"
+    },
+    {
+      "id": "ability-a-splendid-mistake",
+      "name": "A Splendid Mistake",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-splendid-mistake.md"
+    },
+    {
+      "id": "ability-a-steady-hand-at-dawn",
+      "name": "A Steady Hand at Dawn",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-steady-hand-at-dawn.md"
+    },
+    {
+      "id": "ability-a-sword-made-of-dawn",
+      "name": "A Sword Made of Dawn",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-sword-made-of-dawn.md"
+    },
+    {
+      "id": "ability-a-thought-that-is-not-yours",
+      "name": "A Thought That Is Not Yours",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-thought-that-is-not-yours.md"
+    },
+    {
+      "id": "ability-a-verse-for-courage",
+      "name": "A Verse for Courage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-verse-for-courage.md"
+    },
+    {
+      "id": "ability-a-voice-across-the-valley",
+      "name": "A Voice across the Valley",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-voice-across-the-valley.md"
+    },
+    {
+      "id": "ability-a-word-apart",
+      "name": "A Word Apart",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/a-word-apart.md"
+    },
+    {
+      "id": "ability-aid",
+      "name": "Aid",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/aid.md"
+    },
+    {
+      "id": "ability-all-voices-as-one",
+      "name": "All Voices as One",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/all-voices-as-one.md"
+    },
+    {
+      "id": "ability-an-impossible-theft",
+      "name": "An Impossible Theft",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/an-impossible-theft.md"
+    },
+    {
+      "id": "ability-an-invitation-elsewhere",
+      "name": "An Invitation Elsewhere",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/an-invitation-elsewhere.md"
+    },
+    {
+      "id": "ability-anatomy-of-an-opening",
+      "name": "Anatomy of an Opening",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/anatomy-of-an-opening.md"
+    },
+    {
+      "id": "ability-another-tongue",
+      "name": "Another Tongue",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/another-tongue.md"
+    },
+    {
+      "id": "ability-answer-for-what-you-did",
+      "name": "Answer for What You Did",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/answer-for-what-you-did.md"
+    },
+    {
+      "id": "ability-armored-recovery",
+      "name": "Armored Recovery",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/armored-recovery.md"
+    },
+    {
+      "id": "ability-arrive-under-guard",
+      "name": "Arrive under Guard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/arrive-under-guard.md"
+    },
+    {
+      "id": "ability-ask-the-falling-ash",
+      "name": "Ask the Falling Ash",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ask-the-falling-ash.md"
+    },
+    {
+      "id": "ability-bank-the-embers",
+      "name": "Bank the Embers",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/bank-the-embers.md"
+    },
+    {
+      "id": "ability-basic-melee",
+      "name": "Basic Melee",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/basic-melee.md"
+    },
+    {
+      "id": "ability-basic-ranged",
+      "name": "Basic Ranged",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/basic-ranged.md"
+    },
+    {
+      "id": "ability-basic-throw",
+      "name": "Basic Throw",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/basic-throw.md"
+    },
+    {
+      "id": "ability-basic-unarmed",
+      "name": "Basic Unarmed",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/basic-unarmed.md"
+    },
+    {
+      "id": "ability-beacon-through-terror",
+      "name": "Beacon through Terror",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/beacon-through-terror.md"
+    },
+    {
+      "id": "ability-behind-the-hawthorn",
+      "name": "Behind the Hawthorn",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/behind-the-hawthorn.md"
+    },
+    {
+      "id": "ability-bind-and-turn",
+      "name": "Bind and Turn",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/bind-and-turn.md"
+    },
+    {
+      "id": "ability-blood-in-the-teeth",
+      "name": "Blood in the Teeth",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/blood-in-the-teeth.md"
+    },
+    {
+      "id": "ability-borrow-a-voice",
+      "name": "Borrow a Voice",
+      "status": "review",
+      "reason": "Needs authored impersonation targets and dialogue checks before it can offer meaningful dungeon choices.",
+      "source": "design/cards/borrow-a-voice.md"
+    },
+    {
+      "id": "ability-borrow-the-beast",
+      "name": "Borrow the Beast",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/borrow-the-beast.md"
+    },
+    {
+      "id": "ability-borrow-the-shadow",
+      "name": "Borrow the Shadow",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/borrow-the-shadow.md"
+    },
+    {
+      "id": "ability-borrow-tomorrow-s-weather",
+      "name": "Borrow Tomorrow’s Weather",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/borrow-tomorrow-s-weather.md"
+    },
+    {
+      "id": "ability-borrowed-clothes-borrowed-manners",
+      "name": "Borrowed Clothes, Borrowed Manners",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/borrowed-clothes-borrowed-manners.md"
+    },
+    {
+      "id": "ability-borrowed-identity",
+      "name": "Borrowed Identity",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/borrowed-identity.md"
+    },
+    {
+      "id": "ability-borrowed-silhouette",
+      "name": "Borrowed Silhouette",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/borrowed-silhouette.md"
+    },
+    {
+      "id": "ability-bottled-morning",
+      "name": "Bottled Morning",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/bottled-morning.md"
+    },
+    {
+      "id": "ability-bow-to-the-balcony",
+      "name": "Bow to the Balcony",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/bow-to-the-balcony.md"
+    },
+    {
+      "id": "ability-braced-harness",
+      "name": "Braced Harness",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/braced-harness.md"
+    },
+    {
+      "id": "ability-break-the-charge",
+      "name": "Break the Charge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/break-the-charge.md"
+    },
+    {
+      "id": "ability-break-the-formation",
+      "name": "Break the Formation",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/break-the-formation.md"
+    },
+    {
+      "id": "ability-breakaway-rig",
+      "name": "Breakaway Rig",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/breakaway-rig.md"
+    },
+    {
+      "id": "ability-breath-of-the-wyrmling",
+      "name": "Breath of the Wyrmling",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/breath-of-the-wyrmling.md"
+    },
+    {
+      "id": "ability-breath-of-white",
+      "name": "Breath of White",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/breath-of-white.md"
+    },
+    {
+      "id": "ability-briar-gate",
+      "name": "Briar Gate",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/briar-gate.md"
+    },
+    {
+      "id": "ability-bridge-of-winter",
+      "name": "Bridge of Winter",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/bridge-of-winter.md"
+    },
+    {
+      "id": "ability-call-a-burrower",
+      "name": "Call Spirit: Novice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-a-burrower.md"
+    },
+    {
+      "id": "ability-call-a-sentinel",
+      "name": "Call Spirit: Adept",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-a-sentinel.md"
+    },
+    {
+      "id": "ability-call-a-tempest-beast",
+      "name": "Call Elemental: Master",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-a-tempest-beast.md"
+    },
+    {
+      "id": "ability-call-the-elder-stag",
+      "name": "Call Animal: Master",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-the-elder-stag.md"
+    },
+    {
+      "id": "ability-call-the-faithful-hound",
+      "name": "Call Animal: Novice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-the-faithful-hound.md"
+    },
+    {
+      "id": "ability-call-the-hunting-cat",
+      "name": "Call Animal: Adept",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-the-hunting-cat.md"
+    },
+    {
+      "id": "ability-call-the-opening",
+      "name": "Fortune Favors Us",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-the-opening.md"
+    },
+    {
+      "id": "ability-call-their-name",
+      "name": "Call Their Name",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/call-their-name.md"
+    },
+    {
+      "id": "ability-carry-the-sunrise",
+      "name": "Carry the Sunrise",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/carry-the-sunrise.md"
+    },
+    {
+      "id": "ability-carry-them-to-shore",
+      "name": "Carry Them to Shore",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/carry-them-to-shore.md"
+    },
+    {
+      "id": "ability-carry-to-safety",
+      "name": "Carry to Safety",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/carry-to-safety.md"
+    },
+    {
+      "id": "ability-cast-off-the-venom",
+      "name": "Cast Off the Venom",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/cast-off-the-venom.md"
+    },
+    {
+      "id": "ability-cast-through-the-reflection",
+      "name": "Cast through the Reflection",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/cast-through-the-reflection.md"
+    },
+    {
+      "id": "ability-catch-a-falling-friend",
+      "name": "Carry the Wounded",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-a-falling-friend.md"
+    },
+    {
+      "id": "ability-catch-that",
+      "name": "Catch That!",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-that.md"
+    },
+    {
+      "id": "ability-catch-the-ledge",
+      "name": "Catch the Ledge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-the-ledge.md"
+    },
+    {
+      "id": "ability-catch-the-mechanism",
+      "name": "Catch the Mechanism",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-the-mechanism.md"
+    },
+    {
+      "id": "ability-catch-the-root",
+      "name": "Catch the Root",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-the-root.md"
+    },
+    {
+      "id": "ability-catch-the-spell",
+      "name": "Catch the Spell",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-the-spell.md"
+    },
+    {
+      "id": "ability-catch-them-falling",
+      "name": "Catch Them Falling",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/catch-them-falling.md"
+    },
+    {
+      "id": "ability-checkmate-in-three-steps",
+      "name": "Checkmate in Three Steps",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/checkmate-in-three-steps.md"
+    },
+    {
+      "id": "ability-cinder-cast",
+      "name": "Cinder Cast",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/cinder-cast.md"
+    },
+    {
+      "id": "ability-circle-of-old-names",
+      "name": "Circle of Old Names",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/circle-of-old-names.md"
+    },
+    {
+      "id": "ability-clear-the-airway",
+      "name": "Clear the Airway",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/clear-the-airway.md"
+    },
+    {
+      "id": "ability-clear-the-smoke",
+      "name": "Clear the Smoke",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/clear-the-smoke.md"
+    },
+    {
+      "id": "ability-close-shot",
+      "name": "Close Shot",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/close-shot.md"
+    },
+    {
+      "id": "ability-cold-cuirass",
+      "name": "Cold Cuirass",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/cold-cuirass.md"
+    },
+    {
+      "id": "ability-command-a-summon",
+      "name": "Command a Summon",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/command-a-summon.md"
+    },
+    {
+      "id": "ability-conditioned-body",
+      "name": "Conditioned Body",
+      "status": "included",
+      "reason": "Applied through the pinned character/development or passive-defense calculator.",
+      "source": "design/cards/conditioned-body.md"
+    },
+    {
+      "id": "ability-convert-an-action",
+      "name": "Convert an Action",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
+      "source": "design/cards/convert-an-action.md"
+    },
+    {
+      "id": "ability-create-a-distraction",
+      "name": "Create a Distraction",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/create-a-distraction.md"
+    },
+    {
+      "id": "ability-crosswind",
+      "name": "Crosswind",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/crosswind.md"
+    },
+    {
+      "id": "ability-cup-the-flame",
+      "name": "Cup the Flame",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/cup-the-flame.md"
+    },
+    {
+      "id": "ability-cut-off-the-escape",
+      "name": "Cut Off the Escape",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/cut-off-the-escape.md"
+    },
+    {
+      "id": "ability-dance-beyond-the-circle",
+      "name": "Dance beyond the Circle",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/dance-beyond-the-circle.md"
+    },
+    {
+      "id": "ability-dawn-shard",
+      "name": "Dawn Shard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/dawn-shard.md"
+    },
+    {
+      "id": "ability-defend",
+      "name": "Defend",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/defend.md"
+    },
+    {
+      "id": "ability-derive-a-mechanism",
+      "name": "Derive a Mechanism",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/derive-a-mechanism.md"
+    },
+    {
+      "id": "ability-disengage",
+      "name": "Disengage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/disengage.md"
+    },
+    {
+      "id": "ability-doors-for-the-host",
+      "name": "Doors for the Host",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/doors-for-the-host.md"
+    },
+    {
+      "id": "ability-drain-warmth",
+      "name": "Drain Warmth",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/drain-warmth.md"
+    },
+    {
+      "id": "ability-draw-the-current",
+      "name": "Draw the Current",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/draw-the-current.md"
+    },
+    {
+      "id": "ability-draw-the-tether",
+      "name": "Draw the Tether",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/draw-the-tether.md"
+    },
+    {
+      "id": "ability-dread-reflection",
+      "name": "Dread Reflection",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/dread-reflection.md"
+    },
+    {
+      "id": "ability-driving-volley",
+      "name": "Driving Volley",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/driving-volley.md"
+    },
+    {
+      "id": "ability-duck-into-the-brush",
+      "name": "Duck into the Brush",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/duck-into-the-brush.md"
+    },
+    {
+      "id": "ability-ease-the-spasm",
+      "name": "Ease the Spasm",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ease-the-spasm.md"
+    },
+    {
+      "id": "ability-ember-along-the-edge",
+      "name": "Ember Along the Edge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ember-along-the-edge.md"
+    },
+    {
+      "id": "ability-enchanting-workshop",
+      "name": "Enchanting Workshop",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/enchanting-workshop.md"
+    },
+    {
+      "id": "ability-expert-river-crossing",
+      "name": "Expert River Crossing",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/expert-river-crossing.md"
+    },
+    {
+      "id": "ability-field-triage",
+      "name": "Field Triage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/field-triage.md"
+    },
+    {
+      "id": "ability-find-the-seam",
+      "name": "Find the Seam",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/find-the-seam.md"
+    },
+    {
+      "id": "ability-find-your-footing",
+      "name": "Find Your Footing",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/find-your-footing.md"
+    },
+    {
+      "id": "ability-fit-a-replacement",
+      "name": "Fit a Replacement",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/fit-a-replacement.md"
+    },
+    {
+      "id": "ability-follow-my-leap",
+      "name": "Follow My Leap",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/follow-my-leap.md"
+    },
+    {
+      "id": "ability-forage-coast",
+      "name": "Forage Coast",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/forage-coast.md"
+    },
+    {
+      "id": "ability-forage-mountains",
+      "name": "Forage Mountains",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/forage-mountains.md"
+    },
+    {
+      "id": "ability-forage-wetlands",
+      "name": "Forage Wetlands",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/forage-wetlands.md"
+    },
+    {
+      "id": "ability-forage-woodland",
+      "name": "Wild Harvest",
+      "status": "adaptation-planned",
+      "reason": "Candidate for gathering from suitable underground biomes; no automatic conversion or woodland benefit underground.",
+      "source": "design/cards/forage-woodland.md"
+    },
+    {
+      "id": "ability-force",
+      "name": "Force",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/force.md"
+    },
+    {
+      "id": "ability-forked-sky",
+      "name": "Forked Sky",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/forked-sky.md"
+    },
+    {
+      "id": "ability-four-winds-at-once",
+      "name": "Four Winds at Once",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/four-winds-at-once.md"
+    },
+    {
+      "id": "ability-furnace-sweep",
+      "name": "Furnace Sweep",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/furnace-sweep.md"
+    },
+    {
+      "id": "ability-guide-a-frightened-animal",
+      "name": "Guide a Frightened Animal",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/guide-a-frightened-animal.md"
+    },
+    {
+      "id": "ability-guide-the-crossing",
+      "name": "Guide the Crossing",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/guide-the-crossing.md"
+    },
+    {
+      "id": "ability-gust-hammer",
+      "name": "Gust Hammer",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/gust-hammer.md"
+    },
+    {
+      "id": "ability-handle-an-item",
+      "name": "Handle an Item",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
+      "source": "design/cards/handle-an-item.md"
+    },
+    {
+      "id": "ability-haul-them-home",
+      "name": "Haul Them Home",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/haul-them-home.md"
+    },
+    {
+      "id": "ability-high-guard",
+      "name": "High Guard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/high-guard.md"
+    },
+    {
+      "id": "ability-hold-a-conversation",
+      "name": "Hold a Conversation",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/hold-a-conversation.md"
+    },
+    {
+      "id": "ability-hold-the-passage",
+      "name": "Hold the Passage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/hold-the-passage.md"
+    },
+    {
+      "id": "ability-hold-the-pulse",
+      "name": "Hold the Pulse",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/hold-the-pulse.md"
+    },
+    {
+      "id": "ability-hook-and-drive",
+      "name": "Hook and Drive",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/hook-and-drive.md"
+    },
+    {
+      "id": "ability-hook-with-the-shield",
+      "name": "Hook with the Shield",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/hook-with-the-shield.md"
+    },
+    {
+      "id": "ability-hurl-aside",
+      "name": "Hurl Aside",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/hurl-aside.md"
+    },
+    {
+      "id": "ability-i-have-seen-this-step",
+      "name": "I Have Seen This Step",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/i-have-seen-this-step.md"
+    },
+    {
+      "id": "ability-ice-across-the-break",
+      "name": "Ice across the Break",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ice-across-the-break.md"
+    },
+    {
+      "id": "ability-icebound-path",
+      "name": "Icebound Path",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/icebound-path.md"
+    },
+    {
+      "id": "ability-identify-a-mixture",
+      "name": "Identify a Mixture",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/identify-a-mixture.md"
+    },
+    {
+      "id": "ability-identify-an-enchantment",
+      "name": "Identify an Enchantment",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/identify-an-enchantment.md"
+    },
+    {
+      "id": "ability-intrusive-echo",
+      "name": "Intrusive Echo",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/intrusive-echo.md"
+    },
+    {
+      "id": "ability-invitation-to-the-blade",
+      "name": "Invitation to the Blade",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/invitation-to-the-blade.md"
+    },
+    {
+      "id": "ability-ironbound-advance",
+      "name": "Ironbound Advance",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ironbound-advance.md"
+    },
+    {
+      "id": "ability-keep-pressure",
+      "name": "Keep Pressure",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/keep-pressure.md"
+    },
+    {
+      "id": "ability-keep-the-door-closed",
+      "name": "Keep the Door Closed",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/keep-the-door-closed.md"
+    },
+    {
+      "id": "ability-keep-time-with-steel",
+      "name": "Keep Time with Steel",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/keep-time-with-steel.md"
+    },
+    {
+      "id": "ability-keep-your-bearings",
+      "name": "Keep Your Bearings",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/keep-your-bearings.md"
+    },
+    {
+      "id": "ability-lantern-in-the-palm",
+      "name": "Lantern in the Palm",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/lantern-in-the-palm.md"
+    },
+    {
+      "id": "ability-lantern-moths",
+      "name": "Lantern Moths",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/lantern-moths.md"
+    },
+    {
+      "id": "ability-last-light-of-the-watch",
+      "name": "Last Light of the Watch",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/last-light-of-the-watch.md"
+    },
+    {
+      "id": "ability-lend-your-eyes",
+      "name": "Lend Your Eyes",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/lend-your-eyes.md"
+    },
+    {
+      "id": "ability-let-the-spark-decide",
+      "name": "Let the Spark Decide",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/let-the-spark-decide.md"
+    },
+    {
+      "id": "ability-live-in-the-mask",
+      "name": "Live in the Mask",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/live-in-the-mask.md"
+    },
+    {
+      "id": "ability-look-over-here",
+      "name": "Look Over Here!",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/look-over-here.md"
+    },
+    {
+      "id": "ability-make-something-useful",
+      "name": "Make Something Useful",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/make-something-useful.md"
+    },
+    {
+      "id": "ability-measured-appeal",
+      "name": "Measured Appeal",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/measured-appeal.md"
+    },
+    {
+      "id": "ability-mercy-in-the-light",
+      "name": "Mercy in the Light",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/mercy-in-the-light.md"
+    },
+    {
+      "id": "ability-message-by-heart",
+      "name": "Message by Heart",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/message-by-heart.md"
+    },
+    {
+      "id": "ability-move",
+      "name": "Move",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
+      "source": "design/cards/move.md"
+    },
+    {
+      "id": "ability-name-the-reckoning",
+      "name": "Name the Reckoning",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/name-the-reckoning.md"
+    },
+    {
+      "id": "ability-name-what-is-real",
+      "name": "Name What Is Real",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/name-what-is-real.md"
+    },
+    {
+      "id": "ability-no-footfall-at-all",
+      "name": "No Footfall at All",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/no-footfall-at-all.md"
+    },
+    {
+      "id": "ability-no-road-away",
+      "name": "No Road Away",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/no-road-away.md"
+    },
+    {
+      "id": "ability-noonday-judgment",
+      "name": "Noonday Judgment",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/noonday-judgment.md"
+    },
+    {
+      "id": "ability-not-yet-your-name",
+      "name": "Not Yet Your Name",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/not-yet-your-name.md"
+    },
+    {
+      "id": "ability-notice-the-human-detail",
+      "name": "Read the Room",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/notice-the-human-detail.md"
+    },
+    {
+      "id": "ability-oathlight-strike",
+      "name": "Oathlight Strike",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/oathlight-strike.md"
+    },
+    {
+      "id": "ability-one-more-dawn",
+      "name": "One More Dawn",
+      "status": "included",
+      "reason": "Applied through the pinned character/development or passive-defense calculator.",
+      "source": "design/cards/one-more-dawn.md"
+    },
+    {
+      "id": "ability-open-the-furnace-door",
+      "name": "Open the Furnace Door",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/open-the-furnace-door.md"
+    },
+    {
+      "id": "ability-opportunity-attack",
+      "name": "Opportunity Attack",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/opportunity-attack.md"
+    },
+    {
+      "id": "ability-ordinary-recipe-study",
+      "name": "Ordinary Recipe Study",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ordinary-recipe-study.md"
+    },
+    {
+      "id": "ability-pack-with-purpose",
+      "name": "Pack with Purpose",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/pack-with-purpose.md"
+    },
+    {
+      "id": "ability-palm-of-the-gale",
+      "name": "Palm of the Gale",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/palm-of-the-gale.md"
+    },
+    {
+      "id": "ability-pinning-shot",
+      "name": "Pinning Shot",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/pinning-shot.md"
+    },
+    {
+      "id": "ability-play-it-off",
+      "name": "Play It Off",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/play-it-off.md"
+    },
+    {
+      "id": "ability-pounce-of-the-red-claw",
+      "name": "Pounce of the Red Claw",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/pounce-of-the-red-claw.md"
+    },
+    {
+      "id": "ability-press-and-bind",
+      "name": "Press and Bind",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/press-and-bind.md"
+    },
+    {
+      "id": "ability-procession-of-the-quiet",
+      "name": "Call Undead: Master",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/procession-of-the-quiet.md"
+    },
+    {
+      "id": "ability-quick-exit",
+      "name": "Quick Exit",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/quick-exit.md"
+    },
+    {
+      "id": "ability-quiet-conference",
+      "name": "Quiet Conference",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/quiet-conference.md"
+    },
+    {
+      "id": "ability-quiet-latch",
+      "name": "Quiet Latch",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/quiet-latch.md"
+    },
+    {
+      "id": "ability-read-a-dangerous-trail",
+      "name": "Read a Dangerous Trail",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/read-a-dangerous-trail.md"
+    },
+    {
+      "id": "ability-read-the-maker-s-hand",
+      "name": "Read the Maker’s Hand",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/read-the-maker-s-hand.md"
+    },
+    {
+      "id": "ability-read-the-next-blow",
+      "name": "Read the Next Blow",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/read-the-next-blow.md"
+    },
+    {
+      "id": "ability-read-the-quarry",
+      "name": "Read the Quarry",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/read-the-quarry.md"
+    },
+    {
+      "id": "ability-read-the-remains",
+      "name": "Read the Remains",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/read-the-remains.md"
+    },
+    {
+      "id": "ability-read-the-ward",
+      "name": "Read the Ward",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/read-the-ward.md"
+    },
+    {
+      "id": "ability-recall-the-shape",
+      "name": "Recall the Shape",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/recall-the-shape.md"
+    },
+    {
+      "id": "ability-recast-the-footprint",
+      "name": "Recast the Footprint",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/recast-the-footprint.md"
+    },
+    {
+      "id": "ability-reconstruct-the-event",
+      "name": "Reconstruct the Event",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/reconstruct-the-event.md"
+    },
+    {
+      "id": "ability-reduce-a-condition",
+      "name": "Reduce a Condition",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/reduce-a-condition.md"
+    },
+    {
+      "id": "ability-relieve-poison",
+      "name": "Relieve Poison",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/relieve-poison.md"
+    },
+    {
+      "id": "ability-remember-this-name",
+      "name": "A Name Remembered",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/remember-this-name.md"
+    },
+    {
+      "id": "ability-rest-for-the-restless",
+      "name": "Rest for the Restless",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/rest-for-the-restless.md"
+    },
+    {
+      "id": "ability-return-to-strength",
+      "name": "Return to Strength",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/return-to-strength.md"
+    },
+    {
+      "id": "ability-reveal-the-threshold",
+      "name": "Reveal the Threshold",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/reveal-the-threshold.md"
+    },
+    {
+      "id": "ability-ride-the-falling-stone",
+      "name": "Ride the Falling Stone",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ride-the-falling-stone.md"
+    },
+    {
+      "id": "ability-ride-the-furnace-breath",
+      "name": "Ride the Furnace Breath",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/ride-the-furnace-breath.md"
+    },
+    {
+      "id": "ability-rim-strike",
+      "name": "Rim Strike",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/rim-strike.md"
+    },
+    {
+      "id": "ability-rime-footholds",
+      "name": "Rime Footholds",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/rime-footholds.md"
+    },
+    {
+      "id": "ability-rime-grip",
+      "name": "Rime Grip",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/rime-grip.md"
+    },
+    {
+      "id": "ability-road-of-dawn",
+      "name": "Road of Dawn",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/road-of-dawn.md"
+    },
+    {
+      "id": "ability-road-of-rime",
+      "name": "Road of Rime",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/road-of-rime.md"
+    },
+    {
+      "id": "ability-roots-remember-feet",
+      "name": "Roots Remember Feet",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/roots-remember-feet.md"
+    },
+    {
+      "id": "ability-rouse-the-senses",
+      "name": "Rouse the Senses",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/rouse-the-senses.md"
+    },
+    {
+      "id": "ability-running-vault",
+      "name": "Running Vault",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/running-vault.md"
+    },
+    {
+      "id": "ability-saddle-and-rein",
+      "name": "Saddle and Rein",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/saddle-and-rein.md"
+    },
+    {
+      "id": "ability-sap-and-breath",
+      "name": "Sap and Breath",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/sap-and-breath.md"
+    },
+    {
+      "id": "ability-scales-beneath-the-skin",
+      "name": "Scales beneath the Skin",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/scales-beneath-the-skin.md"
+    },
+    {
+      "id": "ability-secure-a-hold",
+      "name": "Secure a Hold",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/secure-a-hold.md"
+    },
+    {
+      "id": "ability-sell-the-feint",
+      "name": "Sell the Feint",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/sell-the-feint.md"
+    },
+    {
+      "id": "ability-set-the-wedge",
+      "name": "Set the Wedge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/set-the-wedge.md"
+    },
+    {
+      "id": "ability-sever-the-pursuit",
+      "name": "Sever the Pursuit",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/sever-the-pursuit.md"
+    },
+    {
+      "id": "ability-shade-the-eyes",
+      "name": "Shade the Eyes",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/shade-the-eyes.md"
+    },
+    {
+      "id": "ability-shared-breath",
+      "name": "Shared Breath",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/shared-breath.md"
+    },
+    {
+      "id": "ability-shatterguard",
+      "name": "Shatterguard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/shatterguard.md"
+    },
+    {
+      "id": "ability-shield-block",
+      "name": "Shield Block",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
+      "source": "design/cards/shield-block.md"
+    },
+    {
+      "id": "ability-shield-roof",
+      "name": "Shield Roof",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/shield-roof.md"
+    },
+    {
+      "id": "ability-shielded-advance",
+      "name": "Shielded Advance",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/shielded-advance.md"
+    },
+    {
+      "id": "ability-shielding-step",
+      "name": "Shielding Step",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/shielding-step.md"
+    },
+    {
+      "id": "ability-signature-arcanist-arcane-deflection",
+      "name": "Arcane Deflection",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-arcane-deflection.md"
+    },
+    {
+      "id": "ability-signature-arcanist-bent-trajectory",
+      "name": "Bent Trajectory",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-bent-trajectory.md"
+    },
+    {
+      "id": "ability-signature-arcanist-cast-and-scatter",
+      "name": "Siphon Cast",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-cast-and-scatter.md"
+    },
+    {
+      "id": "ability-signature-arcanist-choose-the-edge",
+      "name": "Choose the Edge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-choose-the-edge.md"
+    },
+    {
+      "id": "ability-signature-arcanist-deliberate-spark",
+      "name": "Deliberate Spark",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-deliberate-spark.md"
+    },
+    {
+      "id": "ability-signature-arcanist-fold-the-distance",
+      "name": "Folded Aegis",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-fold-the-distance.md"
+    },
+    {
+      "id": "ability-signature-arcanist-leave-a-window",
+      "name": "Create a Window",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-leave-a-window.md"
+    },
+    {
+      "id": "ability-signature-arcanist-open-the-circle",
+      "name": "Open the Circle",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-open-the-circle.md"
+    },
+    {
+      "id": "ability-signature-arcanist-study-the-pattern",
+      "name": "Study the Pattern",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-arcanist-study-the-pattern.md"
+    },
+    {
+      "id": "ability-signature-blade-cut-and-turn",
+      "name": "Reckless Charge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-cut-and-turn.md"
+    },
+    {
+      "id": "ability-signature-blade-dance-through-steel",
+      "name": "Dance Through Steel",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-dance-through-steel.md"
+    },
+    {
+      "id": "ability-signature-blade-fell-the-balance",
+      "name": "Not So Fast",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-fell-the-balance.md"
+    },
+    {
+      "id": "ability-signature-blade-measured-guard",
+      "name": "Measured Guard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-measured-guard.md"
+    },
+    {
+      "id": "ability-signature-blade-perfect-placement",
+      "name": "Get Out of Here",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-perfect-placement.md"
+    },
+    {
+      "id": "ability-signature-blade-pressure-point",
+      "name": "Cleave",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-pressure-point.md"
+    },
+    {
+      "id": "ability-signature-blade-relentless-pursuit",
+      "name": "Relentless Pursuit",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-relentless-pursuit.md"
+    },
+    {
+      "id": "ability-signature-blade-return-stroke",
+      "name": "Return Stroke",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-return-stroke.md"
+    },
+    {
+      "id": "ability-signature-blade-sweeping-entry",
+      "name": "Twitch Reflexes",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-blade-sweeping-entry.md"
+    },
+    {
+      "id": "ability-signature-intellect-a-better-angle",
+      "name": "A Better Angle",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-a-better-angle.md"
+    },
+    {
+      "id": "ability-signature-intellect-a-route-for-everyone",
+      "name": "A Route for Everyone",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-a-route-for-everyone.md"
+    },
+    {
+      "id": "ability-signature-intellect-diagnose-the-failure",
+      "name": "Diagnose the Failure",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-diagnose-the-failure.md"
+    },
+    {
+      "id": "ability-signature-intellect-expose-the-mechanism",
+      "name": "Shatter the Guard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-expose-the-mechanism.md"
+    },
+    {
+      "id": "ability-signature-intellect-make-the-connection",
+      "name": "Make the Connection",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-make-the-connection.md"
+    },
+    {
+      "id": "ability-signature-intellect-predict-the-motion",
+      "name": "Predict the Motion",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-predict-the-motion.md"
+    },
+    {
+      "id": "ability-signature-intellect-prepared-explanation",
+      "name": "Angle of Attack",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-prepared-explanation.md"
+    },
+    {
+      "id": "ability-signature-intellect-spot-the-leverage",
+      "name": "Spot the Leverage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-spot-the-leverage.md"
+    },
+    {
+      "id": "ability-signature-intellect-test-the-hypothesis",
+      "name": "Test the Hypothesis",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-intellect-test-the-hypothesis.md"
+    },
+    {
+      "id": "ability-signature-leader-coordinated-rush",
+      "name": "Coordinated Rush",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-coordinated-rush.md"
+    },
+    {
+      "id": "ability-signature-leader-follow-my-signal",
+      "name": "Follow My Signal",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-follow-my-signal.md"
+    },
+    {
+      "id": "ability-signature-leader-hold-your-nerve",
+      "name": "Blow the Horn",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-hold-your-nerve.md"
+    },
+    {
+      "id": "ability-signature-leader-lead-the-step",
+      "name": "Lead the Way",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-lead-the-step.md"
+    },
+    {
+      "id": "ability-signature-leader-orderly-withdrawal",
+      "name": "Lead by Example",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-orderly-withdrawal.md"
+    },
+    {
+      "id": "ability-signature-leader-press-the-opening",
+      "name": "Press the Opening",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-press-the-opening.md"
+    },
+    {
+      "id": "ability-signature-leader-refuse-the-rout",
+      "name": "Refuse the Rout",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-refuse-the-rout.md"
+    },
+    {
+      "id": "ability-signature-leader-stand-together",
+      "name": "Stand Together",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-stand-together.md"
+    },
+    {
+      "id": "ability-signature-leader-watch-the-rear",
+      "name": "Watch the Rear",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-leader-watch-the-rear.md"
+    },
+    {
+      "id": "ability-signature-odd-always-a-way-around",
+      "name": "Pocket Sand",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-always-a-way-around.md"
+    },
+    {
+      "id": "ability-signature-odd-an-unexpected-exit",
+      "name": "The Unseen Procession",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-an-unexpected-exit.md"
+    },
+    {
+      "id": "ability-signature-odd-change-the-question",
+      "name": "A Door Where There Wasn’t",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-change-the-question.md"
+    },
+    {
+      "id": "ability-signature-odd-one-last-remark",
+      "name": "Not Quite Yet",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-one-last-remark.md"
+    },
+    {
+      "id": "ability-signature-odd-sideways-thinking",
+      "name": "Borrowed Tongue",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-sideways-thinking.md"
+    },
+    {
+      "id": "ability-signature-odd-strange-but-effective",
+      "name": "Borrowed Life",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-strange-but-effective.md"
+    },
+    {
+      "id": "ability-signature-odd-unlikely-assistant",
+      "name": "Foul Wind",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-unlikely-assistant.md"
+    },
+    {
+      "id": "ability-signature-odd-useful-interruption",
+      "name": "Use Their Voice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-useful-interruption.md"
+    },
+    {
+      "id": "ability-signature-odd-wrong-place-for-that",
+      "name": "Out of Body",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-odd-wrong-place-for-that.md"
+    },
+    {
+      "id": "ability-signature-protector-between-them",
+      "name": "Step Between",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-between-them.md"
+    },
+    {
+      "id": "ability-signature-protector-break-their-advance",
+      "name": "Break the Charge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-break-their-advance.md"
+    },
+    {
+      "id": "ability-signature-protector-close-the-gap",
+      "name": "Hand on the Collar",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-close-the-gap.md"
+    },
+    {
+      "id": "ability-signature-protector-defiant-rescue",
+      "name": "Take the Wound",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-defiant-rescue.md"
+    },
+    {
+      "id": "ability-signature-protector-drive-back-the-circle",
+      "name": "Radiant Threshold",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-drive-back-the-circle.md"
+    },
+    {
+      "id": "ability-signature-protector-make-a-refuge",
+      "name": "Make a Refuge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-make-a-refuge.md"
+    },
+    {
+      "id": "ability-signature-protector-set-your-feet",
+      "name": "In the Gap",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-set-your-feet.md"
+    },
+    {
+      "id": "ability-signature-protector-shelter-the-fallen",
+      "name": "Over My Body",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-shelter-the-fallen.md"
+    },
+    {
+      "id": "ability-signature-protector-unbroken-passage",
+      "name": "The Long Road",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-protector-unbroken-passage.md"
+    },
+    {
+      "id": "ability-signature-shadow-exploit-confusion",
+      "name": "The Half-Second",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-exploit-confusion.md"
+    },
+    {
+      "id": "ability-signature-shadow-fade-behind",
+      "name": "Fade Behind",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-fade-behind.md"
+    },
+    {
+      "id": "ability-signature-shadow-leave-no-pursuit",
+      "name": "The Cutting Word",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-leave-no-pursuit.md"
+    },
+    {
+      "id": "ability-signature-shadow-open-the-way",
+      "name": "Open the Way",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-open-the-way.md"
+    },
+    {
+      "id": "ability-signature-shadow-pass-the-guard",
+      "name": "Read the Room",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-pass-the-guard.md"
+    },
+    {
+      "id": "ability-signature-shadow-soft-landing",
+      "name": "Blade in the Back",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-soft-landing.md"
+    },
+    {
+      "id": "ability-signature-shadow-strike-and-vanish",
+      "name": "Hamstring",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-strike-and-vanish.md"
+    },
+    {
+      "id": "ability-signature-shadow-turn-their-eye",
+      "name": "Fast Talk",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-turn-their-eye.md"
+    },
+    {
+      "id": "ability-signature-shadow-unseen-passage",
+      "name": "One with the Dark",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shadow-unseen-passage.md"
+    },
+    {
+      "id": "ability-signature-shepherd-a-hand-in-darkness",
+      "name": "The Shepherd's Call",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-a-hand-in-darkness.md"
+    },
+    {
+      "id": "ability-signature-shepherd-bring-them-near",
+      "name": "The Fold",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-bring-them-near.md"
+    },
+    {
+      "id": "ability-signature-shepherd-careful-transfer",
+      "name": "Triage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-careful-transfer.md"
+    },
+    {
+      "id": "ability-signature-shepherd-ease-the-burden",
+      "name": "Steady Voice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-ease-the-burden.md"
+    },
+    {
+      "id": "ability-signature-shepherd-gentle-return",
+      "name": "Mend",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-gentle-return.md"
+    },
+    {
+      "id": "ability-signature-shepherd-hear-me-still",
+      "name": "Come Back",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-hear-me-still.md"
+    },
+    {
+      "id": "ability-signature-shepherd-quiet-the-tremor",
+      "name": "Mend the Wound",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-quiet-the-tremor.md"
+    },
+    {
+      "id": "ability-signature-shepherd-restore-composure",
+      "name": "The Shared Cup",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-restore-composure.md"
+    },
+    {
+      "id": "ability-signature-shepherd-shared-resolve",
+      "name": "Not My Flock",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-shepherd-shared-resolve.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-break-their-grip",
+      "name": "Deathless Rage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-break-their-grip.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-crash-down",
+      "name": "The Cannonball",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-crash-down.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-crush-the-barrier",
+      "name": "Rampage",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-crush-the-barrier.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-fling-the-captive",
+      "name": "Over the Top",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-fling-the-captive.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-laugh-at-the-fall",
+      "name": "Grab and Hurl",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-laugh-at-the-fall.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-raging-recoil",
+      "name": "Pain Feeds the Fire",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-raging-recoil.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-scatter-the-line",
+      "name": "Earthbreaker",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-scatter-the-line.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-shoulder-through",
+      "name": "Charge",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-shoulder-through.md"
+    },
+    {
+      "id": "ability-signature-unbalanced-wild-approach",
+      "name": "Go Berserk",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-unbalanced-wild-approach.md"
+    },
+    {
+      "id": "ability-signature-warden-a-watchful-rest",
+      "name": "The Green Spear",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-a-watchful-rest.md"
+    },
+    {
+      "id": "ability-signature-warden-bring-them-through",
+      "name": "Call the Wild",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-bring-them-through.md"
+    },
+    {
+      "id": "ability-signature-warden-follow-my-footsteps",
+      "name": "Twin Strike",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-follow-my-footsteps.md"
+    },
+    {
+      "id": "ability-signature-warden-keep-the-quarry-close",
+      "name": "Steady Aim",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-keep-the-quarry-close.md"
+    },
+    {
+      "id": "ability-signature-warden-know-what-you-hunt",
+      "name": "Death from the Blind Spot",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-know-what-you-hunt.md"
+    },
+    {
+      "id": "ability-signature-warden-read-the-passing",
+      "name": "Beast Speech",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-read-the-passing.md"
+    },
+    {
+      "id": "ability-signature-warden-stay-on-the-scent",
+      "name": "Volley",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-stay-on-the-scent.md"
+    },
+    {
+      "id": "ability-signature-warden-through-bramble-and-stone",
+      "name": "Entangling Growth",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-through-bramble-and-stone.md"
+    },
+    {
+      "id": "ability-signature-warden-turn-the-hunt",
+      "name": "Mark the Quarry",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/signature-warden-turn-the-hunt.md"
+    },
+    {
+      "id": "ability-silence-the-alarm",
+      "name": "Silence the Alarm",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/silence-the-alarm.md"
+    },
+    {
+      "id": "ability-silent-cue",
+      "name": "Silent Cue",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/silent-cue.md"
+    },
+    {
+      "id": "ability-slip-the-closing-door",
+      "name": "Slip the Closing Door",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/slip-the-closing-door.md"
+    },
+    {
+      "id": "ability-smile-before-steel",
+      "name": "Smile Before Steel",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/smile-before-steel.md"
+    },
+    {
+      "id": "ability-smoke-in-a-bottle",
+      "name": "Smoke in a Bottle",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/smoke-in-a-bottle.md"
+    },
+    {
+      "id": "ability-smoke-through-the-keyhole",
+      "name": "Smoke Through the Keyhole",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/smoke-through-the-keyhole.md"
+    },
+    {
+      "id": "ability-snare-the-missile",
+      "name": "Snare the Missile",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/snare-the-missile.md"
+    },
+    {
+      "id": "ability-speak-with-the-hearth",
+      "name": "Speak with the Hearth",
+      "status": "adaptation-planned",
+      "reason": "Candidate for information at authored hearths. Requires exploration content and a defined information reward.",
+      "source": "design/cards/speak-with-the-hearth.md"
+    },
+    {
+      "id": "ability-spot-the-tell",
+      "name": "Spot the Tell",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/spot-the-tell.md"
+    },
+    {
+      "id": "ability-spring-in-the-sleeve",
+      "name": "Spring in the Sleeve",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/spring-in-the-sleeve.md"
+    },
+    {
+      "id": "ability-stabilize",
+      "name": "Stabilize",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
+      "source": "design/cards/stabilize.md"
+    },
+    {
+      "id": "ability-stand",
+      "name": "Stand",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
+      "source": "design/cards/stand.md"
+    },
+    {
+      "id": "ability-stay-with-my-voice",
+      "name": "Stay with My Voice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/stay-with-my-voice.md"
+    },
+    {
+      "id": "ability-steel-at-the-wrist",
+      "name": "Steel at the Wrist",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/steel-at-the-wrist.md"
+    },
+    {
+      "id": "ability-step-between-lanterns",
+      "name": "Step Between Lanterns",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/step-between-lanterns.md"
+    },
+    {
+      "id": "ability-step-through-the-spark",
+      "name": "Step Through the Spark",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/step-through-the-spark.md"
+    },
+    {
+      "id": "ability-still-the-avalanche",
+      "name": "Still the Avalanche",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/still-the-avalanche.md"
+    },
+    {
+      "id": "ability-still-the-will",
+      "name": "Still the Will",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/still-the-will.md"
+    },
+    {
+      "id": "ability-stillness-at-the-center",
+      "name": "Stillness at the Center",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/stillness-at-the-center.md"
+    },
+    {
+      "id": "ability-stitch-the-living-pattern",
+      "name": "Stitch the Living Pattern",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/stitch-the-living-pattern.md"
+    },
+    {
+      "id": "ability-stone-on-your-shoulders",
+      "name": "Stone on Your Shoulders",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/stone-on-your-shoulders.md"
+    },
+    {
+      "id": "ability-storm-on-a-string",
+      "name": "Storm on a String",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/storm-on-a-string.md"
+    },
+    {
+      "id": "ability-stride-of-the-giant",
+      "name": "Stride of the Giant",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/stride-of-the-giant.md"
+    },
+    {
+      "id": "ability-summon-construct-master",
+      "name": "Call Construct: Master",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-construct-master.md"
+    },
+    {
+      "id": "ability-summon-construct-novice",
+      "name": "Call Construct: Novice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-construct-novice.md"
+    },
+    {
+      "id": "ability-summon-elemental-adept",
+      "name": "Call Elemental: Adept",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-elemental-adept.md"
+    },
+    {
+      "id": "ability-summon-elemental-novice",
+      "name": "Call Elemental: Novice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-elemental-novice.md"
+    },
+    {
+      "id": "ability-summon-fey-adept",
+      "name": "Call Fey: Adept",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-fey-adept.md"
+    },
+    {
+      "id": "ability-summon-fey-master",
+      "name": "Call Fey: Master",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-fey-master.md"
+    },
+    {
+      "id": "ability-summon-undead-adept",
+      "name": "Call Undead: Adept",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/summon-undead-adept.md"
+    },
+    {
+      "id": "ability-sure-ascent",
+      "name": "Sure Ascent",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/sure-ascent.md"
+    },
+    {
+      "id": "ability-sustain-the-failing",
+      "name": "Sustain the Failing",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/sustain-the-failing.md"
+    },
+    {
+      "id": "ability-swing-into-trouble",
+      "name": "Swing into Trouble",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/swing-into-trouble.md"
+    },
+    {
+      "id": "ability-take-the-measure",
+      "name": "Take the Measure",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/take-the-measure.md"
+    },
+    {
+      "id": "ability-take-them-alive",
+      "name": "Take Them Alive",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/take-them-alive.md"
+    },
+    {
+      "id": "ability-teach-stone-to-bend",
+      "name": "Teach Stone to Bend",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/teach-stone-to-bend.md"
+    },
+    {
+      "id": "ability-tell-a-worthy-story",
+      "name": "Tell a Worthy Story",
+      "status": "excluded",
+      "reason": "Open-ended storytelling has no encounter resolver in this dungeon game. Retained in the source sheet; unavailable for new dungeon training.",
+      "source": "design/cards/tell-a-worthy-story.md"
+    },
+    {
+      "id": "ability-terms-before-swords",
+      "name": "Terms before Swords",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/terms-before-swords.md"
+    },
+    {
+      "id": "ability-the-ancestors-stand",
+      "name": "Call Spirit: Master",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-ancestors-stand.md"
+    },
+    {
+      "id": "ability-the-angle-of-unease",
+      "name": "The Angle of Unease",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-angle-of-unease.md"
+    },
+    {
+      "id": "ability-the-bones-rise",
+      "name": "Call Undead: Novice",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-bones-rise.md"
+    },
+    {
+      "id": "ability-the-chorus-advances",
+      "name": "Rally to Me",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-chorus-advances.md"
+    },
+    {
+      "id": "ability-the-circle-holds",
+      "name": "The Circle Holds",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-circle-holds.md"
+    },
+    {
+      "id": "ability-the-city-opens-its-doors",
+      "name": "The City Opens Its Doors",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-city-opens-its-doors.md"
+    },
+    {
+      "id": "ability-the-cleverest-mixture",
+      "name": "The Cleverest Mixture",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-cleverest-mixture.md"
+    },
+    {
+      "id": "ability-the-debt-comes-due",
+      "name": "The Debt Comes Due",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-debt-comes-due.md"
+    },
+    {
+      "id": "ability-the-forest-takes-the-blow",
+      "name": "The Forest Takes the Blow",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-forest-takes-the-blow.md"
+    },
+    {
+      "id": "ability-the-grove-gives-back",
+      "name": "The Grove Gives Back",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-grove-gives-back.md"
+    },
+    {
+      "id": "ability-the-hunt-ends-here",
+      "name": "The Hunt Ends Here",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-hunt-ends-here.md"
+    },
+    {
+      "id": "ability-the-impossible-escape",
+      "name": "The Impossible Escape",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-impossible-escape.md"
+    },
+    {
+      "id": "ability-the-key-changes-hands",
+      "name": "The Key Changes Hands",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-key-changes-hands.md"
+    },
+    {
+      "id": "ability-the-land-keeps-no-secrets",
+      "name": "The Land Keeps No Secrets",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-land-keeps-no-secrets.md"
+    },
+    {
+      "id": "ability-the-last-word",
+      "name": "The Last Word",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-last-word.md"
+    },
+    {
+      "id": "ability-the-lucky-trinket",
+      "name": "The Lucky Trinket",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-lucky-trinket.md"
+    },
+    {
+      "id": "ability-the-moment-foretold",
+      "name": "The Moment Foretold",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-moment-foretold.md"
+    },
+    {
+      "id": "ability-the-mountain-walks",
+      "name": "The Mountain Walks",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-mountain-walks.md"
+    },
+    {
+      "id": "ability-the-orchard-wakes",
+      "name": "The Orchard Wakes",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-orchard-wakes.md"
+    },
+    {
+      "id": "ability-the-otter-s-bargain",
+      "name": "The Otter’s Bargain",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-otter-s-bargain.md"
+    },
+    {
+      "id": "ability-the-patient-metal",
+      "name": "The Patient Metal",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-patient-metal.md"
+    },
+    {
+      "id": "ability-the-right-small-courtesy",
+      "name": "The Right Small Courtesy",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-right-small-courtesy.md"
+    },
+    {
+      "id": "ability-the-road-remembers",
+      "name": "The Road Remembers",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-road-remembers.md"
+    },
+    {
+      "id": "ability-the-shape-of-escape",
+      "name": "The Shape of Escape",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-shape-of-escape.md"
+    },
+    {
+      "id": "ability-the-sky-comes-down",
+      "name": "The Sky Comes Down",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-sky-comes-down.md"
+    },
+    {
+      "id": "ability-the-strong-arm",
+      "name": "The Strong Arm",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-strong-arm.md"
+    },
+    {
+      "id": "ability-the-tale-will-tell-of-you",
+      "name": "The Tale Will Tell of You",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-tale-will-tell-of-you.md"
+    },
+    {
+      "id": "ability-the-unlit-road",
+      "name": "The Unlit Road",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-unlit-road.md"
+    },
+    {
+      "id": "ability-the-untroubled-hand",
+      "name": "The Untroubled Hand",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-untroubled-hand.md"
+    },
+    {
+      "id": "ability-the-walking-toolbox",
+      "name": "Call Construct: Adept",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-walking-toolbox.md"
+    },
+    {
+      "id": "ability-the-web-of-whispers",
+      "name": "The Web of Whispers",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-web-of-whispers.md"
+    },
+    {
+      "id": "ability-the-wind-makes-room",
+      "name": "The Wind Makes Room",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/the-wind-makes-room.md"
+    },
+    {
+      "id": "ability-thought-before-the-blow",
+      "name": "Thought Before the Blow",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/thought-before-the-blow.md"
+    },
+    {
+      "id": "ability-through-the-spearpoints",
+      "name": "Through the Spearpoints",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/through-the-spearpoints.md"
+    },
+    {
+      "id": "ability-thunder-at-the-door",
+      "name": "Thunder at the Door",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/thunder-at-the-door.md"
+    },
+    {
+      "id": "ability-thunder-ring",
+      "name": "Thunder Ring",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/thunder-ring.md"
+    },
+    {
+      "id": "ability-touched-by-the-divine",
+      "name": "Touched by the Divine",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/touched-by-the-divine.md"
+    },
+    {
+      "id": "ability-trail-workshop",
+      "name": "Trail Workshop",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/trail-workshop.md"
+    },
+    {
+      "id": "ability-translate-the-fragment",
+      "name": "Translate the Fragment",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/translate-the-fragment.md"
+    },
+    {
+      "id": "ability-traverse-the-impossible",
+      "name": "Traverse the Impossible",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/traverse-the-impossible.md"
+    },
+    {
+      "id": "ability-treat-bone",
+      "name": "Treat Bone",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/treat-bone.md"
+    },
+    {
+      "id": "ability-treat-elemental-injury",
+      "name": "Treat Elemental Injury",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/treat-elemental-injury.md"
+    },
+    {
+      "id": "ability-treat-life-injury",
+      "name": "Treat Life Injury",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/treat-life-injury.md"
+    },
+    {
+      "id": "ability-treat-mental-trauma",
+      "name": "Treat Mental Trauma",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/treat-mental-trauma.md"
+    },
+    {
+      "id": "ability-treat-radiant-injury",
+      "name": "Treat Radiant Injury",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/treat-radiant-injury.md"
+    },
+    {
+      "id": "ability-treat-soft-tissue",
+      "name": "Treat Soft Tissue",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/treat-soft-tissue.md"
+    },
+    {
+      "id": "ability-turn-the-fall",
+      "name": "Turn the Fall",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/turn-the-fall.md"
+    },
+    {
+      "id": "ability-turn-the-river",
+      "name": "Turn the River",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/turn-the-river.md"
+    },
+    {
+      "id": "ability-under-their-guard",
+      "name": "Under Their Guard",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/under-their-guard.md"
+    },
+    {
+      "id": "ability-undertow-answer",
+      "name": "Undertow Answer",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/undertow-answer.md"
+    },
+    {
+      "id": "ability-unravel-the-bolt",
+      "name": "Unravel the Bolt",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/unravel-the-bolt.md"
+    },
+    {
+      "id": "ability-urgent-bandaging",
+      "name": "Urgent Bandaging",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/urgent-bandaging.md"
+    },
+    {
+      "id": "ability-use-a-healing-potion",
+      "name": "Use a Healing Potion",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/use-a-healing-potion.md"
+    },
+    {
+      "id": "ability-veiled-crossing",
+      "name": "Veiled Crossing",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/veiled-crossing.md"
+    },
+    {
+      "id": "ability-wake-the-iron-rune",
+      "name": "Wake the Iron Rune",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/wake-the-iron-rune.md"
+    },
+    {
+      "id": "ability-wake-the-nerves",
+      "name": "Wake the Nerves",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/wake-the-nerves.md"
+    },
+    {
+      "id": "ability-walk-the-thunder",
+      "name": "Walk the Thunder",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/walk-the-thunder.md"
+    },
+    {
+      "id": "ability-wear-heavy-armor",
+      "name": "Wear Heavy Armor",
+      "status": "included",
+      "reason": "Applied through the pinned character/development or passive-defense calculator.",
+      "source": "design/cards/wear-heavy-armor.md"
+    },
+    {
+      "id": "ability-wear-light-armor",
+      "name": "Wear Light Armor",
+      "status": "included",
+      "reason": "Applied through the pinned character/development or passive-defense calculator.",
+      "source": "design/cards/wear-light-armor.md"
+    },
+    {
+      "id": "ability-wear-medium-armor",
+      "name": "Wear Medium Armor",
+      "status": "included",
+      "reason": "Applied through the pinned character/development or passive-defense calculator.",
+      "source": "design/cards/wear-medium-armor.md"
+    },
+    {
+      "id": "ability-wear-the-great-beast",
+      "name": "Wear the Great Beast",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/wear-the-great-beast.md"
+    },
+    {
+      "id": "ability-weight-of-iron",
+      "name": "Weight of Iron",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/weight-of-iron.md"
+    },
+    {
+      "id": "ability-when-the-stars-look-back",
+      "name": "When the Stars Look Back",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/when-the-stars-look-back.md"
+    },
+    {
+      "id": "ability-where-only-eagles-pass",
+      "name": "Where Only Eagles Pass",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/where-only-eagles-pass.md"
+    },
+    {
+      "id": "ability-white-heat",
+      "name": "White Heat",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/white-heat.md"
+    },
+    {
+      "id": "ability-whiteout",
+      "name": "Whiteout",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/whiteout.md"
+    },
+    {
+      "id": "ability-wind-the-sight",
+      "name": "Wind the Sight",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/wind-the-sight.md"
+    },
+    {
+      "id": "ability-wings-over-the-battle",
+      "name": "Wings over the Battle",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/wings-over-the-battle.md"
+    },
+    {
+      "id": "ability-winter-hold",
+      "name": "Winter Hold",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/winter-hold.md"
+    },
+    {
+      "id": "ability-winter-store",
+      "name": "Winter Store",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/winter-store.md"
+    },
+    {
+      "id": "ability-write-the-final-line",
+      "name": "Write the Final Line",
+      "status": "review",
+      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "source": "design/cards/write-the-final-line.md"
+    }
+  ]
+}

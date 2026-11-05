@@ -15,6 +15,9 @@ for (const name of [
   "wounds",
   "encounter",
   "actions",
+  "conditions",
+  "inventory",
+  "passive-defenses",
 ])
   Object.assign(R, await import(`../public/vendor/hol/rules/${name}.mjs`));
 const data = (n) =>
@@ -158,4 +161,260 @@ test("malformed saved hero coordinates are rejected before loading", () => {
     saved = g.snapshot();
   saved.party[0].x = 999;
   assert.throws(() => deserialize(serialize(saved)), /party data/);
+});
+
+const combatFixture = (selected = 0) => {
+  const g = fresh();
+  g.map = { ...g.map, tiles: {}, obstacles: {}, chests: [] };
+  for (let x = 0; x < 12; x++)
+    for (let z = 0; z < 12; z++) g.map.tiles[key(x, z)] = { x, z };
+  g.party.forEach((h, i) => Object.assign(h, { x: 4 + i, z: 6 }));
+  g.enemies = [
+    {
+      id: "sentry",
+      name: "Bone sentry",
+      x: 4,
+      z: 5,
+      hp: 30,
+      maxHp: 30,
+      conditions: [],
+    },
+  ];
+  g.mode = "combat";
+  g.selected = selected;
+  g.encounter = R.startEncounter(
+    [
+      ...g.party.map((h) => ({ id: h.id, side: "players" })),
+      { id: "sentry", side: "opposition" },
+    ],
+    [6, 6, 6],
+  );
+  g.dice = (n = 3) => Array(n).fill(6);
+  g.advance = () => {};
+  return g;
+};
+test("combat walking moves only the acting hero and uses movement independently of actions", () => {
+  const g = combatFixture(),
+    before = g.party.slice(1).map((h) => ({ x: h.x, z: h.z }));
+  g.move({ x: 3, z: 6 });
+  g.step();
+  assert.deepEqual(
+    g.party.slice(1).map((h) => ({ x: h.x, z: h.z })),
+    before,
+  );
+  assert.equal(g.active.x, 3);
+  assert.equal(g.movementLeft(), g.active.preview.summary.speed - 1);
+  assert.equal(g.budget.remaining.main, 1);
+});
+test("formations honor marching order, reach distinct slots and survive save/load", () => {
+  const g = combatFixture();
+  g.mode = "exploration";
+  g.enemies = [];
+  const order = [...g.party.map((h) => h.id)].reverse();
+  g.setFormation("column", order);
+  g.move({ x: 7, z: 1 });
+  for (let i = 0; i < 60; i++) g.step();
+  assert.deepEqual({ x: g.party[3].x, z: g.party[3].z }, { x: 7, z: 1 });
+  assert.equal(new Set(g.party.map((h) => key(h.x, h.z))).size, 4);
+  const restored = new Game(R, C);
+  restored.load(deserialize(serialize(g.snapshot())));
+  assert.equal(restored.campaign.formation, "column");
+  assert.deepEqual(restored.campaign.order, order);
+  assert.throws(() =>
+    g.setFormation("column", [order[0], order[0], order[2], order[3]]),
+  );
+});
+test("Cinder Cast uses Knowledge, applies Burning and ticks before decay", () => {
+  const g = combatFixture(3),
+    e = g.enemies[0];
+  g.useAbility("ability-cinder-cast", e.id);
+  assert.equal(e.hp, 25);
+  assert.equal(e.conditions[0].key, "burning");
+  assert.equal(e.conditions[0].rating, 2);
+  g.finishEnemyConditions(e);
+  assert.equal(e.hp, 23);
+  assert.equal(e.conditions[0].rating, 1);
+  g.finishEnemyConditions(e);
+  assert.equal(e.hp, 22);
+  assert.equal(e.conditions.length, 0);
+  assert.equal(g.budget.remaining.main, 0);
+  assert.throws(() => g.useAbility("ability-rime-grip", e.id), /No main/);
+});
+test("Rime Grip slows the NPC before Freezing damage and severity decay", () => {
+  const g = combatFixture(3),
+    e = g.enemies[0];
+  g.useAbility("ability-rime-grip", e.id);
+  assert.equal(g.enemySpeed(e), 4);
+  assert.equal(e.hp, 25);
+  g.finishEnemyConditions(e);
+  assert.equal(e.hp, 24);
+  assert.equal(g.enemySpeed(e), 5);
+});
+test("unknown cards, missing equipment and invalid targets spend no action", () => {
+  const g = combatFixture();
+  g.beginHero();
+  assert.throws(
+    () => g.useAbility("ability-cinder-cast", "sentry"),
+    /not learned/,
+  );
+  assert.throws(() => g.useAbility("ability-basic-ranged", "sentry"), /weapon/);
+  assert.throws(
+    () => g.useAbility("ability-stabilize", g.party[1].id),
+    /Dying/,
+  );
+  assert.equal(g.budget.remaining.main, 1);
+  assert.equal(g.budget.remaining.maneuver, 1);
+});
+test("Defend stacks with Shield Block, spends the defender's Reaction, and expires at next own turn", () => {
+  const g = combatFixture(),
+    h = g.active;
+  const shield = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-ordinary-shield",
+  );
+  assert.ok(shield);
+  h.draft.loadout = {
+    ...h.draft.loadout,
+    [shield.instanceId]: { held: true, carried: true },
+  };
+  h.preview = R.workshopCharacter(h.draft, C);
+  g.useAbility("ability-defend");
+  assert.equal(h.buffs.defend, true);
+  g.encounter = R.finishTurn(g.encounter);
+  g.encounter = R.chooseParticipant(g.encounter, "sentry");
+  g.pendingDefense = { attacker: "sentry", target: h.id };
+  let observed;
+  g.roll = (attribute, boons, banes) => {
+    observed = { attribute, boons, banes };
+    return { ...R.classifyRoll([6, 6, 6], attribute), retained: [6, 6, 6] };
+  };
+  g.resolveReaction(true);
+  assert.equal(observed.boons, 2);
+  assert.equal(g.budgets[h.id].remaining.reaction, 0);
+  assert.equal(h.buffs.shield, true);
+  g.encounter = R.startEncounter(
+    [
+      { id: h.id, side: "players" },
+      { id: "sentry", side: "opposition" },
+    ],
+    [6, 6, 6],
+  );
+  g.beginHero();
+  assert.deepEqual(h.buffs, {});
+});
+test("Stabilize clears death marks without restoring HP, Grit or wounds", () => {
+  const g = combatFixture(),
+    ally = g.party[1];
+  ally.survival = R.survivalState({
+    hp: 0,
+    maxHp: 20,
+    marks: 2,
+    wounds: 1,
+    gritAvailable: 0,
+  });
+  ally.wounds = [{ test: true }];
+  g.useAbility("ability-stabilize", ally.id);
+  assert.equal(ally.survival.status, "stable");
+  assert.equal(ally.survival.hp, 0);
+  assert.equal(ally.survival.marks, 0);
+  assert.equal(ally.survival.gritAvailable, 0);
+  assert.equal(ally.wounds.length, 1);
+});
+test("Last Words permits neither movement nor action conversion", () => {
+  const g = combatFixture();
+  g.active.survival = R.enterLastWords(g.active.survival);
+  assert.deepEqual(g.route({ x: 3, z: 6 }), []);
+  assert.throws(() => g.convert(), /active hero/);
+  assert.throws(() => g.useAbility("ability-defend"), /cannot act/);
+});
+test("development uses earned levels, preserves creation and spent resources, and cannot refund commitments", () => {
+  const g = fresh(),
+    h = g.active;
+  h.earnedLevel = 2;
+  h.survival.hp = 3;
+  h.survival.gritAvailable = 0;
+  const proposal = structuredClone(h.draft);
+  proposal.attributes.brawn = 99;
+  proposal.progression = {
+    level: 2,
+    levels: { 2: { purchases: [], signatures: {}, acquisitions: {} } },
+  };
+  g.develop(0, proposal);
+  assert.equal(h.preview.state.level, 2);
+  assert.equal(h.preview.development.current, 10);
+  assert.equal(h.draft.attributes.brawn, 1);
+  assert.equal(h.survival.hp, 3);
+  assert.equal(h.survival.gritAvailable, 0);
+  const buy = structuredClone(h.draft);
+  buy.progression.levels[2].purchases.push({ id: "ability-conditioned-body" });
+  g.develop(0, buy);
+  assert.equal(h.survival.hp, 3);
+  assert.equal(h.survival.maxHp, 26);
+  assert.throws(() => g.develop(0, proposal), /rewritten/);
+  const excess = structuredClone(h.draft);
+  excess.progression.level = 3;
+  assert.throws(() => g.develop(0, excess), /earned level/);
+});
+test("ranged attacks use the last ammunition before exhausting its die", () => {
+  const g = combatFixture(1),
+    h = g.active;
+  const bow = h.preview.inventory.items.find(
+      (i) => i.catalogId === "item-ordinary-ranged-weapon",
+    ),
+    ammo = h.preview.inventory.items.find(
+      (i) => i.catalogId === "item-ammunition-bundle",
+    );
+  assert.ok(bow);
+  assert.ok(ammo);
+  g.mode = "exploration";
+  g.equip(1, bow.instanceId);
+  g.mode = "combat";
+  h.supplies[ammo.instanceId] = 4;
+  const random = Math.random;
+  Math.random = () => 0;
+  try {
+    g.useAbility("ability-pinning-shot", "sentry");
+  } finally {
+    Math.random = random;
+  }
+  assert.equal(g.enemies[0].hp, 26);
+  assert.equal(h.supplies[ammo.instanceId], 0);
+  assert.equal(g.enemies[0].conditions[0].rating, 2);
+});
+test("mid-turn save restores the acting caster, spent actions and active conditions", () => {
+  const g = combatFixture(3);
+  g.useAbility("ability-cinder-cast", "sentry");
+  const restored = new Game(R, C);
+  restored.load(deserialize(serialize(g.snapshot())));
+  assert.equal(restored.selected, 3);
+  assert.equal(restored.encounter.current, restored.active.id);
+  assert.equal(restored.budget.remaining.main, 0);
+  assert.equal(restored.enemies[0].conditions[0].rating, 2);
+});
+test("pending reaction survives save/load without resolving or duplicating the attack", () => {
+  const g = combatFixture();
+  g.beginHero();
+  g.encounter = R.finishTurn(g.encounter);
+  g.encounter = R.chooseParticipant(g.encounter, "sentry");
+  g.pendingDefense = { attacker: "sentry", target: g.party[0].id };
+  const before = g.party[0].survival.hp;
+  const restored = new Game(R, C);
+  let prompted = 0;
+  restored.listeners.push((type) => {
+    if (type === "reaction") prompted++;
+  });
+  restored.load(deserialize(serialize(g.snapshot())));
+  assert.equal(prompted, 1);
+  assert.equal(restored.busy, true);
+  assert.equal(restored.party[0].survival.hp, before);
+  assert.deepEqual(restored.pendingDefense, g.pendingDefense);
+});
+test("each cleared-depth extraction awards one milestone and never awards it twice", () => {
+  const g = fresh();
+  g.mode = "exploration";
+  g.enemies.forEach((e) => (e.hp = 0));
+  g.extract();
+  assert.ok(g.party.every((h) => h.earnedLevel === 2));
+  g.descend();
+  g.extract();
+  assert.ok(g.party.every((h) => h.earnedLevel === 2));
 });

@@ -14,7 +14,7 @@ npm run build
 npm start
 ```
 
-On Linux, use `./launch-game.sh` or the installed application-menu entry. The launcher can reuse a root-owned, mode-4755 sandbox helper from an installed Google Chrome or Chromium, scoped only to the game process. This supports Ubuntu's restricted user namespaces without `--no-sandbox`. Direct execution of an unpacked Electron binary can fail when its bundled helper has not been installed with the required ownership and permissions.
+On Linux, use `./launch-game.sh` or the installed application-menu entry. The launcher can reuse a root-owned, mode-4755 sandbox helper from an installed Google Chrome or Chromium, scoped only to the game process. This supports Ubuntu's restricted user namespaces without `--no-sandbox`. The launcher rejects stale inherited helper overrides and repairs the packaged helper path to a symlink to that trusted system helper. No sudo, sandbox-disabling flags or global kernel changes are required on this machine. Always use the launcher after repackaging.
 
 For development, `npm run dev` opens a local browser-hosted renderer. Production uses a desktop Electron shell with isolated renderer permissions and local saves.
 
@@ -31,7 +31,12 @@ The Linux executable is `release/linux-unpacked/deep-dark-dungeons-hol`. Windows
 - Click ground to move; 1–4 select a hero.
 - Near opposition, movement stops and HoL alternating turns begin.
 - Click an adjacent enemy for Basic Melee/Unarmed. Space ends a turn.
-- Q/E rotate; scroll zooms; F focuses the selected hero.
+- Right-drag pans the camera; Q/E rotate; wheel zooms; F recenters and resumes exploration follow. Combat movement keeps the camera fixed.
+- Formation chooses two by two, single file, wedge or line, with editable marching order.
+- Actions opens the acting hero’s supported cards. Choose one, then click its target; Esc cancels targeting.
+- Character shows attributes, disciplines, gear, wounds, conditions and ability coverage. Ready owned weapons there; Shield Block is offered before eligible enemy attacks.
+- Sound opens master volume, mute and a test sound. Audio starts on the first click or key press.
+- Clear a depth and return to Greyhaven to earn a level. Develop this hero opens training; committed choices, damage, injuries and spent Grit persist.
 - Return to entrance stairs to extract; gather at far stairs to descend.
 - The company register opens the full HoL character workshop; Recruit validates both creation stages before replacing a slot.
 
