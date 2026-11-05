@@ -7,6 +7,8 @@ export const esc = (s) =>
       ],
   );
 const paths = {
+  plus: "M12 4v16M4 12h16",
+  search: "M16 16l6 6M18 10a8 8 0 1 1-16 0 8 8 0 1 1 16 0",
   sword: "M5 19 17 7M14 4l6-1-1 6-9 9-4-4zM3 15l6 6M3 21l3-3",
   bow: "M6 3c15 2 15 16 0 18l4-9zM3 12h18m-4-3 4 3-4 3",
   shield: "M12 2 3 6v7c0 5 9 9 9 9s9-4 9-9V6zM12 6v12",

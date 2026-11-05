@@ -1,4 +1,5 @@
 import { abilityType, disciplineIcon } from "./book-symbols.mjs";
+import { experienceDetails } from "./experience.mjs";
 import { icon, itemIcon, actionIcon, esc } from "./icons.mjs";
 import { ABILITIES, coverage } from "../core/abilities.mjs";
 import { heroPreview } from "../view/appearance.mjs";
@@ -238,7 +239,7 @@ export function characterSheet({
         .querySelectorAll("[data-use]")
         .forEach((b) => (b.onclick = () => activate(b.dataset.use)));
     } else {
-      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">A LIFE BEFORE THE DARK</span><h3>Journey & development</h3></div><b class="level-medallion">${p.state.level}</b></div><div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(h.draft.culture.id))}</h3><p>${esc(name(h.draft.background.id))}</p><p>${esc(p.summary.languages.map((l) => l.name).join(" · "))}</p></div><div><span class="eyebrow">TRAINING</span><h3>${p.development.current} DP available</h3><p>Earned level ${h.earnedLevel} · ${p.development.spent} DP spent</p><p>Clear a new depth and return to Greyhaven to earn a level.</p>${game.mode === "town" ? '<button id="train-hero" class="primary">Develop this hero</button>' : '<span class="cost-note">Return to Greyhaven to train.</span>'}</div></div><h3 class="subheading">Disciplines</h3><div class="discipline-grid">${Object.entries(
+      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">A LIFE BEFORE THE DARK</span><h3>Journey & development</h3></div><b class="level-medallion">${p.state.level}</b></div><div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(h.draft.culture.id))}</h3><p>${esc(name(h.draft.background.id))}</p><p>${esc(p.summary.languages.map((l) => l.name).join(" · "))}</p></div><div><span class="eyebrow">TRAINING</span><h3>${p.development.current} DP available</h3><p>Earned level ${h.earnedLevel} · ${p.development.spent} DP spent</p><p>Gain XP from discovery, encounters and treasure. Apply earned levels by training here.</p>${game.mode === "town" ? '<button id="train-hero" class="primary">Develop this hero</button>' : '<span class="cost-note">Return to Greyhaven to train.</span>'}</div></div>${experienceDetails(h, game.campaign.depth)}<h3 class="subheading">Disciplines</h3><div class="discipline-grid">${Object.entries(
         p.state.ranks,
       )
         .map(

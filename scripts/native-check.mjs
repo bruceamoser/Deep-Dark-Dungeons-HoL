@@ -1,4 +1,5 @@
 import { verifyCombatUX } from "./combat-ux-check.mjs";
+import { verifyRoster } from "./roster-check.mjs";
 import { verifyInteractions } from "./interaction-check.mjs";
 import { verifyEffects } from "./effects-check.mjs";
 import { verifyRecovery } from "./recovery-check.mjs";
@@ -71,6 +72,7 @@ try {
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
   await w.screenshot({ path: "test-results/native-town.png" });
   await verifyCharacter(w);
+  await verifyRoster(w);
   await w.getByRole("button", { name: "Enter the depths" }).click();
   await w.getByRole("button", { name: "Save", exact: true }).click();
   await expect(w.locator("#toast")).toContainText("saved");

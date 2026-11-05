@@ -58,7 +58,8 @@ export async function verifyCharacter(page) {
     ),
   ).toBe(before !== "true");
   await page.getByRole("button", { name: "The company register" }).click();
-  await page.locator('[data-edit="2"]').click();
+  await page.locator('[data-roster-slot="2"]').click();
+  await page.locator("#create-roster-hero").click();
   await expect(page.locator("#hero-name")).toHaveValue("");
   expect(
     await page.locator(".attribute-allocation b").allTextContents(),
@@ -67,7 +68,8 @@ export async function verifyCharacter(page) {
   await page.locator("#hero-name").blur();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "The company register" }).click();
-  await page.locator('[data-edit="2"]').click();
+  await page.locator('[data-roster-slot="2"]').click();
+  await page.locator("#create-roster-hero").click();
   await expect(page.locator("#hero-name")).toHaveValue("");
   await page.locator("#resume-recruit").click();
   await expect(page.locator("#hero-name")).toHaveValue("Mara of the Gate");
@@ -170,6 +172,8 @@ export async function verifyCharacter(page) {
   await expect(page.locator("#recruit")).toBeEnabled();
   await page.screenshot({ path: "test-results/creation-review.png" });
   await page.locator("#recruit").click();
+  await page.locator("#assign-roster-hero").click();
+  await page.keyboard.press("Escape");
   expect(
     await page.evaluate(() => ({
       name: window.__ddd.game.party[2].name,

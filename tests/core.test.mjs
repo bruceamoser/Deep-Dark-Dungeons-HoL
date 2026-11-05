@@ -4,6 +4,7 @@ import fs from "node:fs";
 import { generate, pathfind, key, neighbors } from "../src/core/dungeon.mjs";
 import { Game } from "../src/core/game.mjs";
 import { serialize, deserialize } from "../src/core/save.mjs";
+import { xpForLevel, levelForXP } from "../src/core/experience.mjs";
 const R = {};
 for (const name of [
   "workshop-character",
@@ -410,15 +411,15 @@ test("pending reaction survives save/load without resolving or duplicating the a
   assert.equal(restored.party[0].survival.hp, before);
   assert.deepEqual(restored.pendingDefense, g.pendingDefense);
 });
-test("each cleared-depth extraction awards one milestone and never awards it twice", () => {
+test("returning from a cleared floor no longer invents a milestone level", () => {
   const g = fresh();
   g.mode = "exploration";
   g.enemies.forEach((e) => (e.hp = 0));
   g.extract();
-  assert.ok(g.party.every((h) => h.earnedLevel === 2));
+  assert.ok(g.party.every((h) => h.earnedLevel === 1));
   g.descend();
   g.extract();
-  assert.ok(g.party.every((h) => h.earnedLevel === 2));
+  assert.ok(g.party.every((h) => h.earnedLevel === 1));
 });
 test("favorite actions are per hero, bounded, validated and survive saves", () => {
   const g = fresh(),
@@ -1042,4 +1043,203 @@ test("lost caches are recoverable once on the matching floor and stairs enforce 
   g.interact("stairs:entrance");
   assert.equal(g.mode, "town");
   assert.equal(g.campaign.bank, 9);
+});
+
+test("created heroes stay in reserve and party swaps preserve identity, injuries, supplies and XP", () => {
+  const g = fresh(),
+    previous = g.party[0];
+  const recruit = g.createRecruit({ ...drafts[1], name: "Repository recruit" });
+  assert.equal(g.party[0], previous);
+  assert.equal(g.livingRoster().length, 5);
+  previous.survival.hp = 3;
+  previous.survival.gritAvailable = 0;
+  previous.supplies["test-arrow"] = 4;
+  previous.xp = 450;
+  const old = JSON.stringify({
+    draft: previous.draft,
+    survival: previous.survival,
+    supplies: previous.supplies,
+    xp: previous.xp,
+  });
+  g.assignHero(0, recruit.heroId);
+  assert.equal(g.campaign.reserve[0].heroId, previous.heroId);
+  assert.equal(g.party[0].heroId, recruit.heroId);
+  g.assignHero(0, previous.heroId);
+  assert.equal(
+    JSON.stringify({
+      draft: g.party[0].draft,
+      survival: g.party[0].survival,
+      supplies: g.party[0].supplies,
+      xp: g.party[0].xp,
+    }),
+    old,
+  );
+  const loaded = fresh();
+  loaded.load(deserialize(serialize(g.snapshot())));
+  assert.equal(loaded.livingRoster().length, 5);
+  assert.equal(loaded.campaign.reserve[0].name, "Repository recruit");
+  assert.equal(loaded.party[0].heroId, previous.heroId);
+  loaded.assignHero(1, previous.heroId);
+  assert.equal(loaded.party[1].heroId, previous.heroId);
+  assert.equal(new Set(loaded.party.map((h) => h.id)).size, 4);
+});
+
+test("only final death archives an individual hero, once, and the fallen cannot be recruited", () => {
+  const g = fresh(),
+    h = g.party[0];
+  h.survival = R.enterLastWords(h.survival);
+  g.emit("change");
+  assert.equal(g.campaign.fallenHeroes.length, 0);
+  while (h.survival.status === "lastWords") {
+    h.survival = R.startSurvivalTurn(h.survival, h.survival.ownTurn + 1);
+    h.survival = R.endSurvivalTurn(h.survival, h.survival.ownTurn);
+  }
+  g.emit("change");
+  assert.equal(h.survival.status, "dead");
+  assert.equal(g.campaign.fallenHeroes.length, 1);
+  g.emit("change");
+  g.snapshot();
+  assert.equal(g.campaign.fallenHeroes.length, 1);
+  assert.equal(g.livingRoster().length, 3);
+  assert.throws(() => g.assignHero(1, h.heroId), /no longer available/);
+  const originalName = g.campaign.fallenHeroes[0].hero.name;
+  h.name = "Changed corpse fixture";
+  assert.equal(g.campaign.fallenHeroes[0].hero.name, originalName);
+  const loaded = fresh();
+  loaded.load(deserialize(serialize(g.snapshot())));
+  assert.equal(loaded.campaign.fallenHeroes.length, 1);
+});
+
+test("a defeated company returns to the repository without recreating its dead heroes", () => {
+  const g = fresh(),
+    reserve = g.createRecruit({ ...drafts[1], name: "Town reserve" });
+  g.mode = "combat";
+  g.party.forEach((h) => {
+    h.survival.status = "dead";
+    h.survival.hp = 0;
+  });
+  g.fail();
+  g.fail();
+  assert.equal(g.campaign.fallenHeroes.length, 4);
+  assert.equal(g.campaign.memorial.length, 1);
+  g.returnAfterDefeat();
+  assert.equal(g.mode, "town");
+  assert.equal(g.livingRoster().length, 1);
+  g.assignHero(0, reserve.heroId);
+  assert.equal(g.party[0].name, "Town reserve");
+  assert.throws(() => g.descend(), /Replace or resolve/);
+});
+
+test("legacy saves migrate earned milestone levels without erasing heroes or inventing individual deaths", () => {
+  const g = fresh(),
+    saved = g.snapshot();
+  delete saved.reserve;
+  delete saved.fallenHeroes;
+  delete saved.pendingTreasureXP;
+  saved.memorial = [{ names: ["Old expedition"], depth: 2, expedition: 1 }];
+  for (const h of saved.party) {
+    delete h.heroId;
+    delete h.xp;
+    delete h.xpHistory;
+    h.earnedLevel = 2;
+  }
+  g.load(deserialize(serialize(saved)));
+  assert.equal(g.livingRoster().length, 4);
+  assert.ok(g.party.every((h) => h.xp === 1000 && h.earnedLevel === 2));
+  assert.equal(g.campaign.fallenHeroes.length, 0);
+  assert.equal(g.campaign.memorial.length, 1);
+});
+
+test("XP thresholds unlock multiple levels but do not spend training points or heal", () => {
+  assert.deepEqual([1, 2, 3, 4].map(xpForLevel), [0, 1000, 2250, 3750]);
+  assert.equal(levelForXP(999), 1);
+  assert.equal(levelForXP(1000), 2);
+  const g = fresh(),
+    h = g.party[0],
+    level = h.preview.state.level;
+  h.survival.hp = 3;
+  h.survival.gritAvailable = 0;
+  g.awardXP("test-journey", 3750, "A long expedition");
+  assert.equal(h.earnedLevel, 4);
+  assert.equal(h.preview.state.level, level);
+  assert.equal(h.survival.hp, 3);
+  assert.equal(h.survival.gritAvailable, 0);
+  g.awardXP("test-journey", 3750, "Duplicate event");
+  assert.equal(h.xp, 3750);
+});
+
+test("discovery XP is shared by survivors, excludes reserves and persists its once-only claim", () => {
+  const g = fresh(),
+    reserve = g.createRecruit(drafts[0]);
+  g.mode = "exploration";
+  const room = g.map.rooms[1];
+  Object.assign(g.party[0], { x: room.cx, z: room.cz });
+  g.party[3].survival.status = "dead";
+  g.party[3].survival.hp = 0;
+  g.discoverRooms();
+  g.discoverRooms();
+  assert.deepEqual(
+    g.party.map((h) => h.xp),
+    [60, 60, 60, 0],
+  );
+  assert.equal(reserve.xp, 0);
+  const loaded = fresh();
+  loaded.load(deserialize(serialize(g.snapshot())));
+  loaded.discoverRooms();
+  assert.equal(loaded.party[0].xp, 60);
+});
+
+test("resolved encounters grant per-enemy XP even after their roster entries are withdrawn", () => {
+  const g = combatFixture();
+  delete g.advance;
+  g.enemies[0].hp = 0;
+  g.encounter = R.changeRoster(g.encounter, {
+    id: "sentry",
+    mode: "withdraw",
+    reason: "Defeated",
+  });
+  g.advance();
+  assert.equal(g.mode, "exploration");
+  assert.ok(g.party.every((h) => h.xp === 100));
+  g.awardEncounterXP(["sentry"]);
+  assert.ok(g.party.every((h) => h.xp === 100));
+});
+
+test("treasure XP is earned on safe return, lost on defeat, and not repeated for death caches", () => {
+  const g = fresh();
+  g.descend();
+  g.enemies = [];
+  g.map.chests = [
+    { id: "xp-coins", x: g.active.x, z: g.active.z, coins: 20, opened: false },
+  ];
+  g.interact("coffer:xp-coins");
+  assert.equal(g.party[0].xp, 0);
+  assert.equal(g.campaign.pendingTreasureXP, 100);
+  g.extract();
+  assert.ok(g.party.every((h) => h.xp === 100));
+  g.descend();
+  g.extract();
+  assert.equal(g.party[0].xp, 100);
+  g.descend();
+  g.campaign.pendingTreasureXP = 100;
+  g.campaign.haul = 20;
+  g.fail();
+  assert.equal(g.campaign.pendingTreasureXP, 0);
+  g.returnAfterDefeat();
+  g.descend();
+  const cache = g.campaign.caches[0];
+  Object.assign(g.party[0], { x: cache.x, z: cache.z });
+  g.interact("cache:0");
+  assert.equal(g.campaign.pendingTreasureXP, 0);
+  assert.equal(g.party[0].xp, 100);
+});
+
+test("invalid repository identities and XP cannot silently duplicate or resurrect heroes", () => {
+  const g = fresh(),
+    saved = g.snapshot();
+  saved.reserve.push(structuredClone(saved.party[0]));
+  assert.throws(() => g.load(saved), /more than one/);
+  const wrongXP = fresh().snapshot();
+  wrongXP.party[0].xp = -1;
+  assert.throws(() => g.load(wrongXP), /identity or experience/);
 });

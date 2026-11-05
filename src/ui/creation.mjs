@@ -19,6 +19,7 @@ export function creationScreen({
   close,
   attempt,
   toast,
+  onCreated,
 }) {
   const original = game.party[slot],
     key = `ddd.recruit.${slot}`;
@@ -80,7 +81,7 @@ export function creationScreen({
       cls = record(draft.classId),
       ancestry = record(draft.ancestryId);
     const visibleSteps = development ? [5, 7] : steps.map((_, i) => i);
-    root.innerHTML = `<div class="veil"><section class="creator-window character-window" role="dialog" aria-modal="true" aria-label="${development ? "Character development" : "Create character"}"><header class="character-header"><div><span class="eyebrow">${development ? "GROW INTO YOUR LEGEND" : "A NAME WORTH REMEMBERING"}</span><h2>${development ? "Train in Greyhaven" : "A new companion"}</h2></div><span class="creator-slot">COMPANY SLOT 0${slot + 1}</span><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="creator-body"><nav class="creation-steps">${visibleSteps.map((i) => `<button data-step="${i}" class="${step === i ? "chosen" : ""}"><span>0${i + 1}</span>${development && i === 5 ? "Development" : steps[i]}</button>`).join("")}<div class="creation-note">${development ? "Your injuries and spent resources stay with you." : "Every choice follows the HoL character rules. Unused creation DP expires between stages."}</div>${!development ? '<button id="blank-hero" class="subtle-button">Start a blank hero</button>' : ""}</nav><main class="creation-content"><div class="section-heading"><div><span class="eyebrow">${development ? "EARNED LEVEL " + original.earnedLevel : "CHAPTER " + (step + 1) + " OF 8"}</span><h3>${development && step === 5 ? "Develop your hero" : steps[step]}</h3></div><span class="creator-step-mark">${icon(step === 6 ? "pack" : step === 5 || step === 3 ? "bolt" : "book")}</span></div><div id="creation-fields"></div></main><aside class="creation-summary"><div class="creation-preview"><canvas id="recruit-preview"></canvas></div><h3>${esc(draft.name || "Unnamed adventurer")}</h3><p>${esc(name(draft.ancestryId))}<br>${esc(name(draft.classId))}</p><div class="creation-totals"><span>Health<b>${p.summary?.maximumHp ?? "—"}</b></span><span>Grit<b>${p.summary?.gritGranted ?? "—"}</b></span><span>Speed<b>${p.summary?.speed ?? "—"}</b></span><span>Coins<b>${p.inventory.remainingCoins}</b></span></div><div class="creation-validation">${p.valid ? '<span class="ready-seal">◆ Ready for the company</span>' : `<span>${p.errors.length} choices need attention</span><small>Review lists every remaining requirement.</small>`}</div></aside></div><footer class="character-footer creator-footer"><button id="creator-back" ${visibleSteps.indexOf(step) === 0 ? "disabled" : ""}>Back</button><span>${development ? "Training commits only earned, supported choices." : "Draft saved locally as you make choices."}</span>${step === 7 ? `<button id="recruit" class="primary" ${!p.valid ? "disabled" : ""}>${development ? "Commit training" : "Recruit this hero"}</button>` : '<button id="creator-next" class="primary">Continue →</button>'}</footer></section></div>`;
+    root.innerHTML = `<div class="veil"><section class="creator-window character-window" role="dialog" aria-modal="true" aria-label="${development ? "Character development" : "Create character"}"><header class="character-header"><div><span class="eyebrow">${development ? "GROW INTO YOUR LEGEND" : "A NAME WORTH REMEMBERING"}</span><h2>${development ? "Train in Greyhaven" : "A new companion"}</h2></div><span class="creator-slot">${development ? `COMPANY SLOT 0${slot + 1}` : "CHARACTER REPOSITORY"}</span><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="creator-body"><nav class="creation-steps">${visibleSteps.map((i) => `<button data-step="${i}" class="${step === i ? "chosen" : ""}"><span>0${i + 1}</span>${development && i === 5 ? "Development" : steps[i]}</button>`).join("")}<div class="creation-note">${development ? "Your injuries and spent resources stay with you." : "Every choice follows the HoL character rules. Unused creation DP expires between stages."}</div>${!development ? '<button id="blank-hero" class="subtle-button">Start a blank hero</button>' : ""}</nav><main class="creation-content"><div class="section-heading"><div><span class="eyebrow">${development ? "EARNED LEVEL " + original.earnedLevel : "CHAPTER " + (step + 1) + " OF 8"}</span><h3>${development && step === 5 ? "Develop your hero" : steps[step]}</h3></div><span class="creator-step-mark">${icon(step === 6 ? "pack" : step === 5 || step === 3 ? "bolt" : "book")}</span></div><div id="creation-fields"></div></main><aside class="creation-summary"><div class="creation-preview"><canvas id="recruit-preview"></canvas></div><h3>${esc(draft.name || "Unnamed adventurer")}</h3><p>${esc(name(draft.ancestryId))}<br>${esc(name(draft.classId))}</p><div class="creation-totals"><span>Health<b>${p.summary?.maximumHp ?? "—"}</b></span><span>Grit<b>${p.summary?.gritGranted ?? "—"}</b></span><span>Speed<b>${p.summary?.speed ?? "—"}</b></span><span>Coins<b>${p.inventory.remainingCoins}</b></span></div><div class="creation-validation">${p.valid ? '<span class="ready-seal">◆ Ready for the company</span>' : `<span>${p.errors.length} choices need attention</span><small>Review lists every remaining requirement.</small>`}</div></aside></div><footer class="character-footer creator-footer"><button id="creator-back" ${visibleSteps.indexOf(step) === 0 ? "disabled" : ""}>Back</button><span>${development ? "Training commits only earned, supported choices." : "Draft saved locally as you make choices."}</span>${step === 7 ? `<button id="recruit" class="primary" ${!p.valid ? "disabled" : ""}>${development ? "Commit training" : "Save hero to repository"}</button>` : '<button id="creator-next" class="primary">Continue →</button>'}</footer></section></div>`;
     const host = root.querySelector("#creation-fields");
     const model = [
       "class-arcanist",
@@ -122,11 +123,15 @@ export function creationScreen({
       changed();
     });
     root.querySelector("#recruit")?.addEventListener("click", () =>
-      attempt(() => {
+      attempt(async () => {
         if (development) game.develop(slot, draft);
         else {
-          game.replace(slot, draft);
+          const hero = game.createRecruit(draft);
           localStorage.removeItem(key);
+          close();
+          await onCreated?.(hero.heroId);
+          toast(`${hero.name} saved to the character repository.`);
+          return;
         }
         close();
         toast(

@@ -53,6 +53,7 @@ app.whenReady().then(async () => {
     return write;
   });
   ipcMain.handle("save:read", async () => {
+    await saveQueue;
     try {
       return await fs.readFile(savePath, "utf8");
     } catch (e) {

@@ -136,6 +136,10 @@ export const recoveryMethods = {
     );
   },
   suffer(h, amount, type = "physical", source = null) {
+    if (amount > 0)
+      h.lastHarm = source?.name
+        ? `Fell after ${source.name}'s ${type} attack`
+        : `Fell after ${type} harm`;
     const prior = h.survival.wounds,
       result = this.R.sufferDamage(h.survival, amount);
     h.survival = result.state;

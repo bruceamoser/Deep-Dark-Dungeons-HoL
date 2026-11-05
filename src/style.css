@@ -2574,3 +2574,425 @@ p {
     14px/1.5 Georgia,
     serif;
 }
+
+.xp-meter {
+  margin-top: 16px;
+  text-align: left;
+}
+.xp-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font:
+    11px Arial,
+    sans-serif;
+  color: #bfc9c6;
+}
+.xp-track {
+  margin-top: 7px;
+  height: 5px;
+  background: #050c12;
+  border: 1px solid #9b947333;
+  overflow: hidden;
+}
+.xp-track i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #547e9f, #a7cbd3);
+  box-shadow: 0 0 10px #74b7d1;
+}
+.xp-meter .training-ready {
+  display: block;
+  color: #e5c584;
+  font:
+    10px Arial,
+    sans-serif;
+  margin-top: 7px;
+}
+.xp-meter.compact {
+  margin-top: 10px;
+}
+.xp-meter.compact .xp-caption {
+  font-size: 9px;
+  letter-spacing: 0.3px;
+}
+.xp-meter.compact .xp-track {
+  height: 3px;
+  margin-top: 5px;
+}
+.xp-meter.compact .training-ready {
+  font-size: 8px;
+}
+.hero-card .xp-meter {
+  margin-top: 8px;
+}
+.hero-card .xp-meter .xp-caption {
+  font-size: 8px;
+}
+.town-party .xp-meter {
+  min-width: 0;
+  max-width: 240px;
+}
+
+@media (max-height: 820px) {
+  .town h1 {
+    font-size: 38px;
+    margin: 10px 0 14px;
+  }
+  .town .intro {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .town .rule {
+    margin: 15px 0;
+  }
+  .town-actions button {
+    padding: 10px 15px;
+  }
+  .town-status,
+  .town .edition {
+    margin-top: 16px;
+  }
+}
+.minimap footer small {
+  display: block;
+  color: #b4cdd5;
+  margin-top: 7px;
+  font-size: 8px;
+}
+.experience-panel {
+  margin: 24px 0;
+  padding: 24px;
+  border: 1px solid #93b4bd44;
+  background: linear-gradient(110deg, #20374188, #101c20);
+}
+.experience-panel p {
+  color: #aabdb9;
+  font:
+    13px/1.6 Arial,
+    sans-serif;
+}
+.experience-panel summary {
+  color: #d0c299;
+  cursor: pointer;
+  font:
+    13px Cinzel,
+    serif;
+  margin-top: 20px;
+}
+.experience-panel dl > div,
+.fallen-record > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 8px 0;
+  border-bottom: 1px solid #748d802e;
+  font:
+    12px Arial,
+    sans-serif;
+}
+.experience-panel dd,
+.fallen-record dd {
+  color: #e3d2a9;
+  margin: 0;
+}
+.xp-history {
+  margin-top: 24px;
+}
+.xp-history p {
+  display: flex;
+  gap: 20px;
+  margin: 12px 0;
+}
+.xp-history b {
+  color: #b9dce9;
+  white-space: nowrap;
+  min-width: 75px;
+}
+.xp-history small {
+  display: block;
+  color: #7a9897;
+  margin-top: 3px;
+  font-size: 10px;
+}
+.register-window {
+  width: min(1420px, 95vw);
+  height: min(910px, 94vh);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #bca372;
+  background: linear-gradient(135deg, #173136f5, #08151cfb);
+  box-shadow:
+    0 30px 100px #000b,
+    inset 0 0 0 5px #b99c5512;
+}
+.register-window .character-header {
+  flex-shrink: 0;
+}
+.register-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  border-block: 1px solid #9e986244;
+}
+.register-tabs button {
+  padding: 12px 16px;
+  color: #bdc9bf;
+  font:
+    13px Cinzel,
+    serif;
+}
+.register-tabs button.chosen {
+  background: #b6a26b19;
+  border-color: #bda768;
+  color: #eed5a3;
+}
+.register-tabs b {
+  color: #c2b08a;
+  margin-left: 10px;
+}
+.register-tabs .primary {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.register-tabs svg {
+  width: 17px;
+  height: 17px;
+}
+.register-body {
+  display: grid;
+  grid-template-columns: 260px minmax(300px, 1fr) 350px;
+  min-height: 0;
+  flex: 1;
+}
+.register-company {
+  padding: 24px 18px;
+  border-right: 1px solid #a79c6c33;
+  overflow: auto;
+}
+.register-company > p {
+  font:
+    12px/1.6 Arial,
+    sans-serif;
+  color: #8ea6a1;
+}
+.register-company > button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 10px;
+  margin-bottom: 10px;
+  text-align: left;
+  background: #0a1920a6;
+}
+.register-company > button.chosen {
+  border-color: #d6b777;
+  background: #bba56c1a;
+}
+.slot-number {
+  font:
+    11px Cinzel,
+    serif;
+  color: #b99c61;
+}
+.register-company strong {
+  display: block;
+  font:
+    12px Cinzel,
+    serif;
+  color: #ddd2b9;
+}
+.register-company small {
+  display: block;
+  font:
+    9px Arial,
+    sans-serif;
+  color: #8fa8a0;
+  margin-top: 7px;
+}
+.register-company > button.fallen strong,
+.register-company > button.fallen small {
+  color: #b78e89;
+}
+.register-note {
+  font:
+    11px/1.7 Arial,
+    sans-serif;
+  color: #93aaa3;
+}
+.register-company .register-note {
+  margin-top: 24px;
+}
+.register-catalog {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.register-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid #70887c66;
+  background: #07141bcc;
+  margin-bottom: 18px;
+}
+.register-search svg {
+  width: 18px;
+  height: 18px;
+  color: #a9976c;
+}
+.register-search input {
+  background: transparent;
+  border: 0;
+  color: #d4ded2;
+  outline: none;
+  width: 100%;
+  font:
+    12px Arial,
+    sans-serif;
+}
+.hero-register-list {
+  overflow: auto;
+  flex: 1;
+  padding-right: 7px;
+}
+.register-hero {
+  display: block;
+  width: 100%;
+  padding: 19px;
+  margin-bottom: 12px;
+  text-align: left;
+  background: #10232aac;
+  border-color: #50665e88;
+}
+.register-hero.chosen {
+  border-color: #c9ad70;
+  background: linear-gradient(120deg, #756d3829, #1c343ac9);
+  box-shadow: inset 3px 0 #c9ad70;
+}
+.register-hero > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.register-hero strong {
+  font:
+    15px Cinzel,
+    serif;
+  color: #e4d9bd;
+}
+.hero-roster-state {
+  font:
+    8px Arial,
+    sans-serif;
+  letter-spacing: 1px;
+  color: #b9c4a9;
+}
+.register-hero > small {
+  display: block;
+  margin-top: 8px;
+  color: #8da9a0;
+  font:
+    11px Arial,
+    sans-serif;
+}
+.register-inspector {
+  overflow: auto;
+  padding: 0 26px 22px;
+  border-left: 1px solid #a79c6c33;
+  background: radial-gradient(ellipse at 50% 25%, #4b6c6644, #07141a55 65%);
+}
+.register-preview {
+  height: 265px;
+  position: relative;
+  margin: 0 -20px;
+}
+.register-preview canvas {
+  width: 100%;
+  height: 100%;
+}
+.register-inspector h3 {
+  font:
+    23px Cinzel,
+    serif;
+  color: #e3d4ac;
+  margin: 12px 0 8px;
+}
+.register-inspector > p {
+  font:
+    12px/1.7 Arial,
+    sans-serif;
+  color: #a2b5ac;
+}
+.register-vitals {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  font:
+    10px Arial,
+    sans-serif;
+  color: #a8c4b7;
+  margin: 24px 0;
+}
+#assign-roster-hero {
+  width: 100%;
+  padding: 15px;
+  font:
+    14px Cinzel,
+    serif;
+}
+.fallen-record {
+  margin: 20px 0;
+  color: #9eaaa4;
+}
+.fallen-cause {
+  font-style: italic !important;
+}
+.fallen-seal {
+  display: block;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #aa935344;
+  color: #b99b71;
+  font:
+    9px Cinzel,
+    serif;
+  letter-spacing: 1px;
+}
+.register-empty {
+  text-align: center;
+  padding: 70px 20px;
+  color: #8ea69e;
+}
+.register-empty svg {
+  width: 45px;
+  height: 45px;
+  color: #b79a63;
+}
+.register-empty h3 {
+  font:
+    20px Cinzel,
+    serif;
+  color: #c6baa0;
+}
+@media (max-width: 1250px) {
+  .register-body {
+    grid-template-columns: 220px minmax(260px, 1fr) 280px;
+  }
+  .register-preview {
+    height: 210px;
+  }
+  .register-tabs button {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .register-inspector {
+    padding-inline: 20px;
+  }
+}
