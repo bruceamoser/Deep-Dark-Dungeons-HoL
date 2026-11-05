@@ -37,3 +37,11 @@ Core regression suite adds single-hero movement, formation ordering/save compati
 The same controls routine runs inside `test:native`, attached to the exact launcher with sandboxing enabled. A deliberately invalid inherited `CHROME_DEVEL_SANDBOX` is used for the launch regression. The packaged helper path is repaired to the installed root-owned helper. Windows packaging is checked separately; Windows execution remains untested.
 
 Latest results: 24 core tests, browser recruitment/combat and controls checks, sandboxed Linux native controls, Linux packaging and Windows ZIP packaging passed. Screenshots in ignored `test-results/` were visually inspected for the dungeon and expanded character sheet.
+
+### Terminal AppArmor correction
+
+Bruce’s subsequent `LaunchProcess: failed to execvp: .../HoL` report exposed another false positive: processes launched from the desktop agent inherited `chatgpt (unconfined)`, which allows user namespaces. His Konsole shell is plain `unconfined` and reaches the SUID helper path. `aa-exec -p unconfined -- ./launch-game.sh` reproduced his exact failure before the fix. This matches the upstream [Electron path-with-spaces issue](https://github.com/electron/electron/issues/44414).
+
+The launcher now copies the packaged runtime to a private, versioned, space-free path in the user’s local application-data directory, retaining the trusted system SUID helper. The copy uses reflinks when available, an installation lock and atomic staging. No project rename, save migration, global AppArmor change or sandbox disabling is involved.
+
+The corrected native test runs the launcher through `aa-exec -p unconfined`, asserts the actual executable path has no whitespace and the main profile is `unconfined`, then runs the full controls suite and verifies renderer seccomp filtering. This passed, as did a plain launch without remote-debugging flags or temporary user data. The earlier profile-inheriting test alone was insufficient evidence of terminal compatibility.
