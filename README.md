@@ -4,7 +4,13 @@ A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, base
 
 **Status: first playable foundation, not the complete game.** Full character creation uses a native game interface backed by the pinned HoL validators; dungeon combat currently implements only a subset of the system. See [implementation coverage and limitations](docs/implementation-status.md). The high-end presentation target remains an acceptance requirement.
 
-## Run
+## Download and install
+
+Get the [latest release](https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest). Windows has an installer; Linux has a `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
+
+The installed game checks for updates on startup and every four hours, downloads them in the background, and offers **Updates → Save & restart to install**. Your active journey is saved before installation. Updates preserve all saved runs and heroes. Source-checkout/unpacked builds link to the release installer instead of self-updating. See [release details and publishing](docs/releases.md).
+
+## Run from source
 
 Use Node.js 22.12+:
 
@@ -24,7 +30,7 @@ npm run package:linux
 npm run package:windows
 ```
 
-The Linux executable is `release/linux-unpacked/deep-dark-dungeons-hol`. Windows packaging creates a ZIP in `release/`; extract it and run `Deep Dark Dungeons - HoL.exe`. Windows runtime behavior has not yet been tested.
+Packaging creates an AppImage or Windows NSIS setup executable in `release/`, plus update metadata. `npm run package:dir` builds only the local Linux directory for `launch-game.sh`. Use the launcher for that unpacked build; use the installed release for automatic updates.
 
 ## Controls
 

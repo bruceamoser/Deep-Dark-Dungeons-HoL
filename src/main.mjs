@@ -28,7 +28,7 @@ const esc = (s) =>
         c
       ],
   );
-let toastTimer, modalCleanup;
+let toastTimer, modalCleanup, updateStatus;
 function closeModal() {
   modalCleanup?.();
   modalCleanup = null;
@@ -289,10 +289,20 @@ async function init() {
   window.desktop?.onClose(() =>
     attempt(async () => {
       game.pause();
-      await save();
-      window.desktop.close();
+      try {
+        await save();
+        window.desktop.close();
+      } catch (error) {
+        window.desktop.cancelClose(error.message);
+        if (!runsOpen) game.resume();
+        throw error;
+      }
     }),
   );
+  if (window.desktop?.updates) {
+    window.desktop.updates.subscribe(receiveUpdateStatus);
+    receiveUpdateStatus(await window.desktop.updates.status());
+  }
   if (!library.active) await openRuns();
   window.__ddd = {
     game,
@@ -317,7 +327,7 @@ function render() {
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
   if (town) {
     ui.innerHTML =
       header +
@@ -432,6 +442,9 @@ function action(a) {
       break;
     case "help":
       help();
+      break;
+    case "updates":
+      updatesScreen();
       break;
     case "sheet":
       sheet(game.selected);
@@ -818,6 +831,58 @@ function audioSettings() {
         ? "Muted — toggle mute to hear audio"
         : `Audio ${sound.context.state} · volume ${Math.round(sound.volume * 100)}%`;
     });
+}
+function receiveUpdateStatus(status) {
+  const previous = updateStatus?.phase;
+  updateStatus = status;
+  if (status.phase === "error" && previous === "installing" && !runsOpen)
+    game.resume();
+  const control = ui.querySelector('[data-action="updates"]');
+  if (control) {
+    control.textContent =
+      status.phase === "downloaded" ? "Update ready" : "Updates";
+    control.classList.toggle("update-ready", status.phase === "downloaded");
+  }
+  if (modal.querySelector("#update-panel")) drawUpdateStatus();
+  if (status.phase === "downloaded" && previous !== "downloaded")
+    toast(`Version ${status.next} is ready. Open Updates to save and restart.`);
+}
+function updatesScreen() {
+  dialog("Keep the lantern lit", '<div id="update-panel"></div>');
+  drawUpdateStatus();
+}
+function drawUpdateStatus() {
+  const s = updateStatus ?? { phase: "idle" };
+  const busy = ["checking", "downloading", "saving", "installing"].includes(
+    s.phase,
+  );
+  const descriptions = {
+    idle: "Checks for new releases when the game opens and every four hours.",
+    checking: "Checking GitHub Releases…",
+    current:
+      "You have the latest release. Your lantern is ready for the depths.",
+    available: "A new release is available.",
+    downloading:
+      "Downloading your update in the background. You can keep playing.",
+    downloaded:
+      "Your update is ready. Save this journey and restart whenever you are ready.",
+    saving: "Saving your journey before installing…",
+    installing: "Installing the update and restarting…",
+    unsupported:
+      "This is a development build. Install the release version to receive updates in the game.",
+    error:
+      "The update could not finish. You can keep playing and try again later.",
+  };
+  modal.querySelector("#update-panel").innerHTML =
+    `<div class="update-version"><img src="/art/greyhaven-seal.png" alt=""><div><span class="eyebrow">DEEP DARK DUNGEONS · RELEASES</span><h3>Version ${esc(s.current ?? "—")}</h3>${s.next ? `<small>New release · ${esc(s.next)}</small>` : ""}</div></div><p role="status">${descriptions[s.phase] ?? descriptions.idle}</p>${s.phase === "downloading" ? `<progress max="100" value="${s.percent ?? 0}" aria-label="Update download progress"></progress><p>${Math.floor(s.percent ?? 0)}% downloaded</p>` : ""}${s.error ? `<p class="update-error">${esc(s.error)}</p>` : ""}<p class="update-note">Updates download automatically from our GitHub releases. Installation waits for you; saved journeys and heroes stay on this computer.</p><footer>${s.phase === "unsupported" ? "" : `<button id="check-update" ${busy || s.phase === "downloaded" ? "disabled" : ""}>Check for updates</button>`}${s.phase === "downloaded" ? '<button id="install-update" class="primary">Save & restart to install</button>' : ""}<button id="release-page">View releases</button></footer>`;
+  const check = modal.querySelector("#check-update");
+  if (check)
+    check.onclick = () => attempt(() => window.desktop.updates.check());
+  const install = modal.querySelector("#install-update");
+  if (install)
+    install.onclick = () => attempt(() => window.desktop.updates.install());
+  modal.querySelector("#release-page").onclick = () =>
+    attempt(() => window.desktop.updates.releases());
 }
 function shop() {
   closeModal();
