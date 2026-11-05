@@ -1,5 +1,15 @@
 import { chromium, expect } from "@playwright/test";
 export async function verifyCharacter(page) {
+  const preservedScroll = async (selector, before) => {
+    const after = await page
+      .locator(selector)
+      .evaluate((e) => ({
+        top: e.scrollTop,
+        maximum: e.scrollHeight - e.clientHeight,
+      }));
+    // Completing a required choice removes its validation message and can shorten the panel.
+    expect(after.top).toBe(Math.min(before, after.maximum));
+  };
   await page.locator('[data-hero="0"]').click();
   const canvas = page.locator("#hero-preview");
   await expect(canvas).toHaveAttribute("data-armor", "light");
@@ -83,12 +93,81 @@ export async function verifyCharacter(page) {
   await page.locator('[data-trait="trait-dwarf-deep-constitution"]').click();
   await page.locator('[data-trait="trait-dwarf-carved-history"]').click();
   await page.locator('[data-step="2"]').click();
+  await page.locator('[data-origin="culture"]').click();
+  const cultureDialog = page.getByRole("dialog", {
+    name: "Choose culture",
+    exact: true,
+  });
+  await expect(cultureDialog.locator("[data-browse-origin]")).toHaveCount(18);
+  await expect(cultureDialog.locator(".origin-pair")).toHaveCount(2);
+  await expect(
+    cultureDialog.locator(".origin-pair .discipline-symbol"),
+  ).toHaveCount(2);
+  await expect(cultureDialog.locator(".origin-pair .ability-type")).toHaveCount(
+    2,
+  );
+  await page.locator("#origin-search").fill("Wear Light Armor");
   await page
-    .locator('[data-origin="culture"]')
-    .selectOption("origin-culture-walled-communities");
+    .locator('[data-browse-origin="origin-culture-walled-communities"]')
+    .click();
+  await expect(cultureDialog.locator('[data-origin-pair="0"]')).toContainText(
+    "Armor",
+  );
+  await expect(
+    cultureDialog.locator('[data-origin-pair="0"] .ability-type b'),
+  ).toHaveText("P");
+  await cultureDialog.locator('[data-origin-pair="0"] summary').click();
+  await page.screenshot({ path: "test-results/culture-grant-preview.png" });
+  // Browsing and canceling do not silently choose the first pair.
+  await page.keyboard.press("Escape");
+  await expect(page.locator('[data-origin-summary="culture"]')).toContainText(
+    "Choose your culture",
+  );
+  await page.locator('[data-origin="culture"]').click();
   await page
-    .locator('[data-origin="background"]')
-    .selectOption("origin-background-household-guard");
+    .locator('[data-browse-origin="origin-culture-walled-communities"]')
+    .click();
+  await page.locator('[data-choose-origin-pair="1"]').click();
+  await expect(page.locator('[data-origin-summary="culture"]')).toContainText(
+    "Shielding Step",
+  );
+  await page.locator('[data-step="3"]').click();
+  await expect(
+    page.locator('[data-purchase-kind="discipline"]'),
+  ).toBeDisabled();
+  await expect(page.locator(".training-banner")).toContainText("Level 0");
+  await page.locator('[data-purchase-kind="ability"]').click();
+  await expect(
+    page.locator('.purchase-window [data-choice^="discipline-"]'),
+  ).toHaveCount(0);
+  await page.keyboard.press("Escape");
+  await page.locator('[data-step="2"]').click();
+  await page.locator('[data-origin="culture"]').click();
+  await expect(page.locator('[data-origin-pair="1"]')).toHaveClass(/chosen/);
+  await page.locator('[data-choose-origin-pair="0"]').click();
+  await expect(page.locator('[data-origin-summary="culture"]')).toContainText(
+    "Wear Light Armor",
+  );
+  await page.locator('[data-origin="background"]').click();
+  await expect(page.locator("[data-browse-origin]")).toHaveCount(32);
+  await page.locator("#origin-search").fill("no such origin");
+  await expect(page.locator("[data-choose-origin-pair]")).toHaveCount(0);
+  await page.locator("#origin-search").fill("Household Guard");
+  await page
+    .locator('[data-browse-origin="origin-background-household-guard"]')
+    .click();
+  await expect(page.locator('[data-origin-pair="0"]')).toContainText(
+    "Hook and Drive",
+  );
+  await expect(
+    page.locator('[data-origin-pair="0"] .ability-type b'),
+  ).toHaveText("A");
+  await page.screenshot({ path: "test-results/background-grant-preview.png" });
+  await page.locator('[data-choose-origin-pair="0"]').click();
+  await expect(
+    page.locator('[data-origin-summary="background"]'),
+  ).toContainText("Hook and Drive");
+  await page.screenshot({ path: "test-results/origin-grants-selected.png" });
   await page.locator('[data-step="6"]').click();
   await expect(
     page.locator('[data-finish-grant="ability-hook-and-drive"]'),
@@ -101,10 +180,25 @@ export async function verifyCharacter(page) {
   await page.locator('[data-class="class-protector"]').click();
   await page.locator('[data-class-discipline="discipline-armor"]').click();
   await page.locator('[data-class-discipline="discipline-guard"]').click();
-  await page
-    .locator('[data-signature="ability-signature-protector-between-them"]')
-    .click();
+  const signature = page.locator(
+    '[data-signature="ability-signature-protector-between-them"]',
+  );
+  await signature.scrollIntoViewIfNeeded();
+  const callingScroll = await page
+    .locator(".creation-content")
+    .evaluate((e) => e.scrollTop);
+  expect(callingScroll).toBeGreaterThan(0);
+  await signature.click();
+  await preservedScroll(".creation-content", callingScroll);
+  await page.locator('[data-step="3"]').click();
+  await expect(
+    page.locator('[data-purchase-kind="discipline"]'),
+  ).toBeDisabled();
   await page.locator('[data-step="5"]').click();
+  expect(
+    await page.locator(".creation-content").evaluate((e) => e.scrollTop),
+  ).toBe(0);
+  await expect(page.locator('[data-purchase-kind="discipline"]')).toBeEnabled();
   await page.locator('[data-purchase-kind="discipline"]').click();
   await expect(
     page.getByRole("dialog", { name: "Purchase disciplines", exact: true }),
@@ -118,7 +212,14 @@ export async function verifyCharacter(page) {
   await expect(
     page.locator('.purchase-window [data-choice="discipline-flame"] img'),
   ).toHaveAttribute("src", "/vendor/hol/assets/flame.webp");
-  await page.locator('[data-buy="discipline-flame"]').click();
+  const disciplinePurchase = page.locator('[data-buy="discipline-flame"]');
+  await disciplinePurchase.scrollIntoViewIfNeeded();
+  const purchaseScroll = await page
+    .locator(".purchase-scroll")
+    .evaluate((e) => e.scrollTop);
+  expect(purchaseScroll).toBeGreaterThan(0);
+  await disciplinePurchase.click();
+  await preservedScroll(".purchase-scroll", purchaseScroll);
   await expect(
     page.locator(".purchase-window .owned-disciplines"),
   ).toContainText("Flame");
@@ -155,7 +256,14 @@ export async function verifyCharacter(page) {
   await expect(
     page.locator('[data-stock="item-ordinary-melee-weapon"]'),
   ).toContainText("Owned 1 · 1 granted");
-  await page.locator('[data-shop="item-ordinary-melee-weapon"]').click();
+  const buyWeapon = page.locator('[data-shop="item-ordinary-melee-weapon"]');
+  await buyWeapon.scrollIntoViewIfNeeded();
+  const equipmentScroll = await page
+    .locator(".creation-content")
+    .evaluate((e) => e.scrollTop);
+  expect(equipmentScroll).toBeGreaterThan(0);
+  await buyWeapon.click();
+  await preservedScroll(".creation-content", equipmentScroll);
   await expect(
     page.locator('[data-stock="item-ordinary-melee-weapon"]'),
   ).toContainText("Owned 2 · 1 granted");

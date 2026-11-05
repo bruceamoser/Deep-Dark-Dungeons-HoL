@@ -1,3 +1,4 @@
+import { originGrant, originPicker } from "./origins.mjs";
 import {
   disciplineIcon,
   disciplineStrip,
@@ -62,13 +63,44 @@ export function creationScreen({
   const field = (label, html) =>
     `<label class="creator-field"><span>${label}</span>${html}</label>`;
   const info = (c) =>
-    `<details class="choice-reference"><summary>Read rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
-  const changed = () => {
+    `<details class="choice-reference" data-rules="${esc(c?.id)}"><summary>Read rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
+  const changed = ({ preserveScroll = true } = {}) => {
+    const scroll = preserveScroll
+      ? [".creation-content", ".purchase-scroll"].map((selector) => ({
+          selector,
+          top: root.querySelector(selector)?.scrollTop ?? 0,
+        }))
+      : [];
+    const openRules = new Set(
+      preserveScroll
+        ? [...root.querySelectorAll("details[data-rules][open]")].map(
+            (e) => e.dataset.rules,
+          )
+        : [],
+    );
+    const grips = preserveScroll
+      ? [...root.querySelectorAll("[data-shop-hands]")].map((e) => [
+          e.dataset.shopHands,
+          e.value,
+        ])
+      : [];
+
     if (!development) {
       localStorage.setItem(key, JSON.stringify(draft));
       resumeDraft = null;
     }
     draw();
+    root.querySelectorAll("details[data-rules]").forEach((e) => {
+      if (openRules.has(e.dataset.rules)) e.open = true;
+    });
+    for (const [id, value] of grips) {
+      const select = root.querySelector(`[data-shop-hands="${id}"]`);
+      if (select) select.value = value;
+    }
+    for (const { selector, top } of scroll) {
+      const panel = root.querySelector(selector);
+      if (panel) panel.scrollTop = top;
+    }
   };
   const bind = (selector, event, fn) =>
     root
@@ -120,7 +152,7 @@ export function creationScreen({
     root.querySelector("#blank-hero")?.addEventListener("click", () => {
       draft = R.newCreationDraft();
       step = 0;
-      changed();
+      changed({ preserveScroll: false });
     });
     root.querySelector("#recruit")?.addEventListener("click", () =>
       attempt(async () => {
@@ -249,28 +281,32 @@ export function creationScreen({
           changed();
         });
     } else if (step === 2) {
-      host.innerHTML = `<p class="section-intro">Culture and background each grant one discipline–ability pair. Duplicate grants refund DP through the source rules.</p>${[
+      host.innerHTML = `<p class="section-intro">Your culture and background each grant <b>one</b> discipline–ability pair. Compare both options before choosing.</p><div class="origin-selections">${[
         "culture",
         "background",
       ]
         .map((type) => {
-          const selected = record(draft[type]?.id);
-          return `<h3 class="subheading">${type === "culture" ? "Where you grew up" : "The life you left"}</h3>${field(
-            type,
-            `<select data-origin="${type}">${options(
-              C.choices.filter((c) => c.originType === type),
-              draft[type]?.id,
-            )}</select>`,
-          )}<div class="choice-grid">${(selected?.pairs ?? []).map((pair, i) => `<button data-pair="${i}" data-origin-type="${type}" class="choice-card ${draft[type]?.pair === i ? "chosen" : ""}">${disciplineIcon(pair.disciplineId)}<strong>${esc(name(pair.disciplineId))} ${pair.rank}</strong><small>${esc(name(pair.abilityId))} · ${esc(coverage(pair.abilityId).status)}</small></button>`).join("")}</div>${selected?.pairs?.[draft[type]?.pair] ? info(record(selected.pairs[draft[type].pair].abilityId)) : ""}`;
+          const selected = record(draft[type]?.id),
+            pair = selected?.pairs?.[draft[type]?.pair];
+          return `<section class="origin-selection" data-origin-summary="${type}"><div class="origin-selection-heading"><div><span class="eyebrow">${type === "culture" ? "WHERE YOU GREW UP · CULTURE" : "THE LIFE YOU LEFT · BACKGROUND"}</span><h3>${esc(selected?.name ?? `Choose your ${type}`)}</h3></div><button data-origin="${type}">${selected ? "Change" : "Choose"} ${type}</button></div>${pair ? `${originGrant(pair, C.choices)}<p class="origin-receipt">Granted by your ${type} · ${selected.coins} starting coins</p>${info(record(pair.abilityId))}` : '<p class="origin-empty">Browse every origin, its two grant pairs and the full ability rules.</p>'}</section>`;
         })
-        .join("")}`;
-      bind("[data-origin]", "change", (e) => {
-        draft[e.dataset.origin] = { id: e.value, pair: 0 };
-        changed();
-      });
-      bind("[data-pair]", "click", (e) => {
-        draft[e.dataset.originType].pair = +e.dataset.pair;
-        changed();
+        .join(
+          "",
+        )}</div><p class="section-intro">Duplicate grants refund DP through the source rules.</p>`;
+      bind("[data-origin]", "click", (e) => {
+        const type = e.dataset.origin;
+        originPicker({
+          root,
+          choices: C.choices,
+          type,
+          current: draft[type],
+          info,
+          attempt,
+          choose: (selection) => {
+            draft[type] = selection;
+            changed();
+          },
+        });
       });
     } else if (step === 4) {
       host.innerHTML = `<p class="section-intro">Your calling grants two starting disciplines and a level-one signature. Choose a class whose required attributes are at least zero.</p><div class="choice-grid">${C.choices
@@ -316,10 +352,11 @@ export function creationScreen({
         acquisitions = draft.acquisitions;
         state = p.stages[stage];
       }
+      const disciplinesLocked = state.level === 0;
       const locked = development
         ? (original.draft.progression?.levels?.[level]?.purchases.length ?? 0)
         : 0;
-      host.innerHTML = `<div class="training-banner"><div><b>${state.dp}</b><span>DP AVAILABLE</span></div><p>${development ? "Advancement DP carries forward. Attributes do not increase automatically." : stage === 0 ? "Your first pool: 10 + Knowledge + Reason + Guile. Unused points expire before your calling." : "A separate pool of 10 + Knowledge + Reason + Guile. Unused points expire when creation ends."}</p></div>${
+      host.innerHTML = `<div class="training-banner"><div><b>${state.dp}</b><span>DP AVAILABLE</span></div><p>${development ? "Advancement DP carries forward. Attributes do not increase automatically." : stage === 0 ? "Level 0 · Ability purchases only. Your first pool is 10 + Knowledge + Reason + Guile. Discipline purchases begin at level 1; unused points expire before your calling." : "A separate pool of 10 + Knowledge + Reason + Guile. Unused points expire when creation ends."}</p></div>${
         development
           ? field(
               "Training level",
@@ -338,8 +375,10 @@ export function creationScreen({
                 .join("")}</select>`,
             )
           : ""
-      }<div class="purchase-receipts">${purchases.map((x, i) => `<span>${esc(name(x.id))}${x.rank ? " " + x.rank : ""}${i >= locked ? `<button data-remove-purchase="${i}" aria-label="Remove ${esc(name(x.id))}">×</button>` : ""}</span>`).join("") || "<span>No DP spent in this stage.</span>"}</div>${disciplineStrip(state, C.choices)}<div class="purchase-gateways"><button data-purchase-kind="discipline">${disciplineIcon("discipline-arms")}<span>Purchase disciplines<small>${stage === 0 && !development ? "Available after choosing your calling" : "Learn a discipline or raise a rank"}</small></span>${icon("arrow")}</button><button data-purchase-kind="ability">${icon("book")}<span>Purchase abilities<small>Browse by discipline and action type</small></span>${icon("arrow")}</button></div><div id="acquisition-choices"></div>`;
+      }<div class="purchase-receipts">${purchases.map((x, i) => `<span>${esc(name(x.id))}${x.rank ? " " + x.rank : ""}${i >= locked ? `<button data-remove-purchase="${i}" aria-label="Remove ${esc(name(x.id))}">×</button>` : ""}</span>`).join("") || "<span>No DP spent in this stage.</span>"}</div>${disciplineStrip(state, C.choices)}<div class="purchase-gateways"><button data-purchase-kind="discipline" ${disciplinesLocked ? 'disabled aria-describedby="discipline-level-lock"' : ""}>${disciplineIcon("discipline-arms")}<span>Purchase disciplines<small id="discipline-level-lock">${disciplinesLocked ? "Unlocks at level 1 · Granted by origins at level 0" : "Learn a discipline or raise a rank"}</small></span>${icon("arrow")}</button><button data-purchase-kind="ability">${icon("book")}<span>Purchase abilities<small>Browse by discipline and action type</small></span>${icon("arrow")}</button></div><div id="acquisition-choices"></div>`;
       bind("[data-purchase-kind]", "click", (e) => {
+        if (e.dataset.purchaseKind === "discipline" && disciplinesLocked)
+          return;
         purchaseKind = e.dataset.purchaseKind;
         search = "";
         showAll = purchaseKind === "discipline";
@@ -348,7 +387,11 @@ export function creationScreen({
       });
       function drawPicker() {
         root.querySelector(".purchase-overlay")?.remove();
-        if (!purchaseKind) return;
+        if (
+          !purchaseKind ||
+          (purchaseKind === "discipline" && disciplinesLocked)
+        )
+          return;
         const isAbility = purchaseKind === "ability";
         const overlay = document.createElement("div");
         overlay.className = "purchase-overlay";
