@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# These immutable imports are checked against exact source-book byte hashes.
+# Do not let Windows checkout convert their line endings.
+public/vendor/hol/** -text

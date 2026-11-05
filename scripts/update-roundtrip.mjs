@@ -202,6 +202,11 @@ try {
   throw error;
 } finally {
   inspector?.close();
+  await restarted
+    ?.contexts()[0]
+    ?.pages()[0]
+    ?.evaluate(() => window.desktop.close())
+    .catch(() => {});
   await restarted?.close().catch(() => {});
   await browser?.close().catch(() => {});
   try {
