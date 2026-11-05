@@ -89,9 +89,15 @@ export const experienceMethods = {
         !this.map.xpClaims.includes(`enemy:${e.id}`),
     );
     if (!defeated.length) return;
-    const amount =
-      defeated.length *
-      (XP_RULES.enemy + XP_RULES.enemyDepth * (this.campaign.depth - 1));
+    const amount = defeated.reduce(
+      (n, e) =>
+        n +
+        Math.round(
+          ((e.cv ?? 8) / 8) *
+            (XP_RULES.enemy + XP_RULES.enemyDepth * (this.campaign.depth - 1)),
+        ),
+      0,
+    );
     if (
       this.awardXP(
         `encounter:${defeated
@@ -99,7 +105,7 @@ export const experienceMethods = {
           .sort()
           .join(",")}`,
         amount,
-        `Overcame ${defeated.length} ${defeated.length === 1 ? "sentry" : "sentries"}`,
+        `Overcame ${defeated.length} ${defeated.length === 1 ? "creature" : "creatures"}`,
       )
     )
       this.map.xpClaims.push(...defeated.map((e) => `enemy:${e.id}`));

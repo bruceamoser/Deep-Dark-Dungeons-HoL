@@ -1,0 +1,12 @@
+Quaternius creature assets
+
+CC0 1.0 Universal (CC0-1.0)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Creator license declarations:
+https://quaternius.com/packs/ultimatemonsters.html
+https://quaternius.com/packs/ultimateanimatedanimals.html
+https://quaternius.com/packs/animatedmonster.html
+
+See docs/creature-assets.json for exact mirrors, revisions, original and converted hashes.
+Rat and spider meshes are original game code, not part of these packs.

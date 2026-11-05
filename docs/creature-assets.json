@@ -1,0 +1,85 @@
+{
+  "creator": "Quaternius",
+  "license": "CC0-1.0",
+  "sourcePages": [
+    "https://quaternius.com/packs/ultimatemonsters.html",
+    "https://quaternius.com/packs/ultimateanimatedanimals.html",
+    "https://quaternius.com/packs/animatedmonster.html"
+  ],
+  "retrieved": "2026-11-05",
+  "conversion": "Embedded glTF buffers/images repacked into GLB; geometry and animation unchanged.",
+  "assets": [
+    {
+      "file": "Orc.gltf",
+      "mirror": "https://raw.githubusercontent.com/mPhpMaster/wavebreak-godot-game/8f79fffdab8e098909894d35d0362e52ae3f0750/assets/quaternius/big/Orc.gltf",
+      "sha256": "e61a37f8d9b2eee28928bdfad2c55e0798cc0a212e925cc5dcc66b243526c1a3",
+      "dependencies": [],
+      "convertedFile": "Orc.glb",
+      "convertedSha256": "e4c3058ecbbcf7388edc709e107c501800c7837efc50a4c52ae48be33b2e5442"
+    },
+    {
+      "file": "Orc_Skull.gltf",
+      "mirror": "https://raw.githubusercontent.com/mPhpMaster/wavebreak-godot-game/8f79fffdab8e098909894d35d0362e52ae3f0750/assets/quaternius/big/Orc_Skull.gltf",
+      "sha256": "e27e3acf826e9f5cad021c647bd3ce6f1c82d2aaa3530c03ee442df4828a710e",
+      "dependencies": [],
+      "convertedFile": "Orc_Skull.glb",
+      "convertedSha256": "70231316711db3d6aef7e62468571290f5942cb94346e3fe8e2f56f7e2ea5575"
+    },
+    {
+      "file": "Yeti.gltf",
+      "mirror": "https://raw.githubusercontent.com/mPhpMaster/wavebreak-godot-game/8f79fffdab8e098909894d35d0362e52ae3f0750/assets/quaternius/big/Yeti.gltf",
+      "sha256": "ab60f4fbc1c2e1fdc3ed4f63023dc2185240dbd55751df568099557b29af6fd5",
+      "dependencies": [],
+      "convertedFile": "Yeti.glb",
+      "convertedSha256": "45344017507b7b9e49662114f46a2f0f00431e7abf18c168455356bdcf541df8"
+    },
+    {
+      "file": "Goleling.gltf",
+      "mirror": "https://raw.githubusercontent.com/mPhpMaster/wavebreak-godot-game/8f79fffdab8e098909894d35d0362e52ae3f0750/assets/quaternius/flying/Goleling.gltf",
+      "sha256": "fad1c4d98e88b21a139fadd74e96c370f1c8ece8d1ae8c4b3bec80d1d7163c29",
+      "dependencies": [],
+      "convertedFile": "Goleling.glb",
+      "convertedSha256": "78c8603e951ba02ae817476c10f2e7787f60be6293a08026cbf3455d64d95402"
+    },
+    {
+      "file": "GreenBlob.gltf",
+      "mirror": "https://raw.githubusercontent.com/mPhpMaster/wavebreak-godot-game/8f79fffdab8e098909894d35d0362e52ae3f0750/assets/quaternius/blob/GreenBlob.gltf",
+      "sha256": "e2d2049ebe8d243bd0f60a3f48a7e174444f641ebc40cbea2f6c23cb97a82519",
+      "dependencies": [],
+      "convertedFile": "GreenBlob.glb",
+      "convertedSha256": "7411ce7ca14556e8941bf49c5329678b9dbc47f5020113ae2d5f3f7b12e72d44"
+    },
+    {
+      "file": "Wolf.gltf",
+      "mirror": "https://raw.githubusercontent.com/afarber/godotcraft/d73db79314d0ee8f6faa9212e7a9248bd8598d6c/models/animals/Wolf.gltf",
+      "sha256": "fe0c12bb71727e2c52034db681319ee1400525ad27e6c513831de0d1ed65ff26",
+      "dependencies": [],
+      "convertedFile": "Wolf.glb",
+      "convertedSha256": "e107d64fbd4baad9dbbb5895bd8410eb077d9c8f021ead35c87165a2ece680eb"
+    },
+    {
+      "file": "bat.glb",
+      "mirror": "https://raw.githubusercontent.com/ilrein/warptracker/71bbfbdfacd118196994b26da68eec1876d55c6b/public/models/bat.glb",
+      "sha256": "31a98ca03f60e5d702e654b3471c0948cb17a7358ce744849fe14e3b410fe1fc",
+      "dependencies": [],
+      "convertedFile": "bat.glb",
+      "convertedSha256": "31a98ca03f60e5d702e654b3471c0948cb17a7358ce744849fe14e3b410fe1fc"
+    },
+    {
+      "file": "demon.glb",
+      "mirror": "https://raw.githubusercontent.com/ilrein/warptracker/71bbfbdfacd118196994b26da68eec1876d55c6b/public/models/demon.glb",
+      "sha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487",
+      "dependencies": [],
+      "convertedFile": "demon.glb",
+      "convertedSha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487"
+    },
+    {
+      "file": "ghost.glb",
+      "mirror": "https://raw.githubusercontent.com/ilrein/warptracker/71bbfbdfacd118196994b26da68eec1876d55c6b/public/models/ghost.glb",
+      "sha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4",
+      "dependencies": [],
+      "convertedFile": "ghost.glb",
+      "convertedSha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4"
+    }
+  ]
+}

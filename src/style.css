@@ -2996,3 +2996,664 @@ p {
     padding-inline: 20px;
   }
 }
+/* Equipment frames leave the live hero visible between two banks of slots. */
+.gear-slots {
+  inset: 8px 0 35px;
+  display: grid;
+  grid-template-columns: 58px 58px;
+  grid-template-rows: repeat(5, 1fr);
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+}
+.gear-slot {
+  width: 58px;
+  height: 52px;
+  padding: 4px;
+}
+.gear-slot .glyph {
+  width: 23px;
+  height: 23px;
+}
+.gear-slot small {
+  margin-top: 1px;
+}
+.enchanted {
+  --relic: #80c3b4;
+}
+.rare {
+  --relic: #b5a0e2;
+}
+.gear-slot.enchanted,
+.gear-slot.rare,
+.inventory-tile.enchanted,
+.inventory-tile.rare {
+  border-color: var(--relic);
+  box-shadow: inset 0 -16px 30px -20px var(--relic);
+}
+.inventory-tile.enchanted .tile-name,
+.inventory-tile.rare .tile-name {
+  color: var(--relic);
+}
+.enchantment-list {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+}
+.enchantment {
+  display: flex;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid #a6baad25;
+}
+.enchantment > .glyph,
+.enchantment > .discipline-symbol {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+.enchantment b {
+  display: block;
+  color: #b2d8c4;
+  font:
+    14px Cinzel,
+    serif;
+}
+.enchantment small {
+  font: 8px Arial;
+  letter-spacing: 1px;
+  float: right;
+  margin: 3px 0 0 10px;
+}
+.enchantment p {
+  font-size: 14px;
+  margin: 6px 0 !important;
+  line-height: 1.4;
+}
+.enchantment span {
+  font: 11px Arial;
+  color: #7fb6ac;
+}
+.enchantment.dormant b,
+.enchantment.dormant span {
+  color: #bda18b;
+}
+.dormant-note {
+  border-left: 2px solid #bda18b;
+  padding-left: 10px;
+}
+.item-comparison {
+  padding: 14px;
+  background: #02090b66;
+  border: 1px solid #a6baad20;
+  margin: 14px 0;
+}
+.item-comparison > b {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+}
+.item-comparison .enchantment-list {
+  margin: 8px 0 0;
+}
+.enhanced {
+  color: #a3dac1 !important;
+}
+.loot-window {
+  width: min(960px, 94vw);
+  max-height: 88vh;
+  overflow: auto;
+  background: linear-gradient(135deg, #192c31, #081216 65%);
+  border: 1px solid #a88c53;
+  box-shadow: 0 20px 80px #000b;
+  padding: 30px;
+}
+.loot-window header {
+  position: relative;
+  padding-right: 30px;
+}
+.loot-window h2 {
+  font: 32px Cinzel;
+  margin: 12px 0;
+}
+.loot-window .close {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.loot-window .sheet-party {
+  justify-content: flex-start;
+  margin: 20px 0;
+}
+.loot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.loot-card {
+  border: 1px solid var(--relic, #8d7951);
+  padding: 20px;
+  background: radial-gradient(at 50% 0, #5e8d7b22, transparent 60%), #06101399;
+}
+.loot-icon > .glyph {
+  width: 60px;
+  height: 60px;
+  color: var(--relic, #bfa56a);
+  margin: 4px 0 20px;
+}
+.loot-card h3 {
+  font: 20px Cinzel;
+  color: var(--relic, #d2c5a1);
+  line-height: 1.5;
+}
+.loot-card button {
+  width: 100%;
+  margin-top: 12px;
+}
+.loot-window footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+.loot-card .item-comparison .enchantment-list {
+  display: none;
+}
+.market-window {
+  width: min(1100px, 96vw);
+  height: min(810px, 92vh);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(115deg, #1a2c30, #091217 65%);
+  border: 1px solid #a68b51;
+  box-shadow: 0 30px 100px #000c;
+}
+.market-window > header {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 24px 30px;
+  border-bottom: 1px solid #9d885244;
+}
+.market-window h2 {
+  font: 28px Cinzel;
+  margin: 6px 0;
+}
+.market-purse {
+  margin-left: auto;
+  color: #dfbc74;
+  font: 24px Cinzel;
+  white-space: nowrap;
+}
+.market-purse .glyph {
+  width: 24px;
+  height: 24px;
+}
+.market-purse small {
+  font: 9px Arial;
+}
+.market-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 0;
+  flex: 1;
+}
+.merchant-list {
+  padding: 20px 12px;
+  border-right: 1px solid #9d885233;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.merchant-list button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  padding: 18px 12px;
+  background: #09141888;
+}
+.merchant-list .glyph {
+  width: 28px;
+  height: 28px;
+  color: #b99a5b;
+}
+.merchant-list small {
+  display: block;
+  margin-top: 4px;
+  color: #8eaaa7;
+  font: 11px Arial;
+}
+.merchant-list .chosen {
+  border-color: #bc9d61;
+  background: #78644233;
+}
+.market-body main {
+  overflow: auto;
+  padding: 26px;
+}
+.merchant-intro h3 {
+  font: 26px Cinzel;
+  margin: 7px 0;
+}
+.merchant-intro p {
+  color: #a4b7b6;
+  font-style: italic;
+}
+.market-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 0 16px;
+  gap: 15px;
+}
+.market-toolbar select {
+  background: #091418;
+  color: #ddd2b5;
+  border: 1px solid #807044;
+  padding: 8px;
+}
+.market-stock {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.stock-card {
+  border: 1px solid var(--relic, #5f6354);
+  padding: 18px;
+  background: #030b0e66;
+}
+.stock-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.stock-title > .glyph {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--relic, #c0a36c);
+}
+.stock-title h4 {
+  font: 15px Cinzel;
+  margin: 0 0 6px;
+  color: var(--relic, #d6cbb0);
+}
+.stock-title small {
+  font: 10px Arial;
+  color: #93a6a4;
+}
+.stock-card button {
+  margin-top: 15px;
+  width: 100%;
+}
+.market-window > footer {
+  padding: 18px 28px;
+  color: #90a6a3;
+  border-top: 1px solid #9d885233;
+  font: 12px Arial;
+}
+.combat-float {
+  position: fixed;
+  z-index: 15;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  font:
+    700 27px Cinzel,
+    serif;
+  white-space: nowrap;
+  text-shadow:
+    0 2px 3px #000,
+    0 0 8px #000,
+    1px 0 #000,
+    -1px 0 #000;
+  letter-spacing: 1px;
+}
+.combat-float.damage {
+  color: #ffe7d8;
+}
+.combat-float.healing {
+  color: #8af1ae;
+}
+.combat-float.status {
+  color: #f0bd72;
+  font: 600 15px Cinzel;
+}
+.combat-float.recovery {
+  color: #86d6c7;
+  font: 600 14px Cinzel;
+}
+.bestiary-window {
+  width: min(1000px, 96vw);
+  height: min(820px, 92vh);
+  background: linear-gradient(120deg, #1b2e32, #091318 70%);
+  border: 1px solid #9d8353;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 30px 100px #000c;
+}
+.bestiary-window > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 30px;
+  border-bottom: 1px solid #9d835344;
+}
+.bestiary-window h2 {
+  font: 28px Cinzel;
+  margin: 10px 0;
+}
+.bestiary-window p {
+  color: #aebcb6;
+  line-height: 1.6;
+}
+.bestiary-window header p {
+  margin: 0;
+  font: 11px Arial;
+}
+.bestiary-body {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  min-height: 0;
+  flex: 1;
+}
+.bestiary-body > aside {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px;
+  border-right: 1px solid #9d835344;
+}
+.bestiary-body input,
+.bestiary-body select {
+  background: #071116;
+  color: #d6d0bb;
+  border: 1px solid #65756c;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.creature-list {
+  overflow: auto;
+}
+.creature-list button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  gap: 12px;
+  margin: 4px 0;
+  padding: 8px;
+  border-color: transparent;
+  background: #09141888;
+}
+.creature-list button.chosen {
+  border-color: #bc9d61;
+  background: #78644233;
+}
+.creature-list img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+.creature-list span {
+  font: 12px Cinzel;
+  flex: 1;
+}
+.creature-list small {
+  display: block;
+  font: 9px Arial;
+  color: #7f9d96;
+  margin-top: 5px;
+}
+.creature-list b {
+  color: #bfa36d;
+}
+.bestiary-body main {
+  overflow: auto;
+  padding: 26px 32px;
+}
+.creature-portrait {
+  height: 200px;
+  position: relative;
+  background: radial-gradient(ellipse at center, #5e74642b, transparent 70%);
+}
+.creature-portrait img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+.creature-cv {
+  position: absolute;
+  right: 5px;
+  bottom: 20px;
+  font: 36px Cinzel;
+  color: #d5b774;
+}
+.creature-cv small {
+  display: block;
+  font: 8px Arial;
+  letter-spacing: 1px;
+}
+.creature-stat-row {
+  display: flex;
+  gap: 40px;
+  margin: 22px 0;
+  border-top: 1px solid #9d835344;
+  border-bottom: 1px solid #9d835344;
+  padding: 18px 0;
+}
+.creature-stat-row span {
+  font: 9px Arial;
+  color: #8fa59e;
+}
+.creature-stat-row b {
+  display: block;
+  font: 26px Cinzel;
+  color: #d0c6a8;
+  margin-top: 6px;
+}
+.creature-action {
+  border: 1px solid #9d835344;
+  margin: 12px 0;
+  padding: 14px;
+}
+.creature-action > b {
+  font: 16px Cinzel;
+}
+.creature-action > small {
+  float: right;
+  color: #88afa5;
+}
+.creature-action > div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+.creature-action span {
+  font: 8px Arial;
+  color: #799b93;
+}
+.creature-action strong {
+  display: block;
+  font: 14px Georgia;
+  color: #d3c8ab;
+  margin-top: 6px;
+}
+.bestiary-note {
+  font-size: 12px;
+}
+
+/* Saved journeys: a paused, persistent campaign library. */
+.runs-veil {
+  background: radial-gradient(ellipse at 20% 0, #29414899, #05090ef2 65%);
+  backdrop-filter: blur(12px);
+}
+.runs-window {
+  width: min(1120px, 94vw);
+  max-height: 93vh;
+  overflow: auto;
+  background: linear-gradient(130deg, #182830, #0c151e 65%);
+  border: 1px solid #8b7954;
+  box-shadow: 0 30px 100px #000c;
+  color: #ddd9cb;
+}
+.runs-window header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 32px 20px;
+  border-bottom: 1px solid #897c493d;
+  gap: 20px;
+}
+.runs-window h2 {
+  margin: 7px 0;
+  font-size: 30px;
+}
+.runs-window header p,
+.runs-window footer p {
+  color: #9caeae;
+  margin: 7px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.runs-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 330px;
+}
+.runs-body aside {
+  padding: 22px;
+  border-right: 1px solid #897c493d;
+}
+.run-list {
+  margin-top: 14px;
+  display: grid;
+  gap: 9px;
+  max-height: 38vh;
+  overflow: auto;
+}
+.run-list button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  padding: 15px;
+  background: #0b151cc9;
+  border: 1px solid #374b50;
+}
+.run-list button.chosen {
+  border-color: #b8a26d;
+  background: linear-gradient(110deg, #36423a88, #14232b);
+  box-shadow: inset 3px 0 #c5ac73;
+}
+.run-list strong {
+  font-size: 15px;
+}
+.run-list small {
+  display: block;
+  font-size: 11px;
+  color: #9aacab;
+  margin-top: 5px;
+}
+.run-emblem {
+  font-size: 26px;
+  color: #cbb37a;
+}
+.run-active {
+  font-size: 8px;
+  color: #d4c28f;
+  margin-left: auto;
+  letter-spacing: 1px;
+}
+.runs-body main {
+  padding: 22px 28px;
+}
+.runs-body h3 {
+  font-size: 25px;
+  margin: 10px 0 18px;
+}
+.run-facts {
+  display: flex;
+  gap: 35px;
+  margin-bottom: 20px;
+}
+.run-facts span {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #9aacab;
+}
+.run-facts b {
+  display: block;
+  font-size: 23px;
+  color: #d4c28f;
+  margin-bottom: 4px;
+}
+.run-company {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.run-company strong {
+  display: block;
+  font-size: 13px;
+}
+.run-company small {
+  color: #8fa4a5;
+  font-size: 10px;
+}
+.runs-window label {
+  display: grid;
+  gap: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #afbdba;
+  letter-spacing: 1px;
+}
+.runs-window input {
+  color: #e2ddcc;
+  padding: 10px;
+  background: #091219;
+  border: 1px solid #4a5b5c;
+  font-size: 14px;
+  min-width: 180px;
+}
+#rename-run {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  margin: 20px 0 10px;
+}
+#rename-run label {
+  flex: 1;
+}
+#rename-run input {
+  width: 100%;
+}
+.runs-window footer {
+  padding: 20px 30px;
+  border-top: 1px solid #897c493d;
+  background: #0b141b;
+}
+.run-new {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+.run-new label {
+  flex: 1;
+}
+.run-exit {
+  display: flex;
+  gap: 10px;
+  justify-content: end;
+  margin-top: 15px;
+}
+.run-delete-confirm {
+  font-size: 12px;
+  color: #e5ada3;
+}
+.run-passage {
+  font-size: 12px;
+  color: #b5c9bc;
+}

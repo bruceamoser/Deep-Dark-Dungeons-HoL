@@ -21,3 +21,9 @@ Physical projectiles reuse the CC0 KayKit Adventurers `arrow.gltf` mesh (wooden 
 Creation and purchase screens reuse the book's existing discipline symbols from `public/vendor/hol/assets/`, with the original source paths and hashes retained in `assets/provenance.json`. A/M/R/P badges use the already bundled Cinzel font and each card's printed Action field, including combined types. Special-duration cards retain their printed label rather than being relabeled as Passive.
 
 World interaction highlights clone and tint the existing CC0 dungeon coffer/stair materials only while highlighted. Recovery caches reuse the bundled coffer mesh; no new external asset was added.
+
+## Broader creature models and condition effects
+
+Quaternius supplies CC0 rigged meshes from [Ultimate Monsters](https://quaternius.com/packs/ultimatemonsters.html), [Ultimate Animated Animals](https://quaternius.com/packs/ultimateanimatedanimals.html) and [Animated Monster](https://quaternius.com/packs/animatedmonster.html). Creator downloads were quota-limited; the imported Orc, Orc Skull, Yeti, Goleling, Green Blob, Wolf, Bat, Demon and Ghost files came from public mirrors. Exact pinned download URLs and SHA-256 hashes for both original and packaged files are recorded in [creature-assets.json](creature-assets.json). Embedded glTF files were repacked to self-contained GLB without geometry or animation edits.
+
+Species variants share those rigs with palette/scale/equipment changes. They are not 58 bespoke models. Rats and spiders, all persistent condition effects, floating feedback and accessory geometry are original runtime code. Book illustrations remain the pinned HoL assets with their existing source provenance. No extra license for the HoL content is implied by the CC0 meshes.

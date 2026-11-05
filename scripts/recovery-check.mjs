@@ -57,7 +57,9 @@ export async function verifyRecovery(page) {
   await page.screenshot({ path: "test-results/treated-wound.png" });
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Save", exact: true }).click();
-  await page.getByRole("button", { name: "Continue saved expedition" }).click();
+  await expect(page.locator("#toast")).toContainText("saved");
+  await page.reload();
+  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
   expect(
     await page.evaluate(
       () => window.__ddd.game.party[0].wounds[0].treatment.completed,

@@ -1,3 +1,6 @@
+import { creatureAppearance } from "./creatures.mjs";
+import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
+import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
@@ -43,8 +46,25 @@ const bowAsset = (() => {
   return g;
 })();
 export function equipmentAppearance(assets, hero, enemy = false) {
-  const name = enemy ? "Skeleton" : hero.model;
-  const model = clone(assets.get(name).scene);
+  const look = enemy ? CREATURE_ROSTER[hero.type] : null;
+  if (
+    enemy &&
+    look &&
+    ![
+      "Skeleton",
+      "SkeletonRogue",
+      "SkeletonMage",
+      "Knight",
+      "Rogue",
+      "Mage",
+      "Barbarian",
+    ].includes(look.model)
+  )
+    return creatureAppearance(assets, hero, bowAsset);
+  const name = enemy ? (look?.model ?? "Skeleton") : hero.model;
+  const model = clone(assets.get(name).scene),
+    owned = [];
+  model.userData.dispose = () => owned.forEach((r) => r.dispose());
   const items = hero.preview?.inventory.items ?? [];
   const armor = items.find(
     (i) =>
@@ -104,7 +124,15 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       )
     )
       o.visible = false;
-    if (o.isMesh && /helmet|_hat/i.test(o.name)) o.visible = false;
+    if (o.isMesh && /helmet|_hat/i.test(o.name))
+      o.visible = enemy && look?.shield;
+    if (
+      enemy &&
+      hero.type === "creature-animated-armor" &&
+      o.isMesh &&
+      /head|face/i.test(o.name)
+    )
+      o.visible = false;
   });
   let right, left;
   model.traverse((o) => {
@@ -114,8 +142,14 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   const held = (id) =>
     items.find((i) => i.carried && i.held && i.catalogId === id);
   const melee = held("item-ordinary-melee-weapon"),
-    ranged = held("item-ordinary-ranged-weapon");
-  if (right && (enemy || melee)) {
+    ranged = held("item-ordinary-ranged-weapon") || look?.weapon === "bow";
+  if (
+    right &&
+    ((enemy &&
+      !ranged &&
+      ["melee", "spear", "chain"].includes(look?.weapon ?? "melee")) ||
+      melee)
+  ) {
     const sword = clone(assets.get("sword").scene);
     sword.name = "Readied melee weapon";
     if (melee?.hands === 2) sword.scale.multiplyScalar(1.35);
@@ -126,16 +160,71 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     bow.rotation.z = Math.PI / 2;
     left.add(bow);
   }
-  if (left && held("item-ordinary-shield")) {
+  if (left && (held("item-ordinary-shield") || look?.shield)) {
     const shield = clone(assets.get("shield").scene);
     shield.name = "Readied shield";
     left.add(shield);
   }
   model.userData.equipment = {
     armor: tier,
-    weapon: ranged ? "bow" : melee || enemy ? "melee" : "unarmed",
+    weapon: ranged
+      ? "bow"
+      : melee
+        ? "melee"
+        : enemy
+          ? (look?.weapon ?? "melee")
+          : "unarmed",
     shield: !!held("item-ordinary-shield"),
   };
+  if (!enemy) {
+    const adorn = (slot, boneName, geometry, position) => {
+      const item = items.find((i) => i.worn && i.slot === slot);
+      if (!item) return;
+      const material = new T.MeshStandardMaterial({
+        color: activeItemEffects(hero, item)[0]?.color ?? 0x776b52,
+        metalness: 0.7,
+        roughness: 0.35,
+      });
+      owned.push(geometry, material);
+      const mesh = new T.Mesh(geometry, material);
+      mesh.name = `Equipped ${slot}`;
+      mesh.position.set(...position);
+      const bone = [...bones.values()].find((b) => boneName.test(b.name));
+      (bone ?? model).add(mesh);
+    };
+    adorn(
+      "head",
+      /^head$/i,
+      new T.CylinderGeometry(0.29, 0.26, 0.12, 8, true),
+      [0, 0.15, 0],
+    );
+    adorn(
+      "waist",
+      /hips|pelvis/i,
+      new T.BoxGeometry(0.49, 0.1, 0.32),
+      [0, 0, 0],
+    );
+    for (const side of ["l", "r"])
+      adorn(
+        "feet",
+        new RegExp(`foot[._]?${side}$`, "i"),
+        new T.BoxGeometry(0.17, 0.14, 0.3),
+        [0, 0, 0.06],
+      );
+    const glowing = items
+      .filter((i) => i.held)
+      .flatMap((i) => activeItemEffects(hero, i))
+      .find((e) => e.effect === "damage");
+    if (glowing)
+      model.traverse((o) => {
+        if (o.isMesh && o.parent?.name === "Readied melee weapon") {
+          o.material = o.material.clone();
+          owned.push(o.material);
+          o.material.emissive.setHex(glowing.color);
+          o.material.emissiveIntensity = 0.7;
+        }
+      });
+  }
   // Rig dimensions are consistent; ignore hidden source accessories when scaling.
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
   return { model, clips: assets.get(name).animations };
@@ -180,6 +269,7 @@ export function heroPreview(canvas, assets, hero) {
     last = performance.now();
   const update = (h) => {
     if (current) {
+      current.userData.dispose?.();
       mixer.stopAllAction();
       mixer.uncacheRoot(current);
       current.traverse((o) => {
@@ -232,6 +322,7 @@ export function heroPreview(canvas, assets, hero) {
     dispose() {
       cancelAnimationFrame(frame);
       resize.disconnect();
+      current.userData.dispose?.();
       mixer.stopAllAction();
       mixer.uncacheRoot(current);
       current.traverse((o) => {

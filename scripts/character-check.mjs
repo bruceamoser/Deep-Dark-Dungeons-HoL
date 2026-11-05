@@ -7,7 +7,7 @@ export async function verifyCharacter(page) {
   await page
     .getByRole("button", { name: "Ordinary Light Armor, worn", exact: true })
     .click();
-  await page.getByRole("button", { name: "Remove armor", exact: true }).click();
+  await page.locator('[data-gear="remove"]').click();
   await expect(canvas).toHaveAttribute("data-armor", "cloth");
   expect(
     await page.evaluate(
@@ -51,7 +51,9 @@ export async function verifyCharacter(page) {
   await page.screenshot({ path: "test-results/readied-bow.png" });
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Save", exact: true }).click();
-  await page.getByRole("button", { name: "Continue saved expedition" }).click();
+  await expect(page.locator("#toast")).toContainText("saved");
+  await page.reload();
+  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
   expect(
     await page.evaluate(() =>
       window.__ddd.game.party[0].favorites.includes("ability-basic-unarmed"),

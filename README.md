@@ -40,12 +40,17 @@ The Linux executable is `release/linux-unpacked/deep-dark-dungeons-hol`. Windows
 - C / I opens the character command screen: animated equipment preview, pack, quick ready/stow, abilities and Journey. Star favorite actions to put them on the combat bar; 5–9 activate the first five. Shield Block is offered before eligible enemy attacks.
 - Sound opens master volume, mute and a test sound. Audio starts on the first click or key press.
 - Discover chambers, overcome encounters and bring treasure home to earn XP equally for living expedition members. Level 2 needs 1,000 XP; each subsequent level costs 250 more XP than the last. Journey shows totals, progress, recent awards and the reward rules. Develop this hero applies earned levels in town using HoL's training rules; damage, injuries and spent Grit persist.
-- Return to entrance stairs to extract; gather at far stairs to descend.
+- Return to entrance stairs to extract; gather at far stairs to descend. Every fifth floor has a guardian blocking onward travel and its coffer.
+- Bestiary shows the 58 playable book creatures. Encounters use party levels and dungeon depth. Shift-click a creature to inspect its card.
+- The market quarter has six merchants. Search coffers for individual magical items and choose who carries each. The sheet shows ten equipment slots and discipline requirements: a dormant enchanted weapon still works as an ordinary weapon.
+- Find or buy a Scroll of Return. Read it outside combat with a free hand to reach town; Return to depth resumes the same preserved floor without healing.
+- Red/green numbers show damage/healing; conditions have persistent visual effects.
+- Runs (or Escape with no targeting/dialog open) pauses and saves. Name, copy, continue or create independent journeys. Save & exit run leaves the run paused in the library; Save & quit game closes the desktop application. Escape also opens Runs during mandatory combat decisions.
 - The company register holds all living heroes, both the active four and the reserve. Create a hero saves a validated character to the repository; choose a slot and Assign to put them in the party. Replaced companions remain in reserve with their gear, injuries and XP. The Hall of Fallen Heroes records each resolved final death and preserves that hero's last state.
 - The eight-step creator starts blank; saved drafts and example characters are explicit choices. Separate discipline/ability purchase dialogs show owned ranks, book symbols and action letters. Equipment lists granted gear before additional shopping.
 - Journey offers matching one-hour wound treatment in town, with one attempt per wound per campaign day. Healing potions are usable from inventory or the combat action bar.
 
-Saves use the desktop application's user-data directory. Development saves use browser local storage. Startup automatically restores the saved campaign and hero repository. Older saves retain their party and earned levels, which migrate to the matching minimum XP. Newly created heroes are saved immediately; final-death records trigger an immediate save.
+Named saves live under the desktop application's user-data `runs/` directory (`~/.config/deep-dark-dungeons-hol/runs/` on this Linux installation). Development saves use browser local storage. Startup restores the active run, or opens the library if you exited it. The old `campaign.json` is imported once as Original expedition and retained as a backup. Each slot includes its own hero repository and Hall; playing a slot autosaves only that slot. Older saves retain their party and earned levels, which migrate to the matching minimum XP. Newly created heroes are saved immediately; final-death records trigger an immediate save.
 
 ## Design and provenance
 

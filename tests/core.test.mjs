@@ -32,6 +32,7 @@ const data = (n) =>
 const C = {
   choices: data("choices").records,
   inventory: data("inventory"),
+  creatures: data("creatures"),
   wounds: data("wounds"),
   commit: data("choices").sourceCommit,
 };
