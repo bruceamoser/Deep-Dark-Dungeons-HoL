@@ -1,3 +1,5 @@
+import { EQUIPMENT_SLOTS, slotOf } from "../core/treasure.mjs";
+import { enchantmentDetails, itemComparison } from "./treasure.mjs";
 import { abilityType, disciplineIcon } from "./book-symbols.mjs";
 import { experienceDetails } from "./experience.mjs";
 import { icon, itemIcon, actionIcon, esc } from "./icons.mjs";
@@ -74,22 +76,29 @@ export function characterSheet({
       `<div><span>${icon("heart")} HEALTH</span><b>${h.survival.hp}<small> / ${h.survival.maxHp}</small></b><div class="bar"><span style="width:${(h.survival.hp / h.survival.maxHp) * 100}%"></span></div></div><div><span>${icon("bolt")} GRIT</span><b>${h.survival.gritAvailable}<small> / ${p.summary.gritGranted}</small></b><div class="grit-pips">${Array.from({ length: p.summary.gritGranted }, (_, i) => `<i class="${i < h.survival.gritAvailable ? "full" : ""}"></i>`).join("")}</div></div>`;
     root.querySelector(".dossier-footer").innerHTML =
       `<span>${icon("boot")} Speed <b>${game.speed(h)}</b></span><span>${icon("shield")} Physical resistance <b>${p.resistances.physical ?? 0}</b></span>`;
-    const armor = items.find((i) => i.worn && /armor/.test(i.catalogId)),
-      held = items.filter((i) => i.held);
-    const slots = [
-      ["Body", armor, "armor"],
-      ["Main hand", held.find((i) => !/shield/.test(i.catalogId)), "sword"],
-      [
-        "Off hand",
-        held.find((i) => /shield/.test(i.catalogId)) ??
-          (held[0]?.hands === 2 ? held[0] : held[1]),
-        "shield",
-      ],
-    ];
+    const slots = EQUIPMENT_SLOTS.map(([slot, label, g]) => [
+      label,
+      items.find(
+        (i) =>
+          i.carried &&
+          (i.held || i.worn) &&
+          slotOf(i) === slot &&
+          i.catalogId !== "item-travel-clothes",
+      ) ?? (slot === "off" ? items.find((i) => i.held && i.hands === 2) : null),
+      g,
+    ]);
     root.querySelector(".gear-slots").innerHTML = slots
       .map(
         ([label, i, g]) =>
-          `<button class="gear-slot ${i ? "filled" : ""}" data-slot="${esc(i?.instanceId ?? "")}" title="${label}: ${esc(i?.definition.name ?? "Empty")}">${icon(i ? itemIcon(i) : g)}<small>${label}</small></button>`,
+          `<button class="gear-slot ${i ? "filled" : ""} ${i?.rarity ?? ""}" data-slot="${esc(i?.instanceId ?? "")}" title="${label}: ${esc(i?.definition.name ?? "Empty")}">${icon(i ? itemIcon(i) : g)}<small>${label}</small></button>`,
+      )
+      .join("");
+    root.querySelector(".attribute-grid").innerHTML = Object.entries(
+      h.draft.attributes,
+    )
+      .map(
+        ([k, v]) =>
+          `<div title="${esc(k)}"><small>${esc(k.slice(0, 3))}</small><b class="${game.attribute(h, k) !== v ? "enhanced" : ""}">${game.attribute(h, k) >= 0 ? "+" : ""}${game.attribute(h, k)}</b></div>`,
       )
       .join("");
     root.querySelectorAll("[data-slot]").forEach(
@@ -114,6 +123,7 @@ export function characterSheet({
         ["all", "All"],
         ["weapons", "Weapons"],
         ["armor", "Armor"],
+        ["relics", "Relics"],
         ["supplies", "Supplies"],
       ]
         .map(
@@ -129,6 +139,7 @@ export function characterSheet({
             (filter === "all" ||
               (filter === "weapons" && /weapon|shield/.test(i.catalogId)) ||
               (filter === "armor" && /armor|clothes/.test(i.catalogId)) ||
+              (filter === "relics" && i.effects?.length) ||
               (filter === "supplies" &&
                 !/weapon|shield|armor|clothes/.test(i.catalogId))) &&
             i.definition.name.toLowerCase().includes(query.toLowerCase()),
@@ -137,7 +148,7 @@ export function characterSheet({
           list
             .map(
               (i) =>
-                `<button class="inventory-tile ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.quantity > 1 ? "×" + i.quantity : ""}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>`,
+                `<button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.quantity > 1 ? "×" + i.quantity : ""}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>`,
             )
             .join("") || '<p class="empty-state">No matching equipment.</p>';
         root.querySelectorAll("[data-item]").forEach(
@@ -159,20 +170,67 @@ export function characterSheet({
         const isArmor = /item-ordinary-(light|medium|heavy)-armor/.test(
             i.catalogId,
           ),
-          operation = isArmor
+          wearable = isArmor || (i.slot && !i.hands),
+          operation = wearable
             ? i.worn
               ? "remove"
               : "wear"
             : i.held
               ? "stow"
               : "ready",
-          canHandle = isArmor || i.hands > 0,
+          canHandle = wearable || i.hands > 0,
           reason = canHandle
             ? game.gearReason(index, i.instanceId, operation)
             : "";
         const plan = game.gearPlan(index, i.instanceId, operation),
           replaces = items.filter((i) => plan.stow.includes(i.instanceId));
-        host.innerHTML = `<div class="inspector-icon">${icon(itemIcon(i))}</div><span class="eyebrow">${i.held ? "IN HAND" : i.worn ? "EQUIPPED" : "IN YOUR PACK"}</span><h3>${esc(i.definition.name)}</h3><div class="item-facts"><span>Bulk<b>${i.bulk}</b></span>${i.hands ? `<span>Hands<b>${i.hands}</b></span>` : ""}${i.inventoryDie ? `<span>Supply<b>${h.supplies[i.instanceId] === 0 ? "Empty" : "d" + (h.supplies[i.instanceId] ?? i.inventoryDie)}</b></span>` : ""}</div><p>${isArmor ? "Requires the matching armor training. Worn armor contributes its printed resistance." : i.hands === 2 ? "Two-handed equipment occupies both hands." : /shield/.test(i.catalogId) ? "Hold to use Shield Block when an enemy attacks." : /melee/.test(i.catalogId) ? "Ready for melee attacks and weapon techniques." : /ranged/.test(i.catalogId) ? "A ranged weapon needs usable ammunition." : "Carried equipment and supplies contribute to bulk."}</p>${replaces.length ? `<p class="swap-note">Stows: ${replaces.map((x) => esc(x.definition.name)).join(", ")}</p>` : ""}${canHandle ? `<button data-gear="${operation}" class="primary equip-button" ${reason ? "disabled" : ""}>${icon(operation === "ready" ? "hand" : itemIcon(i))}${{ ready: "Ready weapon / gear", stow: "Stow in pack", wear: "Wear armor", remove: "Remove armor" }[operation]}</button><p class="cost-note">${esc(reason || (game.mode === "combat" ? `Costs ${plan.cost} Maneuver${plan.cost === 1 ? "" : "s"}` : "No combat action required"))}</p>` : '<p class="cost-note">Supply checks occur after successful use.</p>'}`;
+        host.innerHTML = `<div class="inspector-icon">${icon(itemIcon(i))}</div><span class="eyebrow">${i.held ? "IN HAND" : i.worn ? "EQUIPPED" : "IN YOUR PACK"}</span><h3>${esc(i.definition.name)}</h3><div class="item-facts"><span>Bulk<b>${i.bulk}</b></span>${i.hands ? `<span>Hands<b>${i.hands}</b></span>` : ""}${i.inventoryDie ? `<span>Supply<b>${h.supplies[i.instanceId] === 0 ? "Empty" : "d" + (h.supplies[i.instanceId] ?? i.inventoryDie)}</b></span>` : ""}</div><p>${isArmor ? "Requires the matching armor training. Worn armor contributes its printed resistance." : i.hands === 2 ? "Two-handed equipment occupies both hands." : /shield/.test(i.catalogId) ? "Hold to use Shield Block when an enemy attacks." : /melee/.test(i.catalogId) ? "Ready for melee attacks and weapon techniques." : /ranged/.test(i.catalogId) ? "A ranged weapon needs usable ammunition." : "Carried equipment and supplies contribute to bulk."}</p>${replaces.length ? `<p class="swap-note">Stows: ${replaces.map((x) => esc(x.definition.name)).join(", ")}</p>` : ""}${canHandle ? `<button data-gear="${operation}" class="primary equip-button" ${reason ? "disabled" : ""}>${icon(operation === "ready" ? "hand" : itemIcon(i))}${{ ready: "Ready weapon / gear", stow: "Stow in pack", wear: isArmor ? "Wear armor" : "Equip item", remove: "Remove item" }[operation]}</button><p class="cost-note">${esc(reason || (game.mode === "combat" ? `Costs ${plan.cost} Maneuver${plan.cost === 1 ? "" : "s"}` : "No combat action required"))}</p>` : '<p class="cost-note">Supply checks occur after successful use.</p>'}`;
+        if (i.effects?.length) {
+          const facts = host.querySelector(".item-facts");
+          facts.nextElementSibling?.remove();
+          facts.insertAdjacentHTML("afterend", enchantmentDetails(h, i));
+          if (!(i.held || i.worn))
+            host.insertAdjacentHTML(
+              "beforeend",
+              `<details class="equipment-compare"><summary>Compare equipped item</summary>${itemComparison(h, i)}</details>`,
+            );
+        }
+        if (i.slot === "ring" && !i.worn)
+          host.insertAdjacentHTML(
+            "beforeend",
+            '<label class="creator-field"><span>Ring slot</span><select id="ring-slot"><option value="ring-left">Left ring</option><option value="ring-right">Right ring</option></select></label>',
+          );
+        if (
+          h.treasure?.some((t) => t.instanceId === i.instanceId) &&
+          game.mode !== "combat"
+        ) {
+          host.insertAdjacentHTML(
+            "beforeend",
+            `<label class="creator-field"><span>Give to companion</span><select id="transfer-to">${game.party.map((p, n) => (n !== index ? `<option value="${n}">${esc(p.name)}</option>` : "")).join("")}</select></label><button id="transfer-item">Transfer item</button>`,
+          );
+          host.querySelector("#transfer-item").onclick = () =>
+            attempt(() => {
+              game.transferTreasure(
+                index,
+                i.instanceId,
+                +host.querySelector("#transfer-to").value,
+              );
+              view.update(game.party[index]);
+              draw();
+            });
+        }
+        if (i.kind === "scroll") {
+          const reason = game.recallReason(index);
+          host.insertAdjacentHTML(
+            "beforeend",
+            `<p>Opens a two-way passage to Greyhaven. The same floor remains waiting for your return.</p><button id="read-recall" class="primary" ${reason ? "disabled" : ""}>Read Scroll of Return</button><p class="cost-note">${esc(reason || "Consumes this scroll · One free hand")}</p>`,
+          );
+          host.querySelector("#read-recall").onclick = () =>
+            attempt(() => {
+              game.useRecall(index, i.instanceId);
+              close();
+            });
+        }
         if (game.R.HEALING_POTION_IDS.includes(i.catalogId)) {
           const free =
             2 -
@@ -193,7 +251,12 @@ export function characterSheet({
         }
         host.querySelector("[data-gear]")?.addEventListener("click", () =>
           attempt(() => {
-            game.equip(index, i.instanceId, operation);
+            game.equip(
+              index,
+              i.instanceId,
+              operation,
+              host.querySelector("#ring-slot")?.value,
+            );
             view.update(game.party[index]);
             draw();
           }),

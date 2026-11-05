@@ -7,6 +7,10 @@ export const esc = (s) =>
       ],
   );
 const paths = {
+  hat: "M4 17 8 4l4 5 4-5 4 13M2 18h20M4 21h16",
+  belt: "M2 8h20v8H2zM9 7h6v10H9zM12 12h6",
+  ring: "M16 15a6 6 0 1 1-12 0 6 6 0 0 1 12 0M7 5l3-3 3 3-3 5z",
+  necklace: "M4 3c0 12 16 12 16 0M12 12l4 5-4 5-4-5z",
   plus: "M12 4v16M4 12h16",
   search: "M16 16l6 6M18 10a8 8 0 1 1-16 0 8 8 0 1 1 16 0",
   sword: "M5 19 17 7M14 4l6-1-1 6-9 9-4-4zM3 15l6 6M3 21l3-3",
@@ -34,6 +38,7 @@ const paths = {
 export const icon = (name, cls = "") =>
   `<svg class="glyph ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] ?? paths.book}"/></svg>`;
 export function itemIcon(item) {
+  if (item.icon) return item.icon;
   const id = item.catalogId ?? item.id;
   return /ranged|ammunition/.test(id)
     ? "bow"

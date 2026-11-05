@@ -84,7 +84,7 @@ try {
   await page.waitForTimeout(1800);
   await click(await page.evaluate(() => window.__ddd.game.enemies[0]));
   await page
-    .waitForFunction(() => window.__ddd.game.enemies[0].hp === 6, {
+    .waitForFunction(() => window.__ddd.game.enemies[0].hp === 8, {
       timeout: 5000,
     })
     .catch(async (e) => {
@@ -99,6 +99,14 @@ try {
       );
       throw e;
     });
+  expect(
+    await page.evaluate(() => window.__ddd.game.enemies[0].reactionUsed),
+  ).toBe(true);
+  expect(
+    await page.evaluate(() =>
+      window.__ddd.game.enemies[0].conditions.some((c) => c.key === "prone"),
+    ),
+  ).toBe(true);
   expect(
     await page.evaluate(() => window.__ddd.game.budget.remaining.main),
   ).toBe(0);
@@ -116,7 +124,9 @@ try {
   await page.getByRole("button", { name: "Save", exact: true }).click();
   expect(
     await page.evaluate(
-      () => JSON.parse(localStorage.getItem("ddd.campaign.v1")).campaign.mode,
+      async () =>
+        JSON.parse(await window.__ddd.library.read(window.__ddd.library.active))
+          .campaign.mode,
     ),
   ).toBe("combat");
   expect(errors).toEqual([]);

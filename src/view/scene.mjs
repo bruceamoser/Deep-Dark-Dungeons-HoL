@@ -1,3 +1,5 @@
+import { conditionVisuals } from "./conditions.mjs";
+import { CREATURE_MODELS } from "../core/creature-roster.mjs";
 import * as T from "three";
 import { createAttackEffect } from "./combat-effects.mjs";
 import { equipmentAppearance } from "./appearance.mjs";
@@ -199,6 +201,8 @@ export class Scene {
       .find((h) => h.object.isMesh && visible(h.object));
     for (let obj = hit?.object; obj; obj = obj.parent)
       if (obj.userData.interactionId) return obj.userData.interactionId;
+      else if (obj.userData.creatureId)
+        return `creature:${obj.userData.creatureId}`;
     return null;
   }
   highlightInteraction(id) {
@@ -287,6 +291,7 @@ export class Scene {
       Mage: "/assets/adventurer/Characters/gltf/Mage.glb",
       Barbarian: "/assets/adventurer/Characters/gltf/Barbarian.glb",
       Skeleton: "/assets/skeleton/Characters/gltf/Skeleton_Warrior.glb",
+      ...CREATURE_MODELS,
       sword: "/assets/adventurer/Assets/gltf/sword_1handed.gltf",
       staff: "/assets/adventurer/Assets/gltf/staff.gltf",
       bow: "/assets/adventurer/Assets/gltf/crossbow_2handed.gltf",
@@ -319,6 +324,7 @@ export class Scene {
           this.assets.set(name, g);
         } catch (e) {
           if (
+            Object.hasOwn(CREATURE_MODELS, name) ||
             [
               "Knight",
               "Rogue",
@@ -520,10 +526,11 @@ export class Scene {
     this.targetFocus = this.focus.clone();
   }
   addEntity(data, isEnemy = false) {
-    const name = isEnemy ? "Skeleton" : data.model;
+    const appearance = equipmentAppearance(this.assets, data, isEnemy);
     const group = new T.Group(),
-      model = equipmentAppearance(this.assets, data, isEnemy).model;
+      model = appearance.model;
     group.add(model);
+    if (isEnemy) group.userData.creatureId = data.id;
     group.position.set(data.x * TILE, 0.04, data.z * TILE);
     this.entityGroup.add(group);
     const ring = new T.Mesh(
@@ -539,7 +546,7 @@ export class Scene {
     ring.position.y = 0.03;
     group.add(ring);
     const mixer = new T.AnimationMixer(model),
-      clips = this.assets.get(name)?.animations ?? [];
+      clips = appearance.clips;
     const entity = {
       group,
       model,
@@ -548,6 +555,7 @@ export class Scene {
       clips,
       data,
       isEnemy,
+      statusVisuals: conditionVisuals(group, model.userData.height ?? 1.8),
       action: null,
       lock: 0,
     };
@@ -558,6 +566,8 @@ export class Scene {
   resetEntities(party, enemies) {
     this.clearEffects();
     for (const e of this.entities.values()) {
+      e.statusVisuals.dispose();
+      e.model.userData.dispose?.();
       e.mixer.stopAllAction();
       e.mixer.uncacheRoot(e.model);
       e.model.traverse((o) => {
@@ -586,6 +596,45 @@ export class Scene {
     next.fadeIn(0.18);
     e.action = next;
     if (once) e.lock = clip.duration;
+  }
+  floatingText({ id, text, kind }) {
+    this.floating ??= [];
+    const node = document.createElement("div");
+    node.className = `combat-float ${kind}`;
+    node.textContent = text;
+    node.dataset.recipient = id;
+    document.body.append(node);
+    const lane = this.floating.filter((f) => f.id === id && f.age < 0.8).length;
+    this.floating.push({ id, node, age: -lane * 0.12, lane });
+  }
+  clearFloatingText() {
+    for (const f of this.floating ?? []) f.node.remove();
+    this.floating = [];
+  }
+  updateFloatingText(dt) {
+    for (const f of [...(this.floating ?? [])]) {
+      f.age += dt;
+      const e = this.entities.get(f.id);
+      if (f.age > 2.1 || !e) {
+        f.node.remove();
+        this.floating.splice(this.floating.indexOf(f), 1);
+        continue;
+      }
+      f.node.hidden = f.age < 0;
+      const p = e.group.position
+        .clone()
+        .add(
+          new T.Vector3(
+            0,
+            (e.model.userData.height ?? 1.9) + 0.25 + Math.max(0, f.age) * 0.5,
+            0,
+          ),
+        )
+        .project(this.camera);
+      f.node.style.left = `${((p.x + 1) * innerWidth) / 2}px`;
+      f.node.style.top = `${((1 - p.y) * innerHeight) / 2 - f.lane * 32}px`;
+      f.node.style.opacity = String(Math.min(1, (2.1 - f.age) * 2.5));
+    }
   }
   attackEffect(data, callbacks) {
     const effect = createAttackEffect(this, data, callbacks);
@@ -664,6 +713,11 @@ export class Scene {
     const t = this.clock.elapsedTime;
     for (const e of this.entities.values()) {
       e.mixer.update(dt);
+      e.statusVisuals.sync(
+        e.data.conditions ?? [],
+        e.isEnemy ? e.data.hp > 0 : e.data.survival.status !== "dead",
+      );
+      e.statusVisuals.update(t, this.camera);
       e.lock = Math.max(0, e.lock - dt);
       e.deathGrace = Math.max(0, (e.deathGrace ?? 0) - dt);
       const target =
@@ -671,6 +725,7 @@ export class Scene {
           new T.Vector3(e.data.x * TILE, 0.04, e.data.z * TILE),
         delta = target.clone().sub(e.group.position);
       const moving = delta.length() > 0.02;
+      e.model.userData.animate?.(t, moving);
       // Resolve a pushed target visually after contact, even though the rules
       // have already committed its new square.
       if (moving && !e.pendingImpacts) {
@@ -728,6 +783,7 @@ export class Scene {
     this.partyLight.position
       .copy(selected?.group.position ?? this.focus)
       .add(new T.Vector3(0, 4, 0));
+    this.updateFloatingText(dt);
     this.composer.render();
   }
   resize() {

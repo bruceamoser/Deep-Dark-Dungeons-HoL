@@ -1,3 +1,14 @@
+import { combatFeedback } from "./feedback.mjs";
+import { marketMethods } from "./market.mjs";
+import {
+  gearPreview,
+  treasureMethods,
+  magicItem,
+  recallScroll,
+  slotOf,
+  activeItemEffects,
+} from "./treasure.mjs";
+import { populateEncounters, bestiaryMethods } from "./bestiary.mjs";
 import {
   movementBlockers,
   traversalCost,
@@ -38,6 +49,14 @@ export class Game {
   }
   emit(type, data = {}) {
     this.recordFallen();
+    const feedback = combatFeedback(
+      type === "floor" ? null : this.feedbackState,
+      [...this.party, ...(this.enemies ?? [])],
+      this.R,
+    );
+    this.feedbackState = feedback.next;
+    for (const event of feedback.events)
+      for (const f of this.listeners) f("feedback", event);
     for (const f of this.listeners) f(type, data);
   }
   note(text) {
@@ -100,6 +119,11 @@ export class Game {
     };
   }
   fresh(drafts) {
+    this.pause();
+    this.pendingDefense = null;
+    this.busy = false;
+    this.selected = 0;
+    this.log = [];
     this.woundNotices = [];
     this.campaign = {
       seed: Math.floor(Math.random() * 2147483647),
@@ -117,11 +141,13 @@ export class Game {
       order: drafts.map((_, i) => `hero-${i}`),
       party: drafts.map((d, i) => this.hero(d, i)),
     };
-    this.newFloor();
     this.mode = "town";
+    this.newFloor();
     this.note("Four names in the register. One road beneath the earth.");
+    this.resume();
   }
-  load(c) {
+  load(c, { resume = true } = {}) {
+    this.pause();
     prepareRoster(c);
     c.woundNotices ??= [];
     if (c.mode === "wound-review" && c.encounter) c.mode = "combat";
@@ -130,7 +156,7 @@ export class Game {
       ...c.reserve,
       ...c.fallenHeroes.map((e) => e.hero),
     ]) {
-      const p = this.R.workshopCharacter(h.draft, this.C);
+      const p = gearPreview(this.R, this.C, h);
       if (!p.valid)
         throw new Error("A saved hero no longer passes character validation.");
       h.preview = p;
@@ -201,7 +227,7 @@ export class Game {
     this.busy = false;
     this.pendingDefense = null;
     this.woundNotices = c.woundNotices ?? [];
-    this.newFloor(c.floor);
+    this.newFloor(c.floor, { silent: true });
     this.mode = c.mode ?? "town";
     if (this.mode === "combat") {
       this.encounter = c.encounter;
@@ -221,18 +247,40 @@ export class Game {
         throw new Error("Saved reaction is invalid.");
       this.pendingDefense = c.pendingDefense;
       this.busy = true;
-      this.emit("reaction", {
-        hero: this.party.find((h) => h.id === c.pendingDefense.target),
-        enemy: this.enemies.find((e) => e.id === c.pendingDefense.attacker),
-      });
     }
+    this.paths = new Map(c.paths ?? []);
+    for (const [id, route] of this.paths) {
+      if (
+        !this.party.some((h) => h.id === id) ||
+        !Array.isArray(route) ||
+        route.some((p) => !this.map.tiles[key(p.x, p.z)])
+      )
+        throw new Error("Saved movement is invalid.");
+    }
+    this.log = c.log ?? [];
+    this.pendingInteraction = c.pendingInteraction ?? null;
+    this.emit("floor");
     this.emit("change");
-    if (this.woundNotices.length) {
+    if (resume) this.resume();
+  }
+  pause() {
+    this.suspended = true;
+    clearTimeout(this.enemyTimer);
+    this.enemyTimer = null;
+  }
+  resume() {
+    this.suspended = false;
+    if (this.woundNotices?.length) {
       const n = this.woundNotices[0],
         h = this.party.find((h) => h.id === n.heroId);
       this.emit("wound", {
         hero: h,
         wound: h.wounds.find((w) => w.id === n.woundId),
+      });
+    } else if (this.pendingDefense) {
+      this.emit("reaction", {
+        hero: this.party.find((h) => h.id === this.pendingDefense.target),
+        enemy: this.enemies.find((e) => e.id === this.pendingDefense.attacker),
       });
     } else if (
       this.mode === "combat" &&
@@ -240,9 +288,10 @@ export class Game {
       this.active.survival.status === "dying" &&
       this.active.survival.due === this.active.survival.ownTurn &&
       !this.active.survival.choice?.resolved
-    )
+    ) {
       this.emit("dying", { hero: this.active });
-    else if (this.mode === "combat" && !this.encounter?.current) this.advance();
+    } else if (this.mode === "combat" && !this.encounter.current)
+      this.advance();
   }
   snapshot() {
     this.recordFallen();
@@ -255,6 +304,9 @@ export class Game {
         hero: storedHero(e.hero),
       })),
       mode: this.mode,
+      paths: [...this.paths],
+      pendingInteraction: this.pendingInteraction,
+      log: this.log,
       selected: this.selected,
       encounter: this.encounter,
       budgets: this.budgets,
@@ -263,9 +315,17 @@ export class Game {
       floor: { map: this.map, seen: this.seen, enemies: this.enemies },
     };
   }
-  newFloor(saved) {
+  newFloor(saved, { silent = false } = {}) {
+    this.campaign.deepest = Math.max(
+      this.campaign.deepest ?? 1,
+      this.campaign.depth,
+    );
     this.pendingInteraction = null;
     this.map = saved?.map ?? generate(this.campaign.seed, this.campaign.depth);
+    if (!saved)
+      this.campaign.lootGeneration = (this.campaign.lootGeneration ?? 0) + 1;
+    const treasureSeed =
+      this.campaign.seed + (this.campaign.lootGeneration ?? 0) * 32452843;
     if (!this.map.xpClaims) {
       this.map.xpClaims = saved
         ? [
@@ -287,14 +347,41 @@ export class Game {
     this.rng = new Random(this.campaign.seed + this.campaign.depth * 31);
     this.enemies =
       saved?.enemies ??
-      this.map.enemies.map((e) => ({
-        ...e,
-        hp: 10,
-        maxHp: 10,
-        conditions: [],
-        type: "creature-bone-sentry",
-        name: "Bone sentry",
-      }));
+      populateEncounters(
+        this.map,
+        this.C.creatures,
+        this.party
+          .filter((h) => h.survival.status !== "dead")
+          .map((h) => h.preview.state.level),
+      );
+    if (
+      !saved ||
+      this.map.chests.some((c) => !c.opened && c.items === undefined)
+    )
+      this.map.chests.forEach((c, i) => {
+        if (saved && (c.opened || c.items !== undefined)) return;
+        c.items = [
+          magicItem(
+            (treasureSeed + this.campaign.depth * 98317 + i * 131) >>> 0,
+            this.campaign.depth,
+          ),
+        ];
+      });
+    if (!saved && this.map.chests[0])
+      this.map.chests[0].items.push(
+        recallScroll((treasureSeed + this.campaign.depth * 31) >>> 0),
+      );
+    if (!saved && this.map.bossId) {
+      const coffer = this.map.chests.at(-1);
+      coffer.guardBossId = this.map.bossId;
+      coffer.items = [
+        magicItem(
+          (treasureSeed + this.campaign.depth * 65129) >>> 0,
+          this.campaign.depth,
+          { power: 2 },
+        ),
+      ];
+    }
     if (!saved)
       this.party.forEach((h, i) =>
         Object.assign(h, {
@@ -306,7 +393,7 @@ export class Game {
     this.paths.clear();
     this.encounter = null;
     this.budgets = {};
-    this.emit("floor");
+    if (!silent) this.emit("floor");
   }
   get party() {
     return this.campaign.party;
@@ -455,13 +542,17 @@ export class Game {
       throw new Error("No usable ammunition remains.");
     this.spend(spec.category, id);
     if (drawWeapon) {
+      const relic = h.treasure?.find(
+        (i) => i.instanceId === drawWeapon.instanceId,
+      );
+      if (relic) relic.held = true;
       h.draft.loadout ??= {};
       h.draft.loadout[drawWeapon.instanceId] = {
         ...h.draft.loadout[drawWeapon.instanceId],
         held: true,
         carried: true,
       };
-      h.preview = this.R.workshopCharacter(h.draft, this.C);
+      this.refreshHero(h);
       this.emit("party");
     }
     if (id === "ability-defend") {
@@ -473,7 +564,10 @@ export class Game {
         `${h.name} stabilizes ${target.name} at 0 HP; death marks cleared.`,
       );
     } else {
+      const defense = this.creatureDefense(target, h, spec);
       const sources = [
+        { kind: "boon", amount: defense.boons },
+        { kind: "bane", amount: defense.banes },
         ...this.woundRollSources(h, spec.attribute),
         ...this.R.conditionRollSources(h.conditions ?? [], {
           mode: "attack",
@@ -487,19 +581,31 @@ export class Game {
         banes = sources
           .filter((s) => s.kind === "bane")
           .reduce((n, s) => n + s.amount, 0);
-      const result = this.roll(
-          h.draft.attributes[spec.attribute],
-          boons,
-          banes,
-        ),
+      const result = this.roll(this.attribute(h, spec.attribute), boons, banes),
         tier = ["weak", "standard", "strong"].indexOf(result.tier);
+      const weapon = spec.weapon
+        ? this.held(h, `item-ordinary-${spec.weapon}-weapon`)
+        : null;
+      const enchantments = weapon
+        ? activeItemEffects(h, weapon).filter((e) => e.effect === "damage")
+        : [];
       const damage = this.R.damageEvent({
-        components: [{ type: spec.type, amount: spec.damage[tier] }],
-        resistances: [{ type: "physical", value: 1 }],
+        components: [
+          { type: spec.type, amount: spec.damage[tier] },
+          ...enchantments.map((e) => ({ type: e.type, amount: e.value })),
+        ],
+        resistances: defense.resistances,
+        weaknesses: this.creatureWeaknesses(target),
       });
       target.hp = Math.max(0, target.hp - damage.total);
       target.conditions ??= [];
-      for (const [condition, rating] of spec.conditions?.[tier] ?? [])
+      for (const [condition, rating] of [
+        ...(spec.conditions?.[tier] ?? []),
+        ...(tier === 2 ? enchantments.map((e) => [e.condition, 1]) : []),
+      ].filter(
+        ([k]) =>
+          !this.creature(target)?.immunities.some((i) => i.toLowerCase() === k),
+      ))
         target.conditions.push({
           id: `effect-${crypto.randomUUID()}`,
           key: condition,
@@ -509,12 +615,20 @@ export class Game {
           persistence: condition === "prone" ? "binary" : "temporary",
         });
       this.note(
-        `${h.name} · ${card.name} (${spec.attribute}): ${result.retained.join(" + ")} ${h.draft.attributes[spec.attribute] >= 0 ? "+" : ""}${h.draft.attributes[spec.attribute]} → ${result.total} ${result.tier}; ${damage.total} ${spec.type} damage${result.natural ? ` · natural ${result.natural}` : ""}${target.hp === 0 ? " · sentry destroyed" : ""}.`,
+        `${h.name} · ${card.name} (${spec.attribute}): ${result.retained.join(" + ")} ${this.attribute(h, spec.attribute) >= 0 ? "+" : ""}${this.attribute(h, spec.attribute)} → ${result.total} ${result.tier}; ${damage.total} ${spec.type} damage${result.natural ? ` · natural ${result.natural}` : ""}${target.hp === 0 ? ` · ${target.name} defeated` : ""}.`,
       );
       if (spec.conditions?.[tier]?.length)
         this.note(
           `${target.name}: ${spec.conditions[tier].map(([k, r]) => `${k} ${r}`).join(", ")}.`,
         );
+      if (defense.collapse && target.hp > 0)
+        target.conditions.push({
+          id: `collapse-${crypto.randomUUID()}`,
+          key: "prone",
+          rating: 1,
+          persistence: "binary",
+          source: target.id,
+        });
       if (ammunition) {
         const die =
           h.supplies[ammunition.instanceId] ?? ammunition.inventoryDie;
@@ -533,6 +647,7 @@ export class Game {
           { x: Math.sign(target.x - h.x), z: Math.sign(target.z - h.z) },
           spec.push[tier],
         );
+      this.creatureAfterHit(target, h, spec, damage.total);
       this.defeatEnemy(target);
       this.emit("attack", {
         attacker: h.id,
@@ -570,16 +685,28 @@ export class Game {
     const summary = this.R.conditionSummary(e.conditions ?? []);
     return Math.max(
       0,
-      5 - summary.slowed.rating - (summary.prone.active ? 2 : 0),
+      (this.creature(e)?.speed.ordinary ?? 5) -
+        summary.slowed.rating -
+        (summary.prone.active ? 2 : 0),
     );
   }
   finishEnemyConditions(e) {
     // Sentries stand before acting when prone; this spends two movement squares.
-    if (5 - this.R.conditionSummary(e.conditions ?? []).slowed.rating >= 2)
+    if (
+      (this.creature(e)?.speed.ordinary ?? 5) -
+        this.R.conditionSummary(e.conditions ?? []).slowed.rating >=
+      2
+    )
       e.conditions = (e.conditions ?? []).filter((c) => c.key !== "prone");
     const plan = this.R.conditionEndPlan(e.conditions, {
       turnId: `npc-${this.encounter.serial}`,
-      resistances: [{ type: "physical", value: 1 }],
+      resistances: this.creatureResistances(e),
+      durationPolicies: {
+        blinded: "independent",
+        deafened: "independent",
+        paralyzed: "independent",
+        asleep: "independent",
+      },
     });
     if (!plan.ready)
       throw new Error("This condition combination needs a duration ruling.");
@@ -632,40 +759,82 @@ export class Game {
     this.emit("change");
   }
   resolveEnemyHit(e, h) {
+    const action = this.creatureAction(e),
+      card = this.creature(e);
     const sources = [
       ...this.R.conditionRollSources(h.conditions ?? [], {
         mode: "defense",
         perceivedSources: this.perceivedSources(h),
       }),
       ...this.R.passiveAncestryDefenseSources(h.draft.traitIds ?? []),
-      ...this.woundRollSources(h, "agility"),
+      ...this.woundRollSources(h, action.attribute),
+      ...this.creatureAttackModifiers(e, h),
+      { kind: "boon", amount: card?.defenses.threat.boons ?? 0 },
+      {
+        kind: "bane",
+        amount: (card?.defenses.threat.banes ?? 0) + Number(!!e.study),
+      },
     ];
     const boons =
         Number(!!h.buffs.defend) +
-        Number(!!h.buffs.shield) +
+        Number(!!h.buffs.shield && action.type === "physical") +
         sources
           .filter((s) => s.kind === "boon")
           .reduce((n, s) => n + s.amount, 0),
       banes = sources
         .filter((s) => s.kind === "bane")
         .reduce((n, s) => n + s.amount, 0);
-    const result = this.roll(h.draft.attributes.agility, boons, banes);
+    const result = this.roll(this.attribute(h, action.attribute), boons, banes);
+    const outcome = action.outcomes[result.tier];
     const damage = this.R.damageEvent({
       components: [
         {
-          type: "physical",
-          amount: { weak: 5, standard: 3, strong: 2 }[result.tier],
+          type: action.type,
+          amount: Number(outcome.match(/^\d+/)[0]),
         },
       ],
       resistances: Object.entries(h.preview.resistances).map(
         ([type, value]) => ({ type, value }),
       ),
     });
-    this.suffer(h, damage.total, "physical", e);
+    this.suffer(h, damage.total, action.type, e);
+    for (const m of outcome.matchAll(
+      /(Burning|Freezing|Bleeding|Poisoned|Slowed|Dazed|Paralyzed|Frightened|Blinded|Deafened) (\d+)/gi,
+    ))
+      this.addCreatureCondition(h, m[1].toLowerCase(), Number(m[2]), e);
+    if (/Prone/i.test(outcome)) this.addCreatureCondition(h, "prone", 1, e);
+    const push = Number(outcome.match(/(?:Push|Pull) (\d+)/i)?.[1] ?? 0),
+      direction = /Pull/i.test(outcome) ? -1 : 1;
+    if (push)
+      this.forceMove(
+        h,
+        {
+          x: direction * Math.sign(h.x - e.x),
+          z: direction * Math.sign(h.z - e.z),
+        },
+        push,
+      );
+    if (action.ammunition) {
+      const die = e.ammunition ?? 6;
+      const check = this.R.inventoryCheck({
+        die,
+        retained: 1 + Math.floor(Math.random() * die),
+      });
+      e.ammunition = check.after;
+    }
+    e.study = false;
+    e.chilled = false;
     this.note(
-      `${h.name} defends (Agility, ${boons} Boon / ${banes} Bane): ${result.retained.join(" + ")} → ${result.total} ${result.tier}; suffers ${damage.total} damage.`,
+      `${e.name} · ${action.name}: ${h.name} defends (${action.attribute}, ${boons} Boon / ${banes} Bane): ${result.retained.join(" + ")} → ${result.total} ${result.tier}; suffers ${damage.total} damage.`,
     );
-    this.emit("attack", { attacker: e.id, target: h.id, damage: damage.total });
+    this.emit("attack", {
+      attacker: e.id,
+      target: h.id,
+      damage: damage.total,
+      ranged: action.ammunition,
+      spell: action.spell || (action.range > 1 && action.type !== "physical"),
+      element: action.type,
+    });
   }
   stand() {
     if (this.mode !== "combat" || this.busy || !this.canAct(this.active))
@@ -701,12 +870,35 @@ export class Game {
     }
     this.emit("change");
   }
-  gearPlan(index, instanceId, operation = "ready") {
+  gearPlan(index, instanceId, operation = "ready", targetSlot = null) {
     const items = this.party[index].preview.inventory.items,
       item = items.find((i) => i.instanceId === instanceId),
       held = items.filter((i) => i.held && i !== item);
     if (!item) return { stow: [], cost: 0 };
     const stow = [];
+    if (operation === "wear") {
+      const slot =
+        item.slot === "ring"
+          ? (targetSlot ??
+            ["ring-left", "ring-right"].find(
+              (slot) => !items.some((i) => i.worn && slotOf(i) === slot),
+            ) ??
+            "ring-left")
+          : slotOf(item);
+      return {
+        stow: items
+          .filter(
+            (i) =>
+              i !== item &&
+              i.worn &&
+              slotOf(i) === slot &&
+              i.catalogId !== "item-travel-clothes",
+          )
+          .map((i) => i.instanceId),
+        cost: 0,
+        slot,
+      };
+    }
     let occupied = held.reduce((n, i) => n + i.hands, 0);
     if (operation === "ready")
       for (const i of [...held].sort(
@@ -735,13 +927,16 @@ export class Game {
       return "Wait for your company’s turn.";
     if (!this.canAct(h)) return "This hero cannot handle equipment.";
     if (operation === "wear" || operation === "remove") {
-      if (this.mode === "combat") return "Change armor outside combat.";
+      if (this.mode === "combat")
+        return "Change worn equipment outside combat.";
       const tier = item.catalogId.match(
         /item-ordinary-(light|medium|heavy)-armor/,
       )?.[1];
-      if (!tier) return "Choose a suit of armor.";
+      if (!tier && (!item.slot || item.hands))
+        return "Choose wearable equipment.";
       if (
         operation === "wear" &&
+        tier &&
         !h.preview.state.abilities.includes(`ability-wear-${tier}-armor`)
       )
         return `Requires ${tier} armor training.`;
@@ -764,25 +959,35 @@ export class Game {
     }
     return "";
   }
-  equip(index, instanceId, operation = "ready") {
+  equip(index, instanceId, operation = "ready", targetSlot = null) {
     const reason = this.gearReason(index, instanceId, operation);
     if (reason) throw new Error(reason);
     const h = this.party[index],
       items = h.preview.inventory.items,
       item = items.find((i) => i.instanceId === instanceId);
-    const plan = this.gearPlan(index, instanceId, operation);
+    const plan = this.gearPlan(index, instanceId, operation, targetSlot);
+    if (
+      targetSlot &&
+      item.slot === "ring" &&
+      !["ring-left", "ring-right"].includes(targetSlot)
+    )
+      throw new Error("Choose a ring slot.");
+    const treasure = structuredClone(h.treasure ?? []);
     const draft = structuredClone(h.draft);
     draft.loadout ??= {};
-    const set = (i, values) =>
-      (draft.loadout[i.instanceId] = {
-        ...draft.loadout[i.instanceId],
-        ...values,
-      });
+    const set = (i, values) => {
+      const relic = treasure.find((t) => t.instanceId === i.instanceId);
+      if (relic) Object.assign(relic, values);
+      else
+        draft.loadout[i.instanceId] = {
+          ...draft.loadout[i.instanceId],
+          ...values,
+        };
+    };
     if (operation === "wear") {
-      for (const i of items.filter((i) =>
-        /item-ordinary-(light|medium|heavy)-armor/.test(i.catalogId),
-      ))
-        set(i, { worn: i === item });
+      for (const i of items.filter((i) => plan.stow.includes(i.instanceId)))
+        set(i, { worn: false });
+      set(item, { worn: true, equippedSlot: plan.slot });
     } else if (operation === "remove") set(item, { worn: false });
     else if (operation === "stow") set(item, { held: false });
     else {
@@ -791,13 +996,14 @@ export class Game {
           held: i === item || (!plan.stow.includes(i.instanceId) && i.held),
         });
     }
-    const preview = this.R.workshopCharacter(draft, this.C);
+    const preview = gearPreview(this.R, this.C, { ...h, treasure }, draft);
     if (!preview.valid)
       throw new Error(preview.errors.map((e) => e.text).join("; "));
     if (this.mode === "combat")
       for (let n = 0; n < plan.cost; n++)
         this.spend("maneuver", "ability-handle-an-item");
     h.draft = draft;
+    h.treasure = treasure;
     h.preview = preview;
     this.note(
       `${h.name} ${{ ready: "readies", stow: "stows", wear: "puts on", remove: "removes" }[operation]} ${item.definition.name}${this.mode === "combat" ? ` · ${plan.cost} Maneuver${plan.cost === 1 ? "" : "s"} spent` : ""}.`,
@@ -940,7 +1146,7 @@ export class Game {
       }
     }
     next.progression = progression;
-    const preview = this.R.workshopCharacter(next, this.C);
+    const preview = gearPreview(this.R, this.C, h, next);
     if (!preview.valid)
       throw new Error(
         preview.errors
@@ -979,6 +1185,8 @@ export class Game {
     return { ...this.R.classifyRoll(retained, attribute), retained, all };
   }
   descend() {
+    if (this.mode === "town" && this.campaign.returnPassage)
+      return this.returnThroughPassage();
     if (this.mode !== "town")
       throw new Error("Return to town before beginning an expedition.");
     if (
@@ -988,6 +1196,7 @@ export class Game {
       )
     )
       throw new Error("Replace or resolve injured heroes before descending.");
+    if (this.campaign.expeditions === 0) this.newFloor();
     this.campaign.expeditions++;
     this.mode = "exploration";
     this.note(
@@ -1098,7 +1307,12 @@ export class Game {
     this.emit("change");
   }
   step() {
-    if (this.busy || !["exploration", "combat"].includes(this.mode)) return;
+    if (
+      this.suspended ||
+      this.busy ||
+      !["exploration", "combat"].includes(this.mode)
+    )
+      return;
     const marching =
       this.mode === "combat"
         ? this.encounter.current === this.active.id
@@ -1161,7 +1375,7 @@ export class Game {
       this.dice(),
     );
     this.note(
-      `Encounter · opening ${this.encounter.opening.total}. ${this.encounter.startingSide === "players" ? "Your party" : "The sentries"} acts first.`,
+      `Encounter · opening ${this.encounter.opening.total}. ${this.encounter.startingSide === "players" ? "Your party" : "The creatures"} acts first.`,
     );
     this.emit("combat");
     this.advance();
@@ -1193,7 +1407,13 @@ export class Game {
     this.emit("change");
   }
   advance() {
-    if (this.mode !== "combat" || this.woundNotices?.length) return;
+    if (
+      this.suspended ||
+      this.pendingDefense ||
+      this.mode !== "combat" ||
+      this.woundNotices?.length
+    )
+      return;
     this.recordFallen();
     for (const h of this.party.filter((h) => h.survival.status === "dead")) {
       if (
@@ -1248,8 +1468,10 @@ export class Game {
       this.party.forEach((h) => (h.selected = false));
       this.emit("change");
       const expectedEncounter = this.encounter;
-      setTimeout(() => {
-        if (this.encounter !== expectedEncounter) return;
+      clearTimeout(this.enemyTimer);
+      this.enemyTimer = setTimeout(() => {
+        this.enemyTimer = null;
+        if (this.suspended || this.encounter !== expectedEncounter) return;
         try {
           this.enemyTurn();
         } catch (e) {
@@ -1334,19 +1556,24 @@ export class Game {
       )
       .sort((a, b) => distance(e, a) - distance(e, b));
     const h = targets[0];
-    if (h) {
-      if (distance(e, h) > 1) {
-        const candidates = neighbors(this.map, h, this.occupied(e.id));
-        const routes = candidates
-          .map((p) => pathfind(this.map, e, p, this.occupied(e.id)))
-          .filter((p) => p.length)
-          .sort((a, b) => a.length - b.length);
-        const path = routes[0];
-        if (path?.length)
-          Object.assign(e, path[Math.min(this.enemySpeed(e), path.length) - 1]);
-      }
-      if (distance(e, h) <= 1 && lineOfSight(this.map, e, h)) {
-        if (this.canBlock(h)) {
+    this.enemyManeuver(e);
+    if (
+      h &&
+      this.enemyCapable(e) &&
+      e.retained.includes("main") &&
+      !this.R.conditionSummary(e.conditions ?? []).blinded.active
+    ) {
+      const action = this.creatureAction(e);
+      this.moveCreatureIntoRange(e, h, action.range);
+      if (
+        distance(e, h) <= action.range &&
+        lineOfSight(this.map, e, h) &&
+        !(
+          action.hearing &&
+          this.R.conditionSummary(h.conditions).deafened.active
+        )
+      ) {
+        if (action.type === "physical" && this.canBlock(h)) {
           this.pendingDefense = { attacker: e.id, target: h.id };
           this.emit("reaction", { hero: h, enemy: e });
           return;
@@ -1365,7 +1592,7 @@ export class Game {
       kind === "roll" ? this.heroRoll(h, "fortitude", "death") : null;
     h.survival = this.R.resolveSurvival(
       this.R.chooseSurvival(h.survival, kind),
-      { retained: result?.retained, fortitude: h.draft.attributes.fortitude },
+      { retained: result?.retained, fortitude: this.attribute(h, "fortitude") },
     );
     this.note(
       `${h.name}: ${h.survival.status}, ${h.survival.marks} death marks, ${h.survival.gritAvailable} Grit.`,
@@ -1458,6 +1685,8 @@ export class Game {
     this.emit("change");
   }
   deeper() {
+    if (this.enemies.some((e) => e.boss && e.hp > 0))
+      throw new Error("Defeat this floor’s guardian before descending.");
     if (
       this.mode !== "exploration" ||
       this.party.some(
@@ -1471,6 +1700,7 @@ export class Game {
     this.emit("change");
   }
   fail() {
+    this.campaign.returnPassage = null;
     if (this.mode === "defeat") return;
     this.recordFallen();
     this.campaign.pendingTreasureXP = 0;
@@ -1507,3 +1737,7 @@ export class Game {
 Object.assign(Game.prototype, recoveryMethods);
 Object.assign(Game.prototype, interactionMethods);
 Object.assign(Game.prototype, rosterMethods, experienceMethods);
+
+Object.assign(Game.prototype, treasureMethods, bestiaryMethods);
+
+Object.assign(Game.prototype, marketMethods);

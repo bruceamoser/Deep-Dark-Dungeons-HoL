@@ -1,3 +1,6 @@
+import { verifySaveSlots } from "./save-slots-check.mjs";
+import { verifyCreatureVisuals } from "./creature-visual-check.mjs";
+import { verifyDungeonLoop } from "./dungeon-loop-check.mjs";
 import { verifyCombatUX } from "./combat-ux-check.mjs";
 import { verifyRoster } from "./roster-check.mjs";
 import { verifyInteractions } from "./interaction-check.mjs";
@@ -27,6 +30,7 @@ const child = spawn(
     "--",
     path.join(root, "launch-game.sh"),
     "--remote-debugging-port=0",
+    "--inspect=0",
   ],
   {
     cwd: root,
@@ -39,7 +43,7 @@ const child = spawn(
     },
   },
 );
-let browser;
+let browser, mainEndpoint;
 try {
   const endpoint = await new Promise((resolve, reject) => {
     let log = "";
@@ -57,6 +61,8 @@ try {
     });
     child.stderr.on("data", (chunk) => {
       log += chunk.toString();
+      mainEndpoint =
+        log.match(/Debugger listening on (ws:\/\/\S+)/)?.[1] ?? mainEndpoint;
       const match = log.match(/DevTools listening on (ws:\/\/\S+)/);
       if (match) {
         clearTimeout(timer);
@@ -84,6 +90,9 @@ try {
   await verifyInteractions(w);
   await verifyEffects(w);
   await verifyRecovery(w);
+  await verifyDungeonLoop(w);
+  await verifyCreatureVisuals(w);
+  await verifySaveSlots(w);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");
@@ -101,6 +110,58 @@ try {
     const status = await fs.readFile(`/proc/${renderer.id}/status`, "utf8");
     expect(Number(/Seccomp:\s+(\d+)/.exec(status)?.[1])).toBe(2);
   }
+  const activeSlot = await w.evaluate(() => window.__ddd.library.active);
+  await w.evaluate(() => {
+    window.__ddd.game.campaign.bank = 9876;
+  });
+  const closed = new Promise((resolve) => child.once("exit", resolve));
+  // BrowserWindow.close follows the native titlebar close path. Chromium's
+  // renderer window.close() destroys this Electron window without that event.
+  const inspector = new WebSocket(mainEndpoint);
+  await new Promise((resolve, reject) => {
+    inspector.addEventListener("open", resolve, { once: true });
+    inspector.addEventListener("error", reject, { once: true });
+  });
+  const requested = new Promise((resolve, reject) =>
+    inspector.addEventListener("message", (event) => {
+      const message = JSON.parse(event.data);
+      if (message.id === 1)
+        message.result?.exceptionDetails
+          ? reject(new Error(JSON.stringify(message.result.exceptionDetails)))
+          : resolve();
+    }),
+  );
+  inspector.send(
+    JSON.stringify({
+      id: 1,
+      method: "Runtime.evaluate",
+      params: {
+        expression:
+          "process.mainModule.require('electron').BrowserWindow.getAllWindows()[0].close()",
+      },
+    }),
+  );
+  await requested;
+  inspector.close();
+  await Promise.race([
+    closed,
+    new Promise((_, reject) =>
+      setTimeout(
+        () => reject(new Error("Window close did not finish saving")),
+        15000,
+      ),
+    ),
+  ]);
+  const savedOnClose = JSON.parse(
+    await fs.readFile(
+      path.join(userData, "runs", activeSlot + ".json"),
+      "utf8",
+    ),
+  );
+  expect(JSON.parse(savedOnClose.text).campaign.bank).toBe(9876);
+  console.log(
+    "Native window-close handshake saved the latest state before exit.",
+  );
   console.log(
     "Exact Linux launcher in the normal terminal AppArmor context, rendered scene and disk save passed; runtime path has no spaces, renderers have seccomp filtering and no --no-sandbox flag.",
   );
@@ -119,7 +180,7 @@ try {
   }
   throw error;
 } finally {
-  await browser?.close();
+  await browser?.close().catch(() => {});
   try {
     process.kill(-child.pid, "SIGTERM");
   } catch (e) {

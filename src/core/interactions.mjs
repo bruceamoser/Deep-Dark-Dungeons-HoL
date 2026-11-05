@@ -9,12 +9,13 @@ export const interactionMethods = {
         ...c,
         id: `coffer:${c.id}`,
         kind: "coffer",
-        name: c.opened ? "Empty coffer" : "Forgotten coffer",
+        name:
+          c.opened && !c.items?.length ? "Empty coffer" : "Forgotten coffer",
         description: c.opened
-          ? "The coffer has already been emptied."
-          : `An old coffer holds ${c.coins} coins.`,
-        available: !c.opened,
-        action: "Collect coins",
+          ? `${c.items?.length ?? 0} unclaimed items remain.`
+          : `An old coffer holds ${c.coins} coins${c.items?.length ? ` and ${c.items.length} treasures` : ""}.`,
+        available: !c.opened || !!c.items?.length,
+        action: c.items?.length ? "Search coffer" : "Collect coins",
         source: c,
       })),
       ...this.campaign.caches.flatMap((c, i) =>
@@ -68,6 +69,11 @@ export const interactionMethods = {
     if (this.mode !== "exploration" || this.busy)
       return "Finish combat before interacting.";
     if (!item.available) return "Already collected.";
+    if (
+      item.source?.guardBossId &&
+      this.enemies.some((e) => e.id === item.source.guardBossId && e.hp > 0)
+    )
+      return "The floor guardian protects this treasure.";
     if (!this.interactionNear(item))
       return ["entrance", "descent"].includes(item.kind)
         ? "Gather the company at these stairs."
@@ -126,6 +132,7 @@ export const interactionMethods = {
     this.pendingInteraction = null;
     if (item.kind === "entrance") return this.extract();
     if (item.kind === "descent") return this.deeper();
+    if (item.kind === "coffer" && item.source.opened) return;
     if (item.kind === "cache") item.source.recovered = true;
     else item.source.opened = true;
     this.campaign.haul += item.coins;

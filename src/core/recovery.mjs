@@ -126,7 +126,7 @@ export const recoveryMethods = {
       ...(mode === "death" ? [] : this.woundRollSources(h, attribute)),
     ];
     return this.roll(
-      h.draft.attributes[attribute],
+      this.attribute(h, attribute),
       sources
         .filter((s) => s.kind === "boon")
         .reduce((n, s) => n + s.amount, 0),
@@ -232,7 +232,7 @@ export const recoveryMethods = {
               type,
               value,
             }))
-          : [{ type: "physical", value: 1 }],
+          : this.creatureResistances(h),
       }).total;
       if (h.survival) this.suffer(h, damage, "physical", actor);
       else {

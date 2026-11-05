@@ -1,3 +1,8 @@
+import { SaveLibrary, browserSaveStorage } from "./core/save-library.mjs";
+import { runsScreen } from "./ui/runs.mjs";
+import { bestiaryScreen } from "./ui/bestiary.mjs";
+import { marketScreen } from "./ui/market.mjs";
+import { lootScreen } from "./ui/treasure.mjs";
 import { abilityType } from "./ui/book-symbols.mjs";
 import { rosterScreen } from "./ui/roster.mjs";
 import { xpMeter } from "./ui/experience.mjs";
@@ -57,7 +62,10 @@ let game,
   selectedAction = null,
   saveTimer,
   savedFallen = 0,
-  initialized = false;
+  initialized = false,
+  runsOpen = false,
+  runsBusy = false,
+  library;
 async function init() {
   const modules = [
     "workshop-character",
@@ -88,12 +96,13 @@ async function init() {
     if (!r.ok) throw new Error(`Missing HoL catalog ${n}`);
     return r.json();
   };
-  const [choices, inventory, wounds, party] = await Promise.all(
-    ["choices", "inventory", "wounds", "party"].map(load),
+  const [choices, inventory, wounds, party, creatures] = await Promise.all(
+    ["choices", "inventory", "wounds", "party", "creatures"].map(load),
   );
   C = {
     choices: choices.records,
     inventory,
+    creatures,
     wounds,
     commit: choices.sourceCommit,
   };
@@ -111,11 +120,18 @@ async function init() {
         ["exploration", "combat"].includes(game.mode) &&
         game.worldInteractions().find((i) => i.id === id);
       scene.highlightInteraction(item ? id : null);
-      hint.hidden = !item;
+      const creature = id?.startsWith("creature:")
+        ? game.enemies.find((e) => e.id === id.slice(9))
+        : null;
+      hint.hidden = !item && !creature;
       if (item) {
         hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO INTERACT</small>`;
         hint.style.left = `${Math.min(innerWidth - 250, event.clientX + 18)}px`;
         hint.style.top = `${Math.max(12, Math.min(innerHeight - 75, event.clientY - 65))}px`;
+      } else if (creature && !modal.children.length) {
+        hint.innerHTML = `<strong>${esc(creature.name)}${creature.boss ? " · GUARDIAN" : ""}</strong><small>${creature.hp}/${creature.maxHp} HP · CV ${creature.cv ?? 8} · SHIFT-CLICK TO INSPECT</small>`;
+        hint.style.left = `${Math.min(innerWidth - 300, event.clientX + 18)}px`;
+        hint.style.top = `${Math.max(12, event.clientY - 65)}px`;
       } else if (p && !modal.children.length && game.mode !== "town")
         scene.showPath(game.route(p));
       else scene.showPath([]);
@@ -123,7 +139,9 @@ async function init() {
   );
   await scene.load();
   game.listeners.push((type, data) => {
+    if (type === "feedback") scene.floatingText(data);
     if (type === "floor") {
+      scene.clearFloatingText();
       scene.tilesDetail = [];
       scene.build(game.map);
       scene.syncInteractions(game.worldInteractions());
@@ -168,13 +186,13 @@ async function init() {
       scene.highlightInteraction(null);
       scene.syncInteractions(game.worldInteractions());
       scene.updateVisibility(game.party, game.seen);
-      toast(`Recovered ${data.chest.coins} coins`);
+      toast(data.message ?? "Treasure recovered");
       sound.play("loot");
     }
-    if (type === "reaction") reaction(data);
-    if (type === "dying") dying(data.hero);
-    if (type === "wound") woundReview(data);
-    if (type === "turnchoices") turnChoices(data);
+    if (!runsOpen && type === "reaction") reaction(data);
+    if (!runsOpen && type === "dying") dying(data.hero);
+    if (!runsOpen && type === "wound") woundReview(data);
+    if (!runsOpen && type === "turnchoices") turnChoices(data);
     if (type === "xp") toast(`+${data.amount} XP each · ${data.reason}`);
     if (type === "interact-ready") worldMenu(data.id);
     if (
@@ -194,19 +212,17 @@ async function init() {
       render();
     scheduleSave();
   });
-  const saved = await readSave();
+  library = new SaveLibrary(
+    window.desktop?.saves ?? browserSaveStorage(localStorage),
+  );
+  await library.initialize();
+  const saved = library.active ? await library.read(library.active) : null;
   if (saved) game.load(deserialize(saved));
-  else
-    game.fresh(
-      [
-        "borin-bridgekeeper",
-        "lira-ashbow",
-        "pip-copperwink",
-        "vaelis-emberglass",
-      ].map((id) =>
-        readyExample(examples.find((e) => e.id === id).draft, R, C),
-      ),
-    );
+  else {
+    game.fresh(startingDrafts());
+    if (!(await library.list()).length)
+      await library.create("The first company", serialize(game.snapshot()));
+  }
   // Demo starts from legal published characters, never randomized partial builds.
   scene.updateVisibility(game.party, game.seen);
   render();
@@ -214,6 +230,22 @@ async function init() {
     if (!modal.children.length) game.step();
   }, 170);
   document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && runsOpen) {
+      e.preventDefault();
+      if (library.active && !runsBusy) resumeRun();
+      return;
+    }
+    if (runsOpen) return;
+    if (
+      e.key === "Escape" &&
+      (game.pendingDefense ||
+        game.woundNotices?.length ||
+        (game.mode === "combat" && game.active.survival.status === "dying"))
+    ) {
+      e.preventDefault();
+      attempt(openRuns);
+      return;
+    }
     if (
       e.key === "Escape" &&
       modal.children.length &&
@@ -249,16 +281,26 @@ async function init() {
     if (e.key.toLowerCase() === "e") scene.rotate(1);
     if (e.key.toLowerCase() === "f") scene.focusOn(game.active);
     if (e.key === "Escape") {
-      cancelTargeting();
+      if (selectedAction) cancelTargeting();
+      else attempt(openRuns);
     }
   });
   initialized = true;
+  window.desktop?.onClose(() =>
+    attempt(async () => {
+      game.pause();
+      await save();
+      window.desktop.close();
+    }),
+  );
+  if (!library.active) await openRuns();
   window.__ddd = {
     game,
     scene,
     R,
     C,
     sound,
+    library,
     get selectedAction() {
       return selectedAction;
     },
@@ -275,11 +317,11 @@ function render() {
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · The Old Crypt`}</h2></div><div class="top-tools">${button("Save", "save")}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The provisioner", "shop", "EQUIPMENT & SUPPLIES")}${button("Continue saved expedition", "load", "LOCAL SAVE")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">DEVELOPMENT BUILD 0.1 · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">DEVELOPMENT BUILD 0.1 · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
     if (scene.follow)
       scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
   } else {
@@ -364,7 +406,8 @@ function action(a) {
     case "save":
       return save(true);
     case "load":
-      return load();
+    case "runs":
+      return openRuns();
     case "sound":
       audioSettings();
       break;
@@ -379,6 +422,10 @@ function action(a) {
       break;
     case "fallen":
       roster({ hall: true });
+      break;
+    case "bestiary":
+      closeModal();
+      bestiaryScreen({ root: modal, game, close: closeModal });
       break;
     case "shop":
       shop();
@@ -440,8 +487,20 @@ function clickTile(p, interactionId, event) {
   if (modal.children.length) return;
   attempt(() => {
     const enemy = game.enemies.find(
-      (e) => e.hp > 0 && e.x === p.x && e.z === p.z,
+      (e) =>
+        e.hp > 0 &&
+        (interactionId === `creature:${e.id}` || (e.x === p.x && e.z === p.z)),
     );
+    if (enemy && event?.shiftKey) {
+      closeModal();
+      bestiaryScreen({
+        root: modal,
+        game,
+        close: closeModal,
+        selectedId: enemy.type,
+      });
+      return;
+    }
     if (selectedAction) {
       const ally = game.party.find((h) => h.x === p.x && h.z === p.z);
       const type = ABILITIES[selectedAction.id].target;
@@ -487,7 +546,14 @@ function worldMenu(id, event) {
             menu.querySelector(".world-description").hidden = false;
             return;
           }
-          if (b.dataset.worldOption === "use") game.interact(id);
+          if (b.dataset.worldOption === "use") {
+            game.interact(id);
+            if (item.source?.items?.length) {
+              closeModal();
+              lootScreen({ root: modal, game, id, close: closeModal, attempt });
+              return;
+            }
+          }
           closeModal();
           scene.highlightInteraction(null);
           if (b.dataset.worldOption === "approach")
@@ -504,7 +570,7 @@ function dialog(title, content, footer = "") {
 function help() {
   dialog(
     "A light in the dark",
-    `<p>Lead four heroes through the crypt. Click the floor to travel together. Sentries stop real-time movement and begin alternating HoL turns.</p><p>Choose heroes with <b>1–4</b>. In combat, click an adjacent sentry for Basic Melee (a held melee weapon) or Basic Unarmed. Click the floor to spend movement; convert a Maneuver for more. <b>Space</b> ends a turn. Right-drag pans, <b>Q / E</b> rotate, mouse wheel zooms, <b>F</b> follows your selected hero. Formation controls marching order outside combat.</p><p>The in-game creator uses the full character-creation catalog. C or I opens your equipment sheet; pin favorites in Abilities, then use them from the combat bar. Combat includes melee/unarmed, ranged ammunition, Cinder Cast, Rime Grip, Hook and Drive, Pinning Shot, Defend, Shield Block, Stabilize and alternating turns. The playable roster is curated: Actions lists supported learned cards. Character sheets mark included, excluded, planned adaptations and cards awaiting review. Wounds use all five tables and apply numerical penalties, conditions and Last Words. Acknowledge the injury, resolve any displacement, and continue. The Journey tab offers matching one-hour wound treatment in Greyhaven. Scars and spent Grit persist.</p><p>Expedition recovery, loot and Greyhaven are game-specific playtest proposals. This is an early playable foundation, not a finished HoL adaptation.</p>`,
+    `<p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures stop real-time movement and begin alternating HoL turns.</p><p>Choose heroes with <b>1–4</b>. In combat, click an adjacent creature for Basic Melee (a held melee weapon) or Basic Unarmed. Click the floor to spend movement; convert a Maneuver for more. <b>Space</b> ends a turn. Right-drag pans, <b>Q / E</b> rotate, mouse wheel zooms, <b>F</b> follows your selected hero. Formation controls marching order outside combat.</p><p>The in-game creator uses the full character-creation catalog. C or I opens your equipment sheet; pin favorites in Abilities, then use them from the combat bar. Combat includes melee/unarmed, ranged ammunition, Cinder Cast, Rime Grip, Hook and Drive, Pinning Shot, Defend, Shield Block, Stabilize and alternating turns. The playable roster is curated: Actions lists supported learned cards. Character sheets mark included, excluded, planned adaptations and cards awaiting review. Wounds use all five tables and apply numerical penalties, conditions and Last Words. Acknowledge the injury, resolve any displacement, and continue. The Journey tab offers matching one-hour wound treatment in Greyhaven. Scars and spent Grit persist.</p><p><b>Runs</b> pauses and saves your company. Keep named journeys or save a separate copy before a descent. <b>Save &amp; exit run</b> returns to the library; Escape opens it during a pending combat decision. <b>Bestiary</b> covers the 58 dungeon creatures, and the market has six merchants. A Scroll of Return opens a two-way passage to your preserved floor. Every fifth floor has a guardian.</p><p>Expedition recovery, loot and Greyhaven are game-specific playtest proposals. This is an early playable foundation, not a finished HoL adaptation.</p>`,
   );
 }
 function roster(options = {}) {
@@ -754,14 +820,10 @@ function audioSettings() {
     });
 }
 function shop() {
-  dialog(
-    "The provisioner",
-    `<p>Equipment, supplies, coins, Bulk and acquisition grants are available in each hero’s Workshop. Select a hero to review their inventory and shopping ledger.</p><p class="muted">Expedition-vault purchases are not yet implemented; the workshop currently handles creation equipment.</p><div class="catalog-list">${game.party.map((h, i) => `<button data-shop="${i}">${esc(h.name)}<small>${h.preview.inventory.remainingCoins} creation coins remaining</small></button>`).join("")}</div>`,
-  );
-  modal
-    .querySelectorAll("[data-shop]")
-    .forEach((b) => (b.onclick = () => workshop(+b.dataset.shop)));
+  closeModal();
+  marketScreen({ root: modal, game, close: closeModal, attempt });
 }
+
 function dying(h) {
   dialog(
     `${esc(h.name)} is Dying`,
@@ -834,35 +896,104 @@ function woundReview({ hero, wound }) {
     });
 }
 function scheduleSave() {
-  if (!initialized) return;
+  if (!initialized || runsOpen || !library?.active) return;
   clearTimeout(saveTimer);
   if (game.campaign.fallenHeroes.length > savedFallen) {
     savedFallen = game.campaign.fallenHeroes.length;
     void save(false).catch((e) => toast(e.message));
     return;
   }
-  saveTimer = setTimeout(() => save(false), 900);
+  saveTimer = setTimeout(
+    () => void save(false).catch((e) => toast(e.message)),
+    900,
+  );
+}
+function startingDrafts() {
+  return [
+    "borin-bridgekeeper",
+    "lira-ashbow",
+    "pip-copperwink",
+    "vaelis-emberglass",
+  ].map((id) => readyExample(examples.find((e) => e.id === id).draft, R, C));
 }
 async function save(show = false) {
-  if (!game) return;
-  const text = serialize(game.snapshot());
-  if (window.desktop) await window.desktop.save(text);
-  else localStorage.setItem("ddd.campaign.v1", text);
+  clearTimeout(saveTimer);
+  if (!game || !library?.active) return;
+  await library.write(library.active, serialize(game.snapshot()));
   if (show) toast("Expedition saved on this computer.");
 }
-async function readSave() {
-  return window.desktop
-    ? await window.desktop.load()
-    : localStorage.getItem("ddd.campaign.v1");
+function resumeRun() {
+  closeModal();
+  runsOpen = false;
+  game.resume();
+  render();
 }
-async function load() {
-  const text = await readSave();
-  if (!text) throw new Error("No saved expedition yet.");
-  game.load(deserialize(text));
-  scene.updateVisibility(game.party, game.seen);
-  scene.focusOn(game.active);
-  toast("Saved expedition restored.");
+async function openRuns() {
+  if (runsOpen) return;
+  game.pause();
+  selectedAction = null;
+  scene.freezePositions();
+  scene.showPath([]);
+  runsOpen = true;
+  runsBusy = true;
+  closeModal();
+  modal.innerHTML =
+    '<div class="veil"><section class="runs-window"><header><h2>Saving your journey…</h2></header></section></div>';
+  try {
+    await save();
+  } catch (error) {
+    runsBusy = false;
+    resumeRun();
+    throw error;
+  }
+  runsBusy = false;
+  await runsScreen({
+    onBusy: (value) => {
+      runsBusy = value;
+    },
+    root: modal,
+    library,
+    attempt,
+    resume: resumeRun,
+    exit: async () => {
+      await save();
+      await library.activate(null);
+      render();
+    },
+    copy: (name) => library.create(name, serialize(game.snapshot()), false),
+    create: async (name) => {
+      await save();
+      const candidate = new Game(R, C);
+      candidate.fresh(startingDrafts());
+      candidate.pause();
+      const text = serialize(candidate.snapshot());
+      await library.create(name, text);
+      game.load(deserialize(text), { resume: false });
+      savedFallen = game.campaign.fallenHeroes.length;
+      scene.focusOn(game.active);
+      resumeRun();
+    },
+    load: async (id) => {
+      await save();
+      const text = await library.read(id);
+      const candidate = new Game(R, C);
+      candidate.load(deserialize(text), { resume: false });
+      await library.activate(id);
+      game.load(deserialize(text), { resume: false });
+      savedFallen = game.campaign.fallenHeroes.length;
+      scene.focusOn(game.active);
+      resumeRun();
+      toast("Saved journey restored.");
+    },
+    quit: window.desktop
+      ? async () => {
+          await save();
+          window.desktop.close();
+        }
+      : null,
+  });
 }
+
 init().catch((e) => {
   console.error(e);
   ui.innerHTML = `<div class="loading-screen"><h1>The gate could not open</h1><p>${esc(e.message)}</p></div>`;

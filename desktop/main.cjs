@@ -1,6 +1,6 @@
 const { app, BrowserWindow, protocol, net, ipcMain } = require("electron");
 const path = require("node:path");
-const fs = require("node:fs/promises");
+const { createSaveStorage } = require("./save-storage.cjs");
 const { pathToFileURL } = require("node:url");
 if (process.env.DDD_TEST_USER_DATA)
   app.setPath("userData", process.env.DDD_TEST_USER_DATA);
@@ -33,33 +33,22 @@ app.whenReady().then(async () => {
       return new Response("Forbidden", { status: 403 });
     return net.fetch(pathToFileURL(p).href);
   });
-  const savePath = path.join(app.getPath("userData"), "campaign.json");
-  let saveQueue = Promise.resolve();
-  ipcMain.handle("save:write", async (event, text) => {
-    if (
-      !event.senderFrame.url.startsWith("dungeon://game/") ||
-      typeof text !== "string" ||
-      text.length > 8_000_000
-    )
-      throw new Error("Invalid save");
-    JSON.parse(text);
-    const write = saveQueue.then(async () => {
-      await fs.mkdir(path.dirname(savePath), { recursive: true });
-      await fs.writeFile(savePath + ".tmp", text);
-      await fs.rename(savePath + ".tmp", savePath);
-      return true;
+  const storage = createSaveStorage(app.getPath("userData"));
+  const trusted = (event) => {
+    if (!event.senderFrame.url.startsWith("dungeon://game/"))
+      throw new Error("Invalid save sender");
+  };
+  for (const method of ["get", "set", "remove", "keys"])
+    ipcMain.handle(`saves:${method}`, (event, ...args) => {
+      trusted(event);
+      return storage[method](...args);
     });
-    saveQueue = write.catch(() => {});
-    return write;
-  });
-  ipcMain.handle("save:read", async () => {
-    await saveQueue;
-    try {
-      return await fs.readFile(savePath, "utf8");
-    } catch (e) {
-      if (e.code === "ENOENT") return null;
-      throw e;
-    }
+  ipcMain.handle("save:read", async (event) => {
+    trusted(event);
+    const index = JSON.parse((await storage.get("index")) ?? "null");
+    if (!index?.active) return storage.get("legacy");
+    const record = JSON.parse(await storage.get(index.active));
+    return record?.text ?? null;
   });
   const win = new BrowserWindow({
     width: 1600,
@@ -80,6 +69,22 @@ app.whenReady().then(async () => {
   win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
   win.webContents.on("will-navigate", (e, url) => {
     if (!url.startsWith("dungeon://game/")) e.preventDefault();
+  });
+  let closing = false,
+    readyToSave = false;
+  ipcMain.on("save:ready", (event) => {
+    trusted(event);
+    readyToSave = true;
+  });
+  win.on("close", (event) => {
+    if (closing || !readyToSave) return;
+    event.preventDefault();
+    win.webContents.send("save:closing");
+  });
+  ipcMain.on("save:closed", (event) => {
+    trusted(event);
+    closing = true;
+    win.close();
   });
   await win.loadURL("dungeon://game/");
 });

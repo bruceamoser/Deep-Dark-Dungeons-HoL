@@ -195,7 +195,12 @@ export function attackPresentation(from, data) {
     return { kind: "arrow", clip: "2H_Ranged_Shoot", release: 0.28 };
   if (data.ability === "ability-rim-strike")
     return { kind: "shield", clip: "Block_Attack", contact: 0.43 };
-  if (data.ability === "ability-basic-unarmed" || (!melee && !from.isEnemy))
+  if (
+    data.ability === "ability-basic-unarmed" ||
+    (!melee && !from.isEnemy) ||
+    (from.isEnemy &&
+      ["bite", "claw", "slam"].includes(from.model.userData.equipment?.weapon))
+  )
     return {
       kind: "unarmed",
       clip: "Unarmed_Melee_Attack_Punch_A",
