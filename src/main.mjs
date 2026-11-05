@@ -1,4 +1,7 @@
+import { creationScreen } from "./ui/creation.mjs";
 import "./style.css";
+import { characterSheet } from "./ui/character.mjs";
+import { icon, itemIcon, actionIcon } from "./ui/icons.mjs";
 import { ABILITIES, coverage } from "./core/abilities.mjs";
 import { FORMATIONS } from "./core/formations.mjs";
 import { GameAudio } from "./view/audio.mjs";
@@ -17,7 +20,12 @@ const esc = (s) =>
         c
       ],
   );
-let toastTimer;
+let toastTimer, modalCleanup;
+function closeModal() {
+  modalCleanup?.();
+  modalCleanup = null;
+  modal.replaceChildren();
+}
 function toast(text) {
   const e = document.querySelector("#toast");
   e.textContent = text;
@@ -58,6 +66,8 @@ async function init() {
     "conditions",
     "inventory",
     "passive-defenses",
+    "development",
+    "identity",
   ];
   R = {};
   for (const name of modules)
@@ -156,6 +166,15 @@ async function init() {
   }, 170);
   document.addEventListener("keydown", (e) => {
     if (
+      e.key === "Escape" &&
+      modal.children.length &&
+      !game.pendingDefense &&
+      !["wound-review"].includes(game.mode)
+    ) {
+      closeModal();
+      return;
+    }
+    if (
       modal.children.length ||
       ["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)
     )
@@ -163,6 +182,12 @@ async function init() {
     if (e.code === "Space") {
       e.preventDefault();
       attempt(() => game.endTurn());
+    }
+    if (e.key.toLowerCase() === "c" || e.key.toLowerCase() === "i")
+      sheet(game.selected);
+    if (/^[5-9]$/.test(e.key)) {
+      const id = game.active.favorites?.[+e.key - 5];
+      if (id) activateAction(id);
     }
     if (/^[1-4]$/.test(e.key)) attempt(() => game.select(Number(e.key) - 1));
     if (e.key.toLowerCase() === "q") scene.rotate(-1);
@@ -210,12 +235,29 @@ function render() {
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
           "",
-        )}</aside><div class="bottom"><div class="phase ${combat ? "combat" : ""}">${phase}</div><div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Safe breath", "rest", "RESTORE HP") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Actions opens learned cards · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · Formation sets marching order"}</div></div>`;
+        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Safe breath", "rest", "RESTORE HP") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Actions opens learned cards · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · Formation sets marching order"}</div></div>`;
     drawMap();
   }
   bind();
 }
 function bind() {
+  ui.querySelectorAll("[data-hot-action]").forEach(
+    (b) => (b.onclick = () => activateAction(b.dataset.hotAction)),
+  );
+  ui.querySelectorAll("[data-quick-gear]").forEach(
+    (b) =>
+      (b.onclick = () =>
+        attempt(() => {
+          const item = game.active.preview.inventory.items.find(
+            (i) => i.instanceId === b.dataset.quickGear,
+          );
+          game.equip(
+            game.selected,
+            item.instanceId,
+            item.held ? "stow" : "ready",
+          );
+        })),
+  );
   ui.querySelectorAll("[data-select]").forEach(
     (b) => (b.onclick = () => attempt(() => game.select(+b.dataset.select))),
   );
@@ -327,8 +369,9 @@ function clickTile(p) {
   });
 }
 function dialog(title, content, footer = "") {
+  closeModal();
   modal.innerHTML = `<div class="veil"><section class="dialog" role="dialog" aria-modal="true"><header><div class="eyebrow">DEEP DARK DUNGEONS</div><button class="close" aria-label="Close">×</button></header><h2>${title}</h2>${content}<footer>${footer}</footer></section></div>`;
-  modal.querySelector(".close").onclick = () => modal.replaceChildren();
+  modal.querySelector(".close").onclick = () => closeModal();
 }
 function help() {
   dialog(
@@ -346,90 +389,66 @@ function roster() {
     .forEach((b) => (b.onclick = () => workshop(+b.dataset.edit)));
 }
 function workshop(slot, development = false) {
-  const h = game.party[slot],
-    draft = structuredClone(h.draft);
-  if (development) {
-    draft.progression ??= { level: 1, levels: {} };
-    draft.progression.level = Math.min(
-      h.earnedLevel,
-      h.preview.state.level + 1,
-    );
-  }
-  if (!development) delete draft.progression;
-  localStorage.setItem(
-    "hol.workshop.v1",
-    JSON.stringify({
-      character: JSON.parse(R.writePortableCharacter(draft, C)),
-      mode: development ? "sheet" : "builder",
-      tab: development ? "Development" : "Main",
-      step: 0,
-      isExample: false,
-    }),
-  );
-  modal.innerHTML = `<div class="veil"><section class="workshop-dialog"><header><span class="caps">${development ? "Training" : "Recruit"} · ${esc(h.name)}</span><p>${development ? `Earned level ${h.earnedLevel}. Train with included dungeon cards. Current injuries and spent resources persist. Creation edits and unearned levels cannot be committed.` : "Finish both DP stages, equipment and review. Recruit validates the complete character."}</p><button id="recruit" class="primary">${development ? "Commit training" : "Recruit this hero"}</button><button id="cancel-workshop">Close</button></header><iframe title="Heroes of Legend character workshop" src="/vendor/hol/index.html"></iframe></section></div>`;
-  modal.querySelector("#cancel-workshop").onclick = () =>
-    modal.replaceChildren();
-  modal.querySelector("#recruit").onclick = () =>
-    attempt(() => {
-      const stored = JSON.parse(localStorage.getItem("hol.workshop.v1"));
-      const parsed = R.readPortableCharacter(stored.character, C);
-      if (development) game.develop(slot, parsed.draft);
-      else game.replace(slot, parsed.draft);
-      modal.replaceChildren();
-      toast(
-        `${game.party[slot].name}: ${development ? "training committed" : "joins the company"}.`,
-      );
-    });
+  closeModal();
+  modalCleanup = creationScreen({
+    root: modal,
+    game,
+    scene,
+    R,
+    C,
+    examples,
+    slot,
+    development,
+    close: closeModal,
+    attempt,
+    toast,
+  });
 }
 function sheet(index) {
-  const h = game.party[index],
-    p = h.preview;
-  const cards = C.choices.filter(
-    (c) => p.state.abilities.includes(c.id) || c.universal,
-  );
-  const name = (id) => C.choices.find((c) => c.id === id)?.name ?? id;
-  dialog(
-    esc(h.name),
-    `<div class="eyebrow">${esc(name(h.draft.ancestryId))} · ${esc(className(h))} · LEVEL ${p.state.level}</div>
-    <div class="sheet-summary"><span>${h.survival.hp}/${h.survival.maxHp} HP</span><span>${h.survival.gritAvailable}/${p.summary.gritGranted} Grit</span><span>Speed ${p.summary.speed}</span><span>Bulk ${p.inventory.bulk}/${p.inventory.capacity}</span></div>
-    <div class="attribute-grid">${Object.entries(h.draft.attributes)
-      .map(
-        ([k, v]) =>
-          `<div><small>${esc(k)}</small><b>${v >= 0 ? "+" : ""}${v}</b></div>`,
-      )
-      .join("")}</div>
-    <p>${esc(h.survival.status)} · ${h.survival.marks} death marks · ${h.wounds.length} wounds. Resistance: ${
-      Object.entries(p.resistances)
-        .map(([k, v]) => `${esc(k)} ${v}`)
-        .join(", ") || "none"
-    }.</p>
-    <p>Conditions: ${(h.conditions ?? []).map((c) => `${esc(c.key)} ${c.rating}`).join(", ") || "none"}${h.buffs.defend ? " · Defend +1 Boon" : ""}${h.buffs.shield ? " · Shield Block +1 Boon" : ""}</p>
-    ${h.wounds.map((w) => `<p class="wound"><b>${esc(w.record.injury)}</b> · ${esc(w.record.remedy)}</p>`).join("")}
-    <details><summary>Disciplines, origins & languages</summary><p>${Object.entries(
-      p.state.ranks,
+  closeModal();
+  modalCleanup = characterSheet({
+    root: modal,
+    game,
+    scene,
+    C,
+    index,
+    close: closeModal,
+    attempt,
+    activate: activateAction,
+    train: (i) => workshop(i, true),
+  });
+}
+function activateAction(id) {
+  attempt(() => {
+    const reason = game.actionReason(id);
+    if (reason) throw new Error(reason);
+    closeModal();
+    if (ABILITIES[id].target === "self") game.useAbility(id);
+    else selectedAction = { id, hero: game.active.id };
+    render();
+  });
+}
+function combatDock() {
+  const h = game.active,
+    b = game.encounter.current === h.id ? game.budget : null;
+  const cards = (h.favorites ?? [])
+    .map((id) => C.choices.find((c) => c.id === id))
+    .filter(Boolean);
+  return `<div class="combat-dock"><div class="combat-status"><strong>${esc(h.name)}</strong><div class="budget-pips"><span><b>${b?.remaining.main ?? 1}</b> MAIN</span><span><b>${b?.remaining.maneuver ?? 1}</b> MANEUVER</span><span><b>${b?.remaining.reaction ?? 1}</b> REACTION</span><span><b>${game.movementLeft()}</b> MOVE</span></div></div><div class="favorite-bar">${
+    cards
+      .map((c, i) => {
+        const reason = game.actionReason(c.id);
+        return `<button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" title="${esc(c.name)} · ${ABILITIES[c.id].category}${reason ? " · " + esc(reason) : ""}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${i + 5 <= 9 ? i + 5 : ""}</small>${icon(actionIcon(c.id))}<span>${esc(c.name)}</span></button>`;
+      })
+      .join("") ||
+    '<span class="cost-note">Pin favorite actions from Character → Abilities.</span>'
+  }</div><div class="quick-gear"><span>READY · 1 MANEUVER</span>${h.preview.inventory.items
+    .filter((i) => i.carried && i.hands)
+    .map(
+      (i) =>
+        `<button class="${i.held ? "readied" : ""}" data-quick-gear="${esc(i.instanceId)}" ${game.gearReason(game.selected, i.instanceId, i.held ? "stow" : "ready") ? "disabled" : ""} title="${esc(game.gearReason(game.selected, i.instanceId, i.held ? "stow" : "ready") || (i.held ? "Stow" : "Ready"))} ${esc(i.definition.name)}">${icon(itemIcon(i))}${i.held ? "✓ " : ""}${esc(i.definition.name.replace("Ordinary ", ""))}</button>`,
     )
-      .map(([k, v]) => `${esc(name(k))} ${v}`)
-      .join(
-        " · ",
-      )}</p><p>${esc(name(h.draft.culture.id))} · ${esc(name(h.draft.background.id))}</p><p>${esc(p.summary.languages.map((l) => l.name).join(", "))}</p></details>
-    <h3>Development</h3><p>Earned level ${h.earnedLevel} · ${p.development.current} DP available · ${p.development.spent} spent. Return after clearing a new depth to earn a level. Advancement DP carries forward; attributes do not increase automatically.</p>
-    <h3>Equipment</h3><p class="muted">Ready preserves compatible one-handed gear; otherwise it stows held gear. Attacks draw carried weapons when hands are free. In combat this spends a Maneuver.</p><div class="equipment-list">${p.inventory.items.map((i) => `<div><span>${esc(i.definition.name)} <small>${i.held ? "HELD" : i.worn ? "WORN" : i.carried ? "PACK" : "STORED"}${i.hands ? ` · ${i.hands} hand` : ""}${i.inventoryDie ? ` · ${h.supplies[i.instanceId] === 0 ? "exhausted" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`}` : ""}</small></span>${i.carried && i.hands > 0 && !i.held ? `<button data-ready="${esc(i.instanceId)}">Ready</button>` : ""}</div>`).join("")}</div>
-    <h3>Abilities</h3><p class="muted">Included cards have dungeon support. Other source cards are preserved for review; they are not substituted with generic attacks.</p><div class="card-list">${cards.map((c) => `<details><summary>${esc(c.name)} <span class="tag">${esc(coverage(c.id).status.toUpperCase())}</span></summary><p class="muted">${esc(coverage(c.id).reason)}</p>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}:</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes?.map((o) => `<p><b>${esc(o.label)}:</b> ${esc(o.text)}</p>`).join("") ?? ""))).join("") ?? ""}</details>`).join("")}</div>`,
-    game.mode === "town"
-      ? '<button id="train-hero" class="primary">Develop this hero</button>'
-      : "",
-  );
-  modal
-    .querySelector("#train-hero")
-    ?.addEventListener("click", () => workshop(index, true));
-  modal.querySelectorAll("[data-ready]").forEach(
-    (b) =>
-      (b.onclick = () =>
-        attempt(() => {
-          game.equip(index, b.dataset.ready);
-          sheet(index);
-        })),
-  );
+    .join("")}</div></div>`;
 }
 function actions() {
   const h = game.active;
@@ -451,10 +470,10 @@ function actions() {
           const id = b.dataset.card;
           if (ABILITIES[id].target === "self") {
             game.useAbility(id);
-            modal.replaceChildren();
+            closeModal();
           } else {
             selectedAction = { id, hero: h.id };
-            modal.replaceChildren();
+            closeModal();
             render();
             toast(
               `Choose a target for ${C.choices.find((c) => c.id === id).name}.`,
@@ -465,12 +484,12 @@ function actions() {
   modal.querySelector("#main-convert").onclick = () =>
     attempt(() => {
       game.convert("main");
-      modal.replaceChildren();
+      closeModal();
     });
   modal.querySelector("#stand").onclick = () =>
     attempt(() => {
       game.stand();
-      modal.replaceChildren();
+      closeModal();
     });
 }
 function formation() {
@@ -509,7 +528,7 @@ function formation() {
   modal.querySelector("#apply-formation").onclick = () =>
     attempt(() => {
       game.setFormation(modal.querySelector("#formation-kind").value, order);
-      modal.replaceChildren();
+      closeModal();
     });
 }
 function reaction({ hero, enemy }) {
@@ -526,7 +545,7 @@ function reaction({ hero, enemy }) {
   ])
     modal.querySelector(`#${id}`).onclick = () =>
       attempt(() => {
-        modal.replaceChildren();
+        closeModal();
         game.resolveReaction(block);
       });
 }
@@ -576,7 +595,7 @@ function dying(h) {
     modal.querySelector("#" + id).onclick = () =>
       attempt(() => {
         game.survivalChoice(kind);
-        modal.replaceChildren();
+        closeModal();
       });
 }
 function woundReview({ hero, wound }) {

@@ -418,3 +418,40 @@ test("each cleared-depth extraction awards one milestone and never awards it twi
   g.extract();
   assert.ok(g.party.every((h) => h.earnedLevel === 2));
 });
+test("favorite actions are per hero, bounded, validated and survive saves", () => {
+  const g = fresh(),
+    id = "ability-basic-unarmed",
+    before = g.party[0].favorites.includes(id);
+  g.favorite(0, id);
+  assert.equal(g.party[0].favorites.includes(id), !before);
+  assert.throws(() => g.favorite(0, "ability-cinder-cast"), /playable/);
+  const copy = fresh();
+  copy.load(deserialize(serialize(g.snapshot())));
+  assert.deepEqual(copy.party[0].favorites, g.party[0].favorites);
+  assert.deepEqual(copy.party[1].favorites, g.party[1].favorites);
+});
+test("armor wear checks training and swaps resistance without granting HP or Grit", () => {
+  const g = fresh(),
+    h = g.party[0],
+    armor = h.preview.inventory.items.find((i) =>
+      /light-armor/.test(i.catalogId),
+    );
+  h.survival.hp = 3;
+  h.survival.gritAvailable = 0;
+  g.equip(0, armor.instanceId, "wear");
+  assert.equal(h.preview.resistances.physical, 1);
+  g.equip(0, armor.instanceId, "remove");
+  assert.equal(h.preview.resistances.physical ?? 0, 0);
+  assert.equal(h.survival.hp, 3);
+  assert.equal(h.survival.gritAvailable, 0);
+  const invalid = {
+    id: "item-ordinary-heavy-armor",
+    quantity: 1,
+    hands: 0,
+    instanceId: "test-heavy",
+  };
+  h.draft.shopping.push(invalid);
+  h.draft.coinOverride = true;
+  h.preview = R.workshopCharacter(h.draft, C);
+  assert.match(g.gearReason(0, "test-heavy", "wear"), /training/);
+});

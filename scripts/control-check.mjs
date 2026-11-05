@@ -148,7 +148,7 @@ export async function verifyControls(page) {
     window.__ddd.game.party.slice(0, 3).map((h) => [h.x, h.z]),
   );
   await page.getByRole("button", { name: "Actions", exact: false }).click();
-  await page.getByRole("button", { name: "Cinder Cast", exact: false }).click();
+  await page.locator('[data-card="ability-cinder-cast"]').click();
   const target = await page.evaluate(() => {
     const { game: g, scene: s } = window.__ddd,
       e = g.enemies[0],
@@ -214,10 +214,10 @@ export async function verifyControls(page) {
   });
   await page.getByRole("button", { name: "Return", exact: false }).click();
   await page.locator('[data-hero="0"]').click();
+  await page.locator('[data-tab="journey"]').click();
   await page.getByRole("button", { name: "Develop this hero" }).click();
-  await expect(
-    page.frameLocator("iframe").locator(".development-summary"),
-  ).toContainText("10");
+  await expect(page.locator(".training-banner")).toContainText("10");
+  await page.locator('[data-step="7"]').click();
   await page.getByRole("button", { name: "Commit training" }).click();
   expect(
     await page.evaluate(() => ({

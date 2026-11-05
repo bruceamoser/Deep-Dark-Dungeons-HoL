@@ -1,4 +1,5 @@
 import * as T from "three";
+import { equipmentAppearance } from "./appearance.mjs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -431,7 +432,7 @@ export class Scene {
   addEntity(data, isEnemy = false) {
     const name = isEnemy ? "Skeleton" : data.model;
     const group = new T.Group(),
-      model = this.model(name, isEnemy ? 1.9 : 1.7);
+      model = equipmentAppearance(this.assets, data, isEnemy).model;
     group.add(model);
     group.position.set(data.x * TILE, 0.04, data.z * TILE);
     this.entityGroup.add(group);
@@ -462,28 +463,15 @@ export class Scene {
     };
     this.entities.set(data.id, entity);
     this.animate(data.id, "Idle");
-    let right, left;
-    model.traverse((o) => {
-      if (["handslotr", "handslot.r"].includes(o.name)) right = o;
-      if (["handslotl", "handslot.l"].includes(o.name)) left = o;
-    });
-    const held = (id) =>
-      data.preview?.inventory.items.some(
-        (i) => i.carried && i.held && i.catalogId === id,
-      );
-    if (right) {
-      if (isEnemy || held("item-ordinary-melee-weapon"))
-        right.add(this.model("sword"));
-      else if (held("item-ordinary-ranged-weapon"))
-        right.add(this.model("bow"));
-    }
-    if (left && held("item-ordinary-shield")) left.add(this.model("shield"));
     return entity;
   }
   resetEntities(party, enemies) {
     for (const e of this.entities.values()) {
       e.mixer.stopAllAction();
       e.mixer.uncacheRoot(e.model);
+      e.model.traverse((o) => {
+        if (o.isSkinnedMesh) o.skeleton.dispose();
+      });
       e.ring.geometry.dispose();
       e.ring.material.dispose();
       this.entityGroup.remove(e.group);
