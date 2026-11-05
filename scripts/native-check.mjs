@@ -1,3 +1,4 @@
+import { verifyRecovery } from "./recovery-check.mjs";
 import { verifyCharacter } from "./character-check.mjs";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -74,6 +75,7 @@ try {
   expect(JSON.parse(stored).campaign.party).toHaveLength(4);
   await w.screenshot({ path: "test-results/native-dungeon.png" });
   await verifyControls(w);
+  await verifyRecovery(w);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");

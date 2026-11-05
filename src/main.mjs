@@ -68,6 +68,8 @@ async function init() {
     "passive-defenses",
     "development",
     "identity",
+    "potions",
+    "treatment",
   ];
   R = {};
   for (const name of modules)
@@ -126,9 +128,15 @@ async function init() {
             : "1H_Melee_Attack_Slice_Diagonal",
         true,
       );
-      scene.animate(data.target, "Hit_A", true);
+      if (data.damage > 0) scene.animate(data.target, "Hit_A", true);
       scene.attackEffect(data);
-      sound.play(data.spell ? "spell" : "hit");
+      sound.play(
+        data.element === "life" && data.damage === 0
+          ? "loot"
+          : data.spell
+            ? "spell"
+            : "hit",
+      );
     }
     if (type === "combat") {
       sound.play("combat");
@@ -143,6 +151,7 @@ async function init() {
     if (type === "reaction") reaction(data);
     if (type === "dying") dying(data.hero);
     if (type === "wound") woundReview(data);
+    if (type === "turnchoices") turnChoices(data);
     if (type !== "move") {
       if (selectedAction && selectedAction.hero !== game.active.id)
         selectedAction = null;
@@ -169,7 +178,12 @@ async function init() {
       e.key === "Escape" &&
       modal.children.length &&
       !game.pendingDefense &&
-      !["wound-review"].includes(game.mode)
+      !["wound-review"].includes(game.mode) &&
+      !game.woundNotices?.length &&
+      !(
+        game.active.survival.status === "dying" &&
+        game.active.survival.due === game.active.survival.ownTurn
+      )
     ) {
       closeModal();
       return;
@@ -361,7 +375,7 @@ function clickTile(p) {
       const ally = game.party.find((h) => h.x === p.x && h.z === p.z);
       const target =
         ABILITIES[selectedAction.id].target === "ally" ? ally : enemy;
-      game.useAbility(selectedAction.id, target?.id);
+      game.useAbility(selectedAction.id, target?.id, selectedAction.options);
       selectedAction = null;
       render();
     } else if (enemy) game.attack(enemy.id);
@@ -376,13 +390,13 @@ function dialog(title, content, footer = "") {
 function help() {
   dialog(
     "A light in the dark",
-    `<p>Lead four heroes through the crypt. Click the floor to travel together. Sentries stop real-time movement and begin alternating HoL turns.</p><p>Choose heroes with <b>1–4</b>. In combat, click an adjacent sentry for Basic Melee (a held melee weapon) or Basic Unarmed. Click the floor to spend movement; convert a Maneuver for more. <b>Space</b> ends a turn. Right-drag pans, <b>Q / E</b> rotate, mouse wheel zooms, <b>F</b> follows your selected hero. Formation controls marching order outside combat.</p><p>The Character Workshop includes the full imported character-creation catalog. Combat includes melee/unarmed, ranged ammunition, Cinder Cast, Rime Grip, Hook and Drive, Pinning Shot, Defend, Shield Block, Stabilize and alternating turns. The playable roster is curated: Actions lists supported learned cards. Character sheets mark included, excluded, planned adaptations and cards awaiting review. Wounds are rolled from all five complete tables; this build pauses on a wound rather than silently dropping its effects.</p><p>Expedition recovery, loot and Greyhaven are game-specific playtest proposals. This is an early playable foundation, not a finished HoL adaptation.</p>`,
+    `<p>Lead four heroes through the crypt. Click the floor to travel together. Sentries stop real-time movement and begin alternating HoL turns.</p><p>Choose heroes with <b>1–4</b>. In combat, click an adjacent sentry for Basic Melee (a held melee weapon) or Basic Unarmed. Click the floor to spend movement; convert a Maneuver for more. <b>Space</b> ends a turn. Right-drag pans, <b>Q / E</b> rotate, mouse wheel zooms, <b>F</b> follows your selected hero. Formation controls marching order outside combat.</p><p>The in-game creator uses the full character-creation catalog. C or I opens your equipment sheet; pin favorites in Abilities, then use them from the combat bar. Combat includes melee/unarmed, ranged ammunition, Cinder Cast, Rime Grip, Hook and Drive, Pinning Shot, Defend, Shield Block, Stabilize and alternating turns. The playable roster is curated: Actions lists supported learned cards. Character sheets mark included, excluded, planned adaptations and cards awaiting review. Wounds use all five tables and apply numerical penalties, conditions and Last Words. Acknowledge the injury, resolve any displacement, and continue. The Journey tab offers matching one-hour wound treatment in Greyhaven. Scars and spent Grit persist.</p><p>Expedition recovery, loot and Greyhaven are game-specific playtest proposals. This is an early playable foundation, not a finished HoL adaptation.</p>`,
   );
 }
 function roster() {
   dialog(
     "The company register",
-    `<p>Recruit from the published examples or build your own hero with the full HoL workshop.</p><div class="catalog-list">${game.party.map((h, i) => `<button data-edit="${i}">${esc(h.name)}<small>${esc(className(h))} · Replace or customize slot ${i + 1}</small></button>`).join("")}</div>`,
+    `<p>Recruit from the published examples or build your own hero with the complete in-game HoL creator.</p><div class="catalog-list">${game.party.map((h, i) => `<button data-edit="${i}">${esc(h.name)}<small>${esc(className(h))} · Replace or customize slot ${i + 1}</small></button>`).join("")}</div>`,
   );
   modal
     .querySelectorAll("[data-edit]")
@@ -423,6 +437,36 @@ function activateAction(id) {
     const reason = game.actionReason(id);
     if (reason) throw new Error(reason);
     closeModal();
+    if (id === "ability-reduce-a-condition") {
+      dialog(
+        "Reduce a condition",
+        '<p>Choose the aid you will give, then click yourself or an adjacent companion. Reduces one temporary rating; persistent injuries need their printed remedy.</p><div class="catalog-list">' +
+          [
+            ["bleeding", "Apply pressure"],
+            ["burning", "Smother flames"],
+            ["freezing", "Warm the affected area"],
+          ]
+            .map(
+              ([id, label]) =>
+                `<button data-reduce="${id}">${label}<small>${id} −1 · Main</small></button>`,
+            )
+            .join("") +
+          "</div>",
+      );
+      modal.querySelectorAll("[data-reduce]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            selectedAction = {
+              id,
+              hero: game.active.id,
+              options: { condition: b.dataset.reduce },
+            };
+            closeModal();
+            render();
+          }),
+      );
+      return;
+    }
     if (ABILITIES[id].target === "self") game.useAbility(id);
     else selectedAction = { id, hero: game.active.id };
     render();
@@ -442,11 +486,11 @@ function combatDock() {
       })
       .join("") ||
     '<span class="cost-note">Pin favorite actions from Character → Abilities.</span>'
-  }</div><div class="quick-gear"><span>READY · 1 MANEUVER</span>${h.preview.inventory.items
+  }</div><div class="quick-gear"><span>READY / STOW</span>${h.preview.inventory.items
     .filter((i) => i.carried && i.hands)
     .map(
       (i) =>
-        `<button class="${i.held ? "readied" : ""}" data-quick-gear="${esc(i.instanceId)}" ${game.gearReason(game.selected, i.instanceId, i.held ? "stow" : "ready") ? "disabled" : ""} title="${esc(game.gearReason(game.selected, i.instanceId, i.held ? "stow" : "ready") || (i.held ? "Stow" : "Ready"))} ${esc(i.definition.name)}">${icon(itemIcon(i))}${i.held ? "✓ " : ""}${esc(i.definition.name.replace("Ordinary ", ""))}</button>`,
+        `<button class="${i.held ? "readied" : ""}" data-quick-gear="${esc(i.instanceId)}" ${game.gearReason(game.selected, i.instanceId, i.held ? "stow" : "ready") ? "disabled" : ""} title="${esc(game.gearReason(game.selected, i.instanceId, i.held ? "stow" : "ready") || (i.held ? "Stow" : "Ready"))} ${esc(i.definition.name)}">${icon(itemIcon(i))}${i.held ? "✓ " : ""}${esc(i.definition.name.replace("Ordinary ", ""))} · ${game.gearPlan(game.selected, i.instanceId, i.held ? "stow" : "ready").cost} M</button>`,
     )
     .join("")}</div></div>`;
 }
@@ -463,24 +507,9 @@ function actions() {
       .join("")}</div>`,
     '<button id="main-convert">Main → Maneuver</button><button id="stand">Stand · 2 movement</button>',
   );
-  modal.querySelectorAll("[data-card]").forEach(
-    (b) =>
-      (b.onclick = () =>
-        attempt(() => {
-          const id = b.dataset.card;
-          if (ABILITIES[id].target === "self") {
-            game.useAbility(id);
-            closeModal();
-          } else {
-            selectedAction = { id, hero: h.id };
-            closeModal();
-            render();
-            toast(
-              `Choose a target for ${C.choices.find((c) => c.id === id).name}.`,
-            );
-          }
-        })),
-  );
+  modal
+    .querySelectorAll("[data-card]")
+    .forEach((b) => (b.onclick = () => activateAction(b.dataset.card)));
   modal.querySelector("#main-convert").onclick = () =>
     attempt(() => {
       game.convert("main");
@@ -588,6 +617,8 @@ function dying(h) {
     `<p>Spend Grit to return to full available HP, or make a Fortitude death roll. Spent Grit does not return through ordinary rest.</p>`,
     `<button id="death-roll">Make death roll</button><button id="grit" ${h.survival.gritAvailable ? "" : "disabled"}>Spend 1 Grit</button>`,
   );
+  modal.querySelector(".close").onclick = () =>
+    toast("Resolve the Dying choice to continue.");
   for (const [id, kind] of [
     ["death-roll", "roll"],
     ["grit", "grit"],
@@ -598,13 +629,58 @@ function dying(h) {
         closeModal();
       });
 }
+function turnChoices({ hero, count }) {
+  dialog(
+    `${esc(hero.name)} · Retained actions`,
+    `<p>Dazed / Grappled leaves ${count} action categories this turn. Movement follows its separate restrictions.</p><div class="catalog-list">${["main", "maneuver", "reaction"].map((c) => `<label><input type="checkbox" name="retained" value="${c}"> ${c}</label>`).join("")}</div>`,
+    '<button id="retain-actions" class="primary">Begin turn</button>',
+  );
+  modal.querySelector("#retain-actions").onclick = () =>
+    attempt(() => {
+      const chosen = [
+        ...modal.querySelectorAll('[name="retained"]:checked'),
+      ].map((e) => e.value);
+      if (chosen.length !== count)
+        throw new Error(`Choose ${count} categories.`);
+      closeModal();
+      game.beginHero(chosen);
+    });
+}
 function woundReview({ hero, wound }) {
+  const forced = wound.effects.filter((e) => e.kind === "forcedMovement");
   dialog(
     "A lasting wound",
-    `<p><b>${esc(hero.name)} · ${esc(wound.record.injury)}</b></p><p>${esc(wound.record.remedy)}</p><p>This result is preserved in the campaign. Automated wound consequences and treatment are still being integrated; this build pauses here to avoid changing HoL’s harm rules.</p>`,
-    button("Save expedition", "save-wound"),
+    `<p><b>${esc(hero.name)} · ${esc(wound.record.injury)}</b></p><p>${esc(wound.record.remedy)}</p><div class="condition-tags">${wound.effects.map((e) => `<span>${esc(e.kind === "condition" ? `${e.key} ${e.rating}${e.persistence === "starred" ? "*" : ""}` : e.kind === "movementPenalty" ? `Movement −${e.amount}` : e.kind === "rollModifier" ? `${e.amount} ${e.polarity}: ${e.context}` : e.kind === "forcedMovement" ? `${e.direction} ${e.distance}` : "Last Words")}</span>`).join("")}</div>${
+      forced.length
+        ? '<p>Select displacement direction on the dungeon grid. Walls and creatures resolve collision damage and Stability.</p><select id="wound-direction"><option value="">Choose direction…</option>' +
+          [
+            [0, -1, "North"],
+            [1, -1, "Northeast"],
+            [1, 0, "East"],
+            [1, 1, "Southeast"],
+            [0, 1, "South"],
+            [-1, 1, "Southwest"],
+            [-1, 0, "West"],
+            [-1, -1, "Northwest"],
+          ]
+            .map(([x, z, n]) => `<option value="${x},${z}">${n}</option>`)
+            .join("") +
+          "</select>"
+        : ""
+    }<p class="muted">The scar and accumulated wound count remain after treatment. Physical and mental penalties apply to their corresponding attributes.</p>`,
+    '<button id="acknowledge-wound" class="primary">Continue</button>',
   );
-  modal.querySelector("[data-action]").onclick = () => save(true);
+  modal.querySelector(".close").onclick = () =>
+    toast("Acknowledge this wound before continuing.");
+  modal.querySelector("#acknowledge-wound").onclick = () =>
+    attempt(() => {
+      const value = modal.querySelector("#wound-direction")?.value;
+      if (forced.length && !value)
+        throw new Error("Choose the displacement direction.");
+      const [x, z] = (value ?? "0,0").split(",").map(Number);
+      closeModal();
+      game.acknowledgeWound({ x, z });
+    });
 }
 function scheduleSave() {
   if (!initialized) return;

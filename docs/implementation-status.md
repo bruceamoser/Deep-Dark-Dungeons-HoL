@@ -14,8 +14,8 @@ This is a first playable foundation, not the completed game or the final visual 
 
 ## Material limitations
 
-- The curated action subset below is playable. Most cards, class signatures, opportunity attacks, contextual exploration checks and complete hero condition handling still need design and adapters.
-- All 280 wound entries and the upstream survival/recovery modules are bundled. A rolled wound pauses the game at an explicit integration boundary. Its consequences are not silently discarded. Complete wound effects, Dying/Last Words interaction, treatment and expedition rescue remain release blockers.
+- The curated action subset below is playable. Most cards, higher-level class signatures, opportunity attacks and contextual exploration checks still need design and adapters.
+- All 280 wound entries and the upstream survival/recovery modules are bundled. Numerical wound effects, typed conditions, Dying/Last Words and daily treatment are now integrated. Exceptional anatomical consequences/remedies, additional reactions and expedition rescue need further work.
 - Town shopping currently opens creation shopping. Persistent vault-funded shopping is not implemented.
 - Failed-party caches and replacement parties are a proposal; the complete defeat/rescue loop is not yet reachable through fully automated harm play.
 - Four class-associated free model appearances are available. Armor tiers and held weapons/shields now drive both world models and the animated sheet preview. Full ancestry/body/outfit customization remains unimplemented; current appearances remain a first art pass.
@@ -38,10 +38,16 @@ No differences were found between the pinned book `24e545e6d860e8c1b03a21356fd22
 - First extraction after clearing each new depth earns one level per surviving hero (game-specific milestone proposal). Workshop training commits only earned progression, protects prior choices and creation, gates newly learned cards to the included roster, carries DP forward, and does not refill HP/Grit. Level-3/7 signature training remains gated by missing signature adapters; this is not complete class progression.
 - Procedural wind, footsteps, impacts, spells, combat and loot tones use gesture-unlocked Web Audio, persisted volume/mute and a test sound. This is a functional sound pass, not finished production audio.
 
-The earlier limitation that _all_ learned cards are reference-only is superseded by this pass. Wound treatment, the full defeat/rescue loop, most signatures/reactions, persistent shopping and high-end final art remain unfinished. Conditions currently originate on sentries from the supported attacks; full hero condition/wound integration remains blocked at the explicit injury boundary.
+The earlier limitation that _all_ learned cards are reference-only is superseded by this pass. The full rescue loop, most signatures/reactions, persistent shopping and high-end final art remain unfinished. Hero injury/condition and treatment coverage is expanded in the pass below.
 
-The complete 427-card curation inventory is [ability-coverage.json](ability-coverage.json). Current counts: 19 included action/passive/support cards, 2 proposed adaptations, 1 excluded and 405 awaiting review. “Awaiting review” is not a judgment that a card should be excluded. Creation still exposes the original catalog and published examples; source-only cards are visible on sheets and cannot execute as generic attacks. Dungeon-only recruitment/catalog filtering and replacement choices for legacy example cards remain to be designed.
+The complete 427-card curation inventory is [ability-coverage.json](ability-coverage.json). Current counts: 36 included action/passive/support cards, 2 proposed adaptations, 1 excluded and 388 awaiting review. “Awaiting review” is not a judgment that a card should be excluded. Creation still exposes the original catalog and published examples; source-only cards are visible on sheets and cannot execute as generic attacks. Dungeon-only recruitment/catalog filtering and replacement choices for legacy example cards remain to be designed.
 
 ## November 5 command-screen update
 
 Replaced the scrolling reference sheet and embedded character mancer with a game-styled equipment screen and native eight-step creator. Added per-hero combat favorites, budget display, quick ready/stow, real armor training checks, equipment-driven model assembly and rotating preview. Linux desktop and blank creation interaction verified. Detailed remaining combat/rules coverage below and in `ability-coverage.json` still applies; this UI update does not claim all tabletop abilities are automated.
+
+## Injury and recovery pass
+
+Wounds apply numerical penalties and typed conditions, offer a displacement direction where required, and continue after acknowledgement. Hero turns resolve condition damage/decay, Dazed action choices, survival and Last Words. Forced movement handles Stability and collision chains. The six treatment capabilities use one-hour, once-per-wound-per-day source procedures and retain scar counts; the Journey panel exposes eligible healers and recovery progress. Healing bottles and nine additional combat/recovery cards have explicit adapters. Source boundaries and adjudications are listed in `computer-game-deltas.md`.
+
+Remaining material gaps include opportunity attacks and most reactions, higher-level signatures, special anatomical remedies, stealth/unnoticed targeting, healing-harmed creatures, prone-occupant traversal, difficult-terrain generation and persistent town shopping. No claim is made that 36 included cards equals complete HoL automation.

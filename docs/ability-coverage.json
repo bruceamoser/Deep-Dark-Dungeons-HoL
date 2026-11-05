@@ -1,8 +1,8 @@
 {
   "sourceCommit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
   "counts": {
-    "review": 405,
-    "included": 19,
+    "review": 388,
+    "included": 36,
     "adaptation-planned": 2,
     "excluded": 1
   },
@@ -766,8 +766,8 @@
     {
       "id": "ability-drain-warmth",
       "name": "Drain Warmth",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/drain-warmth.md"
     },
     {
@@ -1158,8 +1158,8 @@
     {
       "id": "ability-mercy-in-the-light",
       "name": "Mercy in the Light",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/mercy-in-the-light.md"
     },
     {
@@ -1396,15 +1396,15 @@
     {
       "id": "ability-reduce-a-condition",
       "name": "Reduce a Condition",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/reduce-a-condition.md"
     },
     {
       "id": "ability-relieve-poison",
       "name": "Relieve Poison",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/relieve-poison.md"
     },
     {
@@ -1452,8 +1452,8 @@
     {
       "id": "ability-rim-strike",
       "name": "Rim Strike",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/rim-strike.md"
     },
     {
@@ -1494,8 +1494,8 @@
     {
       "id": "ability-rouse-the-senses",
       "name": "Rouse the Senses",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/rouse-the-senses.md"
     },
     {
@@ -1515,8 +1515,8 @@
     {
       "id": "ability-sap-and-breath",
       "name": "Sap and Breath",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/sap-and-breath.md"
     },
     {
@@ -1564,8 +1564,8 @@
     {
       "id": "ability-shared-breath",
       "name": "Shared Breath",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/shared-breath.md"
     },
     {
@@ -2019,8 +2019,8 @@
     {
       "id": "ability-signature-shadow-soft-landing",
       "name": "Blade in the Back",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/signature-shadow-soft-landing.md"
     },
     {
@@ -2075,8 +2075,8 @@
     {
       "id": "ability-signature-shepherd-gentle-return",
       "name": "Mend",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/signature-shepherd-gentle-return.md"
     },
     {
@@ -2782,43 +2782,43 @@
     {
       "id": "ability-treat-bone",
       "name": "Treat Bone",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
       "source": "design/cards/treat-bone.md"
     },
     {
       "id": "ability-treat-elemental-injury",
       "name": "Treat Elemental Injury",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
       "source": "design/cards/treat-elemental-injury.md"
     },
     {
       "id": "ability-treat-life-injury",
       "name": "Treat Life Injury",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
       "source": "design/cards/treat-life-injury.md"
     },
     {
       "id": "ability-treat-mental-trauma",
       "name": "Treat Mental Trauma",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
       "source": "design/cards/treat-mental-trauma.md"
     },
     {
       "id": "ability-treat-radiant-injury",
       "name": "Treat Radiant Injury",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
       "source": "design/cards/treat-radiant-injury.md"
     },
     {
       "id": "ability-treat-soft-tissue",
       "name": "Treat Soft Tissue",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Integrated into turn, movement or equipment controls. See game adaptation notes for current scope.",
       "source": "design/cards/treat-soft-tissue.md"
     },
     {
@@ -2866,8 +2866,8 @@
     {
       "id": "ability-use-a-healing-potion",
       "name": "Use a Healing Potion",
-      "status": "review",
-      "reason": "Awaiting dungeon design review; source text is reference only.",
+      "status": "included",
+      "reason": "Explicit dungeon action adapter; printed attribute, outcomes, cost and equipment requirements.",
       "source": "design/cards/use-a-healing-potion.md"
     },
     {

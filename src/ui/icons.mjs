@@ -54,7 +54,9 @@ export function actionIcon(id) {
         ? "frost"
         : /defend|block/.test(id)
           ? "shield"
-          : /stabilize|heal/.test(id)
+          : /stabilize|heal|shared-breath|sap-and-breath|mercy|gentle-return|relieve|rouse|reduce-a-condition/.test(
+                id,
+              )
             ? "heart"
             : /unarmed/.test(id)
               ? "hand"
