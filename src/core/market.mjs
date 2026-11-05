@@ -7,7 +7,14 @@ export const MERCHANTS = [
     trade: "General store",
     icon: "pack",
     quote: "A full pack weighs less than regret.",
-    goods: ["item-ammunition-bundle", "item-rope-coil", "item-lighting-bundle"],
+    goods: [
+      "item-ammunition-bundle",
+      "item-rope-coil",
+      "item-lighting-bundle",
+      "item-food-bundle",
+      "item-water-flask",
+      "item-craft-tools",
+    ],
   },
   {
     id: "armory",
@@ -75,10 +82,32 @@ export const MERCHANTS = [
   },
 ];
 export const marketMethods = {
+  buyPrice(h, item) {
+    return Math.ceil(
+      item.definition.price *
+        Math.min(1, ...this.traits(h).map((t) => t.buyRate ?? 1)),
+    );
+  },
+  sellPrice(h, item) {
+    return Math.floor(
+      item.definition.price *
+        Math.max(0.5, ...this.traits(h).map((t) => t.sellRate ?? 0.5)),
+    );
+  },
   market() {
     const epoch = this.campaign.expeditions,
       depth = this.campaign.deepest ?? this.campaign.depth;
-    if (this.campaign.market?.epoch === epoch) return this.campaign.market;
+    if (this.campaign.market?.epoch === epoch) {
+      const stock = this.campaign.market.stock.general;
+      for (const id of MERCHANTS.find((m) => m.id === "general").goods)
+        if (!stock.some((e) => e.item.catalogId === id))
+          stock.push({
+            id: `general-added-${id}`,
+            item: ordinaryItem(this.C, id, `stock-added-${id}`),
+            quantity: 8,
+          });
+      return this.campaign.market;
+    }
     const stock = {};
     for (const [mi, m] of MERCHANTS.entries()) {
       const seed = (this.campaign.seed + epoch * 17471 + mi * 797) >>> 0;
@@ -111,7 +140,7 @@ export const marketMethods = {
       entry = this.market().stock[shop]?.find((e) => e.id === id);
     if (!h || h.survival.status === "dead" || !entry || entry.quantity < 1)
       throw new Error("This purchase is unavailable.");
-    const price = entry.item.definition.price;
+    const price = this.buyPrice(h, entry.item);
     if (this.campaign.bank < price)
       throw new Error("Not enough coins in the company vault.");
     const item = structuredClone(entry.item);
@@ -144,7 +173,7 @@ export const marketMethods = {
       throw new Error("Merchants cannot value a partly used supply.");
     if (item.kind === "scroll" && item.quantity < 1)
       throw new Error("That scroll was consumed.");
-    const value = Math.floor(item.definition.price / 2);
+    const value = this.sellPrice(h, item);
     if (value < 1) throw new Error("There is no offer for this item.");
     if (h.treasure?.some((i) => i.instanceId === id))
       h.treasure = h.treasure.filter((i) => i.instanceId !== id);

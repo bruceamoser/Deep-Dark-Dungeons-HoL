@@ -61,7 +61,9 @@ export const interactionMethods = {
     if (["entrance", "descent"].includes(item.kind))
       return active.length > 0 && active.every((h) => distance(h, item) <= 3);
     return active.some(
-      (h) => distance(h, item) <= 1 && lineOfSight(this.map, h, item),
+      (h) =>
+        distance(h, item) <= this.touchRange(h) &&
+        lineOfSight(this.map, h, item),
     );
   },
   interactionReason(item) {

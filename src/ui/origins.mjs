@@ -61,7 +61,7 @@ export function originPicker({
           status = coverage(pair.abilityId),
           owned = current?.id === selected.id && current?.pair === index;
         const description =
-          ability.reference?.flavor?.[0] ??
+          (status.status === "included" ? status.reason : null) ??
           ability.reference?.rules?.body?.find((b) => b.text)?.text ??
           "Read the ability’s source rules below.";
         return `<article class="origin-pair ${owned ? "chosen" : ""}" data-origin-pair="${index}"><span class="eyebrow">${owned ? "YOUR CURRENT PAIR" : `OPTION ${index + 1}`}</span>${originGrant(pair, choices)}<p class="origin-ability-description">${esc(description)}</p><span class="origin-coverage ${status.status === "included" ? "supported" : ""}">${status.status === "included" ? "Supported in the dungeon" : status.status === "excluded" ? "Source ability · Not included in dungeon play" : "Source ability · Dungeon automation pending"}</span>${info(ability)}<button class="primary" data-choose-origin-pair="${index}">${owned ? "Keep this pair" : "Choose this pair"}</button></article>`;

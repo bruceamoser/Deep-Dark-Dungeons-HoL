@@ -1,5 +1,10 @@
 import { chromium, expect } from "@playwright/test";
 export async function verifyRecovery(page) {
+  const notices = async () => {
+    await page.waitForTimeout(100);
+    while (await page.locator(".supply-alert button").count())
+      await page.locator(".supply-alert button").click();
+  };
   await page.evaluate(() => {
     const g = window.__ddd.game;
     g.mode = "town";
@@ -30,6 +35,7 @@ export async function verifyRecovery(page) {
     .click();
   await page.locator("#potion-recipient").selectOption("hero-0");
   await page.getByRole("button", { name: "Use potion", exact: true }).click();
+  await notices();
   expect(
     await page.evaluate(() => window.__ddd.game.party[0].survival.status),
   ).toBe("active");
@@ -40,12 +46,17 @@ export async function verifyRecovery(page) {
     window.__ddd.game.dice = (n) => Array(n).fill(4);
   });
   await page.locator("[data-treat]").first().click();
+  await notices();
   await expect(page.locator(".wound")).toContainText("Recovery 2/5");
   await expect(page.locator("[data-treat]").first()).toBeDisabled();
   await page.locator("#next-care-day").click();
+  await notices();
   await page.locator("[data-treat]").first().click();
+  await notices();
   await page.locator("#next-care-day").click();
+  await notices();
   await page.locator("[data-treat]").first().click();
+  await notices();
   expect(
     await page.evaluate(() =>
       window.__ddd.game.party[0].conditions.some((c) => c.key === "blinded"),

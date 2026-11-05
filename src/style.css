@@ -3973,3 +3973,239 @@ p {
   border-color: #c1a36b;
   color: #f1d39b;
 }
+.equipment-help {
+  color: #97acaa;
+  font: 12px/1.6 Arial;
+  margin: 0 0 16px;
+}
+.equipment-help b {
+  color: #e0c18a;
+}
+.slot-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px;
+  background: #b89d6015;
+  border: 1px solid #8b775477;
+  font: 12px Arial;
+}
+.slot-filter button {
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.pack-group {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  margin: 9px 0 3px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #45606066;
+  font-size: 13px;
+  color: #e0c18a;
+}
+.pack-group small {
+  font: 10px Arial;
+  color: #839b9b;
+}
+.inventory-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.inventory-card .inventory-tile {
+  width: 100%;
+}
+.quick-equip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 4px;
+  font: 11px Arial;
+  background: #34483c88;
+  border-top: 0;
+  color: #d7dfc9;
+}
+.quick-equip .glyph {
+  width: 14px;
+  height: 14px;
+}
+.quick-equip small {
+  color: #e0c18a;
+  margin-left: auto;
+}
+.quick-gear-reason {
+  font: 10px/1.35 Arial;
+  color: #c8a79b;
+  margin: 5px 2px 9px;
+}
+.supply-label {
+  padding: 10px 2px;
+  color: #789493;
+  text-align: center;
+  font: 9px Arial;
+}
+.gear-slot.chosen {
+  outline: 2px solid #dfc284;
+  outline-offset: 2px;
+}
+.camp-window {
+  width: min(1100px, 95vw);
+  max-height: 90vh;
+  overflow: auto;
+  background: linear-gradient(140deg, #1b282b, #10191d);
+  border: 1px solid #786143;
+  box-shadow: 0 24px 90px #000c;
+  padding: 28px;
+}
+.camp-window header,
+.camp-clock,
+.camp-rest,
+.torch-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.camp-clock {
+  justify-content: flex-start;
+  border-block: 1px solid #344447;
+  padding: 16px 0;
+  margin: 20px 0;
+  color: #e7c17a;
+}
+.camp-clock span {
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+}
+.camp-clock small {
+  color: #90aaa9;
+  margin-left: auto;
+}
+.camp-party {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.camp-hero {
+  padding: 18px;
+  background: #0b141a80;
+  border: 1px solid #344447;
+}
+.camp-hero h3 {
+  color: #e7c17a;
+}
+.camp-hero p,
+.camp-rest p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #a6bbba;
+}
+.camp-hero button {
+  margin: 4px 5px 0 0;
+}
+.supply-meter {
+  display: flex;
+  gap: 24px;
+  padding: 10px 0;
+}
+.supply-meter small,
+.supply-meter b {
+  display: block;
+}
+.supply-meter small {
+  color: #92a6a7;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.supply-meter b {
+  font:
+    20px Georgia,
+    serif;
+  color: #e4d4b8;
+  margin-top: 5px;
+}
+.camp-rest {
+  padding: 24px 0;
+}
+.camp-rest > div {
+  max-width: 75%;
+}
+.camp-window footer {
+  color: #819799;
+  border-top: 1px solid #344447;
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.needs-warning {
+  color: #e9a77c !important;
+}
+.torch-controls {
+  padding: 10px 14px;
+  border: 1px solid #534b36;
+  background: #3c2b1a33;
+  margin: 12px 0;
+  font-size: 12px;
+}
+.supply-alert {
+  z-index: 500;
+}
+.supply-alert section {
+  width: min(470px, 90vw);
+  padding: 32px;
+  border: 1px solid #a48352;
+  background: #162126;
+  box-shadow: 0 20px 70px #000;
+}
+.supply-alert p {
+  color: #c0c9c7;
+  line-height: 1.7;
+}
+.supply-alert button {
+  width: 100%;
+  margin-top: 16px;
+}
+.workshop-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 30px;
+  min-height: 370px;
+}
+.workshop-layout nav button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+}
+.workshop-layout nav small {
+  display: block;
+  color: #8fa8a8;
+  padding-top: 6px;
+}
+.workshop-layout article {
+  padding: 10px 20px;
+  border-left: 1px solid #344447;
+}
+.workshop-layout article p {
+  color: #a8bbba;
+  line-height: 1.7;
+}
+.material-purchase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid #554b37;
+}
+
+.ancestry-gifts { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin-bottom:24px; }
+.ancestry-gifts .trait-choice { border:1px solid #63563a; background:linear-gradient(145deg,#25302f,#131e22); padding:18px; }
+.ancestry-gifts p,.dungeon-rule { color:#b9c8c5; line-height:1.55; font-size:13px; }
+.dungeon-rule b { color:#dfc693; }
+.ancestry-gifts button[aria-pressed="true"] { border-color:#bca875; color:#ffe4a6; background:#3c3a29; }
+.choice-reference { margin-top:10px; }

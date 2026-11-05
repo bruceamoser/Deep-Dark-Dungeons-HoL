@@ -1,3 +1,4 @@
+import { traitsOf } from "./ancestry-game.mjs";
 import { Random } from "./dungeon.mjs";
 
 // Dungeon adaptations. Printed examples are identified individually; no creation choices are changed.
@@ -289,6 +290,15 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       throw new Error("Invalid saved treasure identity.");
     return {
       ...item,
+      materialType: saved.materialType,
+      definition: saved.materialType
+        ? {
+            ...item.definition,
+            price:
+              saved.materialType === "recipe-lesser-healing-bottle" ? 80 : 12,
+            name: `${item.definition.name} · ${saved.materialType.replace("recipe-", "").replaceAll("-", " ")}`,
+          }
+        : item.definition,
       carried: saved.carried !== false,
       held: !!saved.held,
       worn: !!saved.worn,
@@ -302,6 +312,13 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
   );
   p.inventory.items.push(...treasure);
   const subject = { ...hero, preview: p };
+  p.summary.stability = Math.max(
+    p.summary.stability ?? 0,
+    ...traitsOf(subject).map((t) => t.stability ?? 0),
+  );
+  for (const t of traitsOf(subject))
+    for (const [type, value] of Object.entries(t.resistance ?? {}))
+      p.resistances[type] = Math.max(p.resistances[type] ?? 0, value);
   p.equipmentEffects = p.inventory.items.flatMap((i) =>
     activeItemEffects(subject, i),
   );
@@ -347,6 +364,13 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
           .map((e) => e.value),
       ),
   );
+  if (
+    p.state.abilities.includes("ability-wake-the-iron-rune") &&
+    p.inventory.items.some(
+      (i) => i.carried && i.worn && /armor/.test(i.catalogId),
+    )
+  )
+    p.summary.stability = Math.max(p.summary.stability ?? 0, 1);
   const equipped = p.inventory.items.filter(
     (i) => i.carried && (i.held || i.worn),
   );

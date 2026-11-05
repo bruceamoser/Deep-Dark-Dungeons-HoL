@@ -15,7 +15,8 @@ export const recoveryMethods = {
       target = this.party.find((p) => p.id === targetId);
     if (
       !target ||
-      distance(h, target) > spec.range ||
+      distance(h, target) >
+        (spec.range === 1 ? this.touchRange(h) : spec.range) ||
       (spec.otherOnly && target === h)
     )
       throw new Error("Choose a willing companion in range.");
@@ -28,9 +29,11 @@ export const recoveryMethods = {
       );
     if (
       spec.freeHand &&
-      h.preview.inventory.items
-        .filter((i) => i.held)
-        .reduce((n, i) => n + i.hands, 0) >= 2
+      Number(!!h.torch?.held) +
+        h.preview.inventory.items
+          .filter((i) => i.held)
+          .reduce((n, i) => n + i.hands, 0) >=
+        2
     )
       throw new Error("A free hand is required.");
     if (spec.hpCost && h.survival.hp <= spec.hpCost)
@@ -43,14 +46,26 @@ export const recoveryMethods = {
     )
       throw new Error("There is no matching temporary condition to reduce.");
     this.spend(spec.category, id);
+    if (
+      (spec.hpCost || spec.spell) &&
+      this.provoke(h, {
+        kind: "recovery",
+        id,
+        target: targetId,
+        label: "casting",
+      })
+    )
+      return;
     h.survival.hp -= spec.hpCost ?? 0;
-    const rolled = this.heroRoll(h, spec.attribute),
+    const rolled = spec.attribute
+        ? this.heroRoll(h, spec.attribute)
+        : { tier: "standard" },
       tier = ["weak", "standard", "strong"].indexOf(rolled.tier);
     if (spec.healing) {
       const heal = this.R.healingPlan({
         amount: spec.healing[tier],
         current: target.survival.hp,
-        max: target.survival.maxHp,
+        max: this.healingMaximum(target),
         lifeResistances: [target.preview.resistances.life ?? 0],
       });
       target.survival = this.R.receiveHealing(target.survival, heal.restored);
@@ -118,28 +133,47 @@ export const recoveryMethods = {
   },
   heroRoll(h, attribute, mode = "attribute", extra = {}) {
     const sources = [
+      ...(extra.sources ?? []),
       ...this.R.conditionRollSources(h.conditions, {
-        mode,
+        mode: ["craft", "treatment"].includes(mode) ? "attribute" : mode,
         perceivedSources: this.perceivedSources(h),
         ...extra,
       }),
-      ...(mode === "death" ? [] : this.woundRollSources(h, attribute)),
+      ...(mode === "death"
+        ? []
+        : [...this.woundRollSources(h, attribute), ...this.fatigueSources(h)]),
     ];
-    return this.roll(
-      this.attribute(h, attribute),
+    return this.rollFor(
+      h,
+      attribute,
       sources
         .filter((s) => s.kind === "boon")
         .reduce((n, s) => n + s.amount, 0),
       sources
         .filter((s) => s.kind === "bane")
         .reduce((n, s) => n + s.amount, 0),
+      { mode, ...extra },
     );
   },
   suffer(h, amount, type = "physical", source = null) {
+    amount = this.interceptDamage(h, amount, type, source);
     if (amount > 0)
       h.lastHarm = source?.name
         ? `Fell after ${source.name}'s ${type} attack`
         : `Fell after ${type} harm`;
+    if (
+      amount > 0 &&
+      this.mode === "combat" &&
+      source?.id &&
+      this.enemies.some((e) => e.id === source.id) &&
+      !h.grudgeTaken &&
+      this.traits(h).some((t) => t.grudge)
+    ) {
+      h.grudgeTaken = true;
+      h.grudges ??= [];
+      const id = this.creatureIdentity(source);
+      if (!h.grudges.includes(id)) h.grudges.push(id);
+    }
     const prior = h.survival.wounds,
       result = this.R.sufferDamage(h.survival, amount);
     h.survival = result.state;
@@ -203,7 +237,8 @@ export const recoveryMethods = {
         hero: p,
         wound: p.wounds.find((w) => w.id === n.woundId),
       });
-    } else this.advance();
+    } else if (this.pendingProvocation) this.continueProvocation();
+    else this.advance();
     this.emit("change");
   },
   forceMove(actor, dir, amount) {
@@ -215,7 +250,11 @@ export const recoveryMethods = {
       throw new Error("Choose a unit grid direction.");
     const stability = (h) =>
       h.survival
-        ? Math.min(3, h.preview.summary.stability ?? 0)
+        ? Math.min(
+            3,
+            (h.preview.summary.stability ?? 0) +
+              this.tacticValue(h, "stability"),
+          )
         : (h.stability ?? 0);
     let remaining = Math.max(0, amount - stability(actor));
     const group = [actor],
@@ -291,6 +330,7 @@ export const recoveryMethods = {
       )
         Object.assign(actor, p);
     }
+    this.syncTorches();
     this.emit("move");
   },
   tickHeroConditions(h) {
@@ -363,14 +403,16 @@ export const recoveryMethods = {
       throw new Error("Choose an owned healing potion and companion.");
     if ((h.supplies[instanceId] ?? item.inventoryDie) !== 4)
       throw new Error("This bottle is exhausted.");
-    if (target.survival.hp >= target.survival.maxHp)
+    if (target.survival.hp >= this.healingMaximum(target))
       throw new Error("This companion is already at full health.");
+    if (this.freeHands(h) < 1)
+      throw new Error("A free hand is required to use a potion.");
     const combat = this.mode === "combat";
     if (combat) {
       if (h !== this.active || this.encounter.nextSide !== "players")
         throw new Error("Only the acting hero can give a potion.");
       if (!this.encounter.current) this.beginHero();
-      if (!this.budget.remaining.maneuver)
+      if (!this.continuingProvocation && !this.budget.remaining.maneuver)
         throw new Error("No Maneuver remains.");
     }
     const turn = (who) =>
@@ -395,6 +437,16 @@ export const recoveryMethods = {
       throw new Error(
         "The conscious recipient cannot take the required Reaction.",
       );
+    const potionTurn = turn(h);
+    const declaringTurn = this.continuingProvocation
+      ? {
+          ...potionTurn,
+          remaining: {
+            ...potionTurn.remaining,
+            maneuver: potionTurn.remaining.maneuver + 1,
+          },
+        }
+      : potionTurn;
     const plan = this.R.planHealingPotion({
       operationId: uuid("potion"),
       recipientOperationId: uuid("receive"),
@@ -408,7 +460,7 @@ export const recoveryMethods = {
           id: i.instanceId,
           hands: i.hands ?? 0,
         })),
-        turn: turn(h),
+        turn: declaringTurn,
         ownTurn: true,
         survival: h.survival,
         conditions: this.restrictions(h),
@@ -416,16 +468,29 @@ export const recoveryMethods = {
       recipient: {
         actorId: target.id,
         turn: turn(target),
-        survival: target.survival,
+        survival: { ...target.survival, maxHp: this.healingMaximum(target) },
         conditions: this.restrictions(target),
         lifeResistances: [target.preview.resistances.life ?? 0],
       },
       relation: target === h ? "self" : "other",
-      adjacent: distance(h, target) <= 1,
+      adjacent: distance(h, target) <= this.touchRange(h),
       willing: true,
       capable: true,
       encounter: combat,
     });
+    if (combat && !this.continuingProvocation) {
+      this.budgets[h.id] = plan.giverTurn;
+      if (
+        this.provoke(h, {
+          kind: "potion",
+          index,
+          item: instanceId,
+          target: targetId,
+          label: "retrieving a potion",
+        })
+      )
+        return;
+    }
     const result = this.R.resolveHealingPotionInventory(plan, {
       retained: this.supplyDie(4),
     });
@@ -433,8 +498,17 @@ export const recoveryMethods = {
       this.budgets[h.id] = plan.giverTurn;
       if (target !== h) this.budgets[target.id] = plan.recipientTurn;
     }
-    target.survival = result.recipientSurvival;
+    target.survival = {
+      ...result.recipientSurvival,
+      maxHp: target.survival.maxHp,
+    };
     h.supplies[instanceId] = result.inventory.after;
+    if (result.inventory.exhausted)
+      this.supplyNotice(
+        h,
+        item,
+        `${item.definition.name} is exhausted after this use.`,
+      );
     this.note(
       `${h.name} gives ${target.name} ${item.definition.name}: ${result.healing.restored} HP restored${result.inventory.exhausted ? "; bottle exhausted" : ""}.`,
     );
@@ -476,11 +550,10 @@ export const recoveryMethods = {
       )
     )
       throw new Error("Choose a capable healer with the matching treatment.");
-    const hour = this.campaign.hours ?? 0,
-      card = this.R.treatmentCardAdapter(cardId, this.C.inventory);
+    const card = this.R.treatmentCardAdapter(cardId, this.C.inventory);
     const reservation = this.R.reserveWoundTreatment({
       operationId: uuid("treatment"),
-      dayKey: `day-${Math.floor(hour / 24) + 1}`,
+      dayKey: `day-${this.clock().day}`,
       elapsedHours: 1,
       cardId,
       woundId: w.record.id,
@@ -508,7 +581,7 @@ export const recoveryMethods = {
       },
       woundApplicable: true,
     });
-    const result = this.heroRoll(healer, card.attribute);
+    const result = this.heroRoll(healer, card.attribute, "treatment");
     const settled = this.R.settleWoundTreatment({
       reservation,
       currentTreatment: reservation.treatment,
@@ -516,7 +589,7 @@ export const recoveryMethods = {
       outcome: result.tier,
     });
     w.treatment = structuredClone(settled.treatment);
-    this.campaign.hours = hour + 1;
+    this.advanceTime(3600, { provisions: true });
     if (w.treatment.completed)
       patient.conditions = patient.conditions.filter(
         (c) => !(c.woundId === w.id && c.persistence === "starred"),
@@ -529,8 +602,8 @@ export const recoveryMethods = {
   nextTreatmentDay() {
     if (this.mode !== "town")
       throw new Error("Wait for treatment in Greyhaven.");
-    this.campaign.hours =
-      (Math.floor((this.campaign.hours ?? 0) / 24) + 1) * 24;
+    const seconds = 86400 - ((this.clock().seconds + 8 * 3600) % 86400);
+    this.advanceTime(seconds, { provisions: true });
     this.note(
       "A new treatment day begins. Wounds, HP and spent Grit are unchanged.",
     );

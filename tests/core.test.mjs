@@ -169,7 +169,13 @@ test("malformed saved hero coordinates are rejected before loading", () => {
 
 const combatFixture = (selected = 0) => {
   const g = fresh();
-  g.map = { ...g.map, tiles: {}, obstacles: {}, chests: [] };
+  g.map = {
+    ...g.map,
+    tiles: {},
+    obstacles: {},
+    chests: [],
+    lights: [{ x: 4, z: 4, radius: 9 }],
+  };
   for (let x = 0; x < 12; x++)
     for (let z = 0; z < 12; z++) g.map.tiles[key(x, z)] = { x, z };
   g.party.forEach((h, i) => Object.assign(h, { x: 4 + i, z: 6 }));
@@ -824,6 +830,7 @@ function corridorFixture() {
     Array.from({ length: 14 }, (_, x) => [key(x, 0), { x, z: 0 }]),
   );
   g.map.obstacles = {};
+  g.map.lights = [{x:6,z:0,radius:9}];
   g.map.chests = [];
   g.map.start = { x: 0, z: 0 };
   g.map.exit = { x: 13, z: 0 };

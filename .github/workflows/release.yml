@@ -48,6 +48,11 @@ jobs:
         run: |
           chmod +x release/*.AppImage
           xvfb-run -a node scripts/release-check.mjs release/*.AppImage
+      - name: Install and exercise Debian package
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y ./release/*.deb
+          xvfb-run -a node scripts/release-check.mjs /usr/bin/deep-dark-dungeons-hol
       - run: npm run package:windows
         if: runner.os == 'Windows'
       - name: Install and exercise Windows release
@@ -66,6 +71,7 @@ jobs:
           if-no-files-found: error
           path: |
             release/*.AppImage
+            release/*.deb
             release/*Setup*.exe
             release/*.blockmap
             release/latest*.yml
@@ -94,7 +100,7 @@ jobs:
         run: |
           cp scripts/install-linux.sh public/art/greyhaven-seal.png release/
           cd release
-          sha256sum *.AppImage *.exe *.blockmap *.yml *.sh *.png > SHA256SUMS
+          sha256sum *.AppImage *.deb *.exe *.blockmap *.yml *.sh *.png > SHA256SUMS
           tar -czf "Deep-Dark-Dungeons-HoL-${GITHUB_REF_NAME#v}-linux-x64.tar.gz" ./*.AppImage install-linux.sh greyhaven-seal.png SHA256SUMS
           sha256sum *.tar.gz >> SHA256SUMS
           gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --title "Deep Dark Dungeons - HoL $GITHUB_REF_NAME" --notes-file ../docs/release-notes.md

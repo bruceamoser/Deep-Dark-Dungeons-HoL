@@ -97,3 +97,10 @@ Author-reviewed creation update: the 77 core/storage tests still pass, including
 The same interaction flow verifies retained scroll offsets after choosing a signature, buying a discipline and purchasing equipment, allowing the natural end-of-content clamp when a resolved validation message shortens the panel. Deliberately switching chapters starts at the top. It completes a valid hero and runs the existing roster, combat, movement, gear, effects, recovery, merchants, recall and saved-run checks. A separate 1100×720 rendered check found no horizontal overflow and selected the second grant pair through the scrollable chooser. Origin-preview and selected-grant screenshots were visually inspected.
 
 Linux and Windows x64 ZIP packages rebuilt successfully. Windows execution remains untested. Source grant pairs, duplicate refunds, purchase eligibility and creation DP rules were not modified; the level-0 rule was already enforced by the pinned validator and is now explicit in the interface.
+
+## v0.3.0 curation and expedition validation
+
+- 99 automated tests pass, including all 90 signature coverage assertions, execution/save round trips for every active signature, daily ancestry preparation, Oath healing caps, low-light/seismic perception, interception, last-stand wards, spell opportunity continuation and free legacy retraining.
+- Supply/time/crafting tests cover torch hands and saved burn intervals, daily food/water final uses, fatigue/sleep without Grit restoration, real crafting outputs/material expenditure, Disengage and pending player opportunity saves.
+- Added a real UI sequence for prepared traits, retraining choices, well refills, buying materials/crafting, held-torch meshes and enemy hover identification. Screenshots are generated in ignored `test-results/`.
+- Source card hashes remain pinned and no vendor, book or Foundry files are edited.

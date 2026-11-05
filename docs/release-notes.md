@@ -1,22 +1,18 @@
-The first downloadable release of **Deep Dark Dungeons - HoL**, a single-player dungeon RPG for a party of four heroes. This is an early playable build; rules coverage, art and balance remain in development.
+**v0.3.0 — Heroes with purpose**
+
+- All 50 ancestry traits now have concrete dungeon behavior, including prepared daily gifts, low-light/seismic senses, crafting, endurance and bargaining.
+- All 90 class signatures are usable. The curated roster now includes 205 abilities. The other 222 are removed from new training; old purchases can be retrained free in town. Game descriptions appear beside the unchanged source rules.
+- Opportunity attacks, tactical support, interception, counters, equipment shortcuts and enemy hover identification.
+- World clock, fatigue, interruptible sleep, daily food/water, supply warnings, hand-held torches, automatic dousing and lighting penalties.
+- Town crafting with real materials and tools; finite dungeon food harvesting.
+- Linux Debian installer added alongside AppImage and Windows setup.
 
 ### Install
 
-- **Windows 10/11, 64-bit:** download and run `Deep-Dark-Dungeons-HoL-Setup-0.2.0-x64.exe`. The installer adds Start-menu and desktop shortcuts. This initial build is unsigned, so Windows may show an unknown-publisher warning.
-- **Linux, 64-bit:** download the `linux-x64.tar.gz` bundle, extract it and run `bash install-linux.sh` inside the extracted folder. Open the game from your applications menu. Alternatively, download just the AppImage, mark it executable and run it directly. On Ubuntu systems that restrict user namespaces, install Google Chrome or Chromium to provide the trusted sandbox helper; the game does not disable sandboxing.
+- **Debian/Ubuntu x64:** download `Deep-Dark-Dungeons-HoL-0.3.0-amd64.deb`, then run `sudo apt install ./Deep-Dark-Dungeons-HoL-0.3.0-amd64.deb`. Open the game from the applications menu. The package configures its own sandbox helper.
+- **Other Linux x64:** download the AppImage or the `linux-x64.tar.gz` installer bundle. For the bundle, extract and run `bash install-linux.sh`. Restricted Ubuntu AppImage users still need Chrome/Chromium's trusted sandbox helper.
+- **Windows x64:** run `Deep-Dark-Dungeons-HoL-Setup-0.3.0-x64.exe`. The installer is unsigned.
 
-You do **not** need Node.js, Electron, Git or a GitHub account to play.
+Installed releases check for updates and download them in the background. **Updates → Save & restart to install** saves the current journey before installing; Debian upgrades may request the system's administrator authorization. Existing saves retain heroes, XP, injuries, gear and source choices.
 
-### Updates and saves
-
-The installed game checks GitHub Releases at startup and every four hours, automatically downloads newer stable versions, and displays **Update ready**. Open **Updates → Save & restart to install** when convenient. It saves the active journey before installing. Failed saves prevent installation; failed downloads can be retried. Named runs, character repositories and fallen heroes remain in your user-data directory. Existing source-project saves use that same directory.
-
-### Included
-
-- Four-hero exploration and turn-based HoL combat, a town market, procedural floors and bosses every fifth depth.
-- 58 source-book creatures, discipline-gated magical gear, recall scrolls, XP and town training.
-- Named saved runs, a hero repository and Hall of Fallen Heroes.
-- Game-styled character creation, visible culture/background grants, discipline filters, level-zero purchase rules and preserved scroll positions.
-- Character equipment previews, favorite actions, arrows, weapon swings, damage numbers and condition effects.
-
-See the repository's `docs/implementation-status.md` for the remaining rules and presentation work. These are early-access game builds, not a declaration of complete HoL implementation.
+This is an early playable game adaptation. Many powers deliberately differ from their tabletop cards; bespoke art and long-term balance remain in development.
