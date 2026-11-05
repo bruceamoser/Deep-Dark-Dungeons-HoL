@@ -1,3 +1,4 @@
+import { verifyCharacter } from "./character-check.mjs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -65,6 +66,7 @@ try {
   w.on("pageerror", (e) => errors.push(e.message));
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
   await w.screenshot({ path: "test-results/native-town.png" });
+  await verifyCharacter(w);
   await w.getByRole("button", { name: "Enter the depths" }).click();
   await w.getByRole("button", { name: "Save", exact: true }).click();
   await expect(w.locator("#toast")).toContainText("saved");

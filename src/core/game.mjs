@@ -61,6 +61,22 @@ export class Game {
       supplies: {},
       earnedLevel: draft.progression?.level ?? 1,
       milestones: [],
+      favorites: this.C.choices
+        .filter(
+          (c) =>
+            ABILITIES[c.id] &&
+            (c.universal || preview.state.abilities.includes(c.id)),
+        )
+        .filter(
+          (c) =>
+            ![
+              "ability-basic-unarmed",
+              "ability-basic-ranged",
+              "ability-stabilize",
+            ].includes(c.id),
+        )
+        .slice(0, 6)
+        .map((c) => c.id),
       preview,
     };
   }
@@ -90,6 +106,16 @@ export class Game {
       h.conditions ??= [];
       h.buffs ??= {};
       h.supplies ??= {};
+      h.favorites = [
+        ...new Set(
+          (
+            h.favorites ??
+            this.availableActions(h)
+              .slice(0, 6)
+              .map((c) => c.id)
+          ).filter((id) => this.availableActions(h).some((c) => c.id === id)),
+        ),
+      ].slice(0, 8);
       h.earnedLevel ??= p.state.level;
       h.milestones ??= [];
       this.R.validateSurvival(h.survival);
@@ -518,35 +544,144 @@ export class Game {
     );
     this.emit("change");
   }
-  equip(index, instanceId) {
-    if (!["town", "exploration", "combat"].includes(this.mode) || this.busy)
-      throw new Error("Equipment cannot change right now.");
+  favorite(index, id) {
+    const h = this.party[index];
+    if (!this.availableActions(h).some((c) => c.id === id))
+      throw new Error("Only playable actions can be favorited.");
+    h.favorites ??= [];
+    if (h.favorites.includes(id))
+      h.favorites = h.favorites.filter((x) => x !== id);
+    else {
+      if (h.favorites.length >= 8)
+        throw new Error(
+          "Eight favorites fit on the action bar. Unpin one first.",
+        );
+      h.favorites.push(id);
+    }
+    this.emit("change");
+  }
+  gearReason(index, instanceId, operation = "ready") {
     const h = this.party[index],
-      item = h.preview.inventory.items.find(
-        (i) => i.instanceId === instanceId && i.carried && i.hands > 0,
+      item = h?.preview.inventory.items.find(
+        (i) => i.instanceId === instanceId,
       );
-    if (!item) throw new Error("Choose a carried weapon or shield.");
-    if (this.mode === "combat" && h !== this.active)
-      throw new Error("Only the acting hero can change equipment.");
+    if (!item?.carried) return "This item must be carried.";
+    if (!["town", "exploration", "combat"].includes(this.mode) || this.busy)
+      return "Wait for your company’s turn.";
+    if (h.survival.status !== "active")
+      return "This hero cannot handle equipment.";
+    if (operation === "wear" || operation === "remove") {
+      if (this.mode === "combat") return "Change armor outside combat.";
+      const tier = item.catalogId.match(
+        /item-ordinary-(light|medium|heavy)-armor/,
+      )?.[1];
+      if (!tier) return "Choose a suit of armor.";
+      if (
+        operation === "wear" &&
+        !h.preview.state.abilities.includes(`ability-wear-${tier}-armor`)
+      )
+        return `Requires ${tier} armor training.`;
+    } else {
+      if (!item.hands) return "Choose a weapon or shield.";
+      if (operation === "ready" && item.held) return "Already readied.";
+      if (operation === "stow" && !item.held) return "Already stowed.";
+    }
+    if (this.mode === "combat") {
+      if (h !== this.active || this.encounter.nextSide !== "players")
+        return "Only the acting hero can change equipment.";
+      if (this.paths.get(h.id)?.length) return "Wait until movement finishes.";
+      if (
+        this.encounter.current === h.id &&
+        !this.budgets[h.id]?.remaining.maneuver
+      )
+        return "No Maneuver remains.";
+      if (this.restrictions(h).helpless) return "This hero cannot act.";
+    }
+    return "";
+  }
+  equip(index, instanceId, operation = "ready") {
+    const reason = this.gearReason(index, instanceId, operation);
+    if (reason) throw new Error(reason);
+    const h = this.party[index],
+      items = h.preview.inventory.items,
+      item = items.find((i) => i.instanceId === instanceId);
+    const draft = structuredClone(h.draft);
+    draft.loadout ??= {};
+    const set = (i, values) =>
+      (draft.loadout[i.instanceId] = {
+        ...draft.loadout[i.instanceId],
+        ...values,
+      });
+    if (operation === "wear") {
+      for (const i of items.filter((i) =>
+        /item-ordinary-(light|medium|heavy)-armor/.test(i.catalogId),
+      ))
+        set(i, { worn: i === item });
+    } else if (operation === "remove") set(item, { worn: false });
+    else if (operation === "stow") set(item, { held: false });
+    else {
+      const stow =
+        items.filter((i) => i.held).reduce((n, i) => n + i.hands, 0) +
+          item.hands >
+        2;
+      for (const i of items) set(i, { held: i === item || (!stow && i.held) });
+    }
+    const preview = this.R.workshopCharacter(draft, this.C);
+    if (!preview.valid)
+      throw new Error(preview.errors.map((e) => e.text).join("; "));
     if (this.mode === "combat")
       this.spend("maneuver", "ability-handle-an-item");
-    // Proper stowing costs a Maneuver. Keep compatible one-handed gear.
-    const heldHands = h.preview.inventory.items
-      .filter((i) => i.held)
-      .reduce((n, i) => n + (i.hands ?? 0), 0);
-    const stow = heldHands + item.hands > 2;
-    h.draft.loadout ??= {};
-    for (const i of h.preview.inventory.items)
-      h.draft.loadout[i.instanceId] = {
-        ...h.draft.loadout[i.instanceId],
-        held: i.instanceId === instanceId || (!stow && i.held),
-      };
-    h.preview = this.R.workshopCharacter(h.draft, this.C);
+    h.draft = draft;
+    h.preview = preview;
     this.note(
-      `${h.name} readies ${item.definition.name}${this.mode === "combat" ? " · Maneuver spent stowing equipment" : ""}.`,
+      `${h.name} ${{ ready: "readies", stow: "stows", wear: "puts on", remove: "removes" }[operation]} ${item.definition.name}${this.mode === "combat" ? " · Maneuver spent" : ""}.`,
     );
     this.emit("party");
     this.emit("change");
+  }
+  actionReason(id, h = this.active) {
+    if (
+      this.mode !== "combat" ||
+      this.busy ||
+      this.encounter?.nextSide !== "players"
+    )
+      return "Available on your combat turn.";
+    if (h !== this.active) return "Select this hero when they can act.";
+    if (h.survival.status !== "active")
+      return "Resolve survival before acting.";
+    if (this.paths.get(h.id)?.length) return "Wait until movement finishes.";
+    const a = ABILITIES[id];
+    if (!a || !this.availableActions(h).some((c) => c.id === id))
+      return "Not learned.";
+    if (this.encounter.current === h.id && !this.budget?.remaining[a.category])
+      return `No ${a.category} remains.`;
+    if (a.weapon && !this.held(h, `item-ordinary-${a.weapon}-weapon`)) {
+      const hands =
+        2 -
+        h.preview.inventory.items
+          .filter((i) => i.held)
+          .reduce((n, i) => n + i.hands, 0);
+      if (
+        !h.preview.inventory.items.some(
+          (i) =>
+            i.carried &&
+            i.catalogId === `item-ordinary-${a.weapon}-weapon` &&
+            i.hands <= hands,
+        )
+      )
+        return `Ready a ${a.weapon} weapon first.`;
+    }
+    if (
+      a.weapon === "ranged" &&
+      !h.preview.inventory.items.some(
+        (i) =>
+          i.carried &&
+          i.catalogId === "item-ammunition-bundle" &&
+          (h.supplies[i.instanceId] ?? i.inventoryDie) > 0,
+      )
+    )
+      return "Ammunition exhausted.";
+    return "";
   }
   develop(index, proposed) {
     if (this.mode !== "town") throw new Error("Train in Greyhaven.");

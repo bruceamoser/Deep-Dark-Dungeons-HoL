@@ -13,12 +13,12 @@ try {
   await page.waitForFunction(() => window.__ddd);
   await page.getByRole("button", { name: "The company register" }).click();
   await page.locator('[data-edit="0"]').click();
-  const frame = page.frameLocator("iframe");
-  await expect(frame.locator('[data-field="name"]')).toBeVisible();
-  await frame.locator('[data-field="name"]').fill("Borin of Greyhaven");
-  await frame.locator('[data-field="name"]').blur();
+  await expect(page.locator("#hero-name")).toBeVisible();
+  await page.locator("#hero-name").fill("Borin of Greyhaven");
+  await page.locator("#hero-name").blur();
+  await page.locator('[data-step="7"]').click();
   await page.getByRole("button", { name: "Recruit this hero" }).click();
-  await expect(page.locator("iframe")).toHaveCount(0);
+  await expect(page.locator(".creator-window")).toHaveCount(0);
   expect(await page.evaluate(() => window.__ddd.game.party[0].name)).toBe(
     "Borin of Greyhaven",
   );
@@ -79,7 +79,22 @@ try {
   await expect(page.locator(".phase")).toContainText("YOUR COMPANY");
   await page.waitForTimeout(1800);
   await click(await page.evaluate(() => window.__ddd.game.enemies[0]));
-  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 6, {timeout:5000}).catch(async e=>{ console.log(await page.evaluate(()=>({toast:document.querySelector("#toast").textContent,mode:window.__ddd.game.mode,log:window.__ddd.game.log,hp:window.__ddd.game.enemies[0].hp,selected:window.__ddd.game.selected})));throw e; });
+  await page
+    .waitForFunction(() => window.__ddd.game.enemies[0].hp === 6, {
+      timeout: 5000,
+    })
+    .catch(async (e) => {
+      console.log(
+        await page.evaluate(() => ({
+          toast: document.querySelector("#toast").textContent,
+          mode: window.__ddd.game.mode,
+          log: window.__ddd.game.log,
+          hp: window.__ddd.game.enemies[0].hp,
+          selected: window.__ddd.game.selected,
+        })),
+      );
+      throw e;
+    });
   expect(
     await page.evaluate(() => window.__ddd.game.budget.remaining.main),
   ).toBe(0);

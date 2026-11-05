@@ -45,3 +45,7 @@ Bruce’s subsequent `LaunchProcess: failed to execvp: .../HoL` report exposed a
 The launcher now copies the packaged runtime to a private, versioned, space-free path in the user’s local application-data directory, retaining the trusted system SUID helper. The copy uses reflinks when available, an installation lock and atomic staging. No project rename, save migration, global AppArmor change or sandbox disabling is involved.
 
 The corrected native test runs the launcher through `aa-exec -p unconfined`, asserts the actual executable path has no whitespace and the main profile is `unconfined`, then runs the full controls suite and verifies renderer seccomp filtering. This passed, as did a plain launch without remote-debugging flags or temporary user data. The earlier profile-inheriting test alone was insufficient evidence of terminal compatibility.
+
+## Character command screen
+
+Author review and checks: 26 core tests; browser control and recruitment/combat checks; `scripts/character-check.mjs` exercises wear/remove resistance and appearance, readying a visible bow, favorite save/load, and a blank-to-valid character through the new interface. The same character check runs inside packaged Linux through the exact launcher under `aa-exec -p unconfined`, followed by camera/formation/audio/turn/training/disk-save checks. Inspected rendered sheet, bow and creation screenshots. Windows execution remains untested.
