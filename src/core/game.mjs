@@ -6,6 +6,13 @@ import {
 } from "./movement.mjs";
 import { recoveryMethods } from "./recovery.mjs";
 import { interactionMethods } from "./interactions.mjs";
+import { experienceMethods, xpForLevel } from "./experience.mjs";
+import {
+  rosterMethods,
+  prepareRoster,
+  validateRoster,
+  storedHero,
+} from "./roster.mjs";
 import { ABILITIES, coverage } from "./abilities.mjs";
 import { formationRoutes, validateFormation } from "./formations.mjs";
 import {
@@ -30,6 +37,7 @@ export class Game {
     this.busy = false;
   }
   emit(type, data = {}) {
+    this.recordFallen();
     for (const f of this.listeners) f(type, data);
   }
   note(text) {
@@ -44,6 +52,9 @@ export class Game {
     const cls = draft.classId;
     return {
       id: `hero-${index}`,
+      heroId: crypto.randomUUID(),
+      xp: xpForLevel(draft.progression?.level ?? 1),
+      xpHistory: [],
       draft: structuredClone(draft),
       name: draft.name,
       model:
@@ -98,6 +109,9 @@ export class Game {
       expeditions: 0,
       hours: 0,
       memorial: [],
+      reserve: [],
+      fallenHeroes: [],
+      pendingTreasureXP: 0,
       caches: [],
       formation: "square",
       order: drafts.map((_, i) => `hero-${i}`),
@@ -108,9 +122,14 @@ export class Game {
     this.note("Four names in the register. One road beneath the earth.");
   }
   load(c) {
+    prepareRoster(c);
     c.woundNotices ??= [];
     if (c.mode === "wound-review" && c.encounter) c.mode = "combat";
-    for (const h of c.party) {
+    for (const h of [
+      ...c.party,
+      ...c.reserve,
+      ...c.fallenHeroes.map((e) => e.hero),
+    ]) {
       const p = this.R.workshopCharacter(h.draft, this.C);
       if (!p.valid)
         throw new Error("A saved hero no longer passes character validation.");
@@ -168,6 +187,7 @@ export class Game {
         throw new Error("Saved development or supplies are invalid.");
     }
     c.hours ??= 0;
+    validateRoster(c);
     if (!Number.isSafeInteger(c.hours) || c.hours < 0)
       throw new Error("Invalid campaign time.");
     c.formation ??= "square";
@@ -225,8 +245,15 @@ export class Game {
     else if (this.mode === "combat" && !this.encounter?.current) this.advance();
   }
   snapshot() {
+    this.recordFallen();
     return {
       ...this.campaign,
+      party: this.party.map(storedHero),
+      reserve: this.campaign.reserve.map(storedHero),
+      fallenHeroes: this.campaign.fallenHeroes.map((e) => ({
+        ...e,
+        hero: storedHero(e.hero),
+      })),
       mode: this.mode,
       selected: this.selected,
       encounter: this.encounter,
@@ -239,6 +266,23 @@ export class Game {
   newFloor(saved) {
     this.pendingInteraction = null;
     this.map = saved?.map ?? generate(this.campaign.seed, this.campaign.depth);
+    if (!this.map.xpClaims) {
+      this.map.xpClaims = saved
+        ? [
+            ...this.map.rooms.flatMap((r, i) =>
+              saved.seen?.[key(r.cx, r.cz)] ? [`room:${i}`] : [],
+            ),
+            ...(saved.enemies ?? [])
+              .filter((e) => e.hp <= 0)
+              .map((e) => `enemy:${e.id}`),
+          ]
+        : [];
+    }
+    if (
+      !Array.isArray(this.map.xpClaims) ||
+      this.map.xpClaims.some((id) => typeof id !== "string")
+    )
+      throw new Error("Invalid saved experience claims.");
     this.seen = saved?.seen ?? {};
     this.rng = new Random(this.campaign.seed + this.campaign.depth * 31);
     this.enemies =
@@ -1076,6 +1120,7 @@ export class Game {
       this.emit("move", {
         steps: steps.map(({ hero, points }) => ({ heroId: hero.id, points })),
       });
+      this.discoverRooms();
       if (this.mode === "exploration") this.detect();
       this.checkInteractionArrival();
     } else if (marching.some((h) => this.paths.get(h.id)?.length)) {
@@ -1149,6 +1194,7 @@ export class Game {
   }
   advance() {
     if (this.mode !== "combat" || this.woundNotices?.length) return;
+    this.recordFallen();
     for (const h of this.party.filter((h) => h.survival.status === "dead")) {
       if (
         this.encounter.current !== h.id &&
@@ -1178,6 +1224,11 @@ export class Game {
             )),
       )
     ) {
+      this.awardEncounterXP(
+        this.encounter.roster
+          .filter((r) => r.side === "opposition")
+          .map((r) => r.id),
+      );
       this.mode = "exploration";
       this.encounter = null;
       this.note(
@@ -1396,19 +1447,7 @@ export class Game {
       )
     )
       throw new Error("Bring the party back to the entrance stairs.");
-    if (this.enemies.every((e) => e.hp === 0)) {
-      for (const h of this.party.filter(
-        (h) => h.survival.status === "active",
-      )) {
-        if (!h.milestones.includes(this.campaign.depth)) {
-          h.milestones.push(this.campaign.depth);
-          h.earnedLevel = Math.min(100, h.earnedLevel + 1);
-          this.note(
-            `${h.name} earned level ${h.earnedLevel}. Spend development points in town.`,
-          );
-        }
-      }
-    }
+    this.bankTreasureXP();
     this.campaign.bank += this.campaign.haul;
     this.campaign.haul = 0;
     this.mode = "town";
@@ -1432,6 +1471,9 @@ export class Game {
     this.emit("change");
   }
   fail() {
+    if (this.mode === "defeat") return;
+    this.recordFallen();
+    this.campaign.pendingTreasureXP = 0;
     this.campaign.caches.push({
       x: this.active.x,
       z: this.active.z,
@@ -1457,18 +1499,11 @@ export class Game {
       throw new Error(
         "New recruits start at level 1. Use development for earned levels.",
       );
-    const previous = this.party[index];
-    const replacement = this.hero(draft, index);
-    Object.assign(replacement, {
-      x: previous.x,
-      z: previous.z,
-      selected: index === this.selected,
-    });
-    this.party[index] = replacement;
-    this.emit("party");
-    this.emit("change");
+    const replacement = this.createRecruit(draft);
+    this.assignHero(index, replacement.heroId);
   }
 }
 
 Object.assign(Game.prototype, recoveryMethods);
 Object.assign(Game.prototype, interactionMethods);
+Object.assign(Game.prototype, rosterMethods, experienceMethods);

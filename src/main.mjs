@@ -1,4 +1,6 @@
 import { abilityType } from "./ui/book-symbols.mjs";
+import { rosterScreen } from "./ui/roster.mjs";
+import { xpMeter } from "./ui/experience.mjs";
 import { creationScreen } from "./ui/creation.mjs";
 import "./style.css";
 import { characterSheet } from "./ui/character.mjs";
@@ -54,6 +56,7 @@ let game,
   sound = new GameAudio(),
   selectedAction = null,
   saveTimer,
+  savedFallen = 0,
   initialized = false;
 async function init() {
   const modules = [
@@ -172,6 +175,7 @@ async function init() {
     if (type === "dying") dying(data.hero);
     if (type === "wound") woundReview(data);
     if (type === "turnchoices") turnChoices(data);
+    if (type === "xp") toast(`+${data.amount} XP each · ${data.reason}`);
     if (type === "interact-ready") worldMenu(data.id);
     if (
       selectedAction &&
@@ -190,14 +194,19 @@ async function init() {
       render();
     scheduleSave();
   });
-  game.fresh(
-    [
-      "borin-bridgekeeper",
-      "lira-ashbow",
-      "pip-copperwink",
-      "vaelis-emberglass",
-    ].map((id) => readyExample(examples.find((e) => e.id === id).draft, R, C)),
-  );
+  const saved = await readSave();
+  if (saved) game.load(deserialize(saved));
+  else
+    game.fresh(
+      [
+        "borin-bridgekeeper",
+        "lira-ashbow",
+        "pip-copperwink",
+        "vaelis-emberglass",
+      ].map((id) =>
+        readyExample(examples.find((e) => e.id === id).draft, R, C),
+      ),
+    );
   // Demo starts from legal published characters, never randomized partial builds.
   scene.updateVisibility(game.party, game.seen);
   render();
@@ -270,7 +279,7 @@ function render() {
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "CREATE & RECRUIT")}${button("The provisioner", "shop", "EQUIPMENT & SUPPLIES")}${button("Continue saved expedition", "load", "LOCAL SAVE")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.memorial.length}</b><small>Lost companies</small></div></div><div class="edition">DEVELOPMENT BUILD 0.1 · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small></button>`).join("")}</div>`;
+      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The provisioner", "shop", "EQUIPMENT & SUPPLIES")}${button("Continue saved expedition", "load", "LOCAL SAVE")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">DEVELOPMENT BUILD 0.1 · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
     if (scene.follow)
       scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
   } else {
@@ -298,7 +307,7 @@ function render() {
         : "REAL-TIME EXPLORATION";
     ui.innerHTML =
       header +
-      `<div class="hero-panel">${game.party.map((p, i) => `<button class="hero-card ${i === game.selected && (!combat || game.encounter.nextSide === "players") ? "active" : ""}" data-select="${i}" ${selectable(p) ? "" : "disabled"} aria-label="${esc(p.name)}${combat ? " · " + heroState(p) : ""}"><span class="number">0${i + 1}</span><div style="flex:1"><h3>${esc(p.name)}</h3><div class="class">${esc(className(p))} · ${p.survival.status}${combat ? ` <b class="hero-turn-state">${heroState(p)}</b>` : ""}</div><div class="bar"><span style="width:${(p.survival.hp / p.survival.maxHp) * 100}%"></span></div><div class="vitals"><span>${p.survival.hp} / ${p.survival.maxHp} HP</span><span>${p.survival.gritAvailable} GRIT</span></div></div></button>`).join("")}<div class="party-hint">1–4 SELECT · CLICK GROUND TO MOVE</div></div><div class="compass">N<b>◇</b>Q ↶ &nbsp; ↷ E</div><div class="minimap"><canvas id="map" width="155" height="155"></canvas><footer>${c.haul} COINS IN THE PACK</footer></div><aside class="eventlog"><div class="eyebrow">EXPEDITION JOURNAL</div>${game.log
+      `<div class="hero-panel">${game.party.map((p, i) => `<button class="hero-card ${i === game.selected && (!combat || game.encounter.nextSide === "players") ? "active" : ""}" data-select="${i}" ${selectable(p) ? "" : "disabled"} aria-label="${esc(p.name)}${combat ? " · " + heroState(p) : ""}"><span class="number">0${i + 1}</span><div style="flex:1"><h3>${esc(p.name)}</h3><div class="class">${esc(className(p))} · ${p.survival.status}${combat ? ` <b class="hero-turn-state">${heroState(p)}</b>` : ""}</div><div class="bar"><span style="width:${(p.survival.hp / p.survival.maxHp) * 100}%"></span></div><div class="vitals"><span>${p.survival.hp} / ${p.survival.maxHp} HP</span><span>${p.survival.gritAvailable} GRIT</span></div>${xpMeter(p, true)}</div></button>`).join("")}<div class="party-hint">1–4 SELECT · CLICK GROUND TO MOVE</div></div><div class="compass">N<b>◇</b>Q ↶ &nbsp; ↷ E</div><div class="minimap"><canvas id="map" width="155" height="155"></canvas><footer>${c.haul} COINS IN THE PACK${c.pendingTreasureXP ? `<small>+${c.pendingTreasureXP} XP EACH ON RETURN</small>` : ""}</footer></div><aside class="eventlog"><div class="eyebrow">EXPEDITION JOURNAL</div>${game.log
         .slice(-4)
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
@@ -368,6 +377,9 @@ function action(a) {
     case "roster":
       roster();
       break;
+    case "fallen":
+      roster({ hall: true });
+      break;
     case "shop":
       shop();
       break;
@@ -400,20 +412,8 @@ function action(a) {
       game.deeper();
       break;
     case "new-party":
-      game.mode = "town";
-      [
-        "borin-bridgekeeper",
-        "lira-ashbow",
-        "pip-copperwink",
-        "vaelis-emberglass",
-      ].forEach((id, i) =>
-        game.replace(
-          i,
-          readyExample(examples.find((e) => e.id === id).draft, R, C),
-        ),
-      );
-      game.newFloor();
-      render();
+      game.returnAfterDefeat();
+      roster();
       break;
   }
 }
@@ -507,14 +507,18 @@ function help() {
     `<p>Lead four heroes through the crypt. Click the floor to travel together. Sentries stop real-time movement and begin alternating HoL turns.</p><p>Choose heroes with <b>1–4</b>. In combat, click an adjacent sentry for Basic Melee (a held melee weapon) or Basic Unarmed. Click the floor to spend movement; convert a Maneuver for more. <b>Space</b> ends a turn. Right-drag pans, <b>Q / E</b> rotate, mouse wheel zooms, <b>F</b> follows your selected hero. Formation controls marching order outside combat.</p><p>The in-game creator uses the full character-creation catalog. C or I opens your equipment sheet; pin favorites in Abilities, then use them from the combat bar. Combat includes melee/unarmed, ranged ammunition, Cinder Cast, Rime Grip, Hook and Drive, Pinning Shot, Defend, Shield Block, Stabilize and alternating turns. The playable roster is curated: Actions lists supported learned cards. Character sheets mark included, excluded, planned adaptations and cards awaiting review. Wounds use all five tables and apply numerical penalties, conditions and Last Words. Acknowledge the injury, resolve any displacement, and continue. The Journey tab offers matching one-hour wound treatment in Greyhaven. Scars and spent Grit persist.</p><p>Expedition recovery, loot and Greyhaven are game-specific playtest proposals. This is an early playable foundation, not a finished HoL adaptation.</p>`,
   );
 }
-function roster() {
-  dialog(
-    "The company register",
-    `<p>Recruit from the published examples or build your own hero with the complete in-game HoL creator.</p><div class="catalog-list">${game.party.map((h, i) => `<button data-edit="${i}">${esc(h.name)}<small>${esc(className(h))} · Replace or customize slot ${i + 1}</small></button>`).join("")}</div>`,
-  );
-  modal
-    .querySelectorAll("[data-edit]")
-    .forEach((b) => (b.onclick = () => workshop(+b.dataset.edit)));
+function roster(options = {}) {
+  closeModal();
+  modalCleanup = rosterScreen({
+    root: modal,
+    game,
+    scene,
+    C,
+    close: closeModal,
+    create: (slot) => workshop(slot),
+    attempt,
+    ...options,
+  });
 }
 function workshop(slot, development = false) {
   closeModal();
@@ -530,6 +534,10 @@ function workshop(slot, development = false) {
     close: closeModal,
     attempt,
     toast,
+    onCreated: async (heroId) => {
+      await save(false);
+      roster({ slot, selection: heroId });
+    },
   });
 }
 function sheet(index) {
@@ -828,6 +836,11 @@ function woundReview({ hero, wound }) {
 function scheduleSave() {
   if (!initialized) return;
   clearTimeout(saveTimer);
+  if (game.campaign.fallenHeroes.length > savedFallen) {
+    savedFallen = game.campaign.fallenHeroes.length;
+    void save(false).catch((e) => toast(e.message));
+    return;
+  }
   saveTimer = setTimeout(() => save(false), 900);
 }
 async function save(show = false) {
@@ -837,10 +850,13 @@ async function save(show = false) {
   else localStorage.setItem("ddd.campaign.v1", text);
   if (show) toast("Expedition saved on this computer.");
 }
-async function load() {
-  const text = window.desktop
+async function readSave() {
+  return window.desktop
     ? await window.desktop.load()
     : localStorage.getItem("ddd.campaign.v1");
+}
+async function load() {
+  const text = await readSave();
   if (!text) throw new Error("No saved expedition yet.");
   game.load(deserialize(text));
   scene.updateVisibility(game.party, game.seen);

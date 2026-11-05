@@ -39,12 +39,13 @@ The Linux executable is `release/linux-unpacked/deep-dark-dungeons-hol`. Windows
 - Heroes can pass willing companions but must end on an empty square. Prone occupied squares cost 2 movement. This is an explicit companion-passage adaptation; standing enemies still block.
 - C / I opens the character command screen: animated equipment preview, pack, quick ready/stow, abilities and Journey. Star favorite actions to put them on the combat bar; 5–9 activate the first five. Shield Block is offered before eligible enemy attacks.
 - Sound opens master volume, mute and a test sound. Audio starts on the first click or key press.
-- Clear a depth and return to Greyhaven to earn a level. Develop this hero opens training; committed choices, damage, injuries and spent Grit persist.
+- Discover chambers, overcome encounters and bring treasure home to earn XP equally for living expedition members. Level 2 needs 1,000 XP; each subsequent level costs 250 more XP than the last. Journey shows totals, progress, recent awards and the reward rules. Develop this hero applies earned levels in town using HoL's training rules; damage, injuries and spent Grit persist.
 - Return to entrance stairs to extract; gather at far stairs to descend.
-- The company register opens a blank eight-step creator; saved drafts and example characters are explicit choices. Separate discipline/ability purchase dialogs show owned ranks, book symbols and action letters. Equipment lists granted gear before additional shopping. Recruit validates both creation stages before replacing a slot.
+- The company register holds all living heroes, both the active four and the reserve. Create a hero saves a validated character to the repository; choose a slot and Assign to put them in the party. Replaced companions remain in reserve with their gear, injuries and XP. The Hall of Fallen Heroes records each resolved final death and preserves that hero's last state.
+- The eight-step creator starts blank; saved drafts and example characters are explicit choices. Separate discipline/ability purchase dialogs show owned ranks, book symbols and action letters. Equipment lists granted gear before additional shopping.
 - Journey offers matching one-hour wound treatment in town, with one attempt per wound per campaign day. Healing potions are usable from inventory or the combat action bar.
 
-Saves use the desktop application's user-data directory. Development saves use browser local storage. Save before replacing or resetting a party.
+Saves use the desktop application's user-data directory. Development saves use browser local storage. Startup automatically restores the saved campaign and hero repository. Older saves retain their party and earned levels, which migrate to the matching minimum XP. Newly created heroes are saved immediately; final-death records trigger an immediate save.
 
 ## Design and provenance
 

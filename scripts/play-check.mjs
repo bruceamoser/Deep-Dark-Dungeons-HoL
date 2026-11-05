@@ -12,15 +12,17 @@ try {
   await page.goto("http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd);
   await page.getByRole("button", { name: "The company register" }).click();
-  await page.locator('[data-edit="0"]').click();
+  await page.locator("#create-roster-hero").click();
   await expect(page.locator("#hero-name")).toBeVisible();
   await expect(page.locator("#hero-name")).toHaveValue("");
   await page.locator('[data-preset="borin-bridgekeeper"]').click();
   await page.locator("#hero-name").fill("Borin of Greyhaven");
   await page.locator("#hero-name").blur();
   await page.locator('[data-step="7"]').click();
-  await page.getByRole("button", { name: "Recruit this hero" }).click();
+  await page.getByRole("button", { name: "Save hero to repository" }).click();
   await expect(page.locator(".creator-window")).toHaveCount(0);
+  await page.locator("#assign-roster-hero").click();
+  await page.keyboard.press("Escape");
   expect(await page.evaluate(() => window.__ddd.game.party[0].name)).toBe(
     "Borin of Greyhaven",
   );

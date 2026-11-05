@@ -1,4 +1,5 @@
 import { distance, key, lineOfSight, pathfind } from "./dungeon.mjs";
+import { XP_RULES } from "./experience.mjs";
 
 // World interactions are a dungeon-game layer; source character rules stay intact.
 export const interactionMethods = {
@@ -128,6 +129,8 @@ export const interactionMethods = {
     if (item.kind === "cache") item.source.recovered = true;
     else item.source.opened = true;
     this.campaign.haul += item.coins;
+    if (item.kind === "coffer")
+      this.campaign.pendingTreasureXP += item.coins * XP_RULES.coin;
     this.note(`Recovered ${item.coins} coins from ${item.name.toLowerCase()}.`);
     this.emit("loot", { chest: item.source });
     this.emit("change");

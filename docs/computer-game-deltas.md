@@ -19,7 +19,7 @@ No resting procedure may replenish spent Grit. No unavailable behavior may silen
 Bruce explicitly approved curating, adapting, excluding and adding abilities for the computer game on November 5, 2026. Original source records stay immutable. The dungeon registry records its choices separately; no unreviewed card is inferred from flavor text. In particular, Basic Ranged and Braced Harness have flavor text that differs from their detailed rules, so adapters follow the detailed rules.
 
 - The first hero in the chosen marching order leads exploration. Two by two, column, wedge and line reserve reachable destination slots; local pathfinding may break shape around obstacles. No party formation movement occurs in combat.
-- Returning alive after fully clearing a previously uncredited depth earns one level, up to the source maximum of 100. This award schedule is a proposed computer-game rule. HoL’s DP amounts, prerequisites, attribute rules and level-based Grit grants remain authoritative. A hero may hold earned levels until a supported signature/training choice is available.
+- The initial cleared-depth milestone proposal is superseded by the XP system below. HoL’s DP amounts, prerequisites, attribute rules and level-based Grit grants remain authoritative. A hero may hold earned levels until a supported signature/training choice is available.
 - Combat uses normal walkable terrain. Crossing prone occupants and difficult terrain are not yet represented; the current movement implementation conservatively blocks occupied tiles. The Stand control costs the printed two movement squares.
 - Readying equipment explicitly via the sheet costs a Maneuver in combat; it stows incompatible held gear. A weapon attack draws a carried weapon at no additional action cost when hands are available. Full dropping/retrieving and grip choices are pending.
 - Sentry melee attacks are considered blockable for Shield Block. Reaction prompts pause until a player chooses. The AI does not yet exercise opportunity attacks, Fall to Pieces or other optional reactions; casts and stowing therefore do not currently trigger those attacks. That is an AI coverage limitation, not removal from canonical HoL.
@@ -54,3 +54,23 @@ Exploration commits companion endpoints together, including cycles where compani
 The next available player-side turn suggests the next eligible hero after the last hero who acted, wrapping the company order at a new round. Players may still choose an eligible participant before committing the turn. This is a UI selection policy; the existing alternating-side encounter procedures are unchanged. Selecting an action is now a reversible targeting state. Self actions require confirmation, and selecting another action, selecting the same action again, Cancel or Escape can leave targeting before any cost is paid.
 
 World-object interactions now replace automatic treasure collection. Coffers, lost-expedition caches and stairs have pointer highlights and Inspect/Approach/Collect/Recover/travel/Leave menus as appropriate. Approach moves the company and reopens the menu without collecting anything. Treasure requires an adjacent capable companion and exploration mode; stairs retain the existing company-gathering checks. This is a computer-game interaction policy, not a new HoL combat action. Arbitrary dropped equipment and container inventories are not implemented by this menu pass.
+
+## Persistent heroes and experience — November 5
+
+Bruce approved mixed exploration, encounter and recovered-treasure XP, shared equally among surviving expedition members, with training in town. The book's `design/development.md` delegates milestone levels to the DA; this XP schedule replaces only that award decision. The existing source advancement validator still determines DP, Grit, prerequisites and signatures. XP does not immediately change attributes, heal HP, restore Grit or purchase abilities.
+
+Initial balance values (computer-game rules, subject to playtesting):
+
+| Event | XP per living party member |
+| --- | --- |
+| First entry into a new chamber, excluding the arrival room | 60 + 10 × (depth − 1) |
+| Completed encounter | 100 + 20 × (depth − 1) per defeated sentry |
+| Newly looted coffer coins returned to Greyhaven | 5 per coin |
+
+Reserve heroes earn no expedition XP. A conscious/active status is required to discover a room, but living incapacitated companions share the reward. Encounter awards wait until the encounter and ongoing survival/harm procedures are resolved. Discovery and encounter XP are retained as earned; coffer XP remains pending until extraction and is lost on defeat. Recovery caches never grant XP again. Claims are saved per generated floor, preventing repeated events, re-entry or save reload from duplicating rewards. Regenerating a floor after a defeated expedition creates a new set of discoveries and encounters.
+
+Level 2 requires 1,000 cumulative XP. Advancing from level L to L+1 costs 1,000 + 250 × (L − 1). The cumulative threshold for level N is 1,000 × (N − 1) + 125 × (N − 1) × (N − 2), capped at source level 100. These values aim to make several rooms plus treasure worth roughly an early level; no long-term balance claim is established. Missing higher-level signature adapters still gate training as documented elsewhere.
+
+Created heroes receive permanent identities independent of their current party slots. A living hero swapped out of the company remains in reserve with the same inventory, survival state, wounds, favorites, XP and progression. Completed characters are saved before returning to the roster. Startup loads the existing campaign rather than replacing it with examples. Legacy earned levels migrate to their minimum XP thresholds without losing committed training. Old expedition memorial entries remain stored; they do not become invented individual death records.
+
+Only the source survival status `dead` creates a Hall entry. Dying, Stable and Last Words remain distinct and do not mark a hero fallen early. Each final death is recorded once, with a snapshot of the hero, last depth, expedition and last recorded harm. Fallen heroes cannot be assigned from the repository. After defeat, surviving heroes and reserves remain available; the game no longer creates a replacement party from copies of the published examples. This keeps the existing proposed retreat/recovery loop without granting healing or reversing death.
