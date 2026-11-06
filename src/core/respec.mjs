@@ -13,6 +13,7 @@ export const respecMethods = {
     return "";
   },
   newRespecDraft(index) {
+    if (this.C.forge) return this.forgeRespecDraft(index);
     const reason = this.respecReason(index);
     if (reason) throw new Error(reason);
     const h = this.party[index],
@@ -191,6 +192,11 @@ export const respecMethods = {
     return next;
   },
   respec(index, proposed, expectedHeroId) {
+    if (this.C.forge)
+      return this.forgeCommit(index, proposed, {
+        respec: true,
+        expectedHeroId,
+      });
     const h = this.party[index];
     if (expectedHeroId !== h?.heroId)
       throw new Error(

@@ -212,7 +212,11 @@ export const tacticMethods = {
           type: "physical",
           amount: Math.max(
             0,
-            { weak: 2, standard: 3, strong: 5 }[r.tier] +
+            (h.draft.forge
+              ? (h.preview.state.abilities.includes("power-forge-strike")
+                  ? h.preview.forge.profiles.melee
+                  : [1, 1, 1])[["weak", "standard", "strong"].indexOf(r.tier)]
+              : { weak: 2, standard: 3, strong: 5 }[r.tier]) +
               this.consumeDamageBonus(h) +
               this.buildDamage(
                 h,

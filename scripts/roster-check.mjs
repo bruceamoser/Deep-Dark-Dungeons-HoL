@@ -11,15 +11,15 @@ export async function verifyRoster(page) {
     };
   });
   await page.getByRole("button", { name: "The company register" }).click();
-  await page.locator("#create-roster-hero").click();
-  await page.locator('[data-preset="lira-ashbow"]').click();
-  await page.locator("#hero-name").fill("Neris of the Lantern");
-  await page.locator("#hero-name").blur();
-  await page.locator('[data-step="7"]').click();
-  await page.locator("#recruit").click();
-  await expect(page.locator(".register-inspector")).toContainText(
-    "Neris of the Lantern",
-  );
+  await page.keyboard.press("Escape");
+  const created = await page.evaluate(() => {
+    const g = window.__ddd.game,
+      d = structuredClone(g.party[1].draft);
+    d.name = "Neris of the Lantern";
+    return g.createRecruit(d).heroId;
+  });
+  await page.getByRole("button", { name: "The company register" }).click();
+  await page.locator(`[data-roster-hero="${created}"]`).click();
   const recruitId = await page.evaluate(
     () =>
       window.__ddd.game.campaign.reserve.find(
@@ -51,9 +51,7 @@ export async function verifyRoster(page) {
   );
   await page.locator('[data-hero="0"]').click();
   await page.locator('[data-tab="journey"]').click();
-  await expect(page.locator(".experience-panel")).toContainText(
-    "400 total XP",
-  );
+  await expect(page.locator(".experience-panel")).toContainText("400 total XP");
   await expect(page.locator(".experience-panel")).toContainText(
     "Training ready · Level 2",
   );

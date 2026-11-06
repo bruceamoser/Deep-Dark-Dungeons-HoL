@@ -30,7 +30,15 @@ export class SaveLibrary {
       this.active = null;
     if (!index && !slots.length) {
       const legacy = await this.storage.get("legacy");
-      if (legacy) await this.create("Original expedition", legacy);
+      if (legacy) {
+        try {
+          deserialize(legacy);
+        } catch {
+          this.incompatibleLegacy = true;
+        }
+        if (!this.incompatibleLegacy)
+          await this.create("Original expedition", legacy);
+      }
     }
     return this.active;
   }
@@ -61,6 +69,18 @@ export class SaveLibrary {
               returnDepth: c.returnPassage?.depth,
             };
           } catch {
+            try {
+              const old = JSON.parse(await this.storage.get(id));
+              const envelope = JSON.parse(old.text);
+              if (envelope.version === 1)
+                return {
+                  id,
+                  name: old.name,
+                  updatedAt: old.updatedAt,
+                  invalid: true,
+                  incompatible: true,
+                };
+            } catch {}
             return { id, name: "Unreadable save", invalid: true };
           }
         }),
@@ -100,6 +120,10 @@ export class SaveLibrary {
       const raw = await this.storage.get(id);
       if (!raw) throw new Error("This save slot no longer exists.");
       const record = JSON.parse(raw);
+      if (JSON.parse(record.text).version === 1)
+        throw new Error(
+          "Earlier-edition saves are preserved. Create a new run.",
+        );
       await this.storage.set(
         id,
         JSON.stringify({

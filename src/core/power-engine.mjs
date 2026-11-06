@@ -53,6 +53,7 @@ export const powerMethods = {
     this.emit("move");
   },
   powerIds(h) {
+    if (h.draft?.forge) return [...h.preview.state.abilities];
     return [
       ...new Set(
         h.preview.state.abilities.map((id) =>
@@ -90,7 +91,9 @@ export const powerMethods = {
     this.emit("feedback", {
       id: target.id,
       kind: "recovery",
-      text: this.C.choices.find((c) => c.id === id)?.name ?? "Power effect",
+      text:
+        this.C.choices.find((c) => c.id === id.split(":")[0])?.name ??
+        "Power effect",
     });
     if (stats.movement && target === this.active && this.budget)
       this.budget.bonusMovement = Math.max(
@@ -451,6 +454,8 @@ export const powerMethods = {
       )
         return `No ${p.category} remains.`;
     }
+    if (p.shield && !this.held(h, "item-ordinary-shield"))
+      return "Ready a shield first.";
     if (p.weapon && !this.held(h, `item-ordinary-${p.weapon}-weapon`))
       return `Ready a ${p.weapon === "ranged" ? "bow" : "melee weapon"} first.`;
     if (p.weapon === "ranged" && !this.supplyItem(h, "item-ammunition-bundle"))
@@ -487,7 +492,21 @@ export const powerMethods = {
     const extra = damaging ? this.consumeDamageBonus(h) : 0;
     const hidden = !!this.powerStat(h, "hidden");
     if (damaging) this.breakConcealment(h);
-    for (const effect of spec.effects) {
+    const resolvedEffects = spec.effects.flatMap((effect) =>
+      effect.kind === "damage"
+        ? Array.from({ length: spec.shots ?? 1 }, (_, shot) => ({
+            ...effect,
+            shot,
+          }))
+        : [effect],
+    );
+    for (const effect of resolvedEffects) {
+      if (
+        effect.kind === "damage" &&
+        spec.weapon === "ranged" &&
+        !this.supplyItem(h, "item-ammunition-bundle")
+      )
+        continue;
       if (effect.kind === "zone") {
         this.createSurface(
           effect.surface,
@@ -505,6 +524,7 @@ export const powerMethods = {
       for (const recipient of effect.self ? [h] : recipients) {
         switch (effect.kind) {
           case "damage": {
+            if (!alive(recipient)) break;
             const d = this.creatureDefense(recipient, h, {
               type: effect.type,
               weapon: spec.weapon,
@@ -534,14 +554,14 @@ export const powerMethods = {
               Math.max(
                 0,
                 value(effect.amount, tier) +
-                  extra +
+                  (effect.shot ? 0 : extra) +
                   this.buildDamage(
                     h,
                     recipient,
                     spec,
                     effect.type,
                     tier,
-                    hidden,
+                    hidden && !effect.shot,
                   ),
               ),
               effect.type,
@@ -579,6 +599,7 @@ export const powerMethods = {
               element: effect.type,
               spell: spec.spell,
               ranged: spec.weapon === "ranged",
+              shot: effect.shot ?? 0,
             });
             break;
           }
@@ -634,7 +655,15 @@ export const powerMethods = {
               recipient.survival = this.R.stabilize(recipient.survival);
             break;
           case "buff":
-            this.powerBuff(h, recipient, effect.stats, effect.turns, id);
+            this.powerBuff(
+              h,
+              recipient,
+              effect.stats,
+              effect.turns,
+              spec.effects.some((e) => e.kind === "barrier")
+                ? id + ":buff"
+                : id,
+            );
             break;
           case "barrier":
             this.powerBuff(
@@ -647,7 +676,9 @@ export const powerMethods = {
                   (spec.supply && this.traits(h).some((t) => t.device) ? 2 : 0),
               },
               effect.turns,
-              id,
+              spec.effects.some((e) => e.kind === "buff")
+                ? id + ":barrier"
+                : id,
             );
             break;
           case "guard":
@@ -721,13 +752,12 @@ export const powerMethods = {
           }
         }
       }
+      if (effect.kind === "damage" && spec.weapon === "ranged") {
+        const ammunition = this.supplyItem(h, "item-ammunition-bundle");
+        if (ammunition)
+          this.checkSupply(h, ammunition, "ammunition after shot");
+      }
     }
-    if (spec.weapon === "ranged")
-      this.checkSupply(
-        h,
-        this.supplyItem(h, "item-ammunition-bundle"),
-        "ammunition after shot",
-      );
     if (spec.supply) {
       const item = this.supplyItem(h, spec.supply);
       if (spec.consume) {

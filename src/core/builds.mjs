@@ -1,3 +1,4 @@
+import { forgePower, forgePowerText } from "./forge.mjs";
 import { POWERS } from "./powers.mjs";
 import { distance } from "./dungeon.mjs";
 import { surfaceAt } from "./battlefield.mjs";
@@ -356,6 +357,13 @@ export function validateBuild(h) {
 export const buildMethods = {
   buildStat(h, key) {
     if (!h?.preview || !this.C.gamePowers) return 0;
+    if (h.draft.forge)
+      return (
+        (h.preview.forge?.stats[key] ?? 0) +
+        (h.preview.equipmentEffects ?? [])
+          .filter((e) => e.effect === "build" && e.stat === key)
+          .reduce((n, e) => n + e.value, 0)
+      );
     const talents = Object.entries(h.build?.talents ?? {}).reduce(
       (n, [id, rank]) => n + (TALENTS[id]?.stats[key] ?? 0) * rank,
       0,
@@ -375,6 +383,8 @@ export const buildMethods = {
     const h = this.party[index];
     if (this.mode !== "town" || !this.canAct(h))
       throw new Error("Change your build safely in Greyhaven.");
+    if (h.draft.forge)
+      throw new Error("Use discipline paths to develop this hero.");
     const before = h.build;
     h.build = structuredClone(before ?? { talents: {}, specializations: {} });
     h.build.talents ??= {};
@@ -406,6 +416,11 @@ export const buildMethods = {
   powerSpec(id, h = this.active) {
     const p = structuredClone(POWERS[id]);
     if (!p) return p;
+    if (h?.draft?.forge) {
+      const result = forgePower(p, h);
+      result.description = forgePowerText(result);
+      return result;
+    }
     const augment = h?.build?.specializations?.[id];
     const add = (value, n) =>
       Array.isArray(value)

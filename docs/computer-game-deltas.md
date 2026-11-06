@@ -1,4 +1,20 @@
-# Current adaptations — v0.5.0
+# Current adaptations — v0.6.0
+
+## v0.6 discipline progression supersedes previous purchase rules
+
+Bruce authorized a fresh ruleset and removal of compatibility obligations on November 6, 2026. The discipline atlas replaces staged DP purchases, mastery talents and fixed class signatures. Historical sections below describe earlier editions, not current progression.
+
+- Creation starts at level 1 with three attribute points (0–2 per attribute), two ancestry traits, one class origin, one culture origin and one background origin. Class/culture/background grant rank I only. Duplicate origins grant 3 DP each.
+- One nonexpiring budget: 8 DP initially plus 4 per trained level, capped at level 30. Additional discipline origins cost 3 DP from level 2. Rank II costs 2 DP and requires level 3/four invested path nodes; rank III costs 3 DP and requires level 7/nine invested path nodes.
+- Each of the 18 disciplines has four circular paths. Minor nodes cost 1 DP; advanced nodes generally cost 2–3. Profile upgrades replace previous values. Weapon powers and melee reactions use the learned profile; an untrained melee reaction uses 1/1/1.
+- A confluence requires every exact touching prerequisite. Two/three/four-discipline combinations cost 3/4/5 DP. Opening its border grants purchase eligibility, not a free ability. Refunds remove invalid dependents and return all their costs.
+- Powers use the shared effect engine with action/supply/position costs, without encounter-use counters. Former discipline weapon techniques use learned weapon profiles; spells use explicitly reduced starting damage and node improvements. Field Care includes modest HP healing as well as stabilization and Bleeding removal. Wound procedures remain distinct.
+- Base maximum HP is 14 + ancestry HP + Fortitude + ancestry/path benefits + one per two trained levels after level 1. Grit starts at 3 and gains one per six trained levels. Injuries continue to use the existing survival and wound engine; progression never heals current HP or refreshes spent Grit.
+- Recipe path benefits can coexist: speed reductions multiply the remaining crafting time, with a five-minute floor. Recipe nodes with overlapping knowledge also grant stated HP, healing or carrying bonuses. Alchemical Insight discounts ingredient batches by 25%.
+- Equipment comes from a chosen kit plus a 60-coin purse. Forge purchases do not mint additional weapons or supplies. Respec preserves actual possessions and exhausted stacks. All heroes speak Common; social-language purchases do not occupy the progression map.
+- Far Walker grants +1 movement and +2 carrying capacity instead of extra DP per level. Other ancestry adaptations continue to use their explicit engine rules.
+- Save version 2 intentionally requires fresh journeys. Older files remain on disk and are shown as preserved, incompatible journeys. New run creation never overwrites those files.
+
 
 Bruce's November 6 direction supersedes the earlier ability-by-ability automation
 approach: HoL supplies core mechanics, while powers are designed for this game.

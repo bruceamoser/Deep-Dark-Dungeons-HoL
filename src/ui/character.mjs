@@ -1,3 +1,4 @@
+import { FORGE_NODES } from "../core/forge-catalog.mjs";
 import { appearanceControls } from "./appearance.mjs";
 import { buildPanel } from "./builds.mjs";
 import { EQUIPMENT_SLOTS, slotOf } from "../core/treasure.mjs";
@@ -430,8 +431,16 @@ export function characterSheet({
                 ? null
                 : (game.powerSpec(c.id, h) ?? ABILITIES[c.id]),
             f = h.favorites?.includes(c.id),
-            status = coverage(c.id);
-          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c, a)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule"><b>Dungeon version</b> ${esc(status.reason)}</p><details class="choice-reference"><summary>${c.gamePower ? "Game rules" : "Original HoL rules"}</summary>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}</details>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
+            granted = FORGE_NODES.find((n) => n.grant === c.id),
+            status = game.powerSpec(c.id, h)
+              ? {
+                  status: "included",
+                  reason: game.powerSpec(c.id, h).description,
+                }
+              : granted
+                ? { status: "included", reason: granted.description }
+                : coverage(c.id);
+          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c, a)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule">${esc(status.reason)}</p>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
         })
         .join("")}</div>`;
       root.querySelectorAll("[data-prepare-trait]").forEach(

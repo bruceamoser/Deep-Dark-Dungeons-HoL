@@ -177,7 +177,7 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-human-far-walker": rule(
     "keep",
-    "Gain one additional DP at each level, including level 0. Source creation and advancement rules apply.",
+    "Far Walker grants +1 movement and +2 carrying capacity in the discipline forge.",
   ),
   "trait-human-many-homes": rule(
     "keep",

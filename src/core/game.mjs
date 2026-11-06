@@ -1,3 +1,5 @@
+import { forgeCharacter } from "./forge.mjs";
+import { forgeGameMethods } from "./forge-game.mjs";
 import { validateGameState } from "./game-state.mjs";
 import { buildMethods } from "./builds.mjs";
 import { normalizeAppearance, identityMethods } from "./identity.mjs";
@@ -58,7 +60,9 @@ import {
 } from "./dungeon.mjs";
 export class Game {
   constructor(rules, catalogs, notify = () => {}) {
-    this.R = rules;
+    this.R = catalogs.forge
+      ? { ...rules, workshopCharacter: forgeCharacter }
+      : rules;
     this.C = catalogs;
     this.notify = notify;
     this.listeners = [];
@@ -153,6 +157,7 @@ export class Game {
       ]
         .filter((id) => this.availableActions(hero).some((c) => c.id === id))
         .slice(0, 8);
+    if (this.C.forge) hero.favorites = this.forgeFavorites(hero);
     return hero;
   }
   fresh(drafts) {
@@ -915,6 +920,8 @@ export class Game {
     return (
       this.canAct(h) &&
       this.held(h, "item-ordinary-shield") &&
+      (!h.draft.forge ||
+        h.preview.state.abilities.includes("ability-shield-block")) &&
       !h.buffs.shield &&
       (this.budgets[h.id]?.remaining.reaction ?? 1) > 0
     );
@@ -1404,6 +1411,7 @@ export class Game {
     return "";
   }
   develop(index, proposed) {
+    if (this.C.forge) return this.forgeCommit(index, proposed);
     if (this.mode !== "town") throw new Error("Train in Greyhaven.");
     const h = this.party[index],
       next = structuredClone(h.draft),
@@ -1978,6 +1986,15 @@ export class Game {
       ? "ranged"
       : "melee";
     const melee = this.held(this.active, "item-ordinary-melee-weapon");
+    if (this.C.forge) {
+      const id =
+        kind === "ranged"
+          ? "power-forge-shot"
+          : melee && this.powerIds(this.active).includes("power-forge-strike")
+            ? "power-forge-strike"
+            : "power-forge-unarmed";
+      return this.useAbility(id, enemyId);
+    }
     return this.useAbility(
       `ability-basic-${kind === "melee" && !melee ? "unarmed" : kind}`,
       enemyId,
@@ -2261,6 +2278,6 @@ Object.assign(Game.prototype, tacticMethods);
 Object.assign(Game.prototype, retrainingMethods, respecMethods);
 
 Object.assign(Game.prototype, powerMethods, battlefieldMethods);
-Object.assign(Game.prototype, buildMethods);
+Object.assign(Game.prototype, buildMethods, forgeGameMethods);
 
 Object.assign(Game.prototype, recipeMethods, gameCareMethods, identityMethods);

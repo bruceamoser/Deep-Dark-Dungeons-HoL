@@ -89,7 +89,7 @@ function wound(g, h, exceptional = false) {
 
 test("new training uses game designs while originals and legacy heroes remain valid", () => {
   const g = fresh();
-  assert.equal(Object.keys(POWERS).length, 225);
+  assert.equal(Object.keys(POWERS).length, 263);
   assert.equal(
     C.choices.some((c) => c.gamePower),
     false,
@@ -128,6 +128,7 @@ test("every active game power validates a target and executes its declared effec
     if (p.weapon === "ranged") item(g, "item-ammunition-bundle");
     if (p.supply) item(g, p.supply);
     grant(g, p.id);
+    g.beginHero();
     h.survival.hp -= 10;
     g.party[1].survival.hp -= 10;
     for (const effect of p.effects.filter((e) => e.kind === "cleanse"))

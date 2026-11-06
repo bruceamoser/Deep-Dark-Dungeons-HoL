@@ -172,6 +172,7 @@ export const recipeMethods = {
   recipePrice(h, r) {
     return Math.ceil(
       r.materialPrice *
+        (1 - Math.min(0.75, this.buildStat(h, "craftDiscount"))) *
         Math.min(1, ...this.traits(h).map((t) => t.buyRate ?? 1)) *
         (this.traits(h).some((t) => t.salvage) ? 0.75 : 1),
     );
@@ -184,7 +185,34 @@ export const recipeMethods = {
         t.craft || t.structure || t.craftTime ? 0.25 : 0,
       ),
     );
-    return Math.max(5, Math.ceil(r.minutes * (1 - speed)));
+    if (h.draft.forge) {
+      const traitSpeed = Math.max(
+        0,
+        ...this.traits(h).map((t) =>
+          t.craft || t.structure || t.craftTime ? 0.25 : 0,
+        ),
+      );
+      const multiplier = this.powerIds(h).reduce(
+        (m, id) => m * (1 - (POWERS[id]?.passive?.craftSpeed ?? 0)),
+        1,
+      );
+      return Math.max(
+        5,
+        Math.ceil(
+          r.minutes *
+            multiplier *
+            (1 - traitSpeed) *
+            (1 - Math.min(0.75, this.buildStat(h, "craftSpeed"))),
+        ),
+      );
+    }
+    return Math.max(
+      5,
+      Math.ceil(
+        r.minutes *
+          (1 - Math.min(0.75, speed + this.buildStat(h, "craftSpeed"))),
+      ),
+    );
   },
   learnRecipe(index, id, source = "merchant") {
     const h = this.party[index],

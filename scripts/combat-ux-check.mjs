@@ -19,9 +19,9 @@ export async function verifyCombatUX(page) {
       h.survival.hp = h.survival.maxHp;
     });
     g.party[0].favorites = [
-      "ability-basic-melee",
+      "power-forge-strike",
       "ability-defend",
-      "ability-basic-unarmed",
+      "power-forge-unarmed",
     ];
     g.enemies = [
       {
@@ -39,7 +39,9 @@ export async function verifyCombatUX(page) {
     s.resetEntities(g.party, g.enemies);
     s.zoom = 19;
     s.resize();
-    s.focusOn({ x: x + 2, z });
+    // Keep projected mouse targets stable independently of earlier camera tests.
+    s.follow = false;
+    s.focusOn({ x: x + 2, z }, false);
     g.detect();
   });
   await page.waitForTimeout(700);
@@ -67,8 +69,8 @@ export async function verifyCombatUX(page) {
       });
     });
   const before = await snapshot();
-  await page.locator('[data-hot-action="ability-basic-melee"]').click();
-  await expect(page.locator(".targeting-tray")).toContainText("Basic Melee");
+  await page.locator('[data-hot-action="power-forge-strike"]').click();
+  await expect(page.locator(".targeting-tray")).toContainText("Melee Attack");
   await page.locator('[data-hot-action="ability-defend"]').click();
   await expect(page.locator(".targeting-tray")).toContainText("Defend");
   expect(await snapshot()).toBe(before);
@@ -79,7 +81,7 @@ export async function verifyCombatUX(page) {
   await expect(page.locator(".targeting-tray")).toHaveCount(0);
   await page.keyboard.press("5");
   await page.keyboard.press("7");
-  await expect(page.locator(".targeting-tray")).toContainText("Basic Unarmed");
+  await expect(page.locator(".targeting-tray")).toContainText("Unarmed Strike");
   await page.keyboard.press("Escape");
   expect(await snapshot()).toBe(before);
 
@@ -104,11 +106,11 @@ export async function verifyCombatUX(page) {
   ).toEqual(companions);
   // Regression: buttons were disabled by movement and never refreshed on completion.
   await expect(
-    page.locator('[data-hot-action="ability-basic-melee"]'),
+    page.locator('[data-hot-action="power-forge-strike"]'),
   ).toBeEnabled();
-  await page.locator('[data-hot-action="ability-basic-melee"]').click();
+  await page.locator('[data-hot-action="power-forge-strike"]').click();
   await clickCell({ x: dest.x, z: dest.z - 1 });
-  await expect(page.locator(".targeting-tray")).toContainText("Basic Melee");
+  await expect(page.locator(".targeting-tray")).toContainText("Melee Attack");
   expect(
     await page.evaluate(() => window.__ddd.game.budget.remaining.main),
   ).toBe(1);
@@ -140,7 +142,7 @@ export async function verifyCombatUX(page) {
   expect(await page.evaluate(() => window.__ddd.selectedAction)).toBe(null);
   // Select, but do not use, an action before ending the turn; it must not leak.
   await page.getByRole("button", { name: "Actions", exact: false }).click();
-  await page.locator('[data-card="ability-basic-unarmed"]').click();
+  await page.locator('[data-card="power-forge-unarmed"]').click();
   await page.getByRole("button", { name: "End turn", exact: false }).click();
   await page.waitForFunction(() => window.__ddd.game.selected === 2);
   expect(await page.evaluate(() => window.__ddd.selectedAction)).toBe(null);
@@ -156,7 +158,7 @@ export async function verifyCombatUX(page) {
   );
   await expect(page.locator('[data-select="0"]')).toHaveClass(/active/);
   await expect(
-    page.locator('[data-hot-action="ability-basic-melee"]'),
+    page.locator('[data-hot-action="power-forge-strike"]'),
   ).toBeEnabled();
   expect(await page.evaluate(() => window.__ddd.selectedAction)).toBe(null);
 
@@ -182,7 +184,8 @@ export async function verifyCombatUX(page) {
     g.map.chests = [{ id: "ux-coins", x: x + 4, z, coins: 23, opened: false }];
     window.uxHaul = g.campaign.haul;
     s.resetEntities(g.party, g.enemies);
-    s.focusOn({ x: x + 2, z });
+    s.follow = false;
+    s.focusOn({ x: x + 2, z }, false);
     g.emit("change");
   });
   await page.waitForTimeout(700);

@@ -171,6 +171,7 @@ try {
     window.__ddd.library.write = window.testWrite;
     window.__ddd.game.campaign.bank = 24680;
   });
+  const priorSlot = await page.evaluate(() => window.__ddd.library.active);
   await page.screenshot({ path: "test-results/update-ready.png" });
   inspector.close();
   await page.getByRole("button", { name: "Save & restart to install" }).click();
@@ -192,9 +193,37 @@ try {
   expect(
     (await newPage.evaluate(() => window.desktop.updates.status())).current,
   ).toBe(version);
-  expect(await newPage.evaluate(() => window.__ddd.game.campaign.bank)).toBe(
-    24680,
+  const oldRecord = JSON.parse(
+    await fs.readFile(path.join(userData, "runs", priorSlot + ".json"), "utf8"),
   );
+  const oldSave = JSON.parse(oldRecord.text);
+  expect(oldSave.campaign.bank).toBe(24680);
+  if (oldSave.version === 1) {
+    const slots = await newPage.evaluate(() => window.__ddd.library.list());
+    expect(slots.find((s) => s.id === priorSlot)).toMatchObject({
+      incompatible: true,
+      invalid: true,
+    });
+    await expect(
+      newPage.getByRole("dialog", { name: "Saved runs" }),
+    ).toBeVisible();
+    await newPage.locator("#run-name").fill("The Forge Company");
+    await newPage.locator("#new-run").click();
+    expect(
+      await newPage.evaluate(
+        () => window.__ddd.game.active.draft.forge.version,
+      ),
+    ).toBe(1);
+    expect(
+      await fs.readFile(
+        path.join(userData, "runs", priorSlot + ".json"),
+        "utf8",
+      ),
+    ).toBe(JSON.stringify(oldRecord));
+  } else
+    expect(await newPage.evaluate(() => window.__ddd.game.campaign.bank)).toBe(
+      24680,
+    );
   expect(
     createHash("sha512")
       .update(await fs.readFile(installed))
@@ -202,7 +231,7 @@ try {
   ).toBe(sha512);
   await newPage.screenshot({ path: "test-results/update-restarted.png" });
   console.log(
-    `Real AppImage download, verified replacement, restart into ${version}, and saved journey restoration passed.`,
+    `Real AppImage download, verified replacement, restart into ${version}, with earlier save preservation and fresh-rule journey creation passed.`,
   );
 } catch (error) {
   console.error(log, await fs.readFile(restartLog, "utf8").catch(() => ""));

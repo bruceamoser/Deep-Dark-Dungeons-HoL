@@ -1,156 +1,59 @@
-import {
-  BUILD_BRANCHES,
-  TALENTS,
-  masteryBudget,
-  masterySpent,
-  specializationOptions,
-} from "../core/builds.mjs";
-import { POWERS } from "../core/powers.mjs";
+import { disciplineStrip } from "./book-symbols.mjs";
+import { FORGE_NODE } from "../core/forge-catalog.mjs";
 import { esc } from "./icons.mjs";
-import { disciplineIcon } from "./book-symbols.mjs";
-
-export function buildPanel(host, { game, index, attempt, train }) {
-  let branch = "steel",
-    selected = "";
-  const draw = () => {
-    const h = game.party[index],
-      remaining = masteryBudget(h) - masterySpent(h),
-      safe = game.mode === "town";
-    const learned = game
-      .powerIds(h)
-      .map((id) => POWERS[id])
-      .filter((p) => specializationOptions(p).length);
-    selected ||= learned[0]?.id ?? "";
-    const current = h.build?.specializations?.[selected] ?? "";
-    const stats = [
-      ...new Set([
-        ...Object.values(TALENTS).flatMap((n) => Object.keys(n.stats)),
-        ...game
-          .powerIds(h)
-          .flatMap((id) => Object.keys(POWERS[id]?.buildStats ?? {})),
-        ...(h.preview.equipmentEffects ?? [])
-          .filter((e) => e.effect === "build")
-          .map((e) => e.stat),
-      ]),
-    ]
-      .map((k) => [k, game.buildStat(h, k)])
-      .filter(([, v]) => v);
-    const names = {
-      attack: "Attack Boons",
-      defense: "Defense Boons",
-      mental: "Mental damage",
-      poisoned: "Poisoned applied",
-      physical: "Physical damage",
-      fire: "Fire damage",
-      cold: "Cold damage",
-      lightning: "Lightning damage",
-      critical: "Strong-hit damage",
-      impact: "Wall impact",
-      movement: "Movement",
-      burning: "Burning applied",
-      bleeding: "Bleeding applied",
-      barrier: "Barriers",
-      heal: "Healing",
-      reduction: "Damage reduction",
-      dr: "Physical DR",
-      flanker: "Flanking damage",
-      ambush: "Concealed-hit damage",
-      spell: "Spell damage",
-      moveDamage: "Damage after moving",
-      damage: "Direct damage",
-      shatter: "Shatter damage",
-      chain: "Wet chain damage",
-      killHeal: "HP per kill",
-      killMove: "Movement per kill",
-      wildfire: "Wildfire enabled",
-      venom: "Poison on weapon hit",
-      permafrost: "Freezing on cold hit",
-      burningDamage: "Damage vs Burning",
-      healingWard: "Barrier on healing",
-      rallyMove: "Movement on healing",
-    };
-    host.innerHTML = `<section class="build-forge"><div class="section-heading"><div><span class="eyebrow">MAKE YOUR OWN MONSTER</span><h3>Build forge</h3></div><div class="mastery-total"><b>${remaining}</b><span>MASTERY AVAILABLE</span></div></div><p class="section-intro">Two points at level 1, two more per trained level. Each talent rank or specialized power costs one point. Refund freely in Greyhaven. Capstones require level 4 and three basic ranks in their branch.</p>${h.earnedLevel > h.preview.state.level ? `<button id="build-level-up" class="primary" ${safe ? "" : "disabled"}>Apply earned level ${h.earnedLevel} · gain mastery and DP</button>` : ""}<div class="build-stats">${stats.map(([k, v]) => `<span><b>${v > 0 ? "+" : ""}${v}</b>${esc(names[k] ?? k)}</span>`).join("") || "Your first investment starts your build."}</div><nav class="build-branches">${BUILD_BRANCHES.map(([id, name, icon]) => `<button data-branch="${id}" class="${id === branch ? "chosen" : ""}">${disciplineIcon(`discipline-${icon}`)}${esc(name)}</button>`).join("")}</nav><div class="talent-grid">${Object.values(
-      TALENTS,
-    )
-      .filter((n) => n.branch === branch)
-      .map((n) => {
-        const rank = h.build?.talents?.[n.id] ?? 0;
-        const basic = Object.entries(h.build?.talents ?? {})
-          .filter(
-            ([id]) => TALENTS[id]?.branch === branch && !TALENTS[id]?.capstone,
-          )
-          .reduce((s, [, r]) => s + r, 0);
-        const blocked =
-          !safe ||
-          !remaining ||
-          rank >= n.maxRank ||
-          h.preview.state.level < n.level ||
-          (n.capstone &&
-            (basic < 3 ||
-              Object.keys(h.build?.talents ?? {}).some(
-                (id) =>
-                  TALENTS[id]?.branch === branch &&
-                  TALENTS[id]?.capstone &&
-                  id !== n.id,
-              )));
-        return `<article class="talent-node ${rank ? "invested" : ""} ${n.capstone ? "capstone" : ""}" data-talent-card="${n.id}"><small>${n.capstone ? "◆ CAPSTONE · LEVEL 4" : "MASTERY"}</small><h4>${esc(n.name)}</h4><p>${esc(n.text)}</p><footer><button data-refund="${n.id}" aria-label="Refund ${esc(n.name)}" ${!safe || !rank ? "disabled" : ""}>−</button><strong>${rank} / ${n.maxRank}</strong><button data-invest="${n.id}" aria-label="Invest in ${esc(n.name)}" ${blocked ? "disabled" : ""}>+</button></footer></article>`;
-      })
-      .join(
-        "",
-      )}</div><div class="specialization-heading"><h3>Shape your skills</h3><span>1 MASTERY EACH · ONE SPECIALIZATION PER POWER</span></div><select id="specialize-power" aria-label="Power to specialize">${learned.map((p) => `<option value="${p.id}" ${selected === p.id ? "selected" : ""}>${esc(p.name)}${h.build?.specializations?.[p.id] ? " · specialized" : ""}</option>`).join("")}</select><p class="section-intro">${esc(POWERS[selected]?.description ?? "Learn powers to unlock specializations.")}</p><div class="specialization-grid">${specializationOptions(
-      POWERS[selected],
-    )
-      .map(
-        (s) =>
-          `<button data-specialize="${s.id}" class="${s.id === current ? "chosen" : ""}" ${!safe || (!remaining && !current) ? "disabled" : ""}><strong>${esc(s.name)}${s.id === current ? " ◆" : ""}</strong><span>${esc(s.text)}</span></button>`,
-      )
-      .join(
-        "",
-      )}</div><div class="build-controls"><button id="clear-specialization" ${!safe || !current ? "disabled" : ""}>Refund specialization</button><button id="reset-mastery" ${!safe || !masterySpent(h) ? "disabled" : ""}>Refund all mastery · free</button></div><p class="cost-note">${safe ? "Changes apply immediately. Skill range and action previews include your specialization. Refund a capstone before its required ranks." : "Inspect your build here; return to Greyhaven to make changes."}</p><h3>Combat combinations</h3><div class="combo-guide"><p><b>Shatter</b> Physical hits against Freezing consume one stack for +2 damage, before your build bonuses.</p><p><b>Conduct</b> Lightning hitting a creature in water arcs for 2 damage to nearby enemies. Conductor and Storm relics increase it.</p><p><b>Wall slam</b> A blocked push deals 2 + unused push distance physical damage. Impact builds amplify it.</p><p><b>Stack & exploit</b> Burning, Bleeding and other severity conditions accumulate. Hide before an ambush, flank with an ally, or move before a Stormrunner strike.</p></div></section>`;
-    const change = (edit) =>
-      attempt(() => {
-        const top = host.scrollTop;
-        game.editBuild(index, edit);
-        draw();
-        host.scrollTop = top;
-      });
-    host.querySelectorAll("[data-branch]").forEach(
-      (b) =>
-        (b.onclick = () => {
-          branch = b.dataset.branch;
-          draw();
-        }),
-    );
-    host
-      .querySelectorAll("[data-invest]")
-      .forEach(
-        (b) =>
-          (b.onclick = () => change({ talent: b.dataset.invest, delta: 1 })),
-      );
-    host
-      .querySelectorAll("[data-refund]")
-      .forEach(
-        (b) =>
-          (b.onclick = () => change({ talent: b.dataset.refund, delta: -1 })),
-      );
-    host.querySelector("#specialize-power").onchange = (e) => {
-      selected = e.target.value;
-      draw();
-    };
-    host
-      .querySelectorAll("[data-specialize]")
-      .forEach(
-        (b) =>
-          (b.onclick = () =>
-            change({ power: selected, specialization: b.dataset.specialize })),
-      );
-    host.querySelector("#clear-specialization").onclick = () =>
-      change({ power: selected, specialization: "" });
-    host.querySelector("#reset-mastery").onclick = () =>
-      change({ reset: true });
-    host
-      .querySelector("#build-level-up")
-      ?.addEventListener("click", () => train(index));
+export function buildPanel(host, { game, index, train }) {
+  const h = game.party[index],
+    p = h.preview;
+  const labels = {
+    hp: "Maximum HP",
+    capacity: "Carrying capacity",
+    movement: "Movement",
+    rangedRange: "Bow range",
+    heal: "HP restored",
+    healingWard: "Barrier on healing",
+    barrier: "Barrier strength",
+    reduction: "Damage reduction",
+    physical: "Physical damage",
+    fire: "Fire damage",
+    radiant: "Radiant damage",
+    mental: "Mental damage",
+    lightning: "Lightning damage",
+    burning: "Burning applied",
+    freezing: "Freezing applied",
+    bleeding: "Bleeding applied",
+    dazed: "Dazed applied",
+    burningDamage: "Damage vs Burning",
+    impact: "Wall impact damage",
+    critical: "Strong-hit damage",
+    ambush: "Concealed-hit damage",
+    flanker: "Flanking damage",
+    moveDamage: "Damage after moving",
+    killHeal: "HP per kill",
+    killMove: "Movement per kill",
+    shatter: "Shatter bonus",
+    chain: "Wet lightning bonus",
+    rallyMove: "Movement on healing",
+    craftSpeed: "Crafting time reduction",
+    craftDiscount: "Ingredient discount",
+    damage: "All direct damage",
+    venom: "Poison on weapon hits",
+    permafrost: "Freezing on cold hits",
   };
-  draw();
+  const benefits = Object.entries(p.forge.stats)
+    .map(
+      ([key, value]) =>
+        `<span>${esc(labels[key] ?? key)}<b>${value > 0 ? "+" : ""}${key.startsWith("craft") ? Math.round(value * 100) + "%" : value}</b></span>`,
+    )
+    .join("");
+  host.innerHTML = `<section class="build-forge"><div class="forge-summary-hero"><span class="eyebrow">THE DISCIPLINE FORGE</span><h3>${p.development.current} DP · Countless directions</h3><p>Follow circular paths, improve your techniques and join disciplines at their confluences. Every touching circle is required to unlock a combined skill.</p><div class="forge-summary-actions"><button id="open-build-forge" class="primary">Open discipline atlas</button>${h.earnedLevel > p.state.level ? `<span class="cost-note">Level ${h.earnedLevel} is ready to train · +${(h.earnedLevel - p.state.level) * 4} DP</span>` : ""}</div>${disciplineStrip(p.state, game.C.choices)}</div><h3 class="subheading">Your foundation</h3><div class="forge-stats"><span>Trained level<b>${p.state.level}</b></span><span>Melee profile<b>${p.forge.profiles.melee.join("/")}</b></span><span>Bow profile<b>${p.forge.profiles.ranged.join("/")}</b></span><span>Purchased circles<b>${h.draft.forge.nodes.length}</b></span><span>DP spent<b>${p.development.spent}</b></span></div>${benefits ? `<h3 class="subheading">Path bonuses</h3><div class="forge-stats">${benefits}</div>` : ""}<h3 class="subheading">Learned techniques</h3><div class="forge-owned-powers">${
+    h.draft.forge.nodes
+      .map((id) => FORGE_NODE[id])
+      .filter((n) => n.power)
+      .map(
+        (n) =>
+          `<article><h4>${esc(n.name)}</h4><p>${esc(game.powerSpec(n.power, h).description)} ${esc(n.bonusText ?? "")}</p><small>${esc(n.discipline ?? n.disciplines.join(" + "))}</small></article>`,
+      )
+      .join("") || "<p>Open the atlas to learn your first technique.</p>"
+  }</div><h3 class="subheading">Battlefield combinations</h3><div class="combo-guide"><p><b>Shatter</b> Physical hits consume one Freezing stack for +2 damage. Frost paths improve this.</p><p><b>Conduct</b> Lightning hitting water arcs to nearby enemies. Storm paths increase the arc damage.</p><p><b>Wall slam</b> A blocked push deals 2 + unused push distance physical damage. Impact paths amplify it.</p><p><b>Stack & exploit</b> Burning, Bleeding and other severity conditions accumulate. Concealment, flanking and movement create openings.</p></div></section>`;
+  host.querySelector("#open-build-forge").onclick = () => train(index);
 }

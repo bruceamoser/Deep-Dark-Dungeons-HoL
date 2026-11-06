@@ -49,6 +49,18 @@ try {
   await page.getByRole("button", { name: "Save", exact: true }).click();
   const saved = await page.evaluate(() => window.desktop.load());
   expect(JSON.parse(saved).campaign.party.length).toBe(4);
+  await page.locator('[data-action="training"]').click();
+  await page.locator("#open-build-forge").click();
+  await expect(
+    page.getByRole("dialog", { name: "Discipline forge" }),
+  ).toBeVisible();
+  await expect(page.locator(".forge-node")).toHaveCount(377);
+  await page.locator('[data-discipline="arms"]').click();
+  await page.screenshot({
+    path: `test-results/release-forge-${process.platform}.png`,
+  });
+  await page.locator(".forge-close").click();
+  await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Updates", exact: true }).click();
   await expect(page.locator("#update-panel")).toContainText(
     `Version ${version}`,
