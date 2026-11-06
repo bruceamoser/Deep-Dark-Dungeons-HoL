@@ -205,7 +205,7 @@ export async function verifyControls(page) {
   await page.screenshot({ path: "test-results/learned-actions.png" });
   await page.evaluate(() => {
     const g = window.__ddd.game;
-    g.awardXP("control-training", 1000, "Training test expedition");
+    g.awardXP("control-training", 400, "Training test expedition");
     g.enemies[0].hp = 0;
     g.mode = "exploration";
     g.encounter = null;

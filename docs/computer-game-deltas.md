@@ -1,4 +1,4 @@
-# Current adaptations — v0.4.1
+# Current adaptations — v0.5.0
 
 Bruce's November 6 direction supersedes the earlier ability-by-ability automation
 approach: HoL supplies core mechanics, while powers are designed for this game.
@@ -6,14 +6,14 @@ The historical decisions below are retained as an audit trail; current coverage
 is in [implementation status](implementation-status.md).
 
 - New training: five starter powers plus one rank-2 and one rank-3 power per
-  discipline, one signature at each class tier (1/3/7), six general game powers,
+  discipline, three signature choices at each class tier (1/3/7), six general game powers,
   ordinary basic actions, retained armor/general training, and three consumable
   actions. The four additional starter purchases cost 1/2/2/3 DP; these are
   deliberate game prices. Rank-1 powers remain legal in level-0 early training,
   but discipline purchases remain locked until level 1. Only original grant
   powers supply starting weapons; additional techniques do not duplicate gear.
   Recipe-only purchases cannot charge for already-known recipes/benefits. Legacy receipts stay immutable and map to current powers.
-  Multiple source cards mapping to one power do not multiply charges.
+  Multiple source cards mapping to one power do not duplicate its effects.
 - HP healing does not remove injuries. Normal treatment costs one field dressing
   and 60 minutes, or 15 coins minimum / five times Recovery in town. Exceptional
   care costs one restoration draught or 100 coins and 240 minutes. Trait time
@@ -29,13 +29,18 @@ is in [implementation status](implementation-status.md).
   extinguishes fire/Burning; smoke blocks distant sight; barriers block movement
   and projectiles. Magical light defeats darkness.
 - An ally's bonus Maneuver is queued for their next turn retaining that category,
-  once per recipient per encounter. Reaction restoration requires an actually
-  spent and retained Reaction. Neither permits a resource loop.
+  without stacked queued grants. Resource-granting powers cost a Main Action.
+  Reaction restoration requires an actually spent and retained Reaction.
 - Cosmetic sex, ancestry mesh features, colors and body style have no bonuses.
   Appearance and equipped visual gear use one pipeline across creation/play.
 - Tactical squares reflect game coordinates. Range overlays use actual weighted
   route costs and cannot end on allies. Deleting a named save removes only that
   run, including its own reserves/fallen history, after explicit confirmation.
+
+The [v0.5 design](v0.5-gameplay-design.md) supersedes old encounter charge limits,
+XP thresholds and deferred inventory dropping. It adds mastery, skill specializations,
+three signatures per tier, unique relics, stacked conditions and combat combinations.
+The historical sections below describe their original releases, not current limits.
 
 ---
 

@@ -1,6 +1,6 @@
 export const XP_RULES = Object.freeze({
-  firstLevel: 1000,
-  levelGrowth: 250,
+  firstLevel: 400,
+  levelGrowth: 175,
   room: 60,
   roomDepth: 10,
   enemy: 100,
@@ -45,8 +45,11 @@ export const experienceMethods = {
     if (!recipients.length) return false;
     this.map.xpClaims.push(claim);
     for (const h of recipients) {
+      const previous = h.earnedLevel;
       h.xp = (h.xp ?? xpForLevel(h.earnedLevel)) + amount;
       h.earnedLevel = Math.max(h.earnedLevel, levelForXP(h.xp));
+      if (h.earnedLevel > previous)
+        this.emit("level-ready", { hero: h, level: h.earnedLevel });
       h.xpHistory ??= [];
       h.xpHistory.push({
         amount,

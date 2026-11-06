@@ -26,15 +26,15 @@ export function disciplineIcon(id) {
     ? `<img class="discipline-symbol" src="/vendor/hol/assets/${slug}.webp" alt="" aria-hidden="true">`
     : "";
 }
-export function abilityType(record) {
+export function abilityType(record, spec = ABILITIES[record.id]) {
   const action =
-    (ABILITIES[record.id]
+    (spec
       ? {
           main: "Main Action",
           maneuver: "Maneuver",
           reaction: "Reaction",
           passive: "Passive",
-        }[ABILITIES[record.id].category]
+        }[spec.category]
       : null) ??
     record.reference?.rules?.details?.find((d) => d.label === "Action")
       ?.value ??

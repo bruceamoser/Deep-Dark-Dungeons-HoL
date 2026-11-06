@@ -48,6 +48,10 @@ export const battlefieldMethods = {
       cells = cells.filter((p) => !surfaceAt(this.map, p, "water"));
     if (!cells.length) return;
     this.map.zones ??= [];
+    // Recasting refreshes one field of this kind per caster; no field carpets.
+    this.map.zones = this.map.zones.filter(
+      (z) => z.source !== actor.id || z.kind !== kind,
+    );
     this.map.zones.push({
       id: crypto.randomUUID(),
       kind,
@@ -74,7 +78,12 @@ export const battlefieldMethods = {
         );
       if (z.kind === "healing" && entry) continue;
       const stamp = `${Math.floor(this.clock().seconds / 6)}`;
-      if (z.hits?.[actor.id] === stamp) continue;
+      // Same-kind overlap and fresh recasts cannot multiply a six-second tick.
+      // The actor owns the receipt so replacing a field cannot erase it.
+      actor.surfaceTicks ??= {};
+      if (actor.surfaceTicks[z.kind] === stamp || z.hits?.[actor.id] === stamp)
+        continue;
+      actor.surfaceTicks[z.kind] = stamp;
       (z.hits ??= {})[actor.id] = stamp;
       if (z.kind === "fire" || z.kind === "trap") {
         this.powerDamage(

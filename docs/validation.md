@@ -168,3 +168,34 @@ purchase screenshot was inspected after removing duplicated power descriptions.
 The full native regression also passed equipment, appearances, combat controls,
 crafting, saves, reactions and shutdown persistence. Review was author self-review;
 this does not establish long-term balance or final production art quality.
+
+## v0.5.0 — build development and dungeon loop
+
+Author self-review completed; **143 automated tests passed**. New cases cover
+three signatures per class/tier and valid level-one creation choices, reusable
+at-will powers, same-source condition accumulation, wall impact after resistance,
+mastery budgets/ranks/exclusive capstones/refunds, actual specialized attacks and
+movement, all 639 offered specializations changing playable behavior, Shatter/wet
+chains/ambush/support, out-of-combat field dressing costs, portable creation gear
+and saved supply conservation, 100 unique same-seed magic draws, all eight distinct
+boss relics, discipline-gated relic stats, XP migration and real trained levels.
+Repeated same-kind fields cannot multiply ticks, including across save/reload;
+negative build tradeoffs cannot deal damage through complete immunity.
+
+`npm run package:dir` and the full `test:native` passed on November 6, 2026.
+The latter invokes the exact local launcher with `aa-exec -p unconfined`, isolated
+user data, a space-free runtime, renderer seccomp enabled and no `--no-sandbox`.
+The new native sequence invests/refunds mastery, specializes a power, saves and
+reloads, commits earned training using the prominent sheet control, transfers
+starting food, drops it into a ground cache, clicks the actual world cache and
+recovers it. It uses Vanish through the action bar and self-confirmation, verifies
+model fading/status rings and sheet feedback, and inspects a readied relic bow's
+three-rune crest. Build forge and concealed relic screenshots were visually reviewed.
+
+The same run passed all existing appearance/creation, crafting/torches, roster/XP,
+camera/audio, action switching/allied passage, coins/interactions, projectiles,
+wound recovery, shops/bosses/recall, all 58 creature adapters and 17 condition
+layers, multiple runs/deletion, mid-combat restore and native-close disk persistence.
+Original source hashes remain unchanged. Windows execution and installer/update
+verification are provided by the release candidate checks before publication;
+this local run does not establish Windows behavior or campaign-length balance.

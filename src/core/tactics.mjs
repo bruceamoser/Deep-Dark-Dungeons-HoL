@@ -201,17 +201,32 @@ export const tacticMethods = {
         { kind: "bane", amount: d.banes },
       ],
     });
-    const damage = this.R.damageEvent({
+    let damage = this.R.damageEvent({
       components: [
         {
           type: "physical",
-          amount: { weak: 2, standard: 3, strong: 5 }[r.tier],
+          amount: Math.max(
+            0,
+            { weak: 2, standard: 3, strong: 5 }[r.tier] +
+              this.consumeDamageBonus(h) +
+              this.buildDamage(
+                h,
+                e,
+                spec,
+                "physical",
+                ["weak", "standard", "strong"].indexOf(r.tier),
+                !!this.powerStat(h, "hidden"),
+              ),
+          ),
         },
       ],
       resistances: d.resistances,
       weaknesses: this.creatureWeaknesses(e),
     }).total;
+    this.breakConcealment(h);
+    damage = this.absorbPowerDamage(e, damage, "physical");
     e.hp = Math.max(0, e.hp - damage);
+    this.buildAfterHit(h, e, spec, "physical");
     this.creatureAfterHit(e, h, spec, damage);
     this.defeatEnemy(e);
     this.note(`${h.name} ripostes: ${r.tier}, ${damage} physical damage.`);

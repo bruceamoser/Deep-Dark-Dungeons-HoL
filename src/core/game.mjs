@@ -1,4 +1,5 @@
 import { validateGameState } from "./game-state.mjs";
+import { buildMethods } from "./builds.mjs";
 import { normalizeAppearance, identityMethods } from "./identity.mjs";
 import { recipeMethods } from "./recipes.mjs";
 import { gameCareMethods } from "./game-care.mjs";
@@ -68,6 +69,9 @@ export class Game {
   }
   emit(type, data = {}) {
     this.recordFallen();
+    if (this.campaign)
+      for (const h of [...this.party, ...(this.enemies ?? [])])
+        h.concealed = !!this.powerStat(h, "hidden");
     const feedback = combatFeedback(
       type === "floor" ? null : this.feedbackState,
       [...this.party, ...(this.enemies ?? [])],
@@ -439,11 +443,11 @@ export class Game {
       this.map.chests.forEach((c, i) => {
         if (saved && (c.opened || c.items !== undefined)) return;
         c.items = [
-          magicItem(
+          this.uniqueMagic(
             (treasureSeed + this.campaign.depth * 98317 + i * 131) >>> 0,
             this.campaign.depth,
           ),
-        ];
+        ].filter(Boolean);
       });
     if (!saved && this.map.chests[0])
       this.map.chests[0].items.push(
@@ -453,12 +457,12 @@ export class Game {
       const coffer = this.map.chests.at(-1);
       coffer.guardBossId = this.map.bossId;
       coffer.items = [
-        magicItem(
+        this.uniqueMagic(
           (treasureSeed + this.campaign.depth * 65129) >>> 0,
           this.campaign.depth,
-          { power: 2 },
+          { power: 2, boss: true },
         ),
-      ];
+      ].filter(Boolean);
     }
     if (!saved)
       this.party.forEach((h, i) =>
@@ -754,7 +758,19 @@ export class Game {
         components: [
           {
             type: spec.type,
-            amount: spec.damage[tier] + this.consumeDamageBonus(h),
+            amount: Math.max(
+              0,
+              spec.damage[tier] +
+                this.consumeDamageBonus(h) +
+                this.buildDamage(
+                  h,
+                  target,
+                  spec,
+                  spec.type,
+                  tier,
+                  !!this.powerStat(h, "hidden"),
+                ),
+            ),
           },
           ...enchantments.map((e) => ({ type: e.type, amount: e.value })),
         ],
@@ -814,6 +830,7 @@ export class Game {
         target.companyMark = Math.max(target.companyMark ?? 0, spec.mark);
       if (spec.after) this.addTactic(h, h, spec.after, id);
       this.creatureAfterHit(target, h, spec, damage.total);
+      this.buildAfterHit(h, target, spec, spec.type);
       this.defeatEnemy(target);
       this.emit("attack", {
         attacker: h.id,
@@ -2223,5 +2240,6 @@ Object.assign(Game.prototype, tacticMethods);
 Object.assign(Game.prototype, retrainingMethods);
 
 Object.assign(Game.prototype, powerMethods, battlefieldMethods);
+Object.assign(Game.prototype, buildMethods);
 
 Object.assign(Game.prototype, recipeMethods, gameCareMethods, identityMethods);

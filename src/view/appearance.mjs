@@ -246,19 +246,92 @@ export function equipmentAppearance(assets, hero, enemy = false) {
         new T.BoxGeometry(0.17, 0.14, 0.3),
         [0, 0, 0.06],
       );
-    const glowing = items
-      .filter((i) => i.held)
-      .flatMap((i) => activeItemEffects(hero, i))
-      .find((e) => e.effect === "damage");
-    if (glowing)
-      model.traverse((o) => {
-        if (o.isMesh && o.parent?.name === "Readied melee weapon") {
-          o.material = o.material.clone();
-          owned.push(o.material);
-          o.material.emissive.setHex(glowing.color);
-          o.material.emissiveIntensity = 0.7;
-        }
+    const enchanted = items.filter(
+      (i) => i.carried && (i.held || i.worn) && i.effects?.length,
+    );
+    model.userData.magicItems = enchanted.map((i) => i.instanceId);
+    for (const item of enchanted) {
+      const tint = item.effects[0]?.color ?? 0xb591f1;
+      const active = activeItemEffects(hero, item).length > 0;
+      const part = item.held
+        ? model.getObjectByName(
+            item.catalogId.includes("ranged")
+              ? "Readied bow"
+              : item.catalogId.includes("shield")
+                ? "Readied shield"
+                : "Readied melee weapon",
+          )
+        : null;
+      part?.traverse((o) => {
+        if (!o.isMesh) return;
+        const paint = (old) => {
+          const m = old.clone();
+          owned.push(m);
+          m.emissive?.setHex(tint);
+          m.emissiveIntensity = active ? 1.5 : 0.3;
+          m.metalness = 0.7;
+          return m;
+        };
+        o.material = Array.isArray(o.material)
+          ? o.material.map(paint)
+          : paint(o.material);
       });
+      // Angular rune marks stay readable on the weapon, armor and accessories,
+      // including dormant magic. Relics receive a larger three-rune crest.
+      const rune = new T.Group();
+      rune.name = `Enchantment runes ${item.instanceId}`;
+      const geometry = new T.OctahedronGeometry(item.relic ? 0.07 : 0.045, 0);
+      const material = new T.MeshStandardMaterial({
+        color: tint,
+        emissive: tint,
+        emissiveIntensity: active ? 2.2 : 0.45,
+        metalness: 0.65,
+        roughness: 0.25,
+      });
+      owned.push(geometry, material);
+      for (let n = 0; n < (item.relic ? 3 : 2); n++) {
+        const mark = new T.Mesh(geometry, material);
+        mark.position.set((n - 0.5) * 0.11, 0.07 * (n % 2), 0);
+        rune.add(mark);
+      }
+      if (part) {
+        rune.position.set(0, 0.25, 0.05);
+        part.add(rune);
+      } else {
+        const bone = [...bones.values()].find((b) =>
+          item.slot === "head"
+            ? /^head$/i.test(b.name)
+            : /spine|chest/i.test(b.name),
+        );
+        rune.position.set(0, item.slot === "head" ? 0.18 : 0.05, 0.22);
+        (bone ?? model).add(rune);
+      }
+    }
+  }
+  if (!enemy) {
+    const faded = [];
+    model.traverse((o) => {
+      if (!o.isMesh) return;
+      o.material = Array.isArray(o.material)
+        ? o.material.map((m) => m.clone())
+        : o.material.clone();
+      for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+        owned.push(m);
+        faded.push({ m, opacity: m.opacity, transparent: m.transparent });
+      }
+    });
+    let concealed = null;
+    model.userData.setConcealed = (value) => {
+      if (value === concealed) return;
+      concealed = value;
+      for (const { m, opacity, transparent } of faded) {
+        m.transparent = value || transparent;
+        m.opacity = value ? opacity * 0.38 : opacity;
+        m.needsUpdate = true;
+      }
+      model.userData.concealed = value;
+    };
+    model.userData.setConcealed(!!hero.concealed);
   }
   // Rig dimensions are consistent; ignore hidden source accessories when scaling.
   if (!enemy) dressIdentity(model, hero, owned);

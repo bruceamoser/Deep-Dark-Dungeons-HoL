@@ -763,6 +763,8 @@ p {
   flex: 1;
 }
 .hero-dossier {
+  min-height: 0;
+  overflow-y: auto;
   padding: 0 24px 18px;
   border-right: 1px solid var(--line);
   display: flex;
@@ -4470,4 +4472,243 @@ p {
 }
 .run-delete-confirm p {
   line-height: 1.6;
+}
+
+/* Build forge: compact, legible tactical choices with visible investments. */
+.dossier-disciplines {
+  padding: 12px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  border-top: 1px solid var(--line);
+}
+.dossier-disciplines > .eyebrow {
+  width: 100%;
+}
+.dossier-disciplines > span:not(.eyebrow) {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 7px;
+  border: 1px solid #415355;
+  color: #d6d6c6;
+  font-size: 11px;
+}
+.dossier-disciplines .discipline-symbol {
+  width: 20px;
+  height: 24px;
+}
+#sheet-training {
+  margin: 10px 18px;
+}
+.concealment-badge {
+  color: #d4baff;
+  background: #372e4c;
+  padding: 9px 15px;
+  font-size: 11px;
+  letter-spacing: 0.07em;
+}
+.mastery-total {
+  display: grid;
+  text-align: right;
+  color: #edd39a;
+}
+.mastery-total b {
+  font-size: 32px;
+  font-family: Cinzel, serif;
+}
+.mastery-total span,
+.specialization-heading span {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #b5b79d;
+}
+.build-stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+}
+.build-stats span {
+  background: #223535;
+  border: 1px solid #425856;
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #c6d3ce;
+}
+.build-stats b {
+  color: #e3c886;
+  margin-right: 7px;
+}
+.build-branches {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin: 15px 0;
+}
+.build-branches button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 47px;
+  text-align: left;
+}
+.build-branches .discipline-symbol {
+  width: 24px;
+  height: 27px;
+}
+.talent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.talent-node {
+  background: linear-gradient(140deg, #203737, #142326);
+  border: 1px solid #405557;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  min-height: 190px;
+}
+.talent-node.invested {
+  border-color: #9d894e;
+  box-shadow: inset 0 0 22px #b58c2220;
+}
+.talent-node.capstone {
+  background: linear-gradient(140deg, #393029, #1f2529);
+}
+.talent-node small {
+  color: #c2ab74;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+.talent-node h4 {
+  font-family: Cinzel, serif;
+  color: #eddfbf;
+  font-size: 18px;
+  margin: 9px 0;
+}
+.talent-node p {
+  color: #b7c6c2;
+  font-size: 12px;
+  line-height: 1.6;
+  flex: 1;
+}
+.talent-node footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.talent-node footer button {
+  min-width: 33px;
+  padding: 6px;
+  font-size: 18px;
+}
+.talent-node footer strong {
+  font-size: 12px;
+  color: #ddc98c;
+}
+.specialization-heading {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+#specialize-power {
+  width: 100%;
+  margin: 12px 0;
+}
+.specialization-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.specialization-grid button {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 9px;
+  padding: 16px;
+}
+.specialization-grid button strong {
+  color: #e9d393;
+  font-family: Cinzel, serif;
+  font-size: 18px;
+}
+.specialization-grid button span {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.build-forge .chosen {
+  border-color: #d6b563;
+  background: #3c3e2a;
+}
+.build-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+.combo-guide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+  color: #a6bcb9;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.combo-guide b {
+  color: #e2c889;
+  display: block;
+}
+.level-ready-banner {
+  border: 1px solid #c5a45d;
+  background: #302e20;
+  color: #f4df9b;
+  padding: 12px 18px;
+  margin: 10px 0;
+}
+.item-tile.relic,
+.inventory-item.relic {
+  border-color: #eac873;
+  box-shadow: inset 0 0 18px #edbb362b;
+}
+@media (max-width: 1150px) {
+  .talent-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .build-branches {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.inventory-tile.enchanted {
+  border-color: #548bba;
+  background: linear-gradient(140deg, #173443, #12272e);
+}
+.inventory-tile.rare {
+  border-color: #9d74c0;
+  background: linear-gradient(140deg, #342842, #16272d);
+}
+.inventory-tile.relic {
+  border-color: #dfbc68;
+  background: linear-gradient(140deg, #463822, #192b2c);
+  box-shadow: inset 0 0 20px #ffc15b26;
+}
+.inventory-tile.enchanted > svg {
+  color: #84cfff;
+  filter: drop-shadow(0 0 5px #4394d5);
+}
+.inventory-tile.rare > svg {
+  color: #d3a9ff;
+  filter: drop-shadow(0 0 6px #a263d8);
+}
+.inventory-tile.relic > svg,
+.loot-card.relic .loot-icon {
+  color: #ffe6a0;
+  filter: drop-shadow(0 0 8px #dcab43);
+}
+.loot-card.relic {
+  border-color: #dfbc68;
+  background: linear-gradient(145deg, #3b3223, #132a2c);
 }

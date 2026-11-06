@@ -20,6 +20,17 @@ export function prepareRoster(campaign) {
     h.xp ??= xpForLevel(h.earnedLevel ?? h.draft.progression?.level ?? 1);
     h.xpHistory ??= [];
   }
+  if ((campaign.xpCurve ?? 1) < 2) {
+    for (const h of [
+      ...campaign.party,
+      ...campaign.reserve,
+      ...campaign.fallenHeroes.map((f) => f.hero),
+    ]) {
+      if (Number.isSafeInteger(h.xp) && h.xp >= 0)
+        h.earnedLevel = Math.max(h.earnedLevel ?? 1, levelForXP(h.xp));
+    }
+    campaign.xpCurve = 2; // Existing XP is retained; the faster curve grants any newly earned levels.
+  }
 }
 export function validateRoster(campaign) {
   const heroes = [...campaign.party, ...campaign.reserve];

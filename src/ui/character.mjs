@@ -1,4 +1,5 @@
 import { appearanceControls } from "./appearance.mjs";
+import { buildPanel } from "./builds.mjs";
 import { EQUIPMENT_SLOTS, slotOf } from "../core/treasure.mjs";
 import { enchantmentDetails, itemComparison } from "./treasure.mjs";
 import { abilityType, disciplineIcon } from "./book-symbols.mjs";
@@ -69,10 +70,22 @@ export function characterSheet({
        ([k, v]) =>
          `<div title="${esc(k)}"><small>${esc(k.slice(0, 3))}</small><b>${v >= 0 ? "+" : ""}${v}</b></div>`,
      )
-     .join("")}</div><div class="dossier-footer"></div></aside>
+     .join(
+       "",
+     )}</div><div class="dossier-disciplines"><span class="eyebrow">DISCIPLINES</span>${Object.entries(
+     p.state.ranks,
+   )
+     .map(
+       ([id, rank]) =>
+         `<span title="${esc(name(id))}">${disciplineIcon(id)}${esc(name(id))}<b>${rank}</b></span>`,
+     )
+     .join(
+       "",
+     )}</div>${game.powerStat(h, "hidden") ? '<div class="concealment-badge">◈ CONCEALED · Your next attack reveals you</div>' : ""}<button id="sheet-training" class="primary">${h.earnedLevel > p.state.level ? `Level up → ${h.earnedLevel}` : "Develop character"}</button><div class="dossier-footer"></div></aside>
    <main class="character-details"><nav class="sheet-tabs" aria-label="Character sections">${[
      ["equipment", "pack", "Equipment"],
      ["abilities", "bolt", "Abilities"],
+     ["build", "star", "Build forge"],
      ["journey", "book", "Journey"],
      ["appearance", "star", "Appearance"],
    ]
@@ -81,6 +94,18 @@ export function characterSheet({
        "",
      )}</nav><div class="sheet-content"></div></main></div><footer class="character-footer"><span><kbd>Esc</kbd> Close <i>·</i> Changes are saved automatically</span><span class="sheet-timing"></span></footer></section></div>`;
     root.querySelector(".close").onclick = close;
+    root.querySelector("#sheet-training").onclick = () => {
+      if (game.mode !== "town")
+        return game.notify(
+          "Return to Greyhaven to train. Your XP and earned levels are saved.",
+        );
+      if (h.earnedLevel > p.state.level || p.development.current > 0)
+        train(index);
+      else {
+        tab = "build";
+        draw();
+      }
+    };
     root.querySelectorAll("[data-companion]").forEach(
       (b) =>
         (b.onclick = () => {
@@ -298,10 +323,7 @@ export function characterSheet({
           )
             ? selectedSlot
             : (plan.slot ?? "ring-left");
-        if (
-          h.treasure?.some((t) => t.instanceId === i.instanceId) &&
-          game.mode !== "combat"
-        ) {
+        if (game.mode !== "combat") {
           host.insertAdjacentHTML(
             "beforeend",
             `<label class="creator-field"><span>Give to companion</span><select id="transfer-to">${game.party.map((p, n) => (n !== index ? `<option value="${n}">${esc(p.name)}</option>` : "")).join("")}</select></label><button id="transfer-item">Transfer item</button>`,
@@ -317,6 +339,17 @@ export function characterSheet({
               draw();
             });
         }
+        host.insertAdjacentHTML(
+          "beforeend",
+          `<button id="drop-item" ${game.mode !== "exploration" ? "disabled" : ""}>Drop ${i.quantity > 1 ? "stack" : "item"} on dungeon floor</button><p class="cost-note">Ground caches persist with this floor and can be recovered. Dropping reduces carried bulk.</p>`,
+        );
+        host.querySelector("#drop-item").onclick = () =>
+          attempt(() => {
+            game.dropItem(index, i.instanceId);
+            selection = null;
+            view.update(game.party[index]);
+            draw();
+          });
         if (i.kind === "scroll") {
           const reason = game.recallReason(index);
           host.insertAdjacentHTML(
@@ -370,6 +403,8 @@ export function characterSheet({
       };
       drawItems();
       inspect();
+    } else if (tab === "build") {
+      buildPanel(content, { game, index, attempt, train });
     } else if (tab === "abilities") {
       const cards = C.choices.filter(
         (c) =>
@@ -388,10 +423,13 @@ export function characterSheet({
         .sort((a, b) => Number(!!ABILITIES[b.id]) - Number(!!ABILITIES[a.id]))
         .map((c) => {
           const a =
-              ABILITIES[c.id]?.category === "passive" ? null : ABILITIES[c.id],
+              (game.powerSpec(c.id, h) ?? ABILITIES[c.id])?.category ===
+              "passive"
+                ? null
+                : (game.powerSpec(c.id, h) ?? ABILITIES[c.id]),
             f = h.favorites?.includes(c.id),
             status = coverage(c.id);
-          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule"><b>Dungeon version</b> ${esc(status.reason)}</p><details class="choice-reference"><summary>${c.gamePower ? "Game rules" : "Original HoL rules"}</summary>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}</details>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
+          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c, a)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule"><b>Dungeon version</b> ${esc(status.reason)}</p><details class="choice-reference"><summary>${c.gamePower ? "Game rules" : "Original HoL rules"}</summary>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}</details>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
         })
         .join("")}</div>`;
       root.querySelectorAll("[data-prepare-trait]").forEach(

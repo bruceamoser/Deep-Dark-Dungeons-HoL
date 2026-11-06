@@ -1,10 +1,10 @@
 {
-  "revision": 2,
+  "revision": 3,
   "policy": "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
   "counts": {
-    "powers": 165,
+    "powers": 225,
     "disciplinePowers": 126,
-    "signatures": 30,
+    "signatures": 90,
     "generalPowers": 6,
     "starterPowersPerDiscipline": {
       "discipline-armor": 5,
@@ -27,18 +27,20 @@
       "discipline-wilderness": 5
     },
     "consumableActions": 3,
-    "recipes": 11
+    "recipes": 11,
+    "masteryTalents": 30,
+    "buildBranches": 6,
+    "namedRelics": 8
   },
   "powers": [
     {
       "id": "power-driving-cut",
       "name": "Driving Cut",
-      "description": "Strike with a readied melee weapon for 2/4/6 physical damage and push the target 1 square. Twice per encounter.",
+      "description": "Strike with a readied melee weapon for 2/4/6 physical damage and push the target 1 square. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -64,12 +66,11 @@
     {
       "id": "power-sweeping-blade",
       "name": "Sweeping Blade",
-      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. Twice per encounter.",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -92,12 +93,11 @@
     {
       "id": "power-execution-edge",
       "name": "Execution Edge",
-      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. Once per encounter.",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -116,12 +116,11 @@
     {
       "id": "power-brace",
       "name": "Brace",
-      "description": "Reduce incoming damage by 2 until the end of your next turn. Twice per encounter.",
+      "description": "Reduce incoming damage by 2 until the end of your next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -139,12 +138,11 @@
     {
       "id": "power-iron-skin",
       "name": "Iron Skin",
-      "description": "Gain 1 physical DR for two turns. Twice per encounter.",
+      "description": "Gain 1 physical DR for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -162,12 +160,11 @@
     {
       "id": "power-adamant-ward",
       "name": "Adamant Ward",
-      "description": "Absorb the next 8 damage you receive. Lasts two turns. Once per encounter.",
+      "description": "Absorb the next 8 damage you receive. Lasts two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -183,12 +180,11 @@
     {
       "id": "power-fleet-step",
       "name": "Fleet Step",
-      "description": "Gain 3 movement this turn and disengage. Twice per encounter.",
+      "description": "Gain 3 movement this turn and disengage. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -207,12 +203,11 @@
     {
       "id": "power-vault",
       "name": "Vault",
-      "description": "Leap up to 4 squares to an empty visible space. Cross creatures and ground hazards, but never walls. Twice per encounter.",
+      "description": "Leap up to 4 squares to an empty visible space. Cross creatures and ground hazards, but never walls. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ground",
       "range": 4,
@@ -227,12 +222,11 @@
     {
       "id": "power-rescue-line",
       "name": "Rescue Line",
-      "description": "Pull an ally up to 4 squares toward you without provoking opportunity attacks. Twice per encounter.",
+      "description": "Pull an ally up to 4 squares toward you without provoking opportunity attacks. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 5,
@@ -247,12 +241,11 @@
     {
       "id": "power-spirit-ward",
       "name": "Spirit Ward",
-      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns. Twice per encounter.",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -269,12 +262,11 @@
     {
       "id": "power-phantom-sentry",
       "name": "Phantom Sentry",
-      "description": "Place a spectral trap. The first creature to cross it suffers 5 mental damage. Lasts three rounds. Twice per encounter.",
+      "description": "Place a spectral trap. The first creature to cross it suffers 5 mental damage. Lasts three rounds. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -292,12 +284,11 @@
     {
       "id": "power-spirit-crossing",
       "name": "Spirit Crossing",
-      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can. Once per encounter.",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 6,
@@ -317,7 +308,6 @@
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -338,7 +328,6 @@
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -356,7 +345,6 @@
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 2,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -372,12 +360,11 @@
     {
       "id": "power-ember-lance",
       "name": "Ember Lance",
-      "description": "Deal 2/4/6 fire damage and apply Burning 1. Twice per encounter.",
+      "description": "Deal 2/4/6 fire damage and apply Burning 1. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -404,12 +391,11 @@
     {
       "id": "power-firebreak",
       "name": "Firebreak",
-      "description": "Ignite a radius of 1 for three rounds. Entering or starting a turn in fire deals 2 fire damage and Burning 1 to either side. Twice per encounter.",
+      "description": "Ignite a radius of 1 for three rounds. Entering or starting a turn in fire deals 2 fire damage and Burning 1 to either side. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -427,12 +413,11 @@
     {
       "id": "power-sunburst",
       "name": "Sunburst",
-      "description": "Deal 4/6/8 fire damage to enemies in a radius of 2. Allies are spared. Once per encounter.",
+      "description": "Deal 4/6/8 fire damage to enemies in a radius of 2. Allies are spared. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -455,12 +440,11 @@
     {
       "id": "power-winter-bolt",
       "name": "Winter Bolt",
-      "description": "Deal 2/4/6 cold damage and apply Slowed 1. Twice per encounter.",
+      "description": "Deal 2/4/6 cold damage and apply Slowed 1. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -487,12 +471,11 @@
     {
       "id": "power-dousing-rain",
       "name": "Dousing Rain",
-      "description": "Create shallow water in a radius of 1 for three rounds. Extinguishes fire and temporary Burning on both sides. Twice per encounter.",
+      "description": "Create shallow water in a radius of 1 for three rounds. Extinguishes fire and temporary Burning on both sides. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -510,12 +493,11 @@
     {
       "id": "power-glacial-wall",
       "name": "Glacial Wall",
-      "description": "Raise a three-square wall perpendicular to your aim for three rounds. Blocks travel and projectiles. Cannot cover creatures or stairs. Once per encounter.",
+      "description": "Raise a three-square wall perpendicular to your aim for three rounds. Blocks travel and projectiles. Cannot cover creatures or stairs. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -534,12 +516,11 @@
     {
       "id": "power-guardian-link",
       "name": "Guardian Link",
-      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn. Twice per encounter.",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 1,
@@ -553,12 +534,11 @@
     {
       "id": "power-retaliating-guard",
       "name": "Retaliating Guard",
-      "description": "Prepare a melee counterattack using your Reaction after the next physical hit. Lasts through your next turn. Twice per encounter.",
+      "description": "Prepare a melee counterattack using your Reaction after the next physical hit. Lasts through your next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -573,12 +553,11 @@
     {
       "id": "power-hold-the-line",
       "name": "Hold the Line",
-      "description": "Allies within 2 squares gain 2 damage reduction for two turns. Once per encounter.",
+      "description": "Allies within 2 squares gain 2 damage reduction for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -597,12 +576,11 @@
     {
       "id": "power-rally",
       "name": "Rally",
-      "description": "Give an ally 1 attack Boon for two turns. Twice per encounter.",
+      "description": "Give an ally 1 attack Boon for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -620,12 +598,11 @@
     {
       "id": "power-draw-attention",
       "name": "Draw Attention",
-      "description": "Mark an enemy to prioritize attacking you for two turns, if you are a legal target. Apply 1 attack Bane. Twice per encounter.",
+      "description": "Mark an enemy to prioritize attacking you for two turns, if you are a legal target. Apply 1 attack Bane. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 5,
@@ -644,13 +621,12 @@
     {
       "id": "power-second-wind",
       "name": "Second Wind",
-      "description": "Grant an ally one bonus Maneuver on their next turn that retains Maneuver. At most once per recipient per encounter. Cannot target yourself. Once per encounter.",
+      "description": "Grant an ally one bonus Maneuver on their next turn that retains Maneuver.  Cannot target yourself. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
-      "category": "maneuver",
+      "category": "main",
       "target": "ally",
       "range": 4,
       "effects": [
@@ -666,12 +642,11 @@
     {
       "id": "power-mending-touch",
       "name": "Mending Touch",
-      "description": "Restore 3/5/7 HP to an ally. Three uses per rest; no wound or Grit recovery.",
+      "description": "Restore 3/5/7 HP to an ally. ; no wound or Grit recovery. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 4,
@@ -687,19 +662,18 @@
       ],
       "attribute": "reason",
       "spell": true,
-      "restLimit": 3,
       "field": true,
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-renewal-circle",
       "name": "Renewal Circle",
-      "description": "Create a healing circle for three rounds. An ally starting a turn there regains 2 HP. Two uses per rest.",
+      "description": "Create a healing circle for three rounds. An ally starting a turn there regains 2 HP. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 0,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -712,18 +686,16 @@
         }
       ],
       "spell": true,
-      "restLimit": 2,
       "gamePower": true
     },
     {
       "id": "power-renew-flesh",
       "name": "Renew Flesh",
-      "description": "Repair one recoverable wound on an ally and restore 5 HP. One use per rest. Does not restore Grit or erase injury history.",
+      "description": "Repair one recoverable wound on an ally and restore 5 HP.  Does not restore Grit or erase injury history. Consumes a restoration draught. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 4,
@@ -737,19 +709,19 @@
         }
       ],
       "spell": true,
-      "restLimit": 1,
       "field": true,
-      "gamePower": true
+      "gamePower": true,
+      "supply": "item-restoration-draught",
+      "consume": true
     },
     {
       "id": "power-barbed-arrow",
       "name": "Barbed Arrow",
-      "description": "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition. Twice per encounter.",
+      "description": "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 8,
@@ -776,12 +748,11 @@
     {
       "id": "power-piercing-flight",
       "name": "Piercing Flight",
-      "description": "Shoot through enemies in a line up to 7 squares for 2/4/6 physical damage. Allies are spared; walls stop the shot. Twice per encounter.",
+      "description": "Shoot through enemies in a line up to 7 squares for 2/4/6 physical damage. Allies are spared; walls stop the shot. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 7,
@@ -804,12 +775,11 @@
     {
       "id": "power-hunters-focus",
       "name": "Hunter’s Focus",
-      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. Once per encounter.",
+      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -828,12 +798,11 @@
     {
       "id": "power-field-care",
       "name": "Field Care",
-      "description": "Stabilize an ally and remove temporary Bleeding. Two uses per rest. Also learn the field dressing recipe.",
+      "description": "Stabilize an ally and remove temporary Bleeding.  Also learn the field dressing recipe. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-medicine",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -849,22 +818,21 @@
           "amount": 99
         }
       ],
-      "restLimit": 2,
       "field": true,
       "recipes": [
         "recipe-field-dressing"
       ],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-purging-tonic",
       "name": "Purging Tonic",
-      "description": "Remove temporary Poisoned, Dazed, Burning and Freezing from an ally. Two uses per rest.",
+      "description": "Remove temporary Poisoned, Dazed, Burning and Freezing from an ally. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-medicine",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 0,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -880,19 +848,18 @@
           "amount": 99
         }
       ],
-      "restLimit": 2,
       "field": true,
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-battle-surgeon",
       "name": "Battle Surgeon",
-      "description": "Restore 6/9/12 HP and stabilize an ally. Two uses per rest. Learn the restoration draught recipe.",
+      "description": "Restore 6/9/12 HP and stabilize an ally.  Learn the restoration draught recipe. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-medicine",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 4,
@@ -910,22 +877,21 @@
         }
       ],
       "attribute": "knowledge",
-      "restLimit": 2,
       "recipes": [
         "recipe-restoration-draught"
       ],
       "field": true,
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-fracture-focus",
       "name": "Fracture Focus",
-      "description": "Deal 1/3/5 mental damage and apply Dazed 1. Twice per encounter.",
+      "description": "Deal 1/3/5 mental damage and apply Dazed 1. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -952,12 +918,11 @@
     {
       "id": "power-force-hand",
       "name": "Force Hand",
-      "description": "Move a visible enemy 3 squares directly away from you. Twice per encounter.",
+      "description": "Move a visible enemy 3 squares directly away from you. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -973,12 +938,11 @@
     {
       "id": "power-mindstorm",
       "name": "Mindstorm",
-      "description": "Enemies in a radius of 2 suffer 2/4/6 mental damage and Dazed 1. Once per encounter.",
+      "description": "Enemies in a radius of 2 suffer 2/4/6 mental damage and Dazed 1. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1006,12 +970,11 @@
     {
       "id": "power-guiding-light",
       "name": "Guiding Light",
-      "description": "Illuminate a radius of 2 for three rounds and reveal concealed creatures there. Twice per encounter.",
+      "description": "Illuminate a radius of 2 for three rounds and reveal concealed creatures there. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1033,12 +996,11 @@
     {
       "id": "power-dawn-shield",
       "name": "Dawn Shield",
-      "description": "Absorb 6 damage on an ally and remove temporary Frightened. Two uses per rest.",
+      "description": "Absorb 6 damage on an ally and remove temporary Frightened. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 0,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -1057,18 +1019,16 @@
         }
       ],
       "spell": true,
-      "restLimit": 2,
       "gamePower": true
     },
     {
       "id": "power-judgments-cone",
       "name": "Judgment’s Cone",
-      "description": "Enemies in a cone up to 4 squares take 4/6/8 radiant damage. Once per encounter.",
+      "description": "Enemies in a cone up to 4 squares take 4/6/8 radiant damage. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 4,
@@ -1091,12 +1051,11 @@
     {
       "id": "power-read-the-depths",
       "name": "Read the Depths",
-      "description": "Reveal the nearby floor and its interactable objects within 8 squares. Does not reveal enemies. Usable while exploring.",
+      "description": "Reveal the nearby floor and its interactable objects within 8 squares. Does not reveal enemies. Usable while exploring. At will; pay the displayed action cost.",
       "discipline": "discipline-scholarship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1111,12 +1070,11 @@
     {
       "id": "power-expose-weakness",
       "name": "Expose Weakness",
-      "description": "Reduce an enemy’s DR by 1 for two turns. Twice per encounter.",
+      "description": "Reduce an enemy’s DR by 1 for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-scholarship",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 6,
@@ -1134,13 +1092,12 @@
     {
       "id": "power-calculated-opening",
       "name": "Calculated Opening",
-      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns. Once per encounter.",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
       "discipline": "discipline-scholarship",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
-      "category": "maneuver",
+      "category": "main",
       "target": "ally",
       "range": 4,
       "effects": [
@@ -1162,12 +1119,11 @@
     {
       "id": "power-gale-bolt",
       "name": "Gale Bolt",
-      "description": "Deal 2/4/6 lightning damage and push the target 1 square. Twice per encounter.",
+      "description": "Deal 2/4/6 lightning damage and push the target 1 square. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -1193,12 +1149,11 @@
     {
       "id": "power-crosswind",
       "name": "Crosswind",
-      "description": "Reposition to an empty square within a walkable route of 4 squares. Movement does not provoke; casting can. Twice per encounter.",
+      "description": "Reposition to an empty square within a walkable route of 4 squares. Movement does not provoke; casting can. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ground",
       "range": 4,
@@ -1214,12 +1169,11 @@
     {
       "id": "power-thunder-line",
       "name": "Thunder Line",
-      "description": "Enemies in a line up to 7 squares take 4/6/8 lightning damage and are pushed 2 squares. Once per encounter.",
+      "description": "Enemies in a line up to 7 squares take 4/6/8 lightning damage and are pushed 2 squares. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 7,
@@ -1246,12 +1200,11 @@
     {
       "id": "power-vanish",
       "name": "Vanish",
-      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. Twice per encounter.",
+      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1269,12 +1222,11 @@
     {
       "id": "power-smoke-screen",
       "name": "Smoke Screen",
-      "description": "Fill a radius of 1 with smoke for three rounds. Blocks sight and ranged targeting through it for both sides; adjacent targeting remains possible. Twice per encounter.",
+      "description": "Fill a radius of 1 with smoke for three rounds. Blocks sight and ranged targeting through it for both sides; adjacent targeting remains possible. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1291,12 +1243,11 @@
     {
       "id": "power-shadow-step",
       "name": "Shadow Step",
-      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. Once per encounter.",
+      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 6,
@@ -1318,12 +1269,11 @@
     {
       "id": "power-snaring-roots",
       "name": "Snaring Roots",
-      "description": "Create difficult ground in a radius of 1 for three rounds. Costs 2 movement per square for both sides. Twice per encounter.",
+      "description": "Create difficult ground in a radius of 1 for three rounds. Costs 2 movement per square for both sides. At will; pay the displayed action cost.",
       "discipline": "discipline-wilderness",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1345,7 +1295,6 @@
       "rank": 2,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -1357,12 +1306,11 @@
     {
       "id": "power-nightfall",
       "name": "Nightfall",
-      "description": "Darken a radius of 2 for three rounds. Counters ordinary light; magical light wins. Conceal yourself for two turns. Once per encounter.",
+      "description": "Darken a radius of 2 for three rounds. Counters ordinary light; magical light wins. Conceal yourself for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-wilderness",
       "rank": 3,
       "minimumLevel": 7,
       "cost": 6,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1387,12 +1335,11 @@
     {
       "id": "power-signature-arcane-reservoir",
       "name": "Arcane Reservoir",
-      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns. Twice per encounter.",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns.  Always active: +1 barriers. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -1406,17 +1353,19 @@
       "spell": true,
       "gamePower": true,
       "classId": "class-arcanist",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "barrier": 1
+      }
     },
     {
       "id": "power-signature-fold-space",
       "name": "Fold Space",
-      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. Once per encounter.",
+      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns.  Always active: +2 barriers. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 6,
@@ -1435,17 +1384,19 @@
       ],
       "gamePower": true,
       "classId": "class-arcanist",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "barrier": 2
+      }
     },
     {
       "id": "power-signature-arcane-cataclysm",
       "name": "Arcane Cataclysm",
-      "description": "Deal 4/6/8 fire damage to enemies in a radius of 2. Allies are spared. Once per encounter.",
+      "description": "Deal 4/6/8 fire damage to enemies in a radius of 2. Allies are spared.  Always active: +3 barriers. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1465,17 +1416,19 @@
       "spell": true,
       "gamePower": true,
       "classId": "class-arcanist",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "barrier": 3
+      }
     },
     {
       "id": "power-signature-duelists-tempo",
       "name": "Duelist’s Tempo",
-      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. Once per encounter.",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns.  Always active: +2 Strong-hit damage. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1491,17 +1444,19 @@
       ],
       "gamePower": true,
       "classId": "class-blade",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "critical": 2
+      }
     },
     {
       "id": "power-signature-whirling-steel",
       "name": "Whirling Steel",
-      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. Twice per encounter.",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +4 Strong-hit damage. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -1521,17 +1476,19 @@
       "weapon": "melee",
       "gamePower": true,
       "classId": "class-blade",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "critical": 4
+      }
     },
     {
       "id": "power-signature-relentless-edge",
       "name": "Relentless Edge",
-      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. Once per encounter.",
+      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns.  Always active: +6 Strong-hit damage. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1547,17 +1504,19 @@
       ],
       "gamePower": true,
       "classId": "class-blade",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "critical": 6
+      }
     },
     {
       "id": "power-signature-battle-plan",
       "name": "Battle Plan",
-      "description": "Give an ally 1 attack Boon for two turns. Twice per encounter.",
+      "description": "Give an ally 1 attack Boon for two turns.  Always active: +1 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -1572,17 +1531,19 @@
       ],
       "gamePower": true,
       "classId": "class-intellect",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "flanker": 1
+      }
     },
     {
       "id": "power-signature-fault-line",
       "name": "Fault Line",
-      "description": "Reduce an enemy’s DR by 1 for two turns. Twice per encounter.",
+      "description": "Reduce an enemy’s DR by 1 for two turns.  Always active: +2 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 6,
@@ -1597,18 +1558,20 @@
       ],
       "gamePower": true,
       "classId": "class-intellect",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "flanker": 2
+      }
     },
     {
       "id": "power-signature-perfect-timing",
       "name": "Perfect Timing",
-      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns. Once per encounter.",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns.  Always active: +3 damage when another ally is adjacent to the target. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
-      "category": "maneuver",
+      "category": "main",
       "target": "ally",
       "range": 4,
       "effects": [
@@ -1627,17 +1590,19 @@
       ],
       "gamePower": true,
       "classId": "class-intellect",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "flanker": 3
+      }
     },
     {
       "id": "power-signature-commanding-presence",
       "name": "Commanding Presence",
-      "description": "Give an ally 1 attack Boon for two turns. Twice per encounter.",
+      "description": "Give an ally 1 attack Boon for two turns.  Always active: +1 movement granted by healing. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -1652,17 +1617,19 @@
       ],
       "gamePower": true,
       "classId": "class-leader",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "rallyMove": 1
+      }
     },
     {
       "id": "power-signature-reposition-company",
       "name": "Reposition Company",
-      "description": "Pull an ally up to 4 squares toward you without provoking opportunity attacks. Twice per encounter.",
+      "description": "Pull an ally up to 4 squares toward you without provoking opportunity attacks.  Always active: +1 movement granted by healing. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 5,
@@ -1674,18 +1641,20 @@
       ],
       "gamePower": true,
       "classId": "class-leader",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "rallyMove": 1
+      }
     },
     {
       "id": "power-signature-seize-the-moment",
       "name": "Seize the Moment",
-      "description": "Grant an ally one bonus Maneuver on their next turn that retains Maneuver. At most once per recipient per encounter. Cannot target yourself. Once per encounter.",
+      "description": "Grant an ally one bonus Maneuver on their next turn that retains Maneuver.  Cannot target yourself.  Always active: +1 movement granted by healing. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
-      "category": "maneuver",
+      "category": "main",
       "target": "ally",
       "range": 4,
       "effects": [
@@ -1698,17 +1667,19 @@
       "otherOnly": true,
       "gamePower": true,
       "classId": "class-leader",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "rallyMove": 1
+      }
     },
     {
       "id": "power-signature-unseen-angle",
       "name": "Unseen Angle",
-      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. Twice per encounter.",
+      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment.  Always active: +2 damage from concealment. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1723,17 +1694,19 @@
       ],
       "gamePower": true,
       "classId": "class-odd",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "ambush": 2
+      }
     },
     {
       "id": "power-signature-impossible-exchange",
       "name": "Impossible Exchange",
-      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can. Once per encounter.",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can.  Always active: +4 damage from concealment. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 6,
@@ -1745,17 +1718,19 @@
       "spell": true,
       "gamePower": true,
       "classId": "class-odd",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "ambush": 4
+      }
     },
     {
       "id": "power-signature-borrowed-night",
       "name": "Borrowed Night",
-      "description": "Darken a radius of 2 for three rounds. Counters ordinary light; magical light wins. Conceal yourself for two turns. Once per encounter.",
+      "description": "Darken a radius of 2 for three rounds. Counters ordinary light; magical light wins. Conceal yourself for two turns.  Always active: +6 damage from concealment. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1777,17 +1752,19 @@
       ],
       "gamePower": true,
       "classId": "class-odd",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "ambush": 6
+      }
     },
     {
       "id": "power-signature-sworn-guardian",
       "name": "Sworn Guardian",
-      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn. Twice per encounter.",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn.  Always active: +1 damage reduction. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 1,
@@ -1798,17 +1775,19 @@
       ],
       "gamePower": true,
       "classId": "class-protector",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "reduction": 1
+      }
     },
     {
       "id": "power-signature-unyielding-wall",
       "name": "Unyielding Wall",
-      "description": "Absorb the next 8 damage you receive. Lasts two turns. Once per encounter.",
+      "description": "Absorb the next 8 damage you receive. Lasts two turns.  Always active: +2 damage reduction. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1821,17 +1800,19 @@
       ],
       "gamePower": true,
       "classId": "class-protector",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "reduction": 2
+      }
     },
     {
       "id": "power-signature-company-bulwark",
       "name": "Company Bulwark",
-      "description": "Allies within 2 squares gain 2 damage reduction for two turns. Once per encounter.",
+      "description": "Allies within 2 squares gain 2 damage reduction for two turns.  Always active: +3 damage reduction. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1847,17 +1828,19 @@
       "radius": 2,
       "gamePower": true,
       "classId": "class-protector",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "reduction": 3
+      }
     },
     {
       "id": "power-signature-fade-away",
       "name": "Fade Away",
-      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. Twice per encounter.",
+      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment.  Always active: +2 damage from concealment. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1872,17 +1855,19 @@
       ],
       "gamePower": true,
       "classId": "class-shadow",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "ambush": 2
+      }
     },
     {
       "id": "power-signature-behind-the-lines",
       "name": "Behind the Lines",
-      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. Once per encounter.",
+      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns.  Always active: +4 damage from concealment. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 6,
@@ -1901,17 +1886,19 @@
       ],
       "gamePower": true,
       "classId": "class-shadow",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "ambush": 4
+      }
     },
     {
       "id": "power-signature-assassins-moment",
       "name": "Assassin’s Moment",
-      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. Once per encounter.",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns.  Always active: +6 damage from concealment. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -1927,17 +1914,19 @@
       ],
       "gamePower": true,
       "classId": "class-shadow",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "ambush": 6
+      }
     },
     {
       "id": "power-signature-life-thread",
       "name": "Life Thread",
-      "description": "Restore 3/5/7 HP to an ally. Three uses per rest; no wound or Grit recovery.",
+      "description": "Restore 3/5/7 HP to an ally. ; no wound or Grit recovery. Always active: +1 HP healing. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 4,
@@ -1953,21 +1942,23 @@
       ],
       "attribute": "reason",
       "spell": true,
-      "restLimit": 3,
       "field": true,
       "gamePower": true,
       "classId": "class-shepherd",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "heal": 1
+      },
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-signature-sanctuary",
       "name": "Sanctuary",
-      "description": "Create a healing circle for three rounds. An ally starting a turn there regains 2 HP. Two uses per rest.",
+      "description": "Create a healing circle for three rounds. An ally starting a turn there regains 2 HP.  Always active: +2 HP healing. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 0,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -1980,20 +1971,21 @@
         }
       ],
       "spell": true,
-      "restLimit": 2,
       "gamePower": true,
       "classId": "class-shepherd",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "heal": 2
+      }
     },
     {
       "id": "power-signature-restore-the-broken",
       "name": "Restore the Broken",
-      "description": "Repair one recoverable wound on an ally and restore 5 HP. One use per rest. Does not restore Grit or erase injury history.",
+      "description": "Repair one recoverable wound on an ally and restore 5 HP.  Does not restore Grit or erase injury history. Always active: +3 HP healing. Consumes a restoration draught. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 4,
@@ -2007,21 +1999,24 @@
         }
       ],
       "spell": true,
-      "restLimit": 1,
       "field": true,
       "gamePower": true,
       "classId": "class-shepherd",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "heal": 3
+      },
+      "supply": "item-restoration-draught",
+      "consume": true
     },
     {
       "id": "power-signature-reckless-momentum",
       "name": "Reckless Momentum",
-      "description": "Strike with a readied melee weapon for 2/4/6 physical damage and push the target 1 square. Twice per encounter.",
+      "description": "Strike with a readied melee weapon for 2/4/6 physical damage and push the target 1 square.  Always active: +2 wall impact. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -2044,17 +2039,19 @@
       "weapon": "melee",
       "gamePower": true,
       "classId": "class-unbalanced",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "impact": 2
+      }
     },
     {
       "id": "power-signature-break-their-line",
       "name": "Break Their Line",
-      "description": "Move a visible enemy 3 squares directly away from you. Twice per encounter.",
+      "description": "Move a visible enemy 3 squares directly away from you.  Always active: +4 wall impact. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -2067,17 +2064,19 @@
       "spell": true,
       "gamePower": true,
       "classId": "class-unbalanced",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "impact": 4
+      }
     },
     {
       "id": "power-signature-storm-of-blows",
       "name": "Storm of Blows",
-      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. Twice per encounter.",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +6 wall impact. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -2097,17 +2096,19 @@
       "weapon": "melee",
       "gamePower": true,
       "classId": "class-unbalanced",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "impact": 6
+      }
     },
     {
       "id": "power-signature-quarry-mark",
       "name": "Quarry Mark",
-      "description": "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition. Twice per encounter.",
+      "description": "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition.  Always active: +1 Bleeding applied. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 1,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 8,
@@ -2131,17 +2132,19 @@
       "weapon": "ranged",
       "gamePower": true,
       "classId": "class-warden",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "bleeding": 1
+      }
     },
     {
       "id": "power-signature-watchers-focus",
       "name": "Watcher’s Focus",
-      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. Once per encounter.",
+      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns.  Always active: +2 Bleeding applied. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 3,
       "cost": 4,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2157,17 +2160,19 @@
       ],
       "gamePower": true,
       "classId": "class-warden",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "bleeding": 2
+      }
     },
     {
       "id": "power-signature-wardens-volley",
       "name": "Warden’s Volley",
-      "description": "Shoot through enemies in a line up to 7 squares for 2/4/6 physical damage. Allies are spared; walls stop the shot. Twice per encounter.",
+      "description": "Shoot through enemies in a line up to 7 squares for 2/4/6 physical damage. Allies are spared; walls stop the shot.  Always active: +3 Bleeding applied. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 0,
       "minimumLevel": 7,
       "cost": 4,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 7,
@@ -2187,7 +2192,10 @@
       "shape": "line",
       "gamePower": true,
       "classId": "class-warden",
-      "signature": true
+      "signature": true,
+      "buildStats": {
+        "bleeding": 3
+      }
     },
     {
       "id": "power-use-smoke",
@@ -2252,12 +2260,11 @@
     {
       "id": "power-measured-cut",
       "name": "Measured Cut",
-      "description": "A readied melee weapon deals 2/3/4 physical damage. Gain 1 defense Boon for this turn. Once per encounter.",
+      "description": "A readied melee weapon deals 2/3/4 physical damage. Gain 1 defense Boon for this turn. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -2288,12 +2295,11 @@
     {
       "id": "power-hamstring",
       "name": "Hamstring",
-      "description": "A readied melee weapon deals 1/2/3 physical damage and applies Slowed 1. Twice per encounter.",
+      "description": "A readied melee weapon deals 1/2/3 physical damage and applies Slowed 1. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -2321,12 +2327,11 @@
     {
       "id": "power-pommel-rattle",
       "name": "Pommel Rattle",
-      "description": "A readied melee weapon deals 1/2/3 physical damage and applies Dazed 1. Twice per encounter.",
+      "description": "A readied melee weapon deals 1/2/3 physical damage and applies Dazed 1. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -2354,12 +2359,11 @@
     {
       "id": "power-blade-ward",
       "name": "Blade Ward",
-      "description": "Gain 1 defense Boon for two turns and prepare a counter against the next adjacent attacker. Countering spends your Reaction and requires a readied melee weapon. Twice per encounter.",
+      "description": "Gain 1 defense Boon for two turns and prepare a counter against the next adjacent attacker. Countering spends your Reaction and requires a readied melee weapon. At will; pay the displayed action cost.",
       "discipline": "discipline-arms",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2381,12 +2385,11 @@
     {
       "id": "power-plated-advance",
       "name": "Plated Advance",
-      "description": "Gain 2 movement and reduce incoming damage by 1 for this turn. Once per encounter.",
+      "description": "Gain 2 movement and reduce incoming damage by 1 for this turn. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2406,12 +2409,11 @@
     {
       "id": "power-clear-visor",
       "name": "Clear Visor",
-      "description": "Reduce temporary Blinded by 2 and absorb the next 2 damage for two turns. Twice per encounter.",
+      "description": "Reduce temporary Blinded by 2 and absorb the next 2 damage for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2435,12 +2437,11 @@
     {
       "id": "power-reinforced-guard",
       "name": "Reinforced Guard",
-      "description": "Spend your Action to absorb the next 5 damage for two turns. Twice per encounter.",
+      "description": "Spend your Action to absorb the next 5 damage for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "self",
       "range": 4,
@@ -2457,12 +2458,11 @@
     {
       "id": "power-deflecting-stance",
       "name": "Deflecting Stance",
-      "description": "Gain 1 defense Boon and reduce incoming damage by 1 for two turns. Twice per encounter.",
+      "description": "Gain 1 defense Boon and reduce incoming damage by 1 for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-armor",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2482,12 +2482,11 @@
     {
       "id": "power-quick-roll",
       "name": "Quick Roll",
-      "description": "Reposition along a clear walking route of 1 square without provoking movement attacks. Reduce temporary Slowed by 1. Once per encounter.",
+      "description": "Reposition along a clear walking route of 1 square without provoking movement attacks. Reduce temporary Slowed by 1. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 1,
@@ -2510,12 +2509,11 @@
     {
       "id": "power-shoulder-check",
       "name": "Shoulder Check",
-      "description": "Push an adjacent enemy 2 squares straight away from you. Obstacles and occupied squares stop the push. Twice per encounter.",
+      "description": "Push an adjacent enemy 2 squares straight away from you. Obstacles and occupied squares stop the push. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -2531,12 +2529,11 @@
     {
       "id": "power-bounding-step",
       "name": "Bounding Step",
-      "description": "Leap up to 2 squares to empty visible ground, crossing creatures and ground hazards but never walls. Gain 1 defense Boon for this turn. Twice per encounter.",
+      "description": "Leap up to 2 squares to empty visible ground, crossing creatures and ground hazards but never walls. Gain 1 defense Boon for this turn. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "ground",
       "range": 2,
@@ -2559,12 +2556,11 @@
     {
       "id": "power-drag-to-safety",
       "name": "Drag to Safety",
-      "description": "Pull an ally within 3 squares up to 2 squares toward you without provoking. They absorb the next 2 damage for two turns. Once per encounter.",
+      "description": "Pull an ally within 3 squares up to 2 squares toward you without provoking. They absorb the next 2 damage for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-athletics",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 3,
@@ -2586,12 +2582,11 @@
     {
       "id": "power-wisp-lantern",
       "name": "Wisp Lantern",
-      "description": "Illuminate one visible square within 4 squares for three rounds. Magical light counters darkness. Once per encounter.",
+      "description": "Illuminate one visible square within 4 squares for three rounds. Magical light counters darkness. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 4,
@@ -2610,12 +2605,11 @@
     {
       "id": "power-spectral-hand",
       "name": "Spectral Hand",
-      "description": "Pull an enemy within 4 squares 1 square toward you. Obstacles and occupied squares stop the pull. Twice per encounter.",
+      "description": "Pull an enemy within 4 squares 1 square toward you. Obstacles and occupied squares stop the pull. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 4,
@@ -2632,12 +2626,11 @@
     {
       "id": "power-spirit-needle",
       "name": "Spirit Needle",
-      "description": "Deal 2/3/4 mental damage to an enemy within 4 squares. Twice per encounter.",
+      "description": "Deal 2/3/4 mental damage to an enemy within 4 squares. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 4,
@@ -2660,12 +2653,11 @@
     {
       "id": "power-ancestral-guidance",
       "name": "Ancestral Guidance",
-      "description": "Grant an ally 1 attack Boon and 1 defense Boon for two turns. Once per encounter.",
+      "description": "Grant an ally 1 attack Boon and 1 defense Boon for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-calling",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -2686,12 +2678,11 @@
     {
       "id": "power-edge-honing",
       "name": "Edge Honing",
-      "description": "Your next attack within two turns deals +1 damage. Does not stack with stronger damage bonuses. Once per encounter.",
+      "description": "Your next attack within two turns deals +1 damage. Does not stack with stronger damage bonuses. At will; pay the displayed action cost.",
       "discipline": "discipline-craft",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2715,7 +2706,6 @@
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -2729,12 +2719,11 @@
     {
       "id": "power-makeshift-screen",
       "name": "Makeshift Screen",
-      "description": "Raise smoke in a radius of 1 within 4 squares for three rounds. Blocks sight and ranged targeting for both sides; adjacent targeting remains possible. Once per encounter.",
+      "description": "Raise smoke in a radius of 1 within 4 squares for three rounds. Blocks sight and ranged targeting for both sides; adjacent targeting remains possible. At will; pay the displayed action cost.",
       "discipline": "discipline-craft",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 4,
@@ -2752,12 +2741,11 @@
     {
       "id": "power-repair-ward",
       "name": "Repair Ward",
-      "description": "Spend your Action to let an adjacent ally absorb the next 5 damage for two turns. Once per encounter.",
+      "description": "Spend your Action to let an adjacent ally absorb the next 5 damage for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-craft",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "main",
       "target": "ally",
       "range": 1,
@@ -2774,12 +2762,11 @@
     {
       "id": "power-cinderlight",
       "name": "Cinderlight",
-      "description": "Illuminate a radius of 1 within 3 squares for three rounds. Magical light counters darkness. Once per encounter.",
+      "description": "Illuminate a radius of 1 within 3 squares for three rounds. Magical light counters darkness. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 3,
@@ -2798,12 +2785,11 @@
     {
       "id": "power-searing-mark",
       "name": "Searing Mark",
-      "description": "Reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero. Twice per encounter.",
+      "description": "Reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 4,
@@ -2823,12 +2809,11 @@
     {
       "id": "power-flame-fan",
       "name": "Flame Fan",
-      "description": "Deal 1/2/3 fire damage to enemies in a cone up to 3 squares. Allies are spared. Once per encounter.",
+      "description": "Deal 1/2/3 fire damage to enemies in a cone up to 3 squares. Allies are spared. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 1,
       "category": "main",
       "target": "ground",
       "range": 3,
@@ -2852,12 +2837,11 @@
     {
       "id": "power-ash-veil",
       "name": "Ash Veil",
-      "description": "Fill a radius of 1 within 4 squares with smoke for three rounds, obscuring both sides. Disengage for this turn; casting itself can provoke. Once per encounter.",
+      "description": "Fill a radius of 1 within 4 squares with smoke for three rounds, obscuring both sides. Disengage for this turn; casting itself can provoke. At will; pay the displayed action cost.",
       "discipline": "discipline-flame",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 4,
@@ -2884,12 +2868,11 @@
     {
       "id": "power-cool-blood",
       "name": "Cool Blood",
-      "description": "Reduce an ally’s temporary Burning by 2. Requires a target that is Burning. Once per encounter.",
+      "description": "Reduce an ally’s temporary Burning by 2. Requires a target that is Burning. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 2,
@@ -2909,12 +2892,11 @@
     {
       "id": "power-rime-shell",
       "name": "Rime Shell",
-      "description": "Absorb the next 3 damage you receive for two turns. Twice per encounter.",
+      "description": "Absorb the next 3 damage you receive for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -2932,12 +2914,11 @@
     {
       "id": "power-frost-patch",
       "name": "Frost Patch",
-      "description": "Create difficult ground in a radius of 1 within 4 squares for three rounds. Each square costs 2 movement for both sides. Twice per encounter.",
+      "description": "Create difficult ground in a radius of 1 within 4 squares for three rounds. Each square costs 2 movement for both sides. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 4,
@@ -2956,12 +2937,11 @@
     {
       "id": "power-brittle-armor",
       "name": "Brittle Armor",
-      "description": "Apply Slowed 1 and reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero. Twice per encounter.",
+      "description": "Apply Slowed 1 and reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero. At will; pay the displayed action cost.",
       "discipline": "discipline-frost",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 4,
@@ -2986,12 +2966,11 @@
     {
       "id": "power-warning-call",
       "name": "Warning Call",
-      "description": "Grant an ally within 3 squares 1 defense Boon through the end of their next turn. Once per encounter.",
+      "description": "Grant an ally within 3 squares 1 defense Boon through the end of their next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 3,
@@ -3011,12 +2990,11 @@
     {
       "id": "power-shielding-step",
       "name": "Shielding Step",
-      "description": "Swap places with an adjacent ally without provoking movement attacks. You absorb the next 2 damage for two turns. Twice per encounter.",
+      "description": "Swap places with an adjacent ally without provoking movement attacks. You absorb the next 2 damage for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 1,
@@ -3038,12 +3016,11 @@
     {
       "id": "power-stand-firm",
       "name": "Stand Firm",
-      "description": "Gain 1 physical DR for this turn. DR cannot exceed 3. Once per encounter.",
+      "description": "Gain 1 physical DR for this turn. DR cannot exceed 3. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -3062,12 +3039,11 @@
     {
       "id": "power-guarded-retreat",
       "name": "Guarded Retreat",
-      "description": "Grant an ally 2 movement and disengagement through the end of their next turn. Twice per encounter.",
+      "description": "Grant an ally 2 movement and disengagement through the end of their next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-guard",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3088,12 +3064,11 @@
     {
       "id": "power-rouse",
       "name": "Rouse",
-      "description": "Reduce an ally’s temporary Dazed by 1. Requires a target that is Dazed. Once per encounter.",
+      "description": "Reduce an ally’s temporary Dazed by 1. Requires a target that is Dazed. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3112,12 +3087,11 @@
     {
       "id": "power-reassuring-word",
       "name": "Reassuring Word",
-      "description": "Restore 2/3/4 HP to an ally within 3 squares. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "description": "Restore 2/3/4 HP to an ally within 3 squares. Usable in the field; does not heal wounds or restore Grit. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 3,
@@ -3132,20 +3106,19 @@
         }
       ],
       "attribute": "guile",
-      "restLimit": 2,
       "field": true,
       "grants": [],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-demoralize",
       "name": "Demoralize",
-      "description": "Apply 1 attack Bane to an enemy for two turns. Twice per encounter.",
+      "description": "Apply 1 attack Bane to an enemy for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 4,
@@ -3164,12 +3137,11 @@
     {
       "id": "power-press-advantage",
       "name": "Press the Advantage",
-      "description": "Grant an ally 1 movement for two turns. Their next attack within that time deals +2 damage. Once per encounter.",
+      "description": "Grant an ally 1 movement for two turns. Their next attack within that time deals +2 damage. At will; pay the displayed action cost.",
       "discipline": "discipline-influence",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3190,12 +3162,11 @@
     {
       "id": "power-vital-spark",
       "name": "Vital Spark",
-      "description": "Restore 2 HP to an ally within 2 squares. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "description": "Restore 2 HP to an ally within 2 squares. Usable in the field; does not heal wounds or restore Grit. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 0,
       "category": "maneuver",
       "target": "ally",
       "range": 2,
@@ -3206,20 +3177,19 @@
         }
       ],
       "spell": true,
-      "restLimit": 2,
       "field": true,
       "grants": [],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-cleanse-blood",
       "name": "Cleanse Blood",
-      "description": "Reduce an ally’s temporary Poisoned and Bleeding by 2 each. Requires one of those conditions. Usable in the field. 3 uses per completed 8-hour sleep.",
+      "description": "Reduce an ally’s temporary Poisoned and Bleeding by 2 each. Requires one of those conditions. Usable in the field. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 4,
@@ -3234,20 +3204,19 @@
         }
       ],
       "spell": true,
-      "restLimit": 3,
       "field": true,
       "grants": [],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-living-ward",
       "name": "Living Ward",
-      "description": "Spend your Action to let an ally within 3 squares absorb the next 4 damage for two turns. Twice per encounter.",
+      "description": "Spend your Action to let an ally within 3 squares absorb the next 4 damage for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "ally",
       "range": 3,
@@ -3265,12 +3234,11 @@
     {
       "id": "power-life-spring",
       "name": "Life Spring",
-      "description": "Create a healing spring on one square for two rounds. An ally starting a turn there regains 2 HP. Does not heal wounds or restore Grit. 1 uses per completed 8-hour sleep.",
+      "description": "Create a healing spring on one square for two rounds. An ally starting a turn there regains 2 HP. Does not heal wounds or restore Grit. At will; pay the displayed action cost.",
       "discipline": "discipline-life",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 0,
       "category": "main",
       "target": "ground",
       "range": 5,
@@ -3283,19 +3251,17 @@
         }
       ],
       "spell": true,
-      "restLimit": 1,
       "grants": [],
       "gamePower": true
     },
     {
       "id": "power-aiming-breath",
       "name": "Aiming Breath",
-      "description": "Gain 1 attack Boon for this turn. Prepare before shooting; this Maneuver does not expend ammunition. Once per encounter.",
+      "description": "Gain 1 attack Boon for this turn. Prepare before shooting; this Maneuver does not expend ammunition. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -3314,12 +3280,11 @@
     {
       "id": "power-leg-shot",
       "name": "Leg Shot",
-      "description": "A readied bow deals 1/2/3 physical damage and applies Slowed 1 within 6 squares. Uses ammunition. Twice per encounter.",
+      "description": "A readied bow deals 1/2/3 physical damage and applies Slowed 1 within 6 squares. Uses ammunition. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 6,
@@ -3347,12 +3312,11 @@
     {
       "id": "power-covering-shot",
       "name": "Covering Shot",
-      "description": "A readied bow deals 2/3/4 physical damage and applies 1 attack Bane for two turns within 6 squares. Uses ammunition. Twice per encounter.",
+      "description": "A readied bow deals 2/3/4 physical damage and applies 1 attack Bane for two turns within 6 squares. Uses ammunition. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 6,
@@ -3382,12 +3346,11 @@
     {
       "id": "power-point-blank-shot",
       "name": "Point-Blank Shot",
-      "description": "A readied bow deals 2/4/6 physical damage to an enemy within 2 squares and pushes it 1 square away. Uses ammunition. Twice per encounter.",
+      "description": "A readied bow deals 2/4/6 physical damage to an enemy within 2 squares and pushes it 1 square away. Uses ammunition. At will; pay the displayed action cost.",
       "discipline": "discipline-marksmanship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 2,
@@ -3414,12 +3377,11 @@
     {
       "id": "power-clear-head",
       "name": "Clear Head",
-      "description": "Reduce an adjacent ally’s temporary Dazed and Blinded by 1 each. Requires one of those conditions. Once per encounter.",
+      "description": "Reduce an adjacent ally’s temporary Dazed and Blinded by 1 each. Requires one of those conditions. At will; pay the displayed action cost.",
       "discipline": "discipline-medicine",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 1,
@@ -3439,12 +3401,11 @@
     {
       "id": "power-field-antidote",
       "name": "Field Antidote",
-      "description": "Reduce an adjacent ally’s temporary Poisoned by 2 and restore 2 HP. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "description": "Reduce an adjacent ally’s temporary Poisoned by 2 and restore 2 HP. Usable in the field; does not heal wounds or restore Grit. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-medicine",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 1,
@@ -3461,10 +3422,10 @@
           "amount": 2
         }
       ],
-      "restLimit": 2,
       "field": true,
       "grants": [],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-dressing-maker",
@@ -3474,7 +3435,6 @@
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -3490,12 +3450,11 @@
     {
       "id": "power-emergency-care",
       "name": "Emergency Care",
-      "description": "Stabilize an adjacent ally and restore 2/3/4 HP. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "description": "Stabilize an adjacent ally and restore 2/3/4 HP. Usable in the field; does not heal wounds or restore Grit. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": "discipline-medicine",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 0,
       "category": "main",
       "target": "ally",
       "range": 1,
@@ -3513,20 +3472,19 @@
         }
       ],
       "attribute": "knowledge",
-      "restLimit": 2,
       "field": true,
       "grants": [],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-distract",
       "name": "Distract",
-      "description": "Apply 1 attack Bane to an enemy through the end of its next turn. Once per encounter.",
+      "description": "Apply 1 attack Bane to an enemy through the end of its next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "enemy",
       "range": 4,
@@ -3546,12 +3504,11 @@
     {
       "id": "power-mind-needle",
       "name": "Mind Needle",
-      "description": "Deal 2/4/6 mental damage to an enemy within 4 squares. Twice per encounter.",
+      "description": "Deal 2/4/6 mental damage to an enemy within 4 squares. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 4,
@@ -3574,12 +3531,11 @@
     {
       "id": "power-shared-focus",
       "name": "Shared Focus",
-      "description": "Grant an ally 1 attack Boon for two turns. Twice per encounter.",
+      "description": "Grant an ally 1 attack Boon for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3599,12 +3555,11 @@
     {
       "id": "power-telekinetic-shove",
       "name": "Telekinetic Shove",
-      "description": "Push an enemy within 4 squares 2 squares straight away from you and apply Slowed 1. Twice per encounter.",
+      "description": "Push an enemy within 4 squares 2 squares straight away from you and apply Slowed 1. At will; pay the displayed action cost.",
       "discipline": "discipline-mind",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 4,
@@ -3626,12 +3581,11 @@
     {
       "id": "power-kindle-courage",
       "name": "Kindle Courage",
-      "description": "Reduce an ally’s temporary Frightened by 1 and grant 1 defense Boon through the end of their next turn. Once per encounter.",
+      "description": "Reduce an ally’s temporary Frightened by 1 and grant 1 defense Boon through the end of their next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3659,12 +3613,11 @@
     {
       "id": "power-dawn-ray",
       "name": "Dawn Ray",
-      "description": "Deal 2/4/6 radiant damage to an enemy within 5 squares. Twice per encounter.",
+      "description": "Deal 2/4/6 radiant damage to an enemy within 5 squares. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 5,
@@ -3687,12 +3640,11 @@
     {
       "id": "power-revealing-brand",
       "name": "Revealing Brand",
-      "description": "Reveal an enemy within 4 squares and apply Blinded 1. Illuminate its current square for three rounds; the light does not follow it. Twice per encounter.",
+      "description": "Reveal an enemy within 4 squares and apply Blinded 1. Illuminate its current square for three rounds; the light does not follow it. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 4,
@@ -3718,12 +3670,11 @@
     {
       "id": "power-halo-ward",
       "name": "Halo Ward",
-      "description": "You and allies within 1 square absorb the next 3 damage each for two turns. Once per encounter.",
+      "description": "You and allies within 1 square absorb the next 3 damage each for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-radiance",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "main",
       "target": "self",
       "range": 4,
@@ -3742,12 +3693,11 @@
     {
       "id": "power-measured-advice",
       "name": "Measured Advice",
-      "description": "Grant another ally 1 attack Boon through the end of their next turn. Once per encounter.",
+      "description": "Grant another ally 1 attack Boon through the end of their next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-scholarship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3767,12 +3717,11 @@
     {
       "id": "power-threat-analysis",
       "name": "Threat Analysis",
-      "description": "Apply 1 attack Bane to an enemy for two turns. Your next attack within two turns deals +1 damage. Twice per encounter.",
+      "description": "Apply 1 attack Bane to an enemy for two turns. Your next attack within two turns deals +1 damage. At will; pay the displayed action cost.",
       "discipline": "discipline-scholarship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 4,
@@ -3804,7 +3753,6 @@
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -3818,12 +3766,11 @@
     {
       "id": "power-anatomists-strike",
       "name": "Anatomist’s Strike",
-      "description": "A readied melee weapon deals 1/3/5 physical damage using Guile and applies Bleeding 1. Twice per encounter.",
+      "description": "A readied melee weapon deals 1/3/5 physical damage using Guile and applies Bleeding 1. At will; pay the displayed action cost.",
       "discipline": "discipline-scholarship",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -3851,12 +3798,11 @@
     {
       "id": "power-tailwind",
       "name": "Tailwind",
-      "description": "Grant another ally 2 movement through the end of their next turn. Once per encounter.",
+      "description": "Grant another ally 2 movement through the end of their next turn. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ally",
       "range": 4,
@@ -3877,12 +3823,11 @@
     {
       "id": "power-static-arc",
       "name": "Static Arc",
-      "description": "Deal 1/2/3 lightning damage to enemies in a cone up to 3 squares. Allies are spared. Twice per encounter.",
+      "description": "Deal 1/2/3 lightning damage to enemies in a cone up to 3 squares. Allies are spared. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 3,
@@ -3906,12 +3851,11 @@
     {
       "id": "power-gust-screen",
       "name": "Gust Screen",
-      "description": "Apply 1 attack Bane to an enemy within 5 squares for two turns. Twice per encounter.",
+      "description": "Apply 1 attack Bane to an enemy within 5 squares for two turns. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "maneuver",
       "target": "enemy",
       "range": 5,
@@ -3931,12 +3875,11 @@
     {
       "id": "power-storm-hop",
       "name": "Storm Hop",
-      "description": "Leap up to 3 squares to empty visible ground, crossing creatures and hazards but never walls. Your next attack within two turns deals +2 damage. Casting can provoke. Once per encounter.",
+      "description": "Leap up to 3 squares to empty visible ground, crossing creatures and hazards but never walls. Your next attack within two turns deals +2 damage. Casting can provoke. At will; pay the displayed action cost.",
       "discipline": "discipline-storm",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 3,
@@ -3960,12 +3903,11 @@
     {
       "id": "power-sidestep",
       "name": "Sidestep",
-      "description": "Reposition along a clear walking route of 1 square without provoking movement attacks. Gain 1 defense Boon for this turn. Once per encounter.",
+      "description": "Reposition along a clear walking route of 1 square without provoking movement attacks. Gain 1 defense Boon for this turn. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 1,
@@ -3988,12 +3930,11 @@
     {
       "id": "power-pocket-sand",
       "name": "Pocket Sand",
-      "description": "Apply Blinded 1 to an adjacent enemy. Twice per encounter.",
+      "description": "Apply Blinded 1 to an adjacent enemy. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -4010,12 +3951,11 @@
     {
       "id": "power-low-blow",
       "name": "Low Blow",
-      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1. Twice per encounter.",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 1,
@@ -4043,12 +3983,11 @@
     {
       "id": "power-escape-route",
       "name": "Escape Route",
-      "description": "Reposition along a clear walking route of up to 3 squares without provoking. Become concealed for this turn; attacking or taking damage breaks concealment. Once per encounter.",
+      "description": "Reposition along a clear walking route of up to 3 squares without provoking. Become concealed for this turn; attacking or taking damage breaks concealment. At will; pay the displayed action cost.",
       "discipline": "discipline-subterfuge",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 3,
@@ -4071,12 +4010,11 @@
     {
       "id": "power-brush-cover",
       "name": "Brush Cover",
-      "description": "Become concealed and gain 1 defense Boon for this turn. Enemies beyond 1 square cannot target you; attacking or taking damage breaks concealment. Once per encounter.",
+      "description": "Become concealed and gain 1 defense Boon for this turn. Enemies beyond 1 square cannot target you; attacking or taking damage breaks concealment. At will; pay the displayed action cost.",
       "discipline": "discipline-wilderness",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -4096,12 +4034,11 @@
     {
       "id": "power-briar-lash",
       "name": "Briar Lash",
-      "description": "Deal 1/3/5 physical damage to an enemy within 3 squares and pull it 1 square toward you. Twice per encounter.",
+      "description": "Deal 1/3/5 physical damage to an enemy within 3 squares and pull it 1 square toward you. At will; pay the displayed action cost.",
       "discipline": "discipline-wilderness",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 2,
       "category": "main",
       "target": "enemy",
       "range": 3,
@@ -4133,7 +4070,6 @@
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 0,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -4147,12 +4083,11 @@
     {
       "id": "power-hunting-snare",
       "name": "Hunting Snare",
-      "description": "Place a spectral snare on one square within 3 squares for three rounds. The first creature crossing it suffers 5 mental damage. Can harm either side. Twice per encounter.",
+      "description": "Place a spectral snare on one square within 3 squares for three rounds. The first creature crossing it suffers 5 mental damage. Can harm either side. At will; pay the displayed action cost.",
       "discipline": "discipline-wilderness",
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "main",
       "target": "ground",
       "range": 3,
@@ -4170,12 +4105,11 @@
     {
       "id": "power-catch-breath",
       "name": "Catch Breath",
-      "description": "Restore 2 of your own HP. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "description": "Restore 2 of your own HP. Usable in the field; does not heal wounds or restore Grit. Outside combat, checks a field dressing supply after use. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 0,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -4185,20 +4119,19 @@
           "amount": 2
         }
       ],
-      "restLimit": 2,
       "field": true,
       "grants": [],
-      "gamePower": true
+      "gamePower": true,
+      "fieldSupply": "item-field-dressing"
     },
     {
       "id": "power-watchful-stance",
       "name": "Watchful Stance",
-      "description": "Gain 1 defense Boon for this turn. Once per encounter.",
+      "description": "Gain 1 defense Boon for this turn. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 1,
       "minimumLevel": 1,
       "cost": 1,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -4217,12 +4150,11 @@
     {
       "id": "power-step-aside",
       "name": "Step Aside",
-      "description": "Reposition along a clear walking route of up to 2 squares without provoking movement attacks. Once per encounter.",
+      "description": "Reposition along a clear walking route of up to 2 squares without provoking movement attacks. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 1,
       "category": "maneuver",
       "target": "ground",
       "range": 2,
@@ -4238,12 +4170,11 @@
     {
       "id": "power-focused-blow",
       "name": "Focused Blow",
-      "description": "Your next attack within two turns deals +2 damage. Does not stack with stronger damage bonuses. Once per encounter.",
+      "description": "Your next attack within two turns deals +2 damage. Does not stack with stronger damage bonuses. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 1,
       "minimumLevel": 1,
       "cost": 2,
-      "limit": 1,
       "category": "maneuver",
       "target": "self",
       "range": 4,
@@ -4262,12 +4193,11 @@
     {
       "id": "power-cover-companion",
       "name": "Cover a Companion",
-      "description": "An adjacent ally absorbs the next 3 damage for two turns. Twice per encounter.",
+      "description": "An adjacent ally absorbs the next 3 damage for two turns. At will; pay the displayed action cost.",
       "discipline": null,
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 2,
       "category": "maneuver",
       "target": "ally",
       "range": 1,
@@ -4290,7 +4220,6 @@
       "rank": 1,
       "minimumLevel": 1,
       "cost": 3,
-      "limit": 0,
       "category": "passive",
       "target": "self",
       "effects": [],
@@ -4300,6 +4229,1926 @@
       ],
       "grants": [],
       "gamePower": true
+    },
+    {
+      "id": "power-signature-arcanist-pyre-1",
+      "name": "Pyre Adept",
+      "description": "Deal 1/2/3 fire damage to enemies in a cone up to 3 squares. Allies are spared.  Always active: +1 fire damage; +1 Burning applied. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true,
+      "buildStats": {
+        "fire": 1,
+        "burning": 1
+      }
+    },
+    {
+      "id": "power-signature-arcanist-rift-1",
+      "name": "Rift Weaver",
+      "description": "Reposition to an empty square within a walkable route of 4 squares. Movement does not provoke; casting can.  Always active: +1 spell damage; +1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "spell": 1,
+        "movement": 1
+      }
+    },
+    {
+      "id": "power-signature-arcanist-pyre-3",
+      "name": "Pyre Adept II",
+      "description": "Deal 1/2/3 fire damage to enemies in a cone up to 3 squares. Allies are spared.  Always active: +2 fire damage; +2 Burning applied. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true,
+      "buildStats": {
+        "fire": 2,
+        "burning": 2
+      }
+    },
+    {
+      "id": "power-signature-arcanist-rift-3",
+      "name": "Rift Weaver II",
+      "description": "Reposition to an empty square within a walkable route of 4 squares. Movement does not provoke; casting can.  Always active: +2 spell damage; +1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "spell": 2,
+        "movement": 1
+      }
+    },
+    {
+      "id": "power-signature-arcanist-pyre-7",
+      "name": "Pyre Adept III",
+      "description": "Deal 1/2/3 fire damage to enemies in a cone up to 3 squares. Allies are spared.  Always active: +3 fire damage; +3 Burning applied. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true,
+      "buildStats": {
+        "fire": 3,
+        "burning": 3
+      }
+    },
+    {
+      "id": "power-signature-arcanist-rift-7",
+      "name": "Rift Weaver III",
+      "description": "Reposition to an empty square within a walkable route of 4 squares. Movement does not provoke; casting can.  Always active: +3 spell damage; +1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "spell": 3,
+        "movement": 1
+      }
+    },
+    {
+      "id": "power-signature-blade-sanguine-1",
+      "name": "Sanguine Edge",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1.  Always active: +1 Bleeding applied; +1 HP on a kill. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true,
+      "buildStats": {
+        "bleeding": 1,
+        "killHeal": 1
+      }
+    },
+    {
+      "id": "power-signature-blade-reaver-1",
+      "name": "Reaver’s Reach",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +1 physical damage; +1 wall impact. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "physical": 1,
+        "impact": 1
+      }
+    },
+    {
+      "id": "power-signature-blade-sanguine-3",
+      "name": "Sanguine Edge II",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1.  Always active: +2 Bleeding applied; +2 HP on a kill. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true,
+      "buildStats": {
+        "bleeding": 2,
+        "killHeal": 2
+      }
+    },
+    {
+      "id": "power-signature-blade-reaver-3",
+      "name": "Reaver’s Reach II",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +2 physical damage; +2 wall impact. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "physical": 2,
+        "impact": 2
+      }
+    },
+    {
+      "id": "power-signature-blade-sanguine-7",
+      "name": "Sanguine Edge III",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1.  Always active: +3 Bleeding applied; +3 HP on a kill. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true,
+      "buildStats": {
+        "bleeding": 3,
+        "killHeal": 3
+      }
+    },
+    {
+      "id": "power-signature-blade-reaver-7",
+      "name": "Reaver’s Reach III",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +3 physical damage; +3 wall impact. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "physical": 3,
+        "impact": 3
+      }
+    },
+    {
+      "id": "power-signature-intellect-dismantler-1",
+      "name": "Dismantler",
+      "description": "Apply Slowed 1 and reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero.  Always active: +2 damage against Freezing targets; +1 wall impact. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true,
+      "buildStats": {
+        "shatter": 2,
+        "impact": 1
+      }
+    },
+    {
+      "id": "power-signature-intellect-anticipation-1",
+      "name": "Perfect Anticipation",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns.  Always active: +1 barriers; +1 Strong-hit damage. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "reaction",
+          "amount": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "barrier": 1,
+        "critical": 1
+      }
+    },
+    {
+      "id": "power-signature-intellect-dismantler-3",
+      "name": "Dismantler II",
+      "description": "Apply Slowed 1 and reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero.  Always active: +4 damage against Freezing targets; +2 wall impact. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true,
+      "buildStats": {
+        "shatter": 4,
+        "impact": 2
+      }
+    },
+    {
+      "id": "power-signature-intellect-anticipation-3",
+      "name": "Perfect Anticipation II",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns.  Always active: +2 barriers; +2 Strong-hit damage. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "reaction",
+          "amount": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "barrier": 2,
+        "critical": 2
+      }
+    },
+    {
+      "id": "power-signature-intellect-dismantler-7",
+      "name": "Dismantler III",
+      "description": "Apply Slowed 1 and reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero.  Always active: +6 damage against Freezing targets; +3 wall impact. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true,
+      "buildStats": {
+        "shatter": 6,
+        "impact": 3
+      }
+    },
+    {
+      "id": "power-signature-intellect-anticipation-7",
+      "name": "Perfect Anticipation III",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns.  Always active: +3 barriers; +3 Strong-hit damage. Costs an Action. Cannot stack queued bonus Maneuvers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "reaction",
+          "amount": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "barrier": 3,
+        "critical": 3
+      }
+    },
+    {
+      "id": "power-signature-leader-marshal-1",
+      "name": "Shield Marshal",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn.  Always active: +2 barriers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "guard"
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "barrier": 2
+      }
+    },
+    {
+      "id": "power-signature-leader-warmaster-1",
+      "name": "War Master",
+      "description": "Grant an ally 1 movement for two turns. Their next attack within that time deals +2 damage.  Always active: +2 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 1,
+            "damage": 2
+          },
+          "turns": 2
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true,
+      "buildStats": {
+        "flanker": 2
+      }
+    },
+    {
+      "id": "power-signature-leader-marshal-3",
+      "name": "Shield Marshal II",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn.  Always active: +4 barriers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "guard"
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "barrier": 4
+      }
+    },
+    {
+      "id": "power-signature-leader-warmaster-3",
+      "name": "War Master II",
+      "description": "Grant an ally 1 movement for two turns. Their next attack within that time deals +2 damage.  Always active: +4 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 1,
+            "damage": 2
+          },
+          "turns": 2
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true,
+      "buildStats": {
+        "flanker": 4
+      }
+    },
+    {
+      "id": "power-signature-leader-marshal-7",
+      "name": "Shield Marshal III",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn.  Always active: +6 barriers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "guard"
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "barrier": 6
+      }
+    },
+    {
+      "id": "power-signature-leader-warmaster-7",
+      "name": "War Master III",
+      "description": "Grant an ally 1 movement for two turns. Their next attack within that time deals +2 damage.  Always active: +6 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 1,
+            "damage": 2
+          },
+          "turns": 2
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true,
+      "buildStats": {
+        "flanker": 6
+      }
+    },
+    {
+      "id": "power-signature-odd-mirror-1",
+      "name": "Mirror Walker",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can.  Always active: +1 movement; +1 Strong-hit damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "swap"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "movement": 1,
+        "critical": 1
+      }
+    },
+    {
+      "id": "power-signature-odd-hex-1",
+      "name": "Hex Weaver",
+      "description": "Deal 1/3/5 mental damage and apply Dazed 1.  Always active: +1 mental damage; +1 Poisoned applied. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "dazed",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "mental": 1,
+        "poisoned": 1
+      }
+    },
+    {
+      "id": "power-signature-odd-mirror-3",
+      "name": "Mirror Walker II",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can.  Always active: +1 movement; +2 Strong-hit damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "swap"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "movement": 1,
+        "critical": 2
+      }
+    },
+    {
+      "id": "power-signature-odd-hex-3",
+      "name": "Hex Weaver II",
+      "description": "Deal 1/3/5 mental damage and apply Dazed 1.  Always active: +2 mental damage; +2 Poisoned applied. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "dazed",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "mental": 2,
+        "poisoned": 2
+      }
+    },
+    {
+      "id": "power-signature-odd-mirror-7",
+      "name": "Mirror Walker III",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can.  Always active: +1 movement; +3 Strong-hit damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "swap"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "movement": 1,
+        "critical": 3
+      }
+    },
+    {
+      "id": "power-signature-odd-hex-7",
+      "name": "Hex Weaver III",
+      "description": "Deal 1/3/5 mental damage and apply Dazed 1.  Always active: +3 mental damage; +3 Poisoned applied. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "dazed",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "mental": 3,
+        "poisoned": 3
+      }
+    },
+    {
+      "id": "power-signature-protector-bastion-1",
+      "name": "Living Bastion",
+      "description": "Spend your Action to absorb the next 5 damage for two turns.  Always active: +2 barriers; -1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 5,
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true,
+      "buildStats": {
+        "barrier": 2,
+        "movement": -1
+      }
+    },
+    {
+      "id": "power-signature-protector-breaker-1",
+      "name": "Line Breaker",
+      "description": "Push an adjacent enemy 2 squares straight away from you. Obstacles and occupied squares stop the push.  Always active: +3 wall impact; +1 physical damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true,
+      "buildStats": {
+        "impact": 3,
+        "physical": 1
+      }
+    },
+    {
+      "id": "power-signature-protector-bastion-3",
+      "name": "Living Bastion II",
+      "description": "Spend your Action to absorb the next 5 damage for two turns.  Always active: +4 barriers; -1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 5,
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true,
+      "buildStats": {
+        "barrier": 4,
+        "movement": -1
+      }
+    },
+    {
+      "id": "power-signature-protector-breaker-3",
+      "name": "Line Breaker II",
+      "description": "Push an adjacent enemy 2 squares straight away from you. Obstacles and occupied squares stop the push.  Always active: +6 wall impact; +2 physical damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true,
+      "buildStats": {
+        "impact": 6,
+        "physical": 2
+      }
+    },
+    {
+      "id": "power-signature-protector-bastion-7",
+      "name": "Living Bastion III",
+      "description": "Spend your Action to absorb the next 5 damage for two turns.  Always active: +6 barriers; -1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 5,
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true,
+      "buildStats": {
+        "barrier": 6,
+        "movement": -1
+      }
+    },
+    {
+      "id": "power-signature-protector-breaker-7",
+      "name": "Line Breaker III",
+      "description": "Push an adjacent enemy 2 squares straight away from you. Obstacles and occupied squares stop the push.  Always active: +9 wall impact; +3 physical damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true,
+      "buildStats": {
+        "impact": 9,
+        "physical": 3
+      }
+    },
+    {
+      "id": "power-signature-shadow-venom-1",
+      "name": "Venom Fang",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1.  Always active: +1 Poisoned on weapon hits. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true,
+      "buildStats": {
+        "venom": 1
+      }
+    },
+    {
+      "id": "power-signature-shadow-executioner-1",
+      "name": "Executioner",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns.  Always active: +2 Strong-hit damage; +1 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 4,
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "critical": 2,
+        "flanker": 1
+      }
+    },
+    {
+      "id": "power-signature-shadow-venom-3",
+      "name": "Venom Fang II",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1.  Always active: +1 Poisoned on weapon hits. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true,
+      "buildStats": {
+        "venom": 1
+      }
+    },
+    {
+      "id": "power-signature-shadow-executioner-3",
+      "name": "Executioner II",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns.  Always active: +4 Strong-hit damage; +2 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 4,
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "critical": 4,
+        "flanker": 2
+      }
+    },
+    {
+      "id": "power-signature-shadow-venom-7",
+      "name": "Venom Fang III",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1.  Always active: +1 Poisoned on weapon hits. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true,
+      "buildStats": {
+        "venom": 1
+      }
+    },
+    {
+      "id": "power-signature-shadow-executioner-7",
+      "name": "Executioner III",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns.  Always active: +6 Strong-hit damage; +3 damage when another ally is adjacent to the target. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 4,
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "critical": 6,
+        "flanker": 3
+      }
+    },
+    {
+      "id": "power-signature-shepherd-bloodweaver-1",
+      "name": "Blood Weaver",
+      "description": "Deal 2/3/4 mental damage to an enemy within 4 squares.  Always active: +2 HP on a kill; +1 mental damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true,
+      "buildStats": {
+        "killHeal": 2,
+        "mental": 1
+      }
+    },
+    {
+      "id": "power-signature-shepherd-sanctuary-1",
+      "name": "Sanctuary Keeper",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns.  Always active: +2 barrier granted by healing; +1 barriers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 4,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "healingWard": 2,
+        "barrier": 1
+      }
+    },
+    {
+      "id": "power-signature-shepherd-bloodweaver-3",
+      "name": "Blood Weaver II",
+      "description": "Deal 2/3/4 mental damage to an enemy within 4 squares.  Always active: +4 HP on a kill; +2 mental damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true,
+      "buildStats": {
+        "killHeal": 4,
+        "mental": 2
+      }
+    },
+    {
+      "id": "power-signature-shepherd-sanctuary-3",
+      "name": "Sanctuary Keeper II",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns.  Always active: +4 barrier granted by healing; +2 barriers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 4,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "healingWard": 4,
+        "barrier": 2
+      }
+    },
+    {
+      "id": "power-signature-shepherd-bloodweaver-7",
+      "name": "Blood Weaver III",
+      "description": "Deal 2/3/4 mental damage to an enemy within 4 squares.  Always active: +6 HP on a kill; +3 mental damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true,
+      "buildStats": {
+        "killHeal": 6,
+        "mental": 3
+      }
+    },
+    {
+      "id": "power-signature-shepherd-sanctuary-7",
+      "name": "Sanctuary Keeper III",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns.  Always active: +6 barrier granted by healing; +3 barriers. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 4,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "healingWard": 6,
+        "barrier": 3
+      }
+    },
+    {
+      "id": "power-signature-unbalanced-berserker-1",
+      "name": "Berserker",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +2 physical damage; -1 damage reduction. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "physical": 2,
+        "reduction": -1
+      }
+    },
+    {
+      "id": "power-signature-unbalanced-tempest-1",
+      "name": "Living Tempest",
+      "description": "Deal 1/2/3 lightning damage to enemies in a cone up to 3 squares. Allies are spared.  Always active: +1 lightning damage; +1 lightning chain damage on wet targets. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "lightning",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true,
+      "buildStats": {
+        "lightning": 1,
+        "chain": 1
+      }
+    },
+    {
+      "id": "power-signature-unbalanced-berserker-3",
+      "name": "Berserker II",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +4 physical damage; -1 damage reduction. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "physical": 4,
+        "reduction": -1
+      }
+    },
+    {
+      "id": "power-signature-unbalanced-tempest-3",
+      "name": "Living Tempest II",
+      "description": "Deal 1/2/3 lightning damage to enemies in a cone up to 3 squares. Allies are spared.  Always active: +2 lightning damage; +2 lightning chain damage on wet targets. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "lightning",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true,
+      "buildStats": {
+        "lightning": 2,
+        "chain": 2
+      }
+    },
+    {
+      "id": "power-signature-unbalanced-berserker-7",
+      "name": "Berserker III",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared.  Always active: +6 physical damage; -1 damage reduction. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true,
+      "grants": [],
+      "buildStats": {
+        "physical": 6,
+        "reduction": -1
+      }
+    },
+    {
+      "id": "power-signature-unbalanced-tempest-7",
+      "name": "Living Tempest III",
+      "description": "Deal 1/2/3 lightning damage to enemies in a cone up to 3 squares. Allies are spared.  Always active: +3 lightning damage; +3 lightning chain damage on wet targets. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "lightning",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true,
+      "buildStats": {
+        "lightning": 3,
+        "chain": 3
+      }
+    },
+    {
+      "id": "power-signature-warden-frosthunter-1",
+      "name": "Frost Hunter",
+      "description": "A readied bow deals 1/2/3 physical damage and applies Slowed 1 within 6 squares. Uses ammunition.  Always active: +2 damage against Freezing targets; +1 cold damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 6,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "weapon": "ranged",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true,
+      "buildStats": {
+        "shatter": 2,
+        "cold": 1
+      }
+    },
+    {
+      "id": "power-signature-warden-pathfinder-1",
+      "name": "Pathfinder",
+      "description": "Leap up to 2 squares to empty visible ground, crossing creatures and ground hazards but never walls. Gain 1 defense Boon for this turn.  Always active: +2 damage after moving this turn; +1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "leap"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true,
+      "buildStats": {
+        "moveDamage": 2,
+        "movement": 1
+      }
+    },
+    {
+      "id": "power-signature-warden-frosthunter-3",
+      "name": "Frost Hunter II",
+      "description": "A readied bow deals 1/2/3 physical damage and applies Slowed 1 within 6 squares. Uses ammunition.  Always active: +4 damage against Freezing targets; +2 cold damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 6,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "weapon": "ranged",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true,
+      "buildStats": {
+        "shatter": 4,
+        "cold": 2
+      }
+    },
+    {
+      "id": "power-signature-warden-pathfinder-3",
+      "name": "Pathfinder II",
+      "description": "Leap up to 2 squares to empty visible ground, crossing creatures and ground hazards but never walls. Gain 1 defense Boon for this turn.  Always active: +4 damage after moving this turn; +1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "leap"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true,
+      "buildStats": {
+        "moveDamage": 4,
+        "movement": 1
+      }
+    },
+    {
+      "id": "power-signature-warden-frosthunter-7",
+      "name": "Frost Hunter III",
+      "description": "A readied bow deals 1/2/3 physical damage and applies Slowed 1 within 6 squares. Uses ammunition.  Always active: +6 damage against Freezing targets; +3 cold damage. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "main",
+      "target": "enemy",
+      "range": 6,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "weapon": "ranged",
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true,
+      "buildStats": {
+        "shatter": 6,
+        "cold": 3
+      }
+    },
+    {
+      "id": "power-signature-warden-pathfinder-7",
+      "name": "Pathfinder III",
+      "description": "Leap up to 2 squares to empty visible ground, crossing creatures and ground hazards but never walls. Gain 1 defense Boon for this turn.  Always active: +6 damage after moving this turn; +1 movement. At will; pay the displayed action cost.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "leap"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true,
+      "buildStats": {
+        "moveDamage": 6,
+        "movement": 1
+      }
     }
   ],
   "legacyMappings": [
@@ -6159,5 +8008,486 @@
       "location": "town",
       "materials": "Etched silver and braided silk"
     }
-  ]
+  ],
+  "masteryTalents": {
+    "heavy-hands": {
+      "id": "heavy-hands",
+      "branch": "steel",
+      "name": "Heavy Hands",
+      "text": "+1 physical damage per rank.",
+      "stats": {
+        "physical": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "crash": {
+      "id": "crash",
+      "branch": "steel",
+      "name": "Crash",
+      "text": "+2 wall collision damage per rank. Turn corridors into weapons.",
+      "stats": {
+        "impact": 2
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "follow-through": {
+      "id": "follow-through",
+      "branch": "steel",
+      "name": "Follow Through",
+      "text": "+1 movement after a kill per rank; strongest kill movement bonus wins.",
+      "stats": {
+        "killMove": 1
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "colossus": {
+      "id": "colossus",
+      "branch": "steel",
+      "name": "Colossus",
+      "text": "+3 physical damage, +1 physical DR, −1 movement. Exclusive with Duelist.",
+      "stats": {
+        "physical": 3,
+        "dr": 1,
+        "movement": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "duelist": {
+      "id": "duelist",
+      "branch": "steel",
+      "name": "Duelist",
+      "text": "+4 damage on Strong hits, +1 attack Boon, −1 damage reduction. Exclusive with Colossus.",
+      "stats": {
+        "critical": 4,
+        "attack": 1,
+        "reduction": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "kindling": {
+      "id": "kindling",
+      "branch": "ember",
+      "name": "Kindling",
+      "text": "+1 fire damage per rank.",
+      "stats": {
+        "fire": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "fuel": {
+      "id": "fuel",
+      "branch": "ember",
+      "name": "Feed the Fire",
+      "text": "+1 Burning applied per rank. Repeated applications accumulate.",
+      "stats": {
+        "burning": 1
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "execution-pyre": {
+      "id": "execution-pyre",
+      "branch": "ember",
+      "name": "Execution Pyre",
+      "text": "+1 damage per rank against targets already Burning.",
+      "stats": {
+        "burningDamage": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "wildfire": {
+      "id": "wildfire",
+      "branch": "ember",
+      "name": "Wildfire",
+      "text": "Fire hits spread Burning 1 to enemies adjacent to the target. −1 direct damage. Exclusive with Glass Cannon.",
+      "stats": {
+        "wildfire": 1,
+        "damage": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "glass-cannon": {
+      "id": "glass-cannon",
+      "branch": "ember",
+      "name": "Glass Cannon",
+      "text": "+4 spell damage, −2 damage reduction. Exclusive with Wildfire.",
+      "stats": {
+        "spell": 4,
+        "reduction": -2
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "deep-cold": {
+      "id": "deep-cold",
+      "branch": "winter",
+      "name": "Deep Cold",
+      "text": "+1 cold damage per rank.",
+      "stats": {
+        "cold": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "wardcraft": {
+      "id": "wardcraft",
+      "branch": "winter",
+      "name": "Wardcraft",
+      "text": "+1 absorption from your barrier powers per rank.",
+      "stats": {
+        "barrier": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "fracture": {
+      "id": "fracture",
+      "branch": "winter",
+      "name": "Fracture",
+      "text": "+2 physical damage per rank against Freezing targets. Consumes one Freezing stack to shatter.",
+      "stats": {
+        "shatter": 2
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "iceblood": {
+      "id": "iceblood",
+      "branch": "winter",
+      "name": "Iceblood",
+      "text": "+1 physical DR, +3 barriers, −1 movement. Exclusive with Permafrost.",
+      "stats": {
+        "dr": 1,
+        "barrier": 3,
+        "movement": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "permafrost": {
+      "id": "permafrost",
+      "branch": "winter",
+      "name": "Permafrost",
+      "text": "Cold hits apply Freezing 1. +1 Slowed applied; −1 direct damage. Exclusive with Iceblood.",
+      "stats": {
+        "permafrost": 1,
+        "slowed": 1,
+        "damage": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "voltage": {
+      "id": "voltage",
+      "branch": "storm",
+      "name": "Voltage",
+      "text": "+1 lightning damage per rank.",
+      "stats": {
+        "lightning": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "stride": {
+      "id": "stride",
+      "branch": "storm",
+      "name": "Long Stride",
+      "text": "+1 movement per rank.",
+      "stats": {
+        "movement": 1
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "conductor": {
+      "id": "conductor",
+      "branch": "storm",
+      "name": "Conductor",
+      "text": "+2 chain damage per rank when lightning hits a target standing in water.",
+      "stats": {
+        "chain": 2
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "stormrunner": {
+      "id": "stormrunner",
+      "branch": "storm",
+      "name": "Stormrunner",
+      "text": "+4 damage after spending movement this turn; −1 damage reduction. Exclusive with Thunderheart.",
+      "stats": {
+        "moveDamage": 4,
+        "reduction": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "thunderheart": {
+      "id": "thunderheart",
+      "branch": "storm",
+      "name": "Thunderheart",
+      "text": "+3 lightning damage and +2 chain damage; −1 movement. Exclusive with Stormrunner.",
+      "stats": {
+        "lightning": 3,
+        "chain": 2,
+        "movement": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "open-vein": {
+      "id": "open-vein",
+      "branch": "shadow",
+      "name": "Open Vein",
+      "text": "+1 Bleeding applied per rank.",
+      "stats": {
+        "bleeding": 1
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "precision": {
+      "id": "precision",
+      "branch": "shadow",
+      "name": "Precision",
+      "text": "+2 damage on Strong hits per rank.",
+      "stats": {
+        "critical": 2
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "flanker": {
+      "id": "flanker",
+      "branch": "shadow",
+      "name": "Flanker",
+      "text": "+1 damage per rank if another capable ally is adjacent to the target.",
+      "stats": {
+        "flanker": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "ambusher": {
+      "id": "ambusher",
+      "branch": "shadow",
+      "name": "Ambusher",
+      "text": "+6 damage when attacking from concealment. The attack reveals you. Exclusive with Venomhand.",
+      "stats": {
+        "ambush": 6
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "venomhand": {
+      "id": "venomhand",
+      "branch": "shadow",
+      "name": "Venomhand",
+      "text": "Weapon hits apply Poisoned 1; −1 direct damage. Exclusive with Ambusher.",
+      "stats": {
+        "venom": 1,
+        "damage": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "renewal": {
+      "id": "renewal",
+      "branch": "life",
+      "name": "Renewal",
+      "text": "+1 HP restored by your healing powers per rank; wounds remain separate.",
+      "stats": {
+        "heal": 1
+      },
+      "maxRank": 3,
+      "capstone": false,
+      "level": 1
+    },
+    "shelter": {
+      "id": "shelter",
+      "branch": "life",
+      "name": "Shelter",
+      "text": "+1 barrier strength per rank.",
+      "stats": {
+        "barrier": 1
+      },
+      "maxRank": 2,
+      "capstone": false,
+      "level": 1
+    },
+    "rallying-care": {
+      "id": "rallying-care",
+      "branch": "life",
+      "name": "Rallying Care",
+      "text": "Healing grants 1 movement through the recipient’s next turn.",
+      "stats": {
+        "rallyMove": 1
+      },
+      "maxRank": 1,
+      "capstone": false,
+      "level": 1
+    },
+    "reaper": {
+      "id": "reaper",
+      "branch": "life",
+      "name": "Reaper",
+      "text": "Recover 4 HP on a kill; −1 HP from your healing powers. Exclusive with Lifeguard.",
+      "stats": {
+        "killHeal": 4,
+        "heal": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    },
+    "lifeguard": {
+      "id": "lifeguard",
+      "branch": "life",
+      "name": "Lifeguard",
+      "text": "Healing also grants a 3-point barrier for two turns; −1 direct damage. Exclusive with Reaper.",
+      "stats": {
+        "healingWard": 3,
+        "damage": -1
+      },
+      "maxRank": 1,
+      "capstone": true,
+      "level": 4
+    }
+  },
+  "namedRelics": {
+    "cinder-crown": {
+      "name": "The Cinder Sovereign",
+      "base": "hat",
+      "affixes": [
+        "flameward"
+      ],
+      "stats": {
+        "wildfire": 1,
+        "fire": 2
+      },
+      "discipline": "flame",
+      "color": 16740664
+    },
+    "winter-verdict": {
+      "name": "Winter’s Verdict",
+      "base": "blade",
+      "affixes": [
+        "rime"
+      ],
+      "stats": {
+        "shatter": 4
+      },
+      "discipline": "frost",
+      "color": 7594495
+    },
+    "thunderwake": {
+      "name": "Thunderwake",
+      "base": "bow",
+      "affixes": [
+        "stormbite"
+      ],
+      "stats": {
+        "chain": 3,
+        "lightning": 1
+      },
+      "discipline": "storm",
+      "color": 11906559
+    },
+    "last-bastion": {
+      "name": "The Last Bastion",
+      "base": "shield",
+      "affixes": [
+        "wardweaver"
+      ],
+      "stats": {
+        "barrier": 3,
+        "reduction": 1
+      },
+      "discipline": "guard",
+      "color": 7396817
+    },
+    "pilgrim-step": {
+      "name": "Steps Between Worlds",
+      "base": "boots",
+      "affixes": [
+        "wind"
+      ],
+      "stats": {
+        "moveDamage": 3
+      },
+      "discipline": "athletics",
+      "color": 9170109
+    },
+    "blood-debt": {
+      "name": "The Blood Debt",
+      "base": "ring",
+      "affixes": [
+        "duelist"
+      ],
+      "stats": {
+        "killHeal": 3,
+        "bleeding": 1
+      },
+      "color": 15557240
+    },
+    "black-thread": {
+      "name": "Black Thread Covenant",
+      "base": "gloves",
+      "affixes": [
+        "stalker"
+      ],
+      "stats": {
+        "ambush": 4,
+        "critical": 2
+      },
+      "discipline": "subterfuge",
+      "color": 12817663
+    },
+    "dawn-chorus": {
+      "name": "Chorus of the Unbroken",
+      "base": "brooch",
+      "affixes": [
+        "lifebloom"
+      ],
+      "stats": {
+        "healingWard": 3,
+        "heal": 1
+      },
+      "discipline": "life",
+      "color": 16769689
+    }
+  }
 }
