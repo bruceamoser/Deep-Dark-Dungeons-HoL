@@ -9,8 +9,11 @@ export const interactionMethods = {
         ...c,
         id: `coffer:${c.id}`,
         kind: "coffer",
-        name:
-          c.opened && !c.items?.length ? "Empty coffer" : "Forgotten coffer",
+        name: c.dropped
+          ? "Ground cache"
+          : c.opened && !c.items?.length
+            ? "Empty coffer"
+            : "Forgotten coffer",
         description: c.opened
           ? `${c.items?.length ?? 0} unclaimed items remain.`
           : `An old coffer holds ${c.coins} coins${c.items?.length ? ` and ${c.items.length} treasures` : ""}.`,

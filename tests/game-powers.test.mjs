@@ -89,7 +89,7 @@ function wound(g, h, exceptional = false) {
 
 test("new training uses game designs while originals and legacy heroes remain valid", () => {
   const g = fresh();
-  assert.equal(Object.keys(POWERS).length, 165);
+  assert.equal(Object.keys(POWERS).length, 225);
   assert.equal(
     C.choices.some((c) => c.gamePower),
     false,
@@ -110,7 +110,7 @@ test("new training uses game designs while originals and legacy heroes remain va
       assert.ok(POWERS[pair.abilityId]);
   for (const cls of g.C.choices.filter((c) => c.kind === "class"))
     for (const tier of [1, 3, 7])
-      assert.equal(cls.signatures[tier].filter((id) => POWERS[id]).length, 1);
+      assert.equal(cls.signatures[tier].filter((id) => POWERS[id]).length, 3);
 });
 test("every active game power validates a target and executes its declared effects", () => {
   for (const p of Object.values(POWERS).filter(
@@ -180,7 +180,7 @@ test("invalid targeting never spends actions, charges or ammunition", () => {
   assert.throws(() => g.useAbility("power-vault", g.party[1]));
   assert.deepEqual(g.budget, before);
 });
-test("starter techniques apply actual movement, conditions, damage reduction and limited use", () => {
+test("starter techniques apply movement, conditions and damage reduction at will", () => {
   const g = arena(),
     h = g.active,
     e = g.enemies[0];
@@ -190,6 +190,7 @@ test("starter techniques apply actual movement, conditions, damage reduction and
   g.refreshHero(h);
   grant(g, "power-hamstring");
   grant(g, "power-plated-advance");
+  h.preview.state.abilities = ["power-hamstring", "power-plated-advance"];
   g.beginHero();
   const movement = g.movementLeft();
   g.useAbility("power-plated-advance", h.id);
@@ -200,7 +201,9 @@ test("starter techniques apply actual movement, conditions, damage reduction and
   g.useAbility("power-hamstring", e.id);
   assert.ok(e.hp < 100);
   assert.equal(R.conditionSummary(e.conditions).slowed.rating, 1);
-  assert.match(g.actionReason("power-plated-advance"), /No uses/);
+  assert.match(g.actionReason("power-plated-advance"), /No maneuver/);
+  g.budget.remaining.maneuver = 1;
+  assert.equal(g.actionReason("power-plated-advance"), "");
 });
 test("condition care rejects useless targets but works on full-HP poisoned companions", () => {
   const g = arena(),
@@ -221,12 +224,13 @@ test("condition care rejects useless targets but works on full-HP poisoned compa
   g.useAbility("power-field-antidote", ally.id);
   assert.equal(ally.survival.hp, hp);
   assert.equal(R.conditionSummary(ally.conditions).poisoned.rating, 0);
-  assert.equal(h.restPowerUses["power-field-antidote"], 1);
+  assert.equal(h.restPowerUses["power-field-antidote"], undefined);
 });
 test("damage bonus, DR, reduction and absorption have bounded nonstacking effects", () => {
   const g = arena(),
     h = g.active,
     e = g.enemies[0];
+  h.preview.state.abilities = [];
   g.powerBuff(h, h, { damage: 4, attack: 1 }, 2, "a");
   g.powerBuff(h, h, { damage: 2, attack: 2 }, 2, "b");
   assert.equal(g.consumeDamageBonus(h), 4);
@@ -493,7 +497,7 @@ test("new spell interruption spends its action once and preserves uncast charges
   assert.equal(g.budget.remaining.main, 0);
   assert.equal(h.powerUses?.["power-ember-lance"], undefined);
 });
-test("a new spell resumes after a saved shield decision with one action and one charge", () => {
+test("an at-will spell resumes after a saved shield decision spending its action exactly once", () => {
   const g = arena(),
     h = g.active,
     e = g.enemies[0];
@@ -517,7 +521,7 @@ test("a new spell resumes after a saved shield decision with one action and one 
   copy.resolveReaction(false);
   assert.equal(copy.pendingProvocation, null);
   assert.equal(copy.budget.remaining.main, 0);
-  assert.equal(copy.active.powerUses["power-ember-lance"], 1);
+  assert.equal(copy.active.powerUses["power-ember-lance"], undefined);
   assert.ok(copy.enemies[0].hp < 100);
 });
 

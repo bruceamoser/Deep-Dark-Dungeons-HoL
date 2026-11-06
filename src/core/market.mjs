@@ -127,7 +127,10 @@ export const marketMethods = {
       for (const [i, base] of (m.bases ?? []).entries()) {
         if ((base === "medium" && depth < 3) || (base === "heavy" && depth < 7))
           continue;
-        const item = magicItem(seed + i + 123, Math.max(1, depth), { base });
+        const item = this.uniqueMagic(seed + i + 123, Math.max(1, depth), {
+          base,
+        });
+        if (!item) continue;
         stock[m.id].push({ id: item.instanceId, item, quantity: 1 });
       }
     }

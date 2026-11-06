@@ -221,6 +221,7 @@ export async function verifyCharacter(page) {
   await page.locator('[data-class="class-protector"]').click();
   await page.locator('[data-class-discipline="discipline-armor"]').click();
   await page.locator('[data-class-discipline="discipline-guard"]').click();
+  await expect(page.locator("[data-signature]")).toHaveCount(3);
   const signature = page.locator(
     '[data-signature="power-signature-sworn-guardian"]',
   );

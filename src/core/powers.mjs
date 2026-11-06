@@ -1,5 +1,6 @@
 import { RECIPE_ITEMS } from "./recipes.mjs";
 import { addStarterPowers } from "./starter-powers.mjs";
+import { expandSignatures, makeAtWill } from "./signature-builds.mjs";
 // Game-owned powers. These are designs for this dungeon, not transcriptions of cards.
 const strike = (attribute, type = "physical", extra = {}) => ({
   category: "main",
@@ -773,6 +774,8 @@ definitions.push(
 );
 // Append after the original designs so origin grants and legacy mappings stay stable.
 addStarterPowers({ power, strike, aid, buff, zone, move, condition });
+expandSignatures(definitions);
+makeAtWill(definitions);
 export const POWERS = Object.freeze(
   Object.fromEntries(definitions.map((p) => [p.id, Object.freeze(p)])),
 );

@@ -1,5 +1,6 @@
 import { traitsOf } from "./ancestry-game.mjs";
 import { Random } from "./dungeon.mjs";
+import { distance, lineOfSight } from "./dungeon.mjs";
 
 // Dungeon adaptations. Printed examples are identified individually; no creation choices are changed.
 export const EQUIPMENT_SLOTS = [
@@ -65,6 +66,58 @@ export const ITEM_BASES = {
   gloves: { name: "Gloves", slot: "hands", icon: "hand" },
 };
 export const ENCHANTMENTS = {
+  stormbite: {
+    name: "Stormbite",
+    kind: "weapon",
+    discipline: "storm",
+    type: "lightning",
+    effect: "damage",
+    condition: "slowed",
+    color: 0xa2b8ff,
+  },
+  bloodletter: {
+    name: "Bloodletter",
+    kind: "weapon",
+    type: "physical",
+    effect: "damage",
+    condition: "bleeding",
+    color: 0xea526f,
+  },
+  mindpiercer: {
+    name: "Mindpiercer",
+    kind: "weapon",
+    discipline: "mind",
+    type: "mental",
+    effect: "damage",
+    condition: "dazed",
+    color: 0xb187ff,
+  },
+  duelist: {
+    name: "Duelist’s",
+    effect: "build",
+    stat: "critical",
+    color: 0xffd28c,
+  },
+  lifebloom: {
+    name: "Lifebloom",
+    discipline: "life",
+    effect: "build",
+    stat: "heal",
+    color: 0x68e0a4,
+  },
+  ram: { name: "Ram’s", effect: "build", stat: "impact", color: 0xe8ad71 },
+  stalker: {
+    name: "Stalker’s",
+    effect: "build",
+    stat: "ambush",
+    color: 0xb7a0ff,
+  },
+  wardweaver: {
+    name: "Wardweaver’s",
+    effect: "build",
+    stat: "barrier",
+    color: 0x81dbef,
+  },
   ember: {
     name: "Ember",
     kind: "weapon",
@@ -123,12 +176,100 @@ const names = [
   "of the Deep Road",
   "of Pale Stars",
   "of Greyhaven",
+  "of the Ashen Gate",
+  "of Shattered Oaths",
+  "of the Last Dawn",
+  "of the Drowned Court",
+  "of Falling Crowns",
+  "of the Red Pilgrim",
+  "of Thorn and Bone",
+  "of the Nine Roads",
+  "of the Moonless Hunt",
+  "of the Iron Choir",
+  "of the First Spark",
+  "of the Silent Bell",
 ];
+export const RELICS = {
+  "cinder-crown": {
+    name: "The Cinder Sovereign",
+    base: "hat",
+    affixes: ["flameward"],
+    stats: { wildfire: 1, fire: 2 },
+    discipline: "flame",
+    color: 0xff7138,
+  },
+  "winter-verdict": {
+    name: "Winter’s Verdict",
+    base: "blade",
+    affixes: ["rime"],
+    stats: { shatter: 4 },
+    discipline: "frost",
+    color: 0x73e1ff,
+  },
+  thunderwake: {
+    name: "Thunderwake",
+    base: "bow",
+    affixes: ["stormbite"],
+    stats: { chain: 3, lightning: 1 },
+    discipline: "storm",
+    color: 0xb5adff,
+  },
+  "last-bastion": {
+    name: "The Last Bastion",
+    base: "shield",
+    affixes: ["wardweaver"],
+    stats: { barrier: 3, reduction: 1 },
+    discipline: "guard",
+    color: 0x70ddd1,
+  },
+  "pilgrim-step": {
+    name: "Steps Between Worlds",
+    base: "boots",
+    affixes: ["wind"],
+    stats: { moveDamage: 3 },
+    discipline: "athletics",
+    color: 0x8becbd,
+  },
+  "blood-debt": {
+    name: "The Blood Debt",
+    base: "ring",
+    affixes: ["duelist"],
+    stats: { killHeal: 3, bleeding: 1 },
+    color: 0xed6278,
+  },
+  "black-thread": {
+    name: "Black Thread Covenant",
+    base: "gloves",
+    affixes: ["stalker"],
+    stats: { ambush: 4, critical: 2 },
+    discipline: "subterfuge",
+    color: 0xc394ff,
+  },
+  "dawn-chorus": {
+    name: "Chorus of the Unbroken",
+    base: "brooch",
+    affixes: ["lifebloom"],
+    stats: { healingWard: 3, heal: 1 },
+    discipline: "life",
+    color: 0xffe299,
+  },
+};
 const basesForDepth = (d) =>
   Object.keys(ITEM_BASES).filter(
     (k) => (k !== "medium" || d >= 3) && (k !== "heavy" || d >= 7),
   );
 export function magicItem(seed, depth = 1, options = {}) {
+  const relic = options.relic ? RELICS[options.relic] : null;
+  if (options.relic && !relic) throw new Error("Unknown relic identity.");
+  if (relic)
+    options = {
+      ...options,
+      base: relic.base,
+      affixes: relic.affixes,
+      power: 2,
+    };
+  const revision = options.revision ?? 2;
+  if (![1, 2].includes(revision)) throw new Error("Unknown treasure revision.");
   if (
     !Number.isSafeInteger(seed) ||
     seed < 0 ||
@@ -147,7 +288,13 @@ export function magicItem(seed, depth = 1, options = {}) {
     weapon ? ENCHANTMENTS[k].kind === "weapon" : !ENCHANTMENTS[k].kind,
   );
   const power = options.power ?? (depth >= 7 && rng.next() < 0.35 ? 2 : 1);
-  const affixes = options.affixes ?? [pool[rng.int(0, pool.length - 1)]];
+  const first = pool[rng.int(0, pool.length - 1)];
+  const second = pool.filter((k) => k !== first);
+  const affixes =
+    options.affixes ??
+    (depth >= 3 && rng.next() < 0.55
+      ? [first, second[rng.int(0, second.length - 1)]]
+      : [first]);
   if (
     affixes.length < 1 ||
     affixes.length > 2 ||
@@ -156,8 +303,10 @@ export function magicItem(seed, depth = 1, options = {}) {
     affixes.some((k) => !pool.includes(k))
   )
     throw new Error("Invalid enchantment for this form.");
-  const suffix = names[rng.int(0, names.length - 1)];
-  const name = `${ENCHANTMENTS[affixes[0]].name} ${def.name} ${suffix}`;
+  const suffix = names[rng.int(0, (revision === 1 ? 6 : names.length) - 1)];
+  const name =
+    relic?.name ??
+    `${affixes.map((a) => ENCHANTMENTS[a].name).join(" ")} ${def.name} ${suffix}`;
   const effects = affixes.map((id) => {
     const e = ENCHANTMENTS[id];
     return {
@@ -172,7 +321,9 @@ export function magicItem(seed, depth = 1, options = {}) {
             ? `${e.type[0].toUpperCase() + e.type.slice(1)} resistance ${power}${e.type === "life" ? "; also reduces Life healing" : ""}.`
             : e.effect === "attribute"
               ? "+1 Brawn while equipped. Does not change creation DP, HP or eligibility."
-              : "+1 Speed while worn.",
+              : e.effect === "build"
+                ? `+${power} ${e.stat} while equipped.`
+                : "+1 Speed while worn.",
       source:
         id === "ember" && base === "blade" && power === 1
           ? "Ember Edge · book effect"
@@ -183,6 +334,20 @@ export function magicItem(seed, depth = 1, options = {}) {
               : "Dungeon adaptation",
     };
   });
+  if (relic)
+    for (const [stat, value] of Object.entries(relic.stats))
+      effects.push({
+        id: `relic-${stat}`,
+        name: relic.name,
+        effect: "build",
+        stat,
+        value,
+        discipline: relic.discipline,
+        rank: relic.discipline ? 1 : 0,
+        color: relic.color,
+        text: `+${value} ${stat} while equipped.`,
+        source: "Unique dungeon relic",
+      });
   return {
     instanceId: `relic-${seed >>> 0}-${base}`,
     catalogId: def.catalogId ?? `relic-${base}`,
@@ -191,9 +356,15 @@ export function magicItem(seed, depth = 1, options = {}) {
     icon: def.icon,
     seed: seed >>> 0,
     depth,
+    revision,
+    relic: options.relic ?? null,
     power,
     affixes,
-    rarity: power === 2 ? "rare" : "enchanted",
+    rarity: relic
+      ? "relic"
+      : power === 2 || affixes.length > 1
+        ? "rare"
+        : "enchanted",
     effects,
     definition: {
       id: `relic-${seed >>> 0}-${base}`,
@@ -285,11 +456,15 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
               base: saved.base,
               power: saved.power,
               affixes: saved.affixes,
+              revision: saved.revision ?? 1,
+              relic: saved.relic,
             });
     if (item.instanceId !== saved.instanceId)
       throw new Error("Invalid saved treasure identity.");
     return {
       ...item,
+      quantity: saved.quantity ?? item.quantity,
+      bulk: item.definition.bulk * (saved.quantity ?? item.quantity),
       materialType: saved.materialType,
       definition: saved.materialType
         ? {
@@ -298,7 +473,9 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
               saved.materialType === "recipe-lesser-healing-bottle" ? 80 : 12,
             name: `${item.definition.name} · ${saved.materialType.replace("recipe-", "").replaceAll("-", " ")}`,
           }
-        : item.definition,
+        : saved.definition?.name
+          ? { ...item.definition, name: saved.definition.name }
+          : item.definition,
       carried: saved.carried !== false,
       held: !!saved.held,
       worn: !!saved.worn,
@@ -345,8 +522,10 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       3,
       Math.max(p.resistances[e.type] ?? 0, e.value),
     );
-  p.inventory.bulk += treasure
-    .filter((i) => i.carried)
+  p.inventory.bulk = p.inventory.items
+    .filter(
+      (i) => i.carried && !(i.worn && i.catalogId === "item-travel-clothes"),
+    )
     .reduce((n, i) => n + i.bulk, 0);
   p.inventory.capacity += 3 * (p.attributes.brawn - draft.attributes.brawn);
   p.inventory.encumbrance = Math.max(
@@ -387,6 +566,52 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
   return p;
 }
 export const treasureMethods = {
+  uniqueMagic(seed, depth, options = {}) {
+    this.campaign.generatedMagic ??= [];
+    const seen = new Set(this.campaign.generatedMagic);
+    const heroes = [
+      ...(this.campaign.party ?? []),
+      ...(this.campaign.reserve ?? []),
+      ...(this.campaign.fallenHeroes ?? []).map((f) => f.hero),
+    ];
+    const existing = [
+      ...heroes.flatMap((h) => h.treasure ?? []),
+      ...[this.map, this.campaign.returnPassage?.floor?.map].flatMap((m) =>
+        (m?.chests ?? []).flatMap((c) => c.items ?? []),
+      ),
+      ...Object.values(this.campaign.market?.stock ?? {}).flatMap((rows) =>
+        rows.map((r) => r.item),
+      ),
+    ];
+    for (const i of existing.filter((i) => i.base)) {
+      seen.add(i.definition.name);
+      seen.add(`item:${i.instanceId}`);
+      if (i.relic) seen.add(`relic:${i.relic}`);
+    }
+    if (options.boss) {
+      const available = Object.keys(RELICS).filter(
+        (id) => !seen.has(`relic:${id}`) && !seen.has(RELICS[id].name),
+      );
+      if (available.length)
+        options = { relic: available[(seed >>> 0) % available.length] };
+    }
+    for (let n = 0; n < 1024; n++) {
+      const item = magicItem((seed + n * 104729) >>> 0, depth, options);
+      if (
+        seen.has(item.definition.name) ||
+        seen.has(`item:${item.instanceId}`) ||
+        (item.relic && seen.has(`relic:${item.relic}`))
+      )
+        continue;
+      seen.add(item.definition.name);
+      seen.add(`item:${item.instanceId}`);
+      if (item.relic) seen.add(`relic:${item.relic}`);
+      this.campaign.generatedMagic = [...seen];
+      return item;
+    }
+    this.campaign.generatedMagic = [...seen];
+    return null; // Exhausted combinations produce no duplicate prize.
+  },
   attribute(h, key) {
     return h.preview.attributes?.[key] ?? h.draft.attributes[key];
   },
@@ -408,18 +633,80 @@ export const treasureMethods = {
       throw new Error(
         "Transfer equipment between capable companions outside combat.",
       );
-    const item = h.treasure?.find((i) => i.instanceId === id);
-    if (!item) throw new Error("Choose recovered treasure.");
-    if (target.treasure?.some((i) => i.instanceId === id))
+    if (
+      this.mode !== "town" &&
+      (distance(h, target) > 2 || !lineOfSight(this.map, h, target))
+    )
+      throw new Error(
+        "Move the companions within 2 squares with a clear path to hand over gear.",
+      );
+    const item = this.portableItem(h, id);
+    if (target.treasure?.some((i) => i.instanceId === item.instanceId))
       throw new Error("That companion already owns this item.");
-    h.treasure = h.treasure.filter((i) => i !== item);
-    item.held = false;
-    item.worn = false;
-    delete item.equippedSlot;
+    this.removePortableItem(h, id);
     (target.treasure ??= []).push(item);
+    if (item.inventoryDie)
+      target.supplies[item.instanceId] = h.supplies[id] ?? item.inventoryDie;
+    delete h.supplies[id];
     this.refreshHero(h);
     this.refreshHero(target);
+    this.syncTorches();
     this.note(`${h.name} gives ${item.definition.name} to ${target.name}.`);
+    this.emit("party");
+    this.emit("change");
+  },
+  portableItem(h, id) {
+    const owned = h.preview.inventory.items.find((i) => i.instanceId === id);
+    if (!owned)
+      throw new Error("Choose an item in this character’s inventory.");
+    const recovered = h.treasure?.find((i) => i.instanceId === id);
+    const item = recovered
+      ? structuredClone(recovered)
+      : {
+          ...ordinaryItem(this.C, owned.catalogId, `carried-${h.heroId}-${id}`),
+          quantity: owned.quantity,
+          hands: owned.hands,
+          bulk: owned.bulk,
+        };
+    Object.assign(item, { held: false, worn: false, carried: true });
+    delete item.equippedSlot;
+    item.supplyRemaining = h.supplies[id] ?? owned.inventoryDie;
+    return item;
+  },
+  removePortableItem(h, id) {
+    if (h.treasure?.some((i) => i.instanceId === id))
+      h.treasure = h.treasure.filter((i) => i.instanceId !== id);
+    else (h.soldItems ??= []).push(id); // Historical creation receipts stay intact.
+  },
+  dropItem(index, id) {
+    const h = this.party[index];
+    if (this.mode !== "exploration" || this.busy || !this.canAct(h))
+      throw new Error("Drop items on the dungeon floor outside combat.");
+    const item = this.portableItem(h, id);
+    this.removePortableItem(h, id);
+    delete h.supplies[id];
+    let pile = this.map.chests.find(
+      (c) => c.dropped && c.x === h.x && c.z === h.z,
+    );
+    if (!pile) {
+      pile = {
+        id: `dropped-${crypto.randomUUID()}`,
+        x: h.x,
+        z: h.z,
+        coins: 0,
+        opened: true,
+        dropped: true,
+        recipeSearched: true,
+        items: [],
+      };
+      this.map.chests.push(pile);
+    }
+    pile.items.push(item);
+    this.refreshHero(h);
+    this.syncTorches();
+    this.note(
+      `${h.name} drops ${item.definition.name}. It can be recovered from the ground cache.`,
+    );
     this.emit("party");
     this.emit("change");
   },
@@ -441,6 +728,8 @@ export const treasureMethods = {
     )
       throw new Error("This item already belongs to the company.");
     (h.treasure ??= []).push(structuredClone(item));
+    if (item.inventoryDie)
+      h.supplies[item.instanceId] = item.supplyRemaining ?? item.inventoryDie;
     world.source.items = world.source.items.filter((i) => i !== item);
     this.refreshHero(h);
     this.note(`${h.name} recovers ${item.definition.name}.`);

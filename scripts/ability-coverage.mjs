@@ -1,3 +1,5 @@
+import { TALENTS, BUILD_BRANCHES } from "../src/core/builds.mjs";
+import { RELICS } from "../src/core/treasure.mjs";
 import { POWERS, mappedPower } from "../src/core/powers.mjs";
 import { RECIPES } from "../src/core/recipes.mjs";
 import { DUNGEON_TRAITS } from "../src/core/ancestry-game.mjs";
@@ -50,7 +52,7 @@ await fs.writeFile(
   new URL("../docs/game-power-coverage.json", import.meta.url),
   JSON.stringify(
     {
-      revision: 2,
+      revision: 3,
       policy:
         "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
       counts: {
@@ -74,6 +76,9 @@ await fs.writeFile(
         consumableActions: Object.values(POWERS).filter((p) => p.universal)
           .length,
         recipes: RECIPES.length,
+        masteryTalents: Object.keys(TALENTS).length,
+        buildBranches: BUILD_BRANCHES.length,
+        namedRelics: Object.keys(RELICS).length,
       },
       powers: Object.values(POWERS),
       legacyMappings: input.records
@@ -83,6 +88,8 @@ await fs.writeFile(
           current: mappedPower(c.id, { choices: input.records }),
         })),
       recipes: RECIPES,
+      masteryTalents: TALENTS,
+      namedRelics: RELICS,
     },
     null,
     2,

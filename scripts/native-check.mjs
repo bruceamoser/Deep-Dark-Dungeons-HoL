@@ -1,3 +1,4 @@
+import { verifyBuildForge } from "./build-forge-check.mjs";
 import { verifyGameplayIdentity } from "./identity-preview-check.mjs";
 import { verifyExpeditionUI } from "./expedition-check.mjs";
 import { verifySaveSlots } from "./save-slots-check.mjs";
@@ -79,6 +80,7 @@ try {
   w.on("pageerror", (e) => errors.push(e.message));
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
   await w.screenshot({ path: "test-results/native-town.png" });
+  await verifyBuildForge(w);
   await verifyGameplayIdentity(w);
   await verifyExpeditionUI(w);
   await verifyCharacter(w);

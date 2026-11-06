@@ -193,11 +193,24 @@ export const opportunityMethods = {
         components: [
           {
             type: "physical",
-            amount:
+            amount: Math.max(
+              0,
               { weak: 2, standard: 3, strong: 5 }[result.tier] +
-              this.consumeDamageBonus(h),
+                this.consumeDamageBonus(h) +
+                this.buildDamage(
+                  h,
+                  e,
+                  spec,
+                  "physical",
+                  ["weak", "standard", "strong"].indexOf(result.tier),
+                  !!this.powerStat(h, "hidden"),
+                ),
+            ),
           },
-          ...effects.map((x) => ({ type: x.type, amount: x.value })),
+          ...effects.map((x) => ({
+            type: x.type,
+            amount: this.enchantmentDamage(h, x, "physical"),
+          })),
         ],
         resistances: defense.resistances,
         weaknesses: this.creatureWeaknesses(e),
@@ -205,6 +218,7 @@ export const opportunityMethods = {
       this.breakConcealment(h);
       damage.total = this.absorbPowerDamage(e, damage.total, "physical");
       e.hp = Math.max(0, e.hp - damage.total);
+      this.buildAfterHit(h, e, spec, "physical", effects);
       if (result.tier === "strong")
         for (const effect of effects)
           if (
@@ -216,7 +230,7 @@ export const opportunityMethods = {
             (e.conditions ??= []).push({
               id: `effect-${crypto.randomUUID()}`,
               key: effect.condition,
-              rating: 1,
+              rating: 1 + this.buildStat(h, effect.condition),
               source: h.id,
               persistence: "temporary",
             });

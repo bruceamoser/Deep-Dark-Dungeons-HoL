@@ -137,7 +137,7 @@ export async function verifyGameplayIdentity(page) {
       await page.evaluate(
         () => window.__ddd.game.active.powerUses["power-firebreak"],
       ),
-    ).toBe(1);
+    ).toBeUndefined();
     await page.screenshot({ path: "test-results/battlefield-fire.png" });
     await page.evaluate(() => {
       window.__ddd.game.budget.remaining.main = 1;

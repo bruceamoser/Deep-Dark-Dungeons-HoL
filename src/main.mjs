@@ -129,7 +129,7 @@ async function init() {
         p &&
         !modal.children.length
       ) {
-        const spec = POWERS[selectedAction.id],
+        const spec = game.powerSpec(selectedAction.id),
           unit =
             spec.target === "enemy"
               ? game.enemies.find(
@@ -209,6 +209,7 @@ async function init() {
       scene.updateVisibility(game.party, game.seen);
     }
     if (type === "party") {
+      scene.syncInteractions(game.worldInteractions());
       scene.resetEntities(game.party, game.enemies);
       scene.updateVisibility(game.party, game.seen);
     }
@@ -254,7 +255,18 @@ async function init() {
     if (!runsOpen && type === "dying") dying(data.hero);
     if (!runsOpen && type === "wound") woundReview(data);
     if (!runsOpen && type === "turnchoices") turnChoices(data);
-    if (type === "xp") toast(`+${data.amount} XP each · ${data.reason}`);
+    if (type === "level-ready")
+      toast(
+        `${data.hero.name} earned level ${data.level}! Return to Greyhaven and choose Level up on their sheet.`,
+      );
+    if (type === "xp") {
+      const ready = game.party.filter(
+        (h) => h.earnedLevel > h.preview.state.level,
+      );
+      toast(
+        `+${data.amount} XP each · ${data.reason}${ready.length ? " · LEVEL UP AVAILABLE — train in Greyhaven" : ""}`,
+      );
+    }
     if (type === "interact-ready") worldMenu(data.id);
     if (
       selectedAction &&
@@ -414,7 +426,7 @@ function render() {
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("The workshop", "workshop", "DOWNTIME CRAFTING")}${button("Camp & supplies", "camp", "REST & PROVISIONS")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">EARLY PLAYABLE · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("Training & builds", "training", "LEVEL UP & SPECIALIZE")}${button("The workshop", "workshop", "DOWNTIME CRAFTING")}${button("Camp & supplies", "camp", "REST & PROVISIONS")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">EARLY PLAYABLE · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
     if (scene.follow)
       scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
   } else {
@@ -519,6 +531,10 @@ function action(a) {
     case "bestiary":
       closeModal();
       bestiaryScreen({ root: modal, game, close: closeModal });
+      break;
+    case "training":
+      sheet(game.selected);
+      modal.querySelector('[data-tab="build"]')?.click();
       break;
     case "workshop":
       closeModal();
@@ -630,7 +646,9 @@ function clickTile(p, interactionId, event) {
     }
     if (selectedAction) {
       const ally = game.party.find((h) => h.x === p.x && h.z === p.z);
-      const type = ABILITIES[selectedAction.id].target;
+      const type = (
+        game.powerSpec(selectedAction.id) ?? ABILITIES[selectedAction.id]
+      ).target;
       if (type === "ground") {
         commitTarget(p);
         return;
@@ -853,13 +871,13 @@ function combatDock() {
     .map((id) => C.choices.find((c) => c.id === id))
     .filter(Boolean);
   const targeting = selectedAction
-    ? `<div class="targeting-tray" role="status"><div><span class="eyebrow">READY TO USE · NO COST SPENT</span><strong>${esc(C.choices.find((c) => c.id === selectedAction.id)?.name)}</strong><small>${ABILITIES[selectedAction.id].target === "self" ? "Use on yourself, or choose a different action." : "Click a target, or select another action to switch."}</small></div>${ABILITIES[selectedAction.id].target === "self" ? button("Use on self", "confirm-self", "CONFIRM", true) : ""}${button("Cancel", "cancel-target", "ESC · RETURN TO MOVEMENT")}</div>`
+    ? `<div class="targeting-tray" role="status"><div><span class="eyebrow">READY TO USE · NO COST SPENT</span><strong>${esc(C.choices.find((c) => c.id === selectedAction.id)?.name)}</strong><small>${(game.powerSpec(selectedAction.id) ?? ABILITIES[selectedAction.id]).target === "self" ? "Use on yourself, or choose a different action." : "Click a target, or select another action to switch."}</small></div>${(game.powerSpec(selectedAction.id) ?? ABILITIES[selectedAction.id]).target === "self" ? button("Use on self", "confirm-self", "CONFIRM", true) : ""}${button("Cancel", "cancel-target", "ESC · RETURN TO MOVEMENT")}</div>`
     : "";
   return `<div class="combat-dock">${targeting}<div class="combat-status"><strong>${game.encounter.nextSide === "players" ? esc(h.name) : "Opposition is acting"}</strong><div class="budget-pips">${game.encounter.nextSide === "players" ? `<span><b>${b?.remaining.main ?? 1}</b> MAIN</span><span><b>${b?.remaining.maneuver ?? 1}</b> MANEUVER</span><span><b>${b?.remaining.reaction ?? 1}</b> REACTION</span><span><b>${game.movementLeft()}</b> MOVE</span>` : "<span>WAIT FOR YOUR COMPANY</span>"}</div></div><div class="favorite-bar">${
     cards
       .map((c, i) => {
         const reason = game.actionReason(c.id);
-        return `<button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" title="${esc(c.name)} · ${ABILITIES[c.id].category}${reason ? " · " + esc(reason) : ""}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${i + 5 <= 9 ? i + 5 : ""}</small>${icon(actionIcon(c.id))}${abilityType(c)}<span>${esc(c.name)}</span></button>`;
+        return `<button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" title="${esc(c.name)} · ${(game.powerSpec(c.id) ?? ABILITIES[c.id]).category}${reason ? " · " + esc(reason) : ""}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${i + 5 <= 9 ? i + 5 : ""}</small>${icon(actionIcon(c.id))}${abilityType(c, game.powerSpec(c.id) ?? ABILITIES[c.id])}<span>${esc(c.name)}</span></button>`;
       })
       .join("") ||
     '<span class="cost-note">Pin favorite actions from Character → Abilities.</span>'
@@ -878,9 +896,9 @@ function actions() {
     `<p>Choose an action, then click its target in the dungeon. Each card uses its own attribute, range, outcomes and action cost.</p><div class="catalog-list">${game
       .availableActions()
       .map((c) => {
-        const a = ABILITIES[c.id];
+        const a = game.powerSpec(c.id) ?? ABILITIES[c.id];
         const reason = game.actionReason(c.id);
-        return `<button data-card="${c.id}" title="${esc(coverage(c.id).reason)}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c)}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
+        return `<button data-card="${c.id}" title="${esc(coverage(c.id).reason)}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c, game.powerSpec(c.id) ?? ABILITIES[c.id])}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
       })
       .join("")}</div>`,
     '<button id="main-convert">Main → Maneuver</button><button id="stand">Stand · 2 movement</button>',

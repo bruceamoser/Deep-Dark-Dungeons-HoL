@@ -756,10 +756,15 @@ export class Scene {
         }
       }
       e.statusVisuals.sync(
-        e.data.conditions ?? [],
+        [
+          ...(e.data.conditions ?? []),
+          ...(e.data.concealed ? [{ key: "hidden", rating: 1 }] : []),
+        ],
         e.isEnemy ? e.data.hp > 0 : e.data.survival.status !== "dead",
       );
       e.statusVisuals.update(t, this.camera);
+      if (e.model.userData.setConcealed)
+        e.model.userData.setConcealed(!!e.data.concealed);
       e.lock = Math.max(0, e.lock - dt);
       e.deathGrace = Math.max(0, (e.deathGrace ?? 0) - dt);
       const target =

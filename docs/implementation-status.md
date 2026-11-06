@@ -1,4 +1,4 @@
-# Implementation status — v0.4.1
+# Implementation status — v0.5.0
 
 Playable desktop dungeon RPG with game-owned powers over HoL's base mechanics.
 The production presentation target remains; the current modular art and balance
@@ -6,9 +6,13 @@ are a playable iteration rather than final production assets.
 
 ## Playable
 
+- Six mastery branches, 30 talents, exclusive capstones and three effect-based specializations per learned active power. Two points at level 1 plus two per trained level; free town refunds. All powers are at will with action/supply costs. Shatter, wet lightning chains, impact damage, concealment ambushes and accumulating severity conditions support combinations.
+- Prominent town training and sheet Level up controls; first advancement at 400 XP. Known disciplines/ranks visible on the sheet. Starting equipment can be transferred or dropped into recoverable ground caches, preserving quantities and remaining supplies.
+- Eight unique boss relics, expanded enchantments and persistent per-run magic-name deduplication. Enchanted gear uses emissive/rune treatments; Vanish fades the model and adds visible status feedback.
+
 - Four equipped, animated heroes; isometric camera; real-time exploration and alternating HoL turns; formations and individual combat movement. Right-drag grabs the ground. Actual tactical squares and a weighted movement overlay distinguish legal destinations, ally passage and the last movement point.
 - 58 book creatures; party/depth encounter budgets; bosses every fifth floor; procedural slotted magic gear with discipline requirements; six merchants and two-way recall scrolls.
-- Full staged HoL character validation and DP progression in a nine-chapter game creator. Visible origin grants, book discipline icons, A/M/R/P badges, separate purchase dialogs and scroll retention. New training uses 126 discipline powers (five rank-1 choices per discipline), 30 class signatures, six game-designed general powers and five retained general/armor training choices. Three consumable actions round out the 165 game designs. Origins grant one starter power; the remaining four cost 1, 2, 2 and 3 DP. Level 0 still cannot buy disciplines. Redundant recipe training is blocked. Basic actions remain available.
+- Full staged HoL character validation and DP progression in a nine-chapter game creator. Visible origin grants, book discipline icons, A/M/R/P badges, separate purchase dialogs and scroll retention. New training uses 126 discipline powers (five rank-1 choices per discipline), 90 class signatures (three choices per class/tier), six game-designed general powers and five retained general/armor training choices. Three consumable actions round out the 225 game designs. Origins grant one starter power; the remaining four cost 1, 2, 2 and 3 DP. Level 0 still cannot buy disciplines. Redundant recipe training is blocked. Basic actions remain available.
 - A common effect engine for damage/healing, areas, physical DR, reduction, absorption, Boons/Banes, conditions, movement, push/pull, swaps, teleportation, protection, counters, concealment, light and limited action resources. Bonus Maneuvers queue for the recipient's next eligible turn, so they can actually be used in alternating combat.
 - Persistent fire, water, smoke, difficult ground, magical light/darkness, barriers, healing circles and one-use traps. Ground previews precede spending; cancellation is free. Surfaces affect both sides; instant area strikes spare allies.
 - All 50 ancestry traits retain explicit game behavior. Crafting and treatment traits now benefit the new recipe/care systems. Class signatures establish tactical roles rather than expose the old tabletop card roster.
@@ -23,7 +27,7 @@ are a playable iteration rather than final production assets.
 
 Original source rules, cards, receipts and inventories remain intact. Legacy
 abilities map to the new designs by class/tier or discipline/rank, with explicit
-general-ability mappings. Duplicate mappings share one power and its limits; new
+general-ability mappings. Duplicate mappings share one power; new
 training cannot charge DP for a power already supplied by legacy training. Source
 stat benefits and past purchases are preserved. This is compatibility mapping,
 not a refund or rewrite of the character's historical build.
@@ -41,5 +45,5 @@ production work. Two GPUs are not required or combined.
 
 [Current game designs and mappings](game-power-coverage.json) ·
 [Historical source-card review](ability-coverage.json) ·
-[Approved plan](gameplay-and-identity-plan.md) ·
+[v0.5 design and research](v0.5-gameplay-design.md) · [Earlier plan](gameplay-and-identity-plan.md) ·
 [Adaptations](computer-game-deltas.md) · [Validation](validation.md)

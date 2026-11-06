@@ -1,5 +1,6 @@
 import { RECIPES } from "./recipes.mjs";
 import { SURFACE_COLORS } from "./battlefield.mjs";
+import { validateBuild } from "./builds.mjs";
 const nonnegative = (n) => Number.isSafeInteger(n) && n >= 0;
 const recipeIds = new Set(RECIPES.map((r) => r.id));
 // Validate optional game-owned additions before a save replaces the live run.
@@ -13,7 +14,34 @@ export function validateGameState(campaign) {
   const floors = [campaign.floor, campaign.returnPassage?.floor].filter(
     Boolean,
   );
+  if (
+    campaign.generatedMagic !== undefined &&
+    (!Array.isArray(campaign.generatedMagic) ||
+      campaign.generatedMagic.some(
+        (id) => typeof id !== "string" || id.length > 200,
+      ))
+  )
+    throw new Error("Saved magic discovery registry is invalid.");
+  const items = [
+    ...heroes.flatMap((h) => h.treasure ?? []),
+    ...floors.flatMap((f) =>
+      (f.map.chests ?? []).flatMap((c) => c.items ?? []),
+    ),
+    ...Object.values(campaign.market?.stock ?? {}).flatMap((rows) =>
+      rows.map((row) => row.item),
+    ),
+  ];
+  for (const item of items) {
+    if (
+      (item.quantity !== undefined &&
+        (!nonnegative(item.quantity) || item.quantity < 1)) ||
+      (item.supplyRemaining != null &&
+        ![0, 2, 4, 6, 8, 10, 12].includes(item.supplyRemaining))
+    )
+      throw new Error("Saved portable equipment is invalid.");
+  }
   for (const h of heroes) {
+    validateBuild(h);
     if (
       (h.recipeBook !== undefined &&
         (!Array.isArray(h.recipeBook) ||

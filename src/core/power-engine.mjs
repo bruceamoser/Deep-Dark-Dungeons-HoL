@@ -6,18 +6,32 @@ const alive = (h) =>
   h.survival ? !["dead", "lastWords"].includes(h.survival.status) : h.hp > 0;
 const value = (n, tier) => (Array.isArray(n) ? n[tier] : n);
 export const powerMethods = {
-  powerForceMove(actor, dir, amount) {
+  powerForceMove(actor, dir, amount, source = null) {
     if (!dir.x && !dir.z) return;
     for (let i = 0; i < amount; i++) {
       const next = { x: actor.x + dir.x, z: actor.z + dir.z };
-      if (
+      const wall =
         !this.map.tiles[key(next.x, next.z)] ||
         this.map.obstacles[key(next.x, next.z)] ||
         wallAt(this.map, next.x, next.z) ||
-        this.occupied(actor.id).has(key(next.x, next.z)) ||
-        !lineOfSight(this.map, actor, next)
-      )
+        !lineOfSight(this.map, actor, next);
+      if (wall) {
+        const impact =
+          2 +
+          (amount - i) +
+          (source ? (this.buildStat?.(source, "impact") ?? 0) : 0);
+        const dealt = this.powerDamage(actor, impact, "physical", source);
+        this.emit("feedback", {
+          id: actor.id,
+          kind: "damage",
+          text: `WALL SLAM · ${dealt}`,
+        });
+        this.note(
+          `${actor.name} slams into a wall (${impact} physical impact before resistance).`,
+        );
         break;
+      }
+      if (this.occupied(actor.id).has(key(next.x, next.z))) break;
       if (
         dir.x &&
         dir.z &&
@@ -54,6 +68,9 @@ export const powerMethods = {
         (this.mode !== "combat" || e.expiresTurn >= (h.powerTurn ?? 0)),
     );
     return (
+      (["attack", "defense", "movement", "dr", "reduction"].includes(name)
+        ? (this.buildStat?.(h, name) ?? 0)
+        : 0) +
       Math.max(0, ...xs.map((e) => Number(e.stats[name]) || 0)) +
       Math.min(0, ...xs.map((e) => Number(e.stats[name]) || 0))
     );
@@ -109,6 +126,17 @@ export const powerMethods = {
       return;
     target.conditions ??= [];
     const id = `power-condition-${source}-${condition}`;
+    const previous = target.conditions.find((c) => c.id === id);
+    const severity = [
+      "burning",
+      "freezing",
+      "bleeding",
+      "poisoned",
+      "frightened",
+      "slowed",
+      "dazed",
+    ].includes(condition);
+    if (severity) rating += previous?.rating ?? 0;
     target.conditions = target.conditions.filter((c) => c.id !== id);
     target.conditions.push({
       id,
@@ -143,6 +171,7 @@ export const powerMethods = {
     ];
   },
   absorbPowerDamage(target, amount, type) {
+    if (amount <= 0) return 0;
     let result = Math.max(0, amount - this.powerStat(target, "reduction"));
     const shield = (target.powerEffects ?? [])
       .filter(
@@ -226,7 +255,7 @@ export const powerMethods = {
     });
   },
   powerPlan(id, target, actor = this.active) {
-    const spec = POWERS[id];
+    const spec = this.powerSpec(id, actor);
     if (!spec) throw new Error("Unknown game power.");
     const point =
       spec.target === "self"
@@ -325,10 +354,10 @@ export const powerMethods = {
       const budget = this.budgets?.[point.id];
       if (
         !this.canAct(point) ||
-        point.powerResourceUsed?.includes(effect.resource)
+        (effect.resource === "maneuver" && point.powerPendingManeuver)
       )
         throw new Error(
-          "Choose a capable companion who has not received this resource this encounter.",
+          "Choose a capable companion without a queued bonus Maneuver.",
         );
       if (
         effect.resource !== "maneuver" &&
@@ -361,7 +390,7 @@ export const powerMethods = {
     return { spec, point, cells, recipients, route };
   },
   powerReason(id, h = this.active) {
-    const p = POWERS[id];
+    const p = this.powerSpec(id, h);
     if (!p.universal && !this.powerIds(h).includes(id)) return "Not learned.";
     if (p.supply && !this.supplyItem(h, p.supply))
       return (
@@ -369,6 +398,12 @@ export const powerMethods = {
         p.supply.replace("item-", "").replaceAll("-", " ") +
         "."
       );
+    if (
+      this.mode !== "combat" &&
+      p.fieldSupply &&
+      !this.supplyItem(h, p.fieldSupply)
+    )
+      return "Outside combat, carry a usable field dressing for this power.";
     if (p.category === "passive")
       return "Automatic benefit. Open the recipe book for crafting.";
     if (
@@ -450,6 +485,7 @@ export const powerMethods = {
     if (spec.restLimit) h.restPowerUses[id] = (h.restPowerUses[id] ?? 0) + 1;
     const damaging = spec.effects.some((e) => e.kind === "damage");
     const extra = damaging ? this.consumeDamageBonus(h) : 0;
+    const hidden = !!this.powerStat(h, "hidden");
     if (damaging) this.breakConcealment(h);
     for (const effect of spec.effects) {
       if (effect.kind === "zone") {
@@ -495,19 +531,46 @@ export const powerMethods = {
             const tier = ["weak", "standard", "strong"].indexOf(roll.tier);
             const damage = this.powerDamage(
               recipient,
-              value(effect.amount, tier) + extra,
+              Math.max(
+                0,
+                value(effect.amount, tier) +
+                  extra +
+                  this.buildDamage(
+                    h,
+                    recipient,
+                    spec,
+                    effect.type,
+                    tier,
+                    hidden,
+                  ),
+              ),
               effect.type,
               h,
             );
             const weapon =
               spec.weapon &&
               this.held(h, `item-ordinary-${spec.weapon}-weapon`);
-            for (const enchant of weapon
+            const enchantments = weapon
               ? activeItemEffects(h, weapon).filter(
                   (e) => e.effect === "damage",
                 )
-              : [])
-              this.powerDamage(recipient, enchant.value, enchant.type, h);
+              : [];
+            for (const enchant of enchantments) {
+              this.powerDamage(
+                recipient,
+                this.enchantmentDamage(h, enchant, effect.type),
+                enchant.type,
+                h,
+              );
+              if (tier === 2 && enchant.condition)
+                this.powerCondition(
+                  recipient,
+                  enchant.condition,
+                  1 + this.buildStat(h, enchant.condition),
+                  h.id,
+                );
+            }
+            this.buildAfterHit(h, recipient, spec, effect.type, enchantments);
             this.emit("attack", {
               attacker: h.id,
               target: recipient.id,
@@ -525,11 +588,38 @@ export const powerMethods = {
                   this.heroRoll(h, spec.attribute).tier,
                 )
               : 1;
-            this.powerHeal(recipient, value(effect.amount, tier));
+            this.powerHeal(
+              recipient,
+              Math.max(
+                0,
+                value(effect.amount, tier) + this.buildStat(h, "heal"),
+              ),
+            );
+            if (this.buildStat(h, "healingWard") > 0)
+              this.powerBuff(
+                h,
+                recipient,
+                { absorb: this.buildStat(h, "healingWard") },
+                2,
+                "build-healing-ward",
+              );
+            if (this.buildStat(h, "rallyMove") > 0)
+              this.powerBuff(
+                h,
+                recipient,
+                { movement: this.buildStat(h, "rallyMove") },
+                1,
+                "build-rallying-care",
+              );
             break;
           }
           case "condition":
-            this.powerCondition(recipient, effect.key, effect.rating, h.id);
+            this.powerCondition(
+              recipient,
+              effect.key,
+              effect.rating + this.buildStat(h, effect.key),
+              h.id,
+            );
             break;
           case "cleanse":
             for (const k of effect.keys)
@@ -553,6 +643,7 @@ export const powerMethods = {
               {
                 absorb:
                   effect.amount +
+                  this.buildStat(h, "barrier") +
                   (spec.supply && this.traits(h).some((t) => t.device) ? 2 : 0),
               },
               effect.turns,
@@ -575,6 +666,7 @@ export const powerMethods = {
                 z: Math.sign(recipient.z - h.z) * sign,
               },
               effect.amount,
+              h,
             );
             break;
           }
@@ -643,6 +735,12 @@ export const powerMethods = {
         this.supplyNotice(h, item, `${item.definition.name} was used.`);
       } else this.checkSupply(h, item, "supply after use");
     }
+    if (this.mode !== "combat" && spec.fieldSupply)
+      this.checkSupply(
+        h,
+        this.supplyItem(h, spec.fieldSupply),
+        "field care after use",
+      );
     this.note(
       `${h.name} · ${spec.name}${recipients.length ? `: ${recipients.map((p) => p.name).join(", ")}` : ""}.`,
     );

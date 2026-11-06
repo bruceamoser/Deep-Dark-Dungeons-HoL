@@ -830,7 +830,7 @@ function corridorFixture() {
     Array.from({ length: 14 }, (_, x) => [key(x, 0), { x, z: 0 }]),
   );
   g.map.obstacles = {};
-  g.map.lights = [{x:6,z:0,radius:9}];
+  g.map.lights = [{ x: 6, z: 0, radius: 9 }];
   g.map.chests = [];
   g.map.start = { x: 0, z: 0 };
   g.map.exit = { x: 13, z: 0 };
@@ -1153,27 +1153,29 @@ test("legacy saves migrate earned milestone levels without erasing heroes or inv
   }
   g.load(deserialize(serialize(saved)));
   assert.equal(g.livingRoster().length, 4);
-  assert.ok(g.party.every((h) => h.xp === 1000 && h.earnedLevel === 2));
+  assert.ok(
+    g.party.every((h) => h.xp === xpForLevel(2) && h.earnedLevel === 2),
+  );
   assert.equal(g.campaign.fallenHeroes.length, 0);
   assert.equal(g.campaign.memorial.length, 1);
 });
 
 test("XP thresholds unlock multiple levels but do not spend training points or heal", () => {
-  assert.deepEqual([1, 2, 3, 4].map(xpForLevel), [0, 1000, 2250, 3750]);
-  assert.equal(levelForXP(999), 1);
-  assert.equal(levelForXP(1000), 2);
+  assert.deepEqual([1, 2, 3, 4].map(xpForLevel), [0, 400, 975, 1725]);
+  assert.equal(levelForXP(399), 1);
+  assert.equal(levelForXP(400), 2);
   const g = fresh(),
     h = g.party[0],
     level = h.preview.state.level;
   h.survival.hp = 3;
   h.survival.gritAvailable = 0;
-  g.awardXP("test-journey", 3750, "A long expedition");
+  g.awardXP("test-journey", 1725, "A long expedition");
   assert.equal(h.earnedLevel, 4);
   assert.equal(h.preview.state.level, level);
   assert.equal(h.survival.hp, 3);
   assert.equal(h.survival.gritAvailable, 0);
-  g.awardXP("test-journey", 3750, "Duplicate event");
-  assert.equal(h.xp, 3750);
+  g.awardXP("test-journey", 1725, "Duplicate event");
+  assert.equal(h.xp, 1725);
 });
 
 test("discovery XP is shared by survivors, excludes reserves and persists its once-only claim", () => {
