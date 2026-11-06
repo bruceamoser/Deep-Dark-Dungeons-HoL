@@ -190,6 +190,15 @@
   color: #8fa299;
   margin-left: 7px;
 }
+.forge-canvas::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 115px;
+  background: linear-gradient(transparent, #102126 40%, #102126);
+  pointer-events: none;
+  z-index: 1;
+}
 .forge-map-caption {
   position: absolute;
   bottom: 50px;
@@ -200,6 +209,7 @@
   color: #637e79;
   font-size: 9px;
   letter-spacing: 1.2px;
+  z-index: 2;
 }
 .forge-map-caption strong {
   display: block;
@@ -222,6 +232,7 @@
   font-size: 9px;
   color: #6e8583;
   pointer-events: none;
+  z-index: 2;
 }
 .forge-legend .learned {
   color: #edca74;
@@ -336,6 +347,9 @@
 .detail .forge-node:hover .forge-node-label,
 .detail .forge-node.intersection .forge-node-label {
   opacity: 1;
+}
+.forge-node.origin .forge-node-label {
+  display: none;
 }
 .forge-node.intersection .node-body {
   fill: #3b3540;
