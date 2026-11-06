@@ -150,3 +150,30 @@ Crafting supports six usable recipe outputs. Each attempt requires the learned p
 Legacy retired purchases can be replaced in Greyhaven at the same original DP cost and stage, subject to full source validation. Existing acquired possessions are retained with their actual supply states. Source acquisition options that need new manual choices are not offered by the quick retraining selector. The original purchase remains intact until an explicit valid replacement is committed; there is no silent XP/DP loss.
 
 When a movement step passes through yielding companions, the existing atomic passage policy keeps saved endpoints unoccupied. Opportunities are evaluated over that step's intermediate route before committing its destination; a disabling hit cancels that entire pending step. This is an explicit compromise for atomic party passage, rather than saving a hero stacked on a companion mid-strike.
+
+
+## v0.5.1 — full town respec
+
+Bruce requested a button to restart character development from the beginning.
+Free respec in Greyhaven is a computer-game adaptation, not a source-book rule.
+It replaces attributes, ancestry/traits, origins, class, disciplines, signatures
+and all DP purchases through the current trained level. The complete creation
+and advancement validators still apply, including the level-0 discipline lock,
+creation DP expiration and signature tiers. Only the current playable catalog
+can be committed. Earned but untrained levels remain available for later training.
+
+The same hero keeps identity, name/appearance unless edited, XP/history, learned
+recipe book/materials, owned equipment, current supplies, wounds/conditions and
+expedition needs. Mastery and specializations reset to unspent points. Current HP
+never rises from respec; maximum HP retains existing wound-related reductions.
+A saved spent-Grit count prevents switching through a lower-Grit build from
+restoring spent Grit. Rebuild does not reset time, fatigue, hunger or thirst.
+Temporary positive build effects/prepared tactics are cleared; penalties remain.
+
+All currently owned creation possessions become portable inventory receipts.
+Old receipts and replacement grants are suppressed; there is no new creation
+purse, shopping, duplicated grant equipment or replenished supplies. Armor is
+unequipped if its proficiency is absent. This keeps the current loadout while
+allowing purchases and later advancement to use the new build. Unfinished drafts
+are local, separate from recruitment and tied to hero identity. The campaign
+changes only after a valid final confirmation; the old build remains otherwise.

@@ -1,10 +1,12 @@
-# Implementation status — v0.5.0
+# Implementation status — v0.5.1
 
 Playable desktop dungeon RPG with game-owned powers over HoL's base mechanics.
 The production presentation target remains; the current modular art and balance
 are a playable iteration rather than final production assets.
 
 ## Playable
+
+- Free town **Respec from beginning** rebuilds all mechanical choices through the current trained level. Keeps hero identity, XP/untrained levels, appearance, possessions, supply states, injuries and history; refunds mastery/specializations. A separate resumable draft commits only after complete validation. No duplicate starting goods, healing or Grit refill.
 
 - Six mastery branches, 30 talents, exclusive capstones and three effect-based specializations per learned active power. Two points at level 1 plus two per trained level; free town refunds. All powers are at will with action/supply costs. Shatter, wet lightning chains, impact damage, concealment ambushes and accumulating severity conditions support combinations.
 - Prominent town training and sheet Level up controls; first advancement at 400 XP. Known disciplines/ranks visible on the sheet. Starting equipment can be transferred or dropped into recoverable ground caches, preserving quantities and remaining supplies.
@@ -30,7 +32,9 @@ abilities map to the new designs by class/tier or discipline/rank, with explicit
 general-ability mappings. Duplicate mappings share one power; new
 training cannot charge DP for a power already supplied by legacy training. Source
 stat benefits and past purchases are preserved. This is compatibility mapping,
-not a refund or rewrite of the character's historical build.
+not a refund or rewrite of the character's historical build. The optional full
+respec replaces that history of mechanical choices only when the player confirms
+a complete current build; existing heroes are never reset automatically.
 
 Signatures share some discipline effect templates. Autonomous summons, vertical
 traversal, full social simulation, elaborate fluid physics, broader recipes,

@@ -17,6 +17,7 @@ export function characterSheet({
   attempt,
   activate,
   train,
+  respec,
 }) {
   let tab = "equipment",
     filter = "all",
@@ -81,7 +82,7 @@ export function characterSheet({
      )
      .join(
        "",
-     )}</div>${game.powerStat(h, "hidden") ? '<div class="concealment-badge">◈ CONCEALED · Your next attack reveals you</div>' : ""}<button id="sheet-training" class="primary">${h.earnedLevel > p.state.level ? `Level up → ${h.earnedLevel}` : "Develop character"}</button><div class="dossier-footer"></div></aside>
+     )}</div>${game.powerStat(h, "hidden") ? '<div class="concealment-badge">◈ CONCEALED · Your next attack reveals you</div>' : ""}<button id="sheet-training" class="primary">${h.earnedLevel > p.state.level ? `Level up → ${h.earnedLevel}` : "Develop character"}</button><button id="sheet-respec" class="respec-button" ${game.respecReason(index) ? "disabled" : ""} title="${esc(game.respecReason(index) || "Rebuild from the first step; keep this hero’s XP and possessions")}">Respec from beginning</button><div class="dossier-footer"></div></aside>
    <main class="character-details"><nav class="sheet-tabs" aria-label="Character sections">${[
      ["equipment", "pack", "Equipment"],
      ["abilities", "bolt", "Abilities"],
@@ -94,6 +95,7 @@ export function characterSheet({
        "",
      )}</nav><div class="sheet-content"></div></main></div><footer class="character-footer"><span><kbd>Esc</kbd> Close <i>·</i> Changes are saved automatically</span><span class="sheet-timing"></span></footer></section></div>`;
     root.querySelector(".close").onclick = close;
+    root.querySelector("#sheet-respec").onclick = () => respec(index);
     root.querySelector("#sheet-training").onclick = () => {
       if (game.mode !== "town")
         return game.notify(

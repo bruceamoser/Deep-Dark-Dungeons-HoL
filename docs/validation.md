@@ -200,3 +200,25 @@ layers, multiple runs/deletion, mid-combat restore and native-close disk persist
 Original source hashes remain unchanged. Windows execution and installer/update
 verification are provided by the release candidate checks before publication;
 this local run does not establish Windows behavior or campaign-length balance.
+
+## v0.5.1 — full character respec
+
+Author self-review and **151 automated tests** cover blank/side-effect-free
+rebuild previews, legacy choice removal, invalid or stale-slot rejection, full
+level-seven signatures, untrained level preservation and subsequent development,
+identity/XP/history/injuries/recipes/equipped magic, exhausted food and water,
+d20 supplies, two-handed grips, repeated-respec item/currency conservation and
+spent-Grit accounting through low/high builds, save/reload and later advancement.
+Vendored source rules are unchanged.
+
+The native Linux regression exercises the exact launcher under
+`aa-exec -p unconfined` with isolated saves, seccomp and sandboxing enabled.
+The new scenario cancels the confirmation, starts with blank attributes, closes
+without changing the hero, resumes a separate draft, restarts it, purchases early
+training and level-two abilities, replaces level-one/three/seven signatures,
+inspects retained exhausted supplies, confirms and verifies refunded mastery,
+then saves/reloads the same level-seven identity, XP, inventory and spent HP/Grit.
+`test-results/respec-review.png` and `respec-advancement.png` were visually reviewed.
+The complete existing desktop regression also passes. Installer and update
+checks are recorded in the release PR before merge; native Linux remains the
+full interactive test surface, with Windows installer smoke verification in CI.

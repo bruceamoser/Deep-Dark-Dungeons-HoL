@@ -463,6 +463,11 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       throw new Error("Invalid saved treasure identity.");
     return {
       ...item,
+      hands:
+        saved.kind === "ordinary" &&
+        item.definition.handChoices?.includes(saved.hands)
+          ? saved.hands
+          : item.hands,
       quantity: saved.quantity ?? item.quantity,
       bulk: item.definition.bulk * (saved.quantity ?? item.quantity),
       materialType: saved.materialType,
@@ -645,8 +650,8 @@ export const treasureMethods = {
       throw new Error("That companion already owns this item.");
     this.removePortableItem(h, id);
     (target.treasure ??= []).push(item);
-    if (item.inventoryDie)
-      target.supplies[item.instanceId] = h.supplies[id] ?? item.inventoryDie;
+    if (item.supplyRemaining != null)
+      target.supplies[item.instanceId] = item.supplyRemaining;
     delete h.supplies[id];
     this.refreshHero(h);
     this.refreshHero(target);
@@ -670,7 +675,8 @@ export const treasureMethods = {
         };
     Object.assign(item, { held: false, worn: false, carried: true });
     delete item.equippedSlot;
-    item.supplyRemaining = h.supplies[id] ?? owned.inventoryDie;
+    const supply = this.supplyValue(h, owned);
+    if (supply || Object.hasOwn(h.supplies, id)) item.supplyRemaining = supply;
     return item;
   },
   removePortableItem(h, id) {
@@ -728,7 +734,7 @@ export const treasureMethods = {
     )
       throw new Error("This item already belongs to the company.");
     (h.treasure ??= []).push(structuredClone(item));
-    if (item.inventoryDie)
+    if (item.supplyRemaining != null || item.inventoryDie)
       h.supplies[item.instanceId] = item.supplyRemaining ?? item.inventoryDie;
     world.source.items = world.source.items.filter((i) => i !== item);
     this.refreshHero(h);

@@ -26,16 +26,21 @@ export function creationScreen({
   examples,
   slot,
   development,
+  respec = false,
+  onRespecced,
   close,
   attempt,
   toast,
   onCreated,
 }) {
   const original = game.party[slot],
-    key = `ddd.recruit.${slot}`;
-  let draft = development
-      ? structuredClone(original.draft)
-      : R.newCreationDraft(),
+    key = respec ? `ddd.respec.${original.heroId}` : `ddd.recruit.${slot}`;
+  let trainingLevel = 1;
+  let draft = respec
+      ? game.newRespecDraft(slot)
+      : development
+        ? structuredClone(original.draft)
+        : R.newCreationDraft(),
     resumeDraft = null,
     purchaseKind = null,
     disciplineFilter = "all",
@@ -53,7 +58,7 @@ export function creationScreen({
     try {
       resumeDraft = JSON.parse(localStorage.getItem(key));
     } catch {}
-    delete draft.progression;
+    if (!respec) delete draft.progression;
   }
   const steps = [
     "Identity",
@@ -120,12 +125,14 @@ export function creationScreen({
       .forEach((e) => e.addEventListener(event, () => attempt(() => fn(e))));
   function draw() {
     view?.dispose();
+    if (respec) game.prepareRespecChoices(slot, draft);
     const p = R.workshopCharacter(draft, C),
-      level = draft.progression?.level ?? 1,
+      level = respec ? trainingLevel : (draft.progression?.level ?? 1),
       cls = record(draft.classId),
       ancestry = record(draft.ancestryId);
+    const advancing = development || (respec && step === 5 && level > 1);
     const visibleSteps = development ? [5, 7] : [0, 1, 8, 2, 3, 4, 5, 6, 7];
-    root.innerHTML = `<div class="veil"><section class="creator-window character-window" role="dialog" aria-modal="true" aria-label="${development ? "Character development" : "Create character"}"><header class="character-header"><div><span class="eyebrow">${development ? "GROW INTO YOUR LEGEND" : "A NAME WORTH REMEMBERING"}</span><h2>${development ? "Train in Greyhaven" : "A new companion"}</h2></div><span class="creator-slot">${development ? `COMPANY SLOT 0${slot + 1}` : "CHARACTER REPOSITORY"}</span><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="creator-body"><nav class="creation-steps">${visibleSteps.map((i, n) => `<button data-step="${i}" class="${step === i ? "chosen" : ""}"><span>0${n + 1}</span>${development && i === 5 ? "Development" : steps[i]}</button>`).join("")}<div class="creation-note">${development ? "Your injuries and spent resources stay with you." : "HoL attributes, disciplines and development. Powers are designed for this dungeon. Unused creation DP expires between stages."}</div>${!development ? '<button id="blank-hero" class="subtle-button">Start a blank hero</button>' : ""}</nav><main class="creation-content"><div class="section-heading"><div><span class="eyebrow">${development ? "EARNED LEVEL " + original.earnedLevel : "CHAPTER " + (visibleSteps.indexOf(step) + 1) + " OF 9"}</span><h3>${development && step === 5 ? "Develop your hero" : steps[step]}</h3></div><span class="creator-step-mark">${icon(step === 6 ? "pack" : step === 5 || step === 3 ? "bolt" : "book")}</span></div><div id="creation-fields"></div></main><aside class="creation-summary"><div class="creation-preview"><canvas id="recruit-preview"></canvas></div><h3>${esc(draft.name || "Unnamed adventurer")}</h3><p>${esc(name(draft.ancestryId))}<br>${esc(name(draft.classId))}</p><div class="creation-totals"><span>Health<b>${p.summary?.maximumHp ?? "—"}</b></span><span>Grit<b>${p.summary?.gritGranted ?? "—"}</b></span><span>Speed<b>${p.summary?.speed ?? "—"}</b></span><span>Coins<b>${p.inventory.remainingCoins}</b></span></div><div class="creation-validation">${p.valid ? '<span class="ready-seal">◆ Ready for the company</span>' : `<span>${p.errors.length} choices need attention</span><small>Review lists every remaining requirement.</small>`}</div></aside></div><footer class="character-footer creator-footer"><button id="creator-back" ${visibleSteps.indexOf(step) === 0 ? "disabled" : ""}>Back</button><span>${development ? "Training commits only earned, supported choices." : "Draft saved locally as you make choices."}</span>${step === 7 ? `<button id="recruit" class="primary" ${!p.valid ? "disabled" : ""}>${development ? "Commit training" : "Save hero to repository"}</button>` : '<button id="creator-next" class="primary">Continue →</button>'}</footer></section></div>`;
+    root.innerHTML = `<div class="veil"><section class="creator-window character-window" role="dialog" aria-modal="true" aria-label="${respec ? "Respec character" : development ? "Character development" : "Create character"}"><header class="character-header"><div><span class="eyebrow">${respec ? "A NEW PATH · THE SAME HERO" : development ? "GROW INTO YOUR LEGEND" : "A NAME WORTH REMEMBERING"}</span><h2>${respec ? "Rebuild from the beginning" : development ? "Train in Greyhaven" : "A new companion"}</h2></div><span class="creator-slot">${respec ? `LEVEL ${original.preview.state.level} · ${original.xp.toLocaleString()} XP RETAINED` : development ? `COMPANY SLOT 0${slot + 1}` : "CHARACTER REPOSITORY"}</span><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="creator-body"><nav class="creation-steps">${visibleSteps.map((i, n) => `<button data-step="${i}" class="${step === i ? "chosen" : ""}"><span>0${n + 1}</span>${development && i === 5 ? "Development" : steps[i]}</button>`).join("")}<div class="creation-note">${respec ? "Your current hero stays intact until Confirm respec. Rebuild every trained level; equipment, XP and injuries stay with you." : development ? "Your injuries and spent resources stay with you." : "HoL attributes, disciplines and development. Powers are designed for this dungeon. Unused creation DP expires between stages."}</div>${!development ? `<button id="blank-hero" class="subtle-button">${respec ? "Restart rebuild" : "Start a blank hero"}</button>` : ""}</nav><main class="creation-content"><div class="section-heading"><div><span class="eyebrow">${development ? "EARNED LEVEL " + original.earnedLevel : "CHAPTER " + (visibleSteps.indexOf(step) + 1) + " OF 9"}</span><h3>${development && step === 5 ? "Develop your hero" : steps[step]}</h3></div><span class="creator-step-mark">${icon(step === 6 ? "pack" : step === 5 || step === 3 ? "bolt" : "book")}</span></div><div id="creation-fields"></div></main><aside class="creation-summary"><div class="creation-preview"><canvas id="recruit-preview"></canvas></div><h3>${esc(draft.name || "Unnamed adventurer")}</h3><p>${esc(name(draft.ancestryId))}<br>${esc(name(draft.classId))}</p><div class="creation-totals"><span>${respec ? "Maximum HP" : "Health"}<b>${p.summary?.maximumHp ?? "—"}</b></span><span>${respec ? "Grit granted" : "Grit"}<b>${p.summary?.gritGranted ?? "—"}</b></span><span>Speed<b>${p.summary?.speed ?? "—"}</b></span><span>${respec ? "Kept items" : "Coins"}<b>${respec ? original.preview.inventory.items.length : p.inventory.remainingCoins}</b></span></div><div class="creation-validation">${p.valid ? '<span class="ready-seal">◆ Ready for the company</span>' : `<span>${p.errors.length} choices need attention</span><small>Review lists every remaining requirement.</small>`}</div></aside></div><footer class="character-footer creator-footer"><button id="creator-back" ${visibleSteps.indexOf(step) === 0 ? "disabled" : ""}>Back</button><span>${respec ? "Nothing changes until you confirm. Closing keeps your current hero." : development ? "Training commits only earned, supported choices." : "Draft saved locally as you make choices."}</span>${step === 7 ? `<button id="recruit" class="primary" ${!p.valid ? "disabled" : ""}>${respec ? "Confirm respec" : development ? "Commit training" : "Save hero to repository"}</button>` : '<button id="creator-next" class="primary">Continue →</button>'}</footer></section></div>`;
     const host = root.querySelector("#creation-fields");
     const model = [
       "class-arcanist",
@@ -164,12 +171,23 @@ export function creationScreen({
       draw();
     });
     root.querySelector("#blank-hero")?.addEventListener("click", () => {
-      draft = R.newCreationDraft();
+      draft = respec ? game.newRespecDraft(slot) : R.newCreationDraft();
+      trainingLevel = 1;
       step = 0;
       changed({ preserveScroll: false });
     });
     root.querySelector("#recruit")?.addEventListener("click", () =>
       attempt(async () => {
+        if (respec) {
+          game.respec(slot, draft, original.heroId);
+          localStorage.removeItem(key);
+          close();
+          await onRespecced?.(slot);
+          toast(
+            `${game.party[slot].name}: rebuild complete. Mastery points are ready in Build forge.`,
+          );
+          return;
+        }
         if (development) game.develop(slot, draft);
         else {
           const hero = game.createRecruit(draft);
@@ -212,10 +230,14 @@ export function creationScreen({
           R.DEFAULT_LANGUAGES.filter((l) => l.ordinary && l.id !== "common"),
           draft.languages.home,
         )}</select>`,
-      )}<h3 class="subheading">Or begin with a complete adventurer</h3><div class="preset-grid">${examples.map((e) => `<button data-preset="${e.id}">${esc(e.draft.name)}<small>${esc(name(e.draft.classId))}</small></button>`).join("")}</div>`;
+      )} ${respec ? "" : `<h3 class="subheading">Or begin with a complete adventurer</h3><div class="preset-grid">${examples.map((e) => `<button data-preset="${e.id}">${esc(e.draft.name)}<small>${esc(name(e.draft.classId))}</small></button>`).join("")}</div>`}`;
       root.querySelector("#resume-recruit")?.addEventListener("click", () => {
         draft = structuredClone(resumeDraft);
-        delete draft.progression;
+        if (!respec) delete draft.progression;
+        else if (draft.progression?.level !== original.preview.state.level) {
+          draft = game.newRespecDraft(slot);
+          toast("Your trained level changed. Starting a fresh rebuild.");
+        }
         changed();
       });
       root.querySelector("#hero-name").onchange = (e) => {
@@ -389,11 +411,11 @@ export function creationScreen({
     } else if (step === 3 || step === 5) {
       const stage = step === 3 ? 0 : 1;
       let purchases, acquisitions, state;
-      if (development) {
+      if (advancing) {
         draft.progression.levels[level] ??= R.emptyLevelDraft();
         purchases = draft.progression.levels[level].purchases;
         acquisitions = draft.progression.levels[level].acquisitions;
-        state = p.state;
+        state = respec ? p.levels[level].state : p.state;
       } else {
         purchases = draft.purchases[stage];
         acquisitions = draft.acquisitions;
@@ -403,25 +425,38 @@ export function creationScreen({
       const locked = development
         ? (original.draft.progression?.levels?.[level]?.purchases.length ?? 0)
         : 0;
-      host.innerHTML = `<div class="training-banner"><div><b>${state.dp}</b><span>DP AVAILABLE</span></div><p>${development ? "Advancement DP carries forward. Attributes do not increase automatically." : stage === 0 ? "Level 0 · Ability purchases only. Your first pool is 10 + Knowledge + Reason + Guile. Discipline purchases begin at level 1; unused points expire before your calling." : "A separate pool of 10 + Knowledge + Reason + Guile. Unused points expire when creation ends."}</p></div>${
-        development
+      host.innerHTML = `<div class="training-banner"><div><b>${state.dp}</b><span>DP AVAILABLE</span></div><p>${advancing ? "Advancement DP carries forward. Attributes do not increase automatically." : stage === 0 ? "Level 0 · Ability purchases only. Your first pool is 10 + Knowledge + Reason + Guile. Discipline purchases begin at level 1; unused points expire before your calling." : "A separate pool of 10 + Knowledge + Reason + Guile. Unused points expire when creation ends."}</p></div>${
+        respec && step === 5
           ? field(
-              "Training level",
-              `<select id="training-level">${Array.from(
-                {
-                  length:
-                    original.earnedLevel - original.preview.state.level + 1,
-                },
-                (_, i) => original.preview.state.level + i,
+              "Rebuild training level",
+              `<select id="respec-level">${Array.from(
+                { length: original.preview.state.level },
+                (_, i) => i + 1,
               )
-                .filter((n) => n >= 2)
                 .map(
                   (n) =>
-                    `<option ${n === level ? "selected" : ""}>${n}</option>`,
+                    `<option value="${n}" ${n === level ? "selected" : ""}>${n === 1 ? "1 · Hero training" : `Level ${n} · Advancement`}</option>`,
                 )
                 .join("")}</select>`,
             )
-          : ""
+          : development
+            ? field(
+                "Training level",
+                `<select id="training-level">${Array.from(
+                  {
+                    length:
+                      original.earnedLevel - original.preview.state.level + 1,
+                  },
+                  (_, i) => original.preview.state.level + i,
+                )
+                  .filter((n) => n >= 2)
+                  .map(
+                    (n) =>
+                      `<option ${n === level ? "selected" : ""}>${n}</option>`,
+                  )
+                  .join("")}</select>`,
+              )
+            : ""
       }<div class="purchase-receipts">${purchases.map((x, i) => `<span>${esc(name(x.id))}${x.rank ? " " + x.rank : ""}${i >= locked ? `<button data-remove-purchase="${i}" aria-label="Remove ${esc(name(x.id))}">×</button>` : ""}</span>`).join("") || "<span>No DP spent in this stage.</span>"}</div>${disciplineStrip(state, C.choices)}<div class="purchase-gateways"><button data-purchase-kind="discipline" ${disciplinesLocked ? 'disabled aria-describedby="discipline-level-lock"' : ""}>${disciplineIcon("discipline-arms")}<span>Purchase disciplines<small id="discipline-level-lock">${disciplinesLocked ? "Unlocks at level 1 · Granted by origins at level 0" : "Learn a discipline or raise a rank"}</small></span>${icon("arrow")}</button><button data-purchase-kind="ability">${icon("book")}<span>Purchase abilities<small>Browse by discipline and action type</small></span>${icon("arrow")}</button></div><div id="acquisition-choices"></div>`;
       bind("[data-purchase-kind]", "click", (e) => {
         if (e.dataset.purchaseKind === "discipline" && disciplinesLocked)
@@ -442,7 +477,7 @@ export function creationScreen({
         const isAbility = purchaseKind === "ability";
         const overlay = document.createElement("div");
         overlay.className = "purchase-overlay";
-        overlay.innerHTML = `<section class="purchase-window" role="dialog" aria-modal="true" aria-label="Purchase ${isAbility ? "abilities" : "disciplines"}"><header><div><span class="eyebrow">${esc(draft.name || "YOUR NEXT LEGEND")} · ${development ? "ADVANCEMENT" : stage === 0 ? "EARLY TRAINING" : "HERO TRAINING"}</span><h2>Purchase ${isAbility ? "abilities" : "disciplines"}</h2></div><div class="purchase-dp"><b>${state.dp}</b> DP available</div><button data-close-picker class="icon-button" aria-label="Close purchases">${icon("close")}</button></header>${disciplineStrip(state, C.choices, isAbility, disciplineFilter)}<div class="purchase-tools"><input id="training-search" type="search" placeholder="Search ${isAbility ? "abilities" : "disciplines"}…" aria-label="Search training" value="${esc(search)}">${isAbility ? `<label>Discipline<select id="discipline-filter">${options([{ id: "all", name: "All disciplines" }, { id: "owned", name: "My disciplines" }, { id: "general", name: "General abilities" }, ...C.choices.filter((c) => c.kind === "discipline")], disciplineFilter).replace('<option value="">Choose…</option>', "")}</select></label>` : ""}<label class="show-all"><input id="training-all" type="checkbox" ${showAll ? "checked" : ""}> Show unavailable</label></div><div class="purchase-scroll"><div id="training-choices" class="purchase-cards"></div></div><footer><span>A · Action &nbsp; M · Maneuver &nbsp; R · Reaction &nbsp; P · Passive</span><button data-close-picker class="primary">Done</button></footer></section>`;
+        overlay.innerHTML = `<section class="purchase-window" role="dialog" aria-modal="true" aria-label="Purchase ${isAbility ? "abilities" : "disciplines"}"><header><div><span class="eyebrow">${esc(draft.name || "YOUR NEXT LEGEND")} · ${advancing ? "ADVANCEMENT" : stage === 0 ? "EARLY TRAINING" : "HERO TRAINING"}</span><h2>Purchase ${isAbility ? "abilities" : "disciplines"}</h2></div><div class="purchase-dp"><b>${state.dp}</b> DP available</div><button data-close-picker class="icon-button" aria-label="Close purchases">${icon("close")}</button></header>${disciplineStrip(state, C.choices, isAbility, disciplineFilter)}<div class="purchase-tools"><input id="training-search" type="search" placeholder="Search ${isAbility ? "abilities" : "disciplines"}…" aria-label="Search training" value="${esc(search)}">${isAbility ? `<label>Discipline<select id="discipline-filter">${options([{ id: "all", name: "All disciplines" }, { id: "owned", name: "My disciplines" }, { id: "general", name: "General abilities" }, ...C.choices.filter((c) => c.kind === "discipline")], disciplineFilter).replace('<option value="">Choose…</option>', "")}</select></label>` : ""}<label class="show-all"><input id="training-all" type="checkbox" ${showAll ? "checked" : ""}> Show unavailable</label></div><div class="purchase-scroll"><div id="training-choices" class="purchase-cards"></div></div><footer><span>A · Action &nbsp; M · Maneuver &nbsp; R · Reaction &nbsp; P · Passive</span><button data-close-picker class="primary">Done</button></footer></section>`;
         root.querySelector(".veil").append(overlay);
         const closePicker = () => {
           purchaseKind = null;
@@ -584,6 +619,11 @@ export function creationScreen({
         overlay.querySelector("[data-close-picker]").focus();
       }
       if (purchaseKind) drawPicker();
+      root.querySelector("#respec-level")?.addEventListener("change", (e) => {
+        trainingLevel = +e.target.value;
+        purchaseKind = null;
+        changed({ preserveScroll: false });
+      });
       root.querySelector("#training-level")?.addEventListener("change", (e) => {
         draft.progression.level = +e.target.value;
         changed();
@@ -596,9 +636,17 @@ export function creationScreen({
         (id) => !development || !original.preview.state.abilities.includes(id),
       );
       root.querySelector("#acquisition-choices").innerHTML = `${
-        development
+        advancing
           ? [3, 7]
-              .filter((t) => t <= level && t > original.preview.state.level)
+              .filter(
+                (t) =>
+                  t <= level &&
+                  (respec
+                    ? !Object.entries(draft.progression.levels).some(
+                        ([n, l]) => +n < level && l.signatures?.[t],
+                      )
+                    : t > original.preview.state.level),
+              )
               .map(
                 (t) =>
                   `<h3 class="subheading">Level ${t} signature</h3>${field(
@@ -618,14 +666,15 @@ export function creationScreen({
               )
               .join("")
           : ""
-      }<h3 class="subheading">Granted equipment & choices</h3>${acquired
+      }<h3 class="subheading">${respec ? "Training choices" : "Granted equipment & choices"}</h3>${respec ? '<p class="cost-note">Your existing equipment is retained; respec does not grant replacement weapons or supplies.</p>' : ""}${acquired
         .map((id) => {
           const a = C.inventory.acquisitions.find((a) => a.id === id);
           if (!a) return "";
           const selected = acquisitions[id] ?? {};
           const needsHands =
-            a.items.includes("item-ordinary-melee-weapon") ||
-            (a.weaponChoice && selected.weapon === "melee");
+            !respec &&
+            (a.items.includes("item-ordinary-melee-weapon") ||
+              (a.weaponChoice && selected.weapon === "melee"));
           return a.weaponChoice ||
             needsHands ||
             a.recipeChoices ||
@@ -687,6 +736,8 @@ export function creationScreen({
           e.value;
         changed();
       });
+    } else if (step === 6 && respec) {
+      host.innerHTML = `<p class="section-intro">Everything you already own stays with this hero. Respec grants no new purse or equipment and never refills supplies. Armor you can no longer use moves into your backpack.</p><div class="creation-pack">${original.preview.inventory.items.map((i) => `<article data-retained-item="${i.instanceId}">${icon(itemIcon(i))}<div><strong>${i.quantity} × ${esc(i.definition.name)}</strong><small>${i.inventoryDie || game.supplyValue(original, i) || Object.hasOwn(original.supplies, i.instanceId) ? `Remaining supply: ${game.supplyValue(original, i) ? `d${game.supplyValue(original, i)}` : "exhausted"}` : `${i.bulk} bulk`}</small></div><span>KEPT</span></article>`).join("")}</div>`;
     } else if (step === 6) {
       const goods = C.inventory.equipment.filter(
         (i) => !i.specialOrder && !i.grantOnly && Number.isFinite(i.price),
@@ -733,10 +784,12 @@ export function creationScreen({
       const unsupported = p.state.abilities.filter(
         (id) => coverage(id).status !== "included",
       );
-      host.innerHTML = `<div class="review-heading">${icon(p.valid ? "shield" : "book")}<h3>${p.valid ? "Ready to write a new chapter" : "A few choices remain"}</h3></div>${p.errors.length ? `<div class="creation-errors">${p.errors.map((e) => `<p>${esc(e.text ?? e.code)}</p>`).join("")}</div>` : '<p class="section-intro">This character passes the complete HoL creation and advancement validators.</p>'}<div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(draft.culture?.id))}</h3><p>${esc(name(draft.background?.id))}</p><p>${esc((p.summary?.languages ?? []).map((l) => l.name).join(", "))}</p></div><div><span class="eyebrow">RESOURCES</span><h3>${p.summary?.maximumHp ?? "—"} HP · ${p.summary?.gritGranted ?? "—"} Grit</h3><p>${p.development.spent} DP spent · ${p.development.expired} creation DP expired</p><p>${p.inventory.remainingCoins} coins · ${p.inventory.bulk} bulk</p></div></div><h3 class="subheading">Dungeon ability coverage</h3><p class="section-intro">${p.state.abilities.length - unsupported.length} learned cards currently supported. These source choices are retired from dungeon training; existing purchases can be retrained in town:</p><div class="coverage-tags">${unsupported.map((id) => `<span>${esc(name(id))} <small>${esc(coverage(id).status)}</small></span>`).join("") || "<span>All learned cards supported.</span>"}</div>`;
+      host.innerHTML = `${respec ? `<div class="respec-review"><span class="eyebrow">CONFIRM A NEW BUILD · KEEP YOUR JOURNEY</span><p><b>${esc(original.name)}</b> remains level ${original.preview.state.level} with ${original.xp.toLocaleString()} XP. All ${original.preview.inventory.items.length} inventory stacks, recipes learned outside your build, wounds and expedition history are retained. Mastery and specializations reset to unspent points. Your old abilities and signatures are replaced.</p><p>Current HP and spent Grit carry over, limited by the new build’s maximums. No currency or supplies are granted.</p></div>` : ""}<div class="review-heading">${icon(p.valid ? "shield" : "book")}<h3>${p.valid ? "Ready to write a new chapter" : "A few choices remain"}</h3></div>${p.errors.length ? `<div class="creation-errors">${p.errors.map((e) => `<p>${esc(e.text ?? e.code)}</p>`).join("")}</div>` : '<p class="section-intro">This character passes the complete HoL creation and advancement validators.</p>'}<div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(draft.culture?.id))}</h3><p>${esc(name(draft.background?.id))}</p><p>${esc((p.summary?.languages ?? []).map((l) => l.name).join(", "))}</p></div><div><span class="eyebrow">RESOURCES</span><h3>${p.summary?.maximumHp ?? "—"} ${respec ? "maximum HP" : "HP"} · ${p.summary?.gritGranted ?? "—"} ${respec ? "Grit granted" : "Grit"}</h3><p>${p.development.spent} DP spent · ${p.development.expired} creation DP expired</p><p>${respec ? "Existing possessions retained" : `${p.inventory.remainingCoins} coins · ${p.inventory.bulk} bulk`}</p></div></div><h3 class="subheading">Dungeon ability coverage</h3><p class="section-intro">${p.state.abilities.length - unsupported.length} learned cards currently supported. These source choices are retired from dungeon training; existing purchases can be retrained in town:</p><div class="coverage-tags">${unsupported.map((id) => `<span>${esc(name(id))} <small>${esc(coverage(id).status)}</small></span>`).join("") || "<span>All learned cards supported.</span>"}</div>`;
     }
     if (step !== 7) {
-      const errors = development ? p.errors : R.creationStepErrors(p, step);
+      const errors = advancing
+        ? p.errors.filter((e) => !respec || e.level === level)
+        : R.creationStepErrors(p, step);
       if (errors.length)
         host.insertAdjacentHTML(
           "beforeend",
