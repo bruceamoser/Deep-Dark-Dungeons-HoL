@@ -502,7 +502,7 @@ export function creationScreen({
                 const requirements = (c.requirements ?? []).filter(
                   (r) => r.kind === "discipline",
                 );
-                return `<article class="purchase-card ${!e.eligible || unsupported ? "unavailable" : ""}" data-choice="${c.id}"><div class="purchase-card-heading">${isAbility ? abilityType(c) : disciplineIcon(c.id)}<div><h3>${esc(c.name)}</h3><small>${isAbility ? requirements.map((r) => `${esc(name(r.id))} ${r.rank}`).join(" · ") || "General ability" : `Rank ${state.ranks[c.id] ?? 0} → ${e.rank ?? "—"}`}</small></div></div><p class="purchase-description">${esc((isAbility ? coverage(c.id).reason : c.reference?.flavor?.[0]) ?? (isAbility ? "Read the full card below." : "Develop your training in " + c.name + "."))}</p>${isAbility ? `<div class="purchase-card-meta">${requirements.map((r) => `<span>${disciplineIcon(r.id)}${esc(name(r.id))} ${r.rank}</span>`).join("")}<span>Level ${c.minimumLevel}</span><span>${esc(coverage(c.id).status)}</span></div>${info(c)}` : ""}${
+                return `<article class="purchase-card ${!e.eligible || unsupported ? "unavailable" : ""}" data-choice="${c.id}"><div class="purchase-card-heading">${isAbility ? abilityType(c) : disciplineIcon(c.id)}<div><h3>${esc(c.name)}</h3><small>${isAbility ? requirements.map((r) => `${esc(name(r.id))} ${r.rank}`).join(" · ") || "General ability" : `Rank ${state.ranks[c.id] ?? 0} → ${e.rank ?? "—"}`}</small></div></div><p class="purchase-description">${esc((isAbility ? coverage(c.id).reason : c.reference?.flavor?.[0]) ?? (isAbility ? "Read the full card below." : "Develop your training in " + c.name + "."))}</p>${isAbility ? `<div class="purchase-card-meta">${requirements.map((r) => `<span>${disciplineIcon(r.id)}${esc(name(r.id))} ${r.rank}</span>`).join("")}<span>${state.level === 0 && c.minimumLevel === 1 && !c.classId ? "Early training" : `Level ${c.minimumLevel}`}</span><span>${esc(coverage(c.id).status)}</span></div>${c.gamePower ? "" : info(c)}` : ""}${
                   c.purchasePolicy === "new-recipe"
                     ? `<div class="recipe-study">${[0, 1]
                         .map(
@@ -523,7 +523,11 @@ export function creationScreen({
                 }<div class="purchase-card-bottom"><small>${unsupported ? esc(coverage(c.id).reason) : esc(e.reasons.map((r) => r.text).join(" "))}</small><button data-buy="${c.id}" ${unsupported || (!e.eligible && c.purchasePolicy !== "new-recipe") ? "disabled" : ""}>${e.cost ?? "—"} DP · ${isAbility ? "Learn" : "Purchase rank"}</button></div></article>`;
               })
               .join("") ||
-            '<p class="empty-state">No matching purchases. Change the discipline filter or show unavailable choices.</p>';
+            `<p class="empty-state">${
+              state.dp === 0 && !showAll
+                ? "All DP spent in this stage. Close this window to undo a purchase and change your training."
+                : "No matching purchases at this budget. Try All disciplines for general training, clear your search, or show unavailable choices to see their requirements."
+            }</p>`;
           overlay.querySelectorAll("[data-buy]").forEach(
             (b) =>
               (b.onclick = () =>

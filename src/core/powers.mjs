@@ -1,4 +1,5 @@
 import { RECIPE_ITEMS } from "./recipes.mjs";
+import { addStarterPowers } from "./starter-powers.mjs";
 // Game-owned powers. These are designs for this dungeon, not transcriptions of cards.
 const strike = (attribute, type = "physical", extra = {}) => ({
   category: "main",
@@ -38,7 +39,7 @@ function power(discipline, rank, slug, name, description, spec) {
     id: `power-${slug}`,
     name,
     description,
-    discipline: `discipline-${discipline}`,
+    discipline: discipline ? `discipline-${discipline}` : null,
     rank,
     minimumLevel: [1, 3, 7][rank - 1],
     cost: [2, 4, 6][rank - 1],
@@ -770,6 +771,8 @@ definitions.push(
     effects: [{ kind: "barrier", amount: 6, turns: 2 }],
   },
 );
+// Append after the original designs so origin grants and legacy mappings stay stable.
+addStarterPowers({ power, strike, aid, buff, zone, move, condition });
 export const POWERS = Object.freeze(
   Object.fromEntries(definitions.map((p) => [p.id, Object.freeze(p)])),
 );
@@ -815,7 +818,8 @@ export function gameCatalog(source) {
       id: p.id,
       source: { path: `game/powers/${p.id}`, sha256: null, revision: 1 },
       items:
-        p.weapon === "melee"
+        p.grants ??
+        (p.weapon === "melee"
           ? ["item-ordinary-melee-weapon"]
           : p.weapon === "ranged"
             ? ["item-ordinary-ranged-weapon", "item-ammunition-bundle"]
@@ -823,7 +827,7 @@ export function gameCatalog(source) {
               ? ["item-craft-tools"]
               : p.id === "power-field-care"
                 ? ["item-field-dressing"]
-                : [],
+                : []),
       recipes: [],
     });
 
@@ -925,5 +929,34 @@ export function gamePurchaseEligibility(record, state, C, R, selection) {
         },
       ],
     };
+  const power = POWERS[record.id];
+  if (C.gamePowers && power?.category === "passive") {
+    const learned = state.abilities
+      .map((id) => POWERS[mappedPower(id, C)])
+      .filter(Boolean);
+    const recipes = new Set([
+      ...(state.recipes ?? []),
+      ...learned.flatMap((p) => p.recipes ?? []),
+    ]);
+    const speed = Math.max(
+      0,
+      ...learned.map((p) => p.passive?.craftSpeed ?? 0),
+    );
+    if (
+      power.recipes?.every((id) => recipes.has(id)) &&
+      (power.passive?.craftSpeed ?? 0) <= speed
+    )
+      return {
+        ...result,
+        eligible: false,
+        reasons: [
+          ...result.reasons,
+          {
+            code: "redundant-training",
+            text: "These recipes and crafting benefits are already learned.",
+          },
+        ],
+      };
+  }
   return result;
 }

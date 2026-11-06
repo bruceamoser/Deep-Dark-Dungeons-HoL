@@ -338,9 +338,23 @@ export const powerMethods = {
       )
         throw new Error("Choose a companion with a spent, retained Reaction.");
     }
+    const canCleanse = spec.effects.some(
+      (effect) =>
+        effect.kind === "cleanse" &&
+        (effect.self ? [actor] : recipients).some((p) =>
+          p.conditions?.some(
+            (c) => c.persistence === "temporary" && effect.keys.includes(c.key),
+          ),
+        ),
+    );
+    if (spec.effects.every((e) => e.kind === "cleanse") && !canCleanse)
+      throw new Error(
+        "Choose a companion with a temporary condition this power can remove.",
+      );
     if (
       spec.effects.some((e) => e.kind === "heal") &&
       !spec.effects.some((e) => ["wound", "stabilize"].includes(e.kind)) &&
+      !canCleanse &&
       recipients.every((p) => p.survival.hp >= this.healingMaximum(p))
     )
       throw new Error("The selected companions are already at full HP.");

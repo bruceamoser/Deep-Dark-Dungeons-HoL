@@ -1,13 +1,18 @@
-# Current adaptations — v0.4.0
+# Current adaptations — v0.4.1
 
 Bruce's November 6 direction supersedes the earlier ability-by-ability automation
 approach: HoL supplies core mechanics, while powers are designed for this game.
 The historical decisions below are retained as an audit trail; current coverage
 is in [implementation status](implementation-status.md).
 
-- New training: three ranked powers per discipline, one signature at each class
-  tier (1/3/7), ordinary basic actions, retained armor/general training, and three
-  consumable actions. Legacy receipts stay immutable and map to current powers.
+- New training: five starter powers plus one rank-2 and one rank-3 power per
+  discipline, one signature at each class tier (1/3/7), six general game powers,
+  ordinary basic actions, retained armor/general training, and three consumable
+  actions. The four additional starter purchases cost 1/2/2/3 DP; these are
+  deliberate game prices. Rank-1 powers remain legal in level-0 early training,
+  but discipline purchases remain locked until level 1. Only original grant
+  powers supply starting weapons; additional techniques do not duplicate gear.
+  Recipe-only purchases cannot charge for already-known recipes/benefits. Legacy receipts stay immutable and map to current powers.
   Multiple source cards mapping to one power do not multiply charges.
 - HP healing does not remove injuries. Normal treatment costs one field dressing
   and 60 minutes, or 15 coins minimum / five times Recovery in town. Exceptional

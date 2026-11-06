@@ -176,6 +176,39 @@ export async function verifyCharacter(page) {
     page.locator('[data-origin-summary="background"]'),
   ).toContainText("Driving Cut");
   await page.screenshot({ path: "test-results/origin-grants-selected.png" });
+  // Regression: Arms + Armor used to leave no training after their origin grants.
+  // Spend down to the reported 3 DP, then exercise real 2-DP and 1-DP purchases.
+  await page.locator('[data-step="3"]').click();
+  await page.locator('[data-purchase-kind="ability"]').click();
+  for (const id of [
+    "power-focused-blow",
+    "power-step-aside",
+    "power-cover-companion",
+  ])
+    await page.locator(`[data-buy="${id}"]`).click();
+  await expect(page.locator(".purchase-dp b")).toHaveText("3");
+  await page.locator("#discipline-filter").selectOption("discipline-arms");
+  await expect(page.locator(".purchase-card")).toHaveCount(4);
+  await expect(page.locator('[data-buy="power-blade-ward"]')).toBeEnabled();
+  await expect(page.locator('[data-buy="power-measured-cut"]')).toContainText(
+    "1 DP",
+  );
+  await expect(page.locator('[data-buy="power-hamstring"]')).toContainText(
+    "2 DP",
+  );
+  await page.screenshot({
+    path: "test-results/early-training-arms-three-dp.png",
+  });
+  await page.locator('[data-buy="power-hamstring"]').click();
+  await expect(page.locator(".purchase-dp b")).toHaveText("1");
+  await page.locator("#discipline-filter").selectOption("discipline-armor");
+  await expect(page.locator('[data-buy="power-plated-advance"]')).toBeEnabled();
+  await page.locator('[data-buy="power-plated-advance"]').click();
+  await expect(page.locator(".purchase-dp b")).toHaveText("0");
+  await expect(page.locator(".purchase-window .empty-state")).toContainText(
+    "All DP spent",
+  );
+  await page.keyboard.press("Escape");
   await page.locator('[data-step="6"]').click();
   await expect(
     page.locator('[data-finish-grant="power-driving-cut"]'),
