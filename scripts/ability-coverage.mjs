@@ -50,7 +50,7 @@ await fs.writeFile(
   new URL("../docs/game-power-coverage.json", import.meta.url),
   JSON.stringify(
     {
-      revision: 1,
+      revision: 2,
       policy:
         "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
       counts: {
@@ -58,6 +58,19 @@ await fs.writeFile(
         disciplinePowers: Object.values(POWERS).filter((p) => p.discipline)
           .length,
         signatures: Object.values(POWERS).filter((p) => p.classId).length,
+        generalPowers: Object.values(POWERS).filter(
+          (p) => !p.discipline && !p.classId && !p.universal,
+        ).length,
+        starterPowersPerDiscipline: Object.fromEntries(
+          input.records
+            .filter((r) => r.kind === "discipline")
+            .map((r) => [
+              r.id,
+              Object.values(POWERS).filter(
+                (p) => p.discipline === r.id && p.rank === 1,
+              ).length,
+            ]),
+        ),
         consumableActions: Object.values(POWERS).filter((p) => p.universal)
           .length,
         recipes: RECIPES.length,

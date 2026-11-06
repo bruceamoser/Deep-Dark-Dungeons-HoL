@@ -89,7 +89,7 @@ function wound(g, h, exceptional = false) {
 
 test("new training uses game designs while originals and legacy heroes remain valid", () => {
   const g = fresh();
-  assert.equal(Object.keys(POWERS).length, 87);
+  assert.equal(Object.keys(POWERS).length, 165);
   assert.equal(
     C.choices.some((c) => c.gamePower),
     false,
@@ -130,6 +130,13 @@ test("every active game power validates a target and executes its declared effec
     grant(g, p.id);
     h.survival.hp -= 10;
     g.party[1].survival.hp -= 10;
+    for (const effect of p.effects.filter((e) => e.kind === "cleanse"))
+      for (const target of [
+        p.target === "self" || p.effects.some((e) => e.kind === "move")
+          ? h
+          : g.party[1],
+      ])
+        for (const key of effect.keys) g.powerCondition(target, key, 2, e.id);
     if (p.effects.some((e) => e.kind === "wound")) wound(g, g.party[1]);
     if (p.effects.some((e) => e.kind === "resource")) {
       g.budgets[g.party[1].id] = R.startTurn({ turnId: "ally", speed: 5 });
@@ -148,6 +155,7 @@ test("every active game power validates a target and executes its declared effec
     if (p.effects.some((e) => e.kind === "damage") && p.target === "ground")
       target = { x: e.x, z: e.z };
     if (p.shape === "wall") target = { x: 8, z: 5 };
+    if (p.effects.some((e) => e.kind === "move")) target = { x: 5, z: 4 };
     const reason = g.actionReason(p.id);
     assert.equal(reason, "", `${p.id}: ${reason}`);
     assert.doesNotThrow(() => g.useAbility(p.id, target), p.id);
@@ -171,6 +179,49 @@ test("invalid targeting never spends actions, charges or ammunition", () => {
   grant(g, "power-vault");
   assert.throws(() => g.useAbility("power-vault", g.party[1]));
   assert.deepEqual(g.budget, before);
+});
+test("starter techniques apply actual movement, conditions, damage reduction and limited use", () => {
+  const g = arena(),
+    h = g.active,
+    e = g.enemies[0];
+  const weapon = item(g, "item-ordinary-melee-weapon");
+  weapon.held = true;
+  weapon.hands = 1;
+  g.refreshHero(h);
+  grant(g, "power-hamstring");
+  grant(g, "power-plated-advance");
+  g.beginHero();
+  const movement = g.movementLeft();
+  g.useAbility("power-plated-advance", h.id);
+  assert.equal(g.movementLeft(), movement + 2);
+  const hp = h.survival.hp;
+  g.suffer(h, 3, "fire");
+  assert.equal(h.survival.hp, hp - 2);
+  g.useAbility("power-hamstring", e.id);
+  assert.ok(e.hp < 100);
+  assert.equal(R.conditionSummary(e.conditions).slowed.rating, 1);
+  assert.match(g.actionReason("power-plated-advance"), /No uses/);
+});
+test("condition care rejects useless targets but works on full-HP poisoned companions", () => {
+  const g = arena(),
+    h = g.active,
+    ally = g.party[1];
+  grant(g, "power-cool-blood");
+  grant(g, "power-field-antidote");
+  g.beginHero();
+  const before = structuredClone(g.budget);
+  assert.throws(
+    () => g.useAbility("power-cool-blood", ally.id),
+    /temporary condition/,
+  );
+  assert.deepEqual(g.budget, before);
+  assert.equal(h.powerUses?.["power-cool-blood"], undefined);
+  g.powerCondition(ally, "poisoned", 2, "venom");
+  const hp = ally.survival.hp;
+  g.useAbility("power-field-antidote", ally.id);
+  assert.equal(ally.survival.hp, hp);
+  assert.equal(R.conditionSummary(ally.conditions).poisoned.rating, 0);
+  assert.equal(h.restPowerUses["power-field-antidote"], 1);
 });
 test("damage bonus, DR, reduction and absorption have bounded nonstacking effects", () => {
   const g = arena(),

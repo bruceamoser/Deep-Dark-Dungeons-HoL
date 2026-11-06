@@ -146,3 +146,25 @@ production exposes no feed override. The test now hooks the explicit
 AppImageUpdater instance used since v0.3.1 rather than the unused default updater.
 All ten ancestry variants were additionally rendered through the creator and
 inspected together in `test-results/ancestry-identity-gallery.png`.
+
+## v0.4.1 — Early-training purchase depth
+
+`npm test`: **129 passed**. New coverage checks every one of the 2,304
+culture/background game-grant pairings, all remaining balances through the
+19-DP maximum, same-discipline refunds, the level-0 discipline lock, actual
+creation receipts and save/load, recipe benefits and redundant purchases.
+Every active power in the 165-entry catalog executes against a valid target;
+focused checks verify the new movement, damage, condition and limited-use effects.
+Condition-only care rejects unaffected targets without spending; mixed care can
+cleanse a full-HP ally. Existing power definitions and all historical mappings
+were compared with v0.4.0 and remain unchanged.
+
+The rebuilt local desktop passed `TMPDIR=/home/bmoser/.cache/ddd-tests npm run
+test:native` through the exact launcher and `aa-exec -p unconfined`, with sandboxing
+and renderer seccomp enabled and isolated saves. The UI test creates Arms/Armor
+origins, spends down to 3 DP, verifies four Arms choices, buys Hamstring for 2 DP
+and Plated Advance for the final 1 DP, then completes recruitment. The rendered
+purchase screenshot was inspected after removing duplicated power descriptions.
+The full native regression also passed equipment, appearances, combat controls,
+crafting, saves, reactions and shutdown persistence. Review was author self-review;
+this does not establish long-term balance or final production art quality.

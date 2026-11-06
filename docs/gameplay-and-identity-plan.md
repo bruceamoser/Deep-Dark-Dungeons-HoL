@@ -80,3 +80,15 @@ rigs. Bonus Maneuvers are queued for an ally's next eligible turn, avoiding an
 unusable off-turn grant. Current design data and legacy mappings live in
 `game-power-coverage.json`. See `implementation-status.md` for production-art
 and simulation limits, and `validation.md` for executed checks.
+
+## Starter training correction — v0.4.1
+
+The initial one-power-per-rank catalog left origin disciplines with no further
+starter purchases. Each of the 18 disciplines now has four additional rank-1
+choices at 1/2/2/3 DP, plus six general choices for any character. Existing
+origin grants and legacy mappings retain their IDs. Five rank-1 choices per
+discipline provide offensive, defensive, movement, support or crafting options
+using actual engine effects; rank and level gates remain intact. This brings the
+catalog to 165 powers. New techniques do not each grant another starter weapon.
+All 2,304 game origin pairings are checked for complete early-pool spending,
+including duplicate grants and the 19-DP maximum; odd balances have options.

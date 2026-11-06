@@ -1,4 +1,4 @@
-# Implementation status — v0.4.0
+# Implementation status — v0.4.1
 
 Playable desktop dungeon RPG with game-owned powers over HoL's base mechanics.
 The production presentation target remains; the current modular art and balance
@@ -8,7 +8,7 @@ are a playable iteration rather than final production assets.
 
 - Four equipped, animated heroes; isometric camera; real-time exploration and alternating HoL turns; formations and individual combat movement. Right-drag grabs the ground. Actual tactical squares and a weighted movement overlay distinguish legal destinations, ally passage and the last movement point.
 - 58 book creatures; party/depth encounter budgets; bosses every fifth floor; procedural slotted magic gear with discipline requirements; six merchants and two-way recall scrolls.
-- Full staged HoL character validation and DP progression in a nine-chapter game creator. Visible origin grants, book discipline icons, A/M/R/P badges, separate purchase dialogs and scroll retention. New training uses 54 discipline powers, 30 class signatures and five retained general/armor training choices. Three consumable actions round out the 87 game designs. Basic actions remain available.
+- Full staged HoL character validation and DP progression in a nine-chapter game creator. Visible origin grants, book discipline icons, A/M/R/P badges, separate purchase dialogs and scroll retention. New training uses 126 discipline powers (five rank-1 choices per discipline), 30 class signatures, six game-designed general powers and five retained general/armor training choices. Three consumable actions round out the 165 game designs. Origins grant one starter power; the remaining four cost 1, 2, 2 and 3 DP. Level 0 still cannot buy disciplines. Redundant recipe training is blocked. Basic actions remain available.
 - A common effect engine for damage/healing, areas, physical DR, reduction, absorption, Boons/Banes, conditions, movement, push/pull, swaps, teleportation, protection, counters, concealment, light and limited action resources. Bonus Maneuvers queue for the recipient's next eligible turn, so they can actually be used in alternating combat.
 - Persistent fire, water, smoke, difficult ground, magical light/darkness, barriers, healing circles and one-use traps. Ground previews precede spending; cancellation is free. Surfaces affect both sides; instant area strikes spare allies.
 - All 50 ancestry traits retain explicit game behavior. Crafting and treatment traits now benefit the new recipe/care systems. Class signatures establish tactical roles rather than expose the old tabletop card roster.

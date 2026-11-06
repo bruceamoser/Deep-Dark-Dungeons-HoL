@@ -1,10 +1,31 @@
 {
-  "revision": 1,
+  "revision": 2,
   "policy": "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
   "counts": {
-    "powers": 87,
-    "disciplinePowers": 54,
+    "powers": 165,
+    "disciplinePowers": 126,
     "signatures": 30,
+    "generalPowers": 6,
+    "starterPowersPerDiscipline": {
+      "discipline-armor": 5,
+      "discipline-arms": 5,
+      "discipline-athletics": 5,
+      "discipline-calling": 5,
+      "discipline-craft": 5,
+      "discipline-flame": 5,
+      "discipline-frost": 5,
+      "discipline-guard": 5,
+      "discipline-influence": 5,
+      "discipline-life": 5,
+      "discipline-marksmanship": 5,
+      "discipline-medicine": 5,
+      "discipline-mind": 5,
+      "discipline-radiance": 5,
+      "discipline-scholarship": 5,
+      "discipline-storm": 5,
+      "discipline-subterfuge": 5,
+      "discipline-wilderness": 5
+    },
     "consumableActions": 3,
     "recipes": 11
   },
@@ -2227,6 +2248,2058 @@
           "turns": 2
         }
       ]
+    },
+    {
+      "id": "power-measured-cut",
+      "name": "Measured Cut",
+      "description": "A readied melee weapon deals 2/3/4 physical damage. Gain 1 defense Boon for this turn. Once per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1,
+          "self": true
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-hamstring",
+      "name": "Hamstring",
+      "description": "A readied melee weapon deals 1/2/3 physical damage and applies Slowed 1. Twice per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-pommel-rattle",
+      "name": "Pommel Rattle",
+      "description": "A readied melee weapon deals 1/2/3 physical damage and applies Dazed 1. Twice per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "dazed",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-blade-ward",
+      "name": "Blade Ward",
+      "description": "Gain 1 defense Boon for two turns and prepare a counter against the next adjacent attacker. Countering spends your Reaction and requires a readied melee weapon. Twice per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 2
+        },
+        {
+          "kind": "counter"
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-plated-advance",
+      "name": "Plated Advance",
+      "description": "Gain 2 movement and reduce incoming damage by 1 for this turn. Once per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 2,
+            "reduction": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-clear-visor",
+      "name": "Clear Visor",
+      "description": "Reduce temporary Blinded by 2 and absorb the next 2 damage for two turns. Twice per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "blinded"
+          ],
+          "amount": 2
+        },
+        {
+          "kind": "barrier",
+          "amount": 2,
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-reinforced-guard",
+      "name": "Reinforced Guard",
+      "description": "Spend your Action to absorb the next 5 damage for two turns. Twice per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 5,
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-deflecting-stance",
+      "name": "Deflecting Stance",
+      "description": "Gain 1 defense Boon and reduce incoming damage by 1 for two turns. Twice per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1,
+            "reduction": 1
+          },
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-quick-roll",
+      "name": "Quick Roll",
+      "description": "Reposition along a clear walking route of 1 square without provoking movement attacks. Reduce temporary Slowed by 1. Once per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        },
+        {
+          "kind": "cleanse",
+          "keys": [
+            "slowed"
+          ],
+          "amount": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-shoulder-check",
+      "name": "Shoulder Check",
+      "description": "Push an adjacent enemy 2 squares straight away from you. Obstacles and occupied squares stop the push. Twice per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-bounding-step",
+      "name": "Bounding Step",
+      "description": "Leap up to 2 squares to empty visible ground, crossing creatures and ground hazards but never walls. Gain 1 defense Boon for this turn. Twice per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "leap"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-drag-to-safety",
+      "name": "Drag to Safety",
+      "description": "Pull an ally within 3 squares up to 2 squares toward you without provoking. They absorb the next 2 damage for two turns. Once per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 3,
+      "effects": [
+        {
+          "kind": "pull",
+          "amount": 2
+        },
+        {
+          "kind": "barrier",
+          "amount": 2,
+          "turns": 2
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-wisp-lantern",
+      "name": "Wisp Lantern",
+      "description": "Illuminate one visible square within 4 squares for three rounds. Magical light counters darkness. Once per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 4,
+      "radius": 0,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "light",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-spectral-hand",
+      "name": "Spectral Hand",
+      "description": "Pull an enemy within 4 squares 1 square toward you. Obstacles and occupied squares stop the pull. Twice per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "pull",
+          "amount": 1
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-spirit-needle",
+      "name": "Spirit Needle",
+      "description": "Deal 2/3/4 mental damage to an enemy within 4 squares. Twice per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-ancestral-guidance",
+      "name": "Ancestral Guidance",
+      "description": "Grant an ally 1 attack Boon and 1 defense Boon for two turns. Once per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1,
+            "defense": 1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-edge-honing",
+      "name": "Edge Honing",
+      "description": "Your next attack within two turns deals +1 damage. Does not stack with stronger damage bonuses. Once per encounter.",
+      "discipline": "discipline-craft",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 1
+          },
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-apothecary-apprentice",
+      "name": "Apothecary Apprentice",
+      "description": "Learn healing potion and field dressing recipes. Craft or replenish them from the recipe book; ingredients, tools and location requirements still apply.",
+      "discipline": "discipline-craft",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-lesser-healing-bottle",
+        "recipe-field-dressing"
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-makeshift-screen",
+      "name": "Makeshift Screen",
+      "description": "Raise smoke in a radius of 1 within 4 squares for three rounds. Blocks sight and ranged targeting for both sides; adjacent targeting remains possible. Once per encounter.",
+      "discipline": "discipline-craft",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 4,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "smoke",
+          "rounds": 3
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-repair-ward",
+      "name": "Repair Ward",
+      "description": "Spend your Action to let an adjacent ally absorb the next 5 damage for two turns. Once per encounter.",
+      "discipline": "discipline-craft",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "main",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 5,
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-cinderlight",
+      "name": "Cinderlight",
+      "description": "Illuminate a radius of 1 within 3 squares for three rounds. Magical light counters darkness. Once per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "light",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-searing-mark",
+      "name": "Searing Mark",
+      "description": "Reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero. Twice per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-flame-fan",
+      "name": "Flame Fan",
+      "description": "Deal 1/2/3 fire damage to enemies in a cone up to 3 squares. Allies are spared. Once per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-ash-veil",
+      "name": "Ash Veil",
+      "description": "Fill a radius of 1 within 4 squares with smoke for three rounds, obscuring both sides. Disengage for this turn; casting itself can provoke. Once per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "smoke",
+          "rounds": 3
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "disengage": true
+          },
+          "turns": 1,
+          "self": true
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-cool-blood",
+      "name": "Cool Blood",
+      "description": "Reduce an ally’s temporary Burning by 2. Requires a target that is Burning. Once per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "burning"
+          ],
+          "amount": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-rime-shell",
+      "name": "Rime Shell",
+      "description": "Absorb the next 3 damage you receive for two turns. Twice per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 3,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-frost-patch",
+      "name": "Frost Patch",
+      "description": "Create difficult ground in a radius of 1 within 4 squares for three rounds. Each square costs 2 movement for both sides. Twice per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 4,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "difficult",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-brittle-armor",
+      "name": "Brittle Armor",
+      "description": "Apply Slowed 1 and reduce an enemy’s physical DR by 1 for two turns, to a minimum of zero. Twice per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-warning-call",
+      "name": "Warning Call",
+      "description": "Grant an ally within 3 squares 1 defense Boon through the end of their next turn. Once per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 3,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-shielding-step",
+      "name": "Shielding Step",
+      "description": "Swap places with an adjacent ally without provoking movement attacks. You absorb the next 2 damage for two turns. Twice per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "swap"
+        },
+        {
+          "kind": "barrier",
+          "amount": 2,
+          "turns": 2,
+          "self": true
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-stand-firm",
+      "name": "Stand Firm",
+      "description": "Gain 1 physical DR for this turn. DR cannot exceed 3. Once per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-guarded-retreat",
+      "name": "Guarded Retreat",
+      "description": "Grant an ally 2 movement and disengagement through the end of their next turn. Twice per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 2,
+            "disengage": true
+          },
+          "turns": 1
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-rouse",
+      "name": "Rouse",
+      "description": "Reduce an ally’s temporary Dazed by 1. Requires a target that is Dazed. Once per encounter.",
+      "discipline": "discipline-influence",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "dazed"
+          ],
+          "amount": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-reassuring-word",
+      "name": "Reassuring Word",
+      "description": "Restore 2/3/4 HP to an ally within 3 squares. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "discipline": "discipline-influence",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 3,
+      "effects": [
+        {
+          "kind": "heal",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "attribute": "guile",
+      "restLimit": 2,
+      "field": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-demoralize",
+      "name": "Demoralize",
+      "description": "Apply 1 attack Bane to an enemy for two turns. Twice per encounter.",
+      "discipline": "discipline-influence",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": -1
+          },
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-press-advantage",
+      "name": "Press the Advantage",
+      "description": "Grant an ally 1 movement for two turns. Their next attack within that time deals +2 damage. Once per encounter.",
+      "discipline": "discipline-influence",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 1,
+            "damage": 2
+          },
+          "turns": 2
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-vital-spark",
+      "name": "Vital Spark",
+      "description": "Restore 2 HP to an ally within 2 squares. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "discipline": "discipline-life",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 0,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "heal",
+          "amount": 2
+        }
+      ],
+      "spell": true,
+      "restLimit": 2,
+      "field": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-cleanse-blood",
+      "name": "Cleanse Blood",
+      "description": "Reduce an ally’s temporary Poisoned and Bleeding by 2 each. Requires one of those conditions. Usable in the field. 3 uses per completed 8-hour sleep.",
+      "discipline": "discipline-life",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "poisoned",
+            "bleeding"
+          ],
+          "amount": 2
+        }
+      ],
+      "spell": true,
+      "restLimit": 3,
+      "field": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-living-ward",
+      "name": "Living Ward",
+      "description": "Spend your Action to let an ally within 3 squares absorb the next 4 damage for two turns. Twice per encounter.",
+      "discipline": "discipline-life",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "ally",
+      "range": 3,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 4,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-life-spring",
+      "name": "Life Spring",
+      "description": "Create a healing spring on one square for two rounds. An ally starting a turn there regains 2 HP. Does not heal wounds or restore Grit. 1 uses per completed 8-hour sleep.",
+      "discipline": "discipline-life",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 0,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 0,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "healing",
+          "rounds": 2
+        }
+      ],
+      "spell": true,
+      "restLimit": 1,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-aiming-breath",
+      "name": "Aiming Breath",
+      "description": "Gain 1 attack Boon for this turn. Prepare before shooting; this Maneuver does not expend ammunition. Once per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-leg-shot",
+      "name": "Leg Shot",
+      "description": "A readied bow deals 1/2/3 physical damage and applies Slowed 1 within 6 squares. Uses ammunition. Twice per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 6,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "weapon": "ranged",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-covering-shot",
+      "name": "Covering Shot",
+      "description": "A readied bow deals 2/3/4 physical damage and applies 1 attack Bane for two turns within 6 squares. Uses ammunition. Twice per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 6,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": -1
+          },
+          "turns": 2
+        }
+      ],
+      "weapon": "ranged",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-point-blank-shot",
+      "name": "Point-Blank Shot",
+      "description": "A readied bow deals 2/4/6 physical damage to an enemy within 2 squares and pushes it 1 square away. Uses ammunition. Twice per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 2,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "push",
+          "amount": 1
+        }
+      ],
+      "weapon": "ranged",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-clear-head",
+      "name": "Clear Head",
+      "description": "Reduce an adjacent ally’s temporary Dazed and Blinded by 1 each. Requires one of those conditions. Once per encounter.",
+      "discipline": "discipline-medicine",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "dazed",
+            "blinded"
+          ],
+          "amount": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-field-antidote",
+      "name": "Field Antidote",
+      "description": "Reduce an adjacent ally’s temporary Poisoned by 2 and restore 2 HP. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "discipline": "discipline-medicine",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "poisoned"
+          ],
+          "amount": 2
+        },
+        {
+          "kind": "heal",
+          "amount": 2
+        }
+      ],
+      "restLimit": 2,
+      "field": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-dressing-maker",
+      "name": "Dressing Maker",
+      "description": "Learn the field dressing recipe. All crafting takes 25% less time; this does not stack with other crafting speed bonuses. Ingredients and other recipe requirements still apply.",
+      "discipline": "discipline-medicine",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-field-dressing"
+      ],
+      "passive": {
+        "craftSpeed": 0.25
+      },
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-emergency-care",
+      "name": "Emergency Care",
+      "description": "Stabilize an adjacent ally and restore 2/3/4 HP. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "discipline": "discipline-medicine",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "stabilize"
+        },
+        {
+          "kind": "heal",
+          "amount": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "attribute": "knowledge",
+      "restLimit": 2,
+      "field": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-distract",
+      "name": "Distract",
+      "description": "Apply 1 attack Bane to an enemy through the end of its next turn. Once per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": -1
+          },
+          "turns": 1
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-mind-needle",
+      "name": "Mind Needle",
+      "description": "Deal 2/4/6 mental damage to an enemy within 4 squares. Twice per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-shared-focus",
+      "name": "Shared Focus",
+      "description": "Grant an ally 1 attack Boon for two turns. Twice per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-telekinetic-shove",
+      "name": "Telekinetic Shove",
+      "description": "Push an enemy within 4 squares 2 squares straight away from you and apply Slowed 1. Twice per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 2
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-kindle-courage",
+      "name": "Kindle Courage",
+      "description": "Reduce an ally’s temporary Frightened by 1 and grant 1 defense Boon through the end of their next turn. Once per encounter.",
+      "discipline": "discipline-radiance",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "frightened"
+          ],
+          "amount": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "otherOnly": true,
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-dawn-ray",
+      "name": "Dawn Ray",
+      "description": "Deal 2/4/6 radiant damage to an enemy within 5 squares. Twice per encounter.",
+      "discipline": "discipline-radiance",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "radiant",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-revealing-brand",
+      "name": "Revealing Brand",
+      "description": "Reveal an enemy within 4 squares and apply Blinded 1. Illuminate its current square for three rounds; the light does not follow it. Twice per encounter.",
+      "discipline": "discipline-radiance",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "reveal"
+        },
+        {
+          "kind": "condition",
+          "key": "blinded",
+          "rating": 1
+        },
+        {
+          "kind": "zone",
+          "surface": "light",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-halo-ward",
+      "name": "Halo Ward",
+      "description": "You and allies within 1 square absorb the next 3 damage each for two turns. Once per encounter.",
+      "discipline": "discipline-radiance",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "main",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 3,
+          "turns": 2
+        }
+      ],
+      "radius": 1,
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-measured-advice",
+      "name": "Measured Advice",
+      "description": "Grant another ally 1 attack Boon through the end of their next turn. Once per encounter.",
+      "discipline": "discipline-scholarship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 1
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-threat-analysis",
+      "name": "Threat Analysis",
+      "description": "Apply 1 attack Bane to an enemy for two turns. Your next attack within two turns deals +1 damage. Twice per encounter.",
+      "discipline": "discipline-scholarship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": -1
+          },
+          "turns": 2
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 1
+          },
+          "turns": 2,
+          "self": true
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-alchemical-primer",
+      "name": "Alchemical Primer",
+      "description": "Learn healing potion and smoke flask recipes. Craft or replenish them from the recipe book; ingredients, tools and location requirements still apply.",
+      "discipline": "discipline-scholarship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-lesser-healing-bottle",
+        "recipe-smoke-flask"
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-anatomists-strike",
+      "name": "Anatomist’s Strike",
+      "description": "A readied melee weapon deals 1/3/5 physical damage using Guile and applies Bleeding 1. Twice per encounter.",
+      "discipline": "discipline-scholarship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-tailwind",
+      "name": "Tailwind",
+      "description": "Grant another ally 2 movement through the end of their next turn. Once per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 2
+          },
+          "turns": 1
+        }
+      ],
+      "otherOnly": true,
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-static-arc",
+      "name": "Static Arc",
+      "description": "Deal 1/2/3 lightning damage to enemies in a cone up to 3 squares. Allies are spared. Twice per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "lightning",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-gust-screen",
+      "name": "Gust Screen",
+      "description": "Apply 1 attack Bane to an enemy within 5 squares for two turns. Twice per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 5,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": -1
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-storm-hop",
+      "name": "Storm Hop",
+      "description": "Leap up to 3 squares to empty visible ground, crossing creatures and hazards but never walls. Your next attack within two turns deals +2 damage. Casting can provoke. Once per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 3,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "leap"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 2
+          },
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-sidestep",
+      "name": "Sidestep",
+      "description": "Reposition along a clear walking route of 1 square without provoking movement attacks. Gain 1 defense Boon for this turn. Once per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-pocket-sand",
+      "name": "Pocket Sand",
+      "description": "Apply Blinded 1 to an adjacent enemy. Twice per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "condition",
+          "key": "blinded",
+          "rating": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-low-blow",
+      "name": "Low Blow",
+      "description": "A readied melee weapon deals 1/2/3 physical damage using Guile and applies Bleeding 1. Twice per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "guile",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "melee",
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-escape-route",
+      "name": "Escape Route",
+      "description": "Reposition along a clear walking route of up to 3 squares without provoking. Become concealed for this turn; attacking or taking damage breaks concealment. Once per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 3,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-brush-cover",
+      "name": "Brush Cover",
+      "description": "Become concealed and gain 1 defense Boon for this turn. Enemies beyond 1 square cannot target you; attacking or taking damage breaks concealment. Once per encounter.",
+      "discipline": "discipline-wilderness",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true,
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-briar-lash",
+      "name": "Briar Lash",
+      "description": "Deal 1/3/5 physical damage to an enemy within 3 squares and pull it 1 square toward you. Twice per encounter.",
+      "discipline": "discipline-wilderness",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 3,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "kind": "pull",
+          "amount": 1
+        }
+      ],
+      "spell": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-forager-remedies",
+      "name": "Forager Remedies",
+      "description": "Learn field dressing and healing potion recipes. Craft or replenish them from the recipe book; ingredients, tools and location requirements still apply.",
+      "discipline": "discipline-wilderness",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-field-dressing",
+        "recipe-lesser-healing-bottle"
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-hunting-snare",
+      "name": "Hunting Snare",
+      "description": "Place a spectral snare on one square within 3 squares for three rounds. The first creature crossing it suffers 5 mental damage. Can harm either side. Twice per encounter.",
+      "discipline": "discipline-wilderness",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 3,
+      "radius": 0,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "trap",
+          "rounds": 3
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-catch-breath",
+      "name": "Catch Breath",
+      "description": "Restore 2 of your own HP. Usable in the field; does not heal wounds or restore Grit. 2 uses per completed 8-hour sleep.",
+      "discipline": null,
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 0,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "heal",
+          "amount": 2
+        }
+      ],
+      "restLimit": 2,
+      "field": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-watchful-stance",
+      "name": "Watchful Stance",
+      "description": "Gain 1 defense Boon for this turn. Once per encounter.",
+      "discipline": null,
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 1,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 1
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-step-aside",
+      "name": "Step Aside",
+      "description": "Reposition along a clear walking route of up to 2 squares without provoking movement attacks. Once per encounter.",
+      "discipline": null,
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 2,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-focused-blow",
+      "name": "Focused Blow",
+      "description": "Your next attack within two turns deals +2 damage. Does not stack with stronger damage bonuses. Once per encounter.",
+      "discipline": null,
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 2
+          },
+          "turns": 2
+        }
+      ],
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-cover-companion",
+      "name": "Cover a Companion",
+      "description": "An adjacent ally absorbs the next 3 damage for two turns. Twice per encounter.",
+      "discipline": null,
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 3,
+          "turns": 2
+        }
+      ],
+      "otherOnly": true,
+      "grants": [],
+      "gamePower": true
+    },
+    {
+      "id": "power-camp-apothecary",
+      "name": "Camp Apothecary",
+      "description": "Learn field dressing and healing potion recipes. Use the recipe book to craft or replenish them; healing potions require town, a mixing kit and ingredients.",
+      "discipline": null,
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 3,
+      "limit": 0,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-field-dressing",
+        "recipe-lesser-healing-bottle"
+      ],
+      "grants": [],
+      "gamePower": true
     }
   ],
   "legacyMappings": [
