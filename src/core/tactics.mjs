@@ -1,3 +1,4 @@
+import { activeItemEffects } from "./treasure.mjs";
 import { ABILITIES } from "./abilities.mjs";
 import { distance, lineOfSight, key } from "./dungeon.mjs";
 export const tacticMethods = {
@@ -201,6 +202,10 @@ export const tacticMethods = {
         { kind: "bane", amount: d.banes },
       ],
     });
+    const enchantments = activeItemEffects(
+      h,
+      this.held(h, "item-ordinary-melee-weapon"),
+    ).filter((e) => e.effect === "damage");
     let damage = this.R.damageEvent({
       components: [
         {
@@ -219,6 +224,10 @@ export const tacticMethods = {
               ),
           ),
         },
+        ...enchantments.map((e) => ({
+          type: e.type,
+          amount: this.enchantmentDamage(h, e, "physical"),
+        })),
       ],
       resistances: d.resistances,
       weaknesses: this.creatureWeaknesses(e),
@@ -226,7 +235,16 @@ export const tacticMethods = {
     this.breakConcealment(h);
     damage = this.absorbPowerDamage(e, damage, "physical");
     e.hp = Math.max(0, e.hp - damage);
-    this.buildAfterHit(h, e, spec, "physical");
+    this.buildAfterHit(h, e, spec, "physical", enchantments);
+    if (r.tier === "strong")
+      for (const effect of enchantments)
+        if (effect.condition)
+          this.powerCondition(
+            e,
+            effect.condition,
+            1 + this.buildStat(h, effect.condition),
+            h.id,
+          );
     this.creatureAfterHit(e, h, spec, damage);
     this.defeatEnemy(e);
     this.note(`${h.name} ripostes: ${r.tier}, ${damage} physical damage.`);

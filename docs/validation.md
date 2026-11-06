@@ -171,7 +171,7 @@ this does not establish long-term balance or final production art quality.
 
 ## v0.5.0 — build development and dungeon loop
 
-Author self-review completed; **143 automated tests passed**. New cases cover
+Author self-review completed; **144 automated tests passed**. New cases cover
 three signatures per class/tier and valid level-one creation choices, reusable
 at-will powers, same-source condition accumulation, wall impact after resistance,
 mastery budgets/ranks/exclusive capstones/refunds, actual specialized attacks and
@@ -179,7 +179,8 @@ movement, all 639 offered specializations changing playable behavior, Shatter/we
 chains/ambush/support, out-of-combat field dressing costs, portable creation gear
 and saved supply conservation, 100 unique same-seed magic draws, all eight distinct
 boss relics, discipline-gated relic stats, XP migration and real trained levels.
-Repeated same-kind fields cannot multiply ticks, including across save/reload;
+Elemental weapon enchantments apply typed mastery and trigger wet lightning chains
+on basic and learned weapon attacks. Repeated same-kind fields cannot multiply ticks, including across save/reload;
 negative build tradeoffs cannot deal damage through complete immunity.
 
 `npm run package:dir` and the full `test:native` passed on November 6, 2026.

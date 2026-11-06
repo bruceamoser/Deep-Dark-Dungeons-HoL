@@ -550,13 +550,27 @@ export const powerMethods = {
             const weapon =
               spec.weapon &&
               this.held(h, `item-ordinary-${spec.weapon}-weapon`);
-            for (const enchant of weapon
+            const enchantments = weapon
               ? activeItemEffects(h, weapon).filter(
                   (e) => e.effect === "damage",
                 )
-              : [])
-              this.powerDamage(recipient, enchant.value, enchant.type, h);
-            this.buildAfterHit(h, recipient, spec, effect.type);
+              : [];
+            for (const enchant of enchantments) {
+              this.powerDamage(
+                recipient,
+                this.enchantmentDamage(h, enchant, effect.type),
+                enchant.type,
+                h,
+              );
+              if (tier === 2 && enchant.condition)
+                this.powerCondition(
+                  recipient,
+                  enchant.condition,
+                  1 + this.buildStat(h, enchant.condition),
+                  h.id,
+                );
+            }
+            this.buildAfterHit(h, recipient, spec, effect.type, enchantments);
             this.emit("attack", {
               attacker: h.id,
               target: recipient.id,

@@ -523,23 +523,40 @@ export const buildMethods = {
     }
     return n;
   },
-  buildAfterHit(h, target, spec, type) {
+  enchantmentDamage(h, effect, primaryType) {
+    return Math.max(
+      0,
+      effect.value +
+        (effect.type === primaryType ? 0 : this.buildStat(h, effect.type)),
+    );
+  },
+  buildAfterHit(h, target, spec, type, enchantments = []) {
     if (!this.C.gamePowers) return;
     if (target.hp > 0 && spec?.weapon && this.buildStat(h, "venom"))
       this.powerCondition(target, "poisoned", this.buildStat(h, "venom"), h.id);
-    if (target.hp > 0 && type === "cold" && this.buildStat(h, "permafrost"))
-      this.powerCondition(target, "freezing", 1, h.id);
-    if (type === "fire" && this.buildStat(h, "wildfire"))
-      for (const e of this.enemies.filter(
-        (e) => e !== target && e.hp > 0 && distance(e, target) <= 1,
-      ))
-        this.powerCondition(e, "burning", 1, h.id);
-    if (type === "lightning" && surfaceAt(this.map, target, "water")) {
-      this.emit("feedback", { id: target.id, kind: "status", text: "CONDUCT" });
-      for (const e of this.enemies.filter(
-        (e) => e !== target && e.hp > 0 && distance(e, target) <= 2,
-      ))
-        this.powerDamage(e, 2 + this.buildStat(h, "chain"), "lightning", h);
+    for (const element of new Set([type, ...enchantments.map((e) => e.type)])) {
+      if (
+        target.hp > 0 &&
+        element === "cold" &&
+        this.buildStat(h, "permafrost")
+      )
+        this.powerCondition(target, "freezing", 1, h.id);
+      if (element === "fire" && this.buildStat(h, "wildfire"))
+        for (const e of this.enemies.filter(
+          (e) => e !== target && e.hp > 0 && distance(e, target) <= 1,
+        ))
+          this.powerCondition(e, "burning", 1, h.id);
+      if (element === "lightning" && surfaceAt(this.map, target, "water")) {
+        this.emit("feedback", {
+          id: target.id,
+          kind: "status",
+          text: "CONDUCT",
+        });
+        for (const e of this.enemies.filter(
+          (e) => e !== target && e.hp > 0 && distance(e, target) <= 2,
+        ))
+          this.powerDamage(e, 2 + this.buildStat(h, "chain"), "lightning", h);
+      }
     }
     if (target.hp <= 0) {
       if (this.buildStat(h, "killHeal") > 0)

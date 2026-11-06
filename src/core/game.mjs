@@ -772,7 +772,10 @@ export class Game {
                 ),
             ),
           },
-          ...enchantments.map((e) => ({ type: e.type, amount: e.value })),
+          ...enchantments.map((e) => ({
+            type: e.type,
+            amount: this.enchantmentDamage(h, e, spec.type),
+          })),
         ],
         resistances: defense.resistances,
         weaknesses: this.creatureWeaknesses(target),
@@ -783,7 +786,12 @@ export class Game {
       target.conditions ??= [];
       for (const [condition, rating] of [
         ...(spec.conditions?.[tier] ?? []),
-        ...(tier === 2 ? enchantments.map((e) => [e.condition, 1]) : []),
+        ...(tier === 2
+          ? enchantments.map((e) => [
+              e.condition,
+              1 + this.buildStat(h, e.condition),
+            ])
+          : []),
       ].filter(
         ([k]) =>
           !this.creature(target)?.immunities.some((i) => i.toLowerCase() === k),
@@ -830,7 +838,7 @@ export class Game {
         target.companyMark = Math.max(target.companyMark ?? 0, spec.mark);
       if (spec.after) this.addTactic(h, h, spec.after, id);
       this.creatureAfterHit(target, h, spec, damage.total);
-      this.buildAfterHit(h, target, spec, spec.type);
+      this.buildAfterHit(h, target, spec, spec.type, enchantments);
       this.defeatEnemy(target);
       this.emit("attack", {
         attacker: h.id,

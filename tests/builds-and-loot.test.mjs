@@ -381,3 +381,40 @@ test("every offered specialization changes playable effects, not just its action
       assert.notDeepEqual(behavior(spec), behavior(p), `${p.id}: ${choice.id}`);
     }
 });
+
+test("elemental bows amplify their enchantment and conduct on basic and learned weapon attacks", () => {
+  for (const action of ["ability-basic-ranged", "power-leg-shot"]) {
+    const g = arena(),
+      h = g.active,
+      e = g.enemies[0];
+    g.mode = "town";
+    for (const i of [...h.preview.inventory.items].filter((i) => i.held))
+      g.equip(0, i.instanceId, "stow");
+    const bow = magicItem(50500, 5, { relic: "thunderwake" });
+    h.treasure ??= [];
+    h.treasure.push(
+      bow,
+      ordinaryItem(g.C, "item-ammunition-bundle", "test-arrows"),
+    );
+    g.refreshHero(h);
+    g.equip(0, bow.instanceId, "ready");
+    // Qualified combat fixture; persistence/gating is separately checked with legal drafts.
+    h.preview.state.ranks["discipline-storm"] = 2;
+    h.preview.equipmentEffects = bow.effects;
+    h.preview.state.abilities.push(action);
+    h.build = { talents: { voltage: 1 }, specializations: {} };
+    assert.equal(g.enchantmentDamage(h, bow.effects[0], "physical"), 4);
+    const second = { ...e, id: "wet-neighbor", x: 3, conditions: [] };
+    g.enemies.push(second);
+    g.encounter.roster.push({
+      id: second.id,
+      side: "opposition",
+      withdrawn: false,
+    });
+    g.createSurface("water", [{ x: e.x, z: e.z }], h);
+    g.mode = "combat";
+    g.useAbility(action, e.id);
+    assert.ok(e.hp < 100, action);
+    assert.equal(second.hp, 95, `${action} must conduct 2 + relic chain 3`);
+  }
+});
