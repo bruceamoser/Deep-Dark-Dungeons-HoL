@@ -134,3 +134,45 @@ test("deleting the last migrated run leaves an empty library on restart", async 
   assert.deepEqual(await reopened.list(), []);
   assert.equal(reopened.firstLaunch, false);
 });
+
+test("earlier-edition slots remain byte-for-byte intact while a fresh forge journey is created", async (t) => {
+  const { storage } = await disk(t),
+    id = `run-${crypto.randomUUID()}`;
+  const old = JSON.parse(fixture(5));
+  old.version = 1;
+  const raw = JSON.stringify({
+    id,
+    name: "Old company",
+    updatedAt: "2026-11-05T12:00:00Z",
+    text: JSON.stringify(old),
+  });
+  await storage.set(id, raw);
+  await storage.set("index", JSON.stringify({ active: id }));
+  const lib = new SaveLibrary(storage);
+  assert.equal(await lib.initialize(), null);
+  assert.deepEqual((await lib.list())[0], {
+    id,
+    name: "Old company",
+    updatedAt: "2026-11-05T12:00:00Z",
+    invalid: true,
+    incompatible: true,
+  });
+  await assert.rejects(lib.read(id), /supported/);
+  await assert.rejects(lib.write(id, fixture()), /preserved/);
+  const freshId = await lib.create("Forge company", fixture());
+  assert.notEqual(freshId, id);
+  assert.equal(await storage.get(id), raw);
+  assert.equal((await lib.list()).length, 2);
+});
+test("an incompatible legacy campaign file is never imported over or deleted", async (t) => {
+  const { dir, storage } = await disk(t),
+    old = JSON.parse(fixture());
+  old.version = 1;
+  const raw = JSON.stringify(old);
+  await fs.writeFile(path.join(dir, "campaign.json"), raw);
+  const lib = new SaveLibrary(storage);
+  assert.equal(await lib.initialize(), null);
+  assert.equal(lib.incompatibleLegacy, true);
+  await lib.create("First forge company", fixture());
+  assert.equal(await fs.readFile(path.join(dir, "campaign.json"), "utf8"), raw);
+});

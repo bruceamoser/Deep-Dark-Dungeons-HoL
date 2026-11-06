@@ -5,51 +5,7 @@ export async function verifyBuildForge(page) {
     structuredClone(window.__ddd.game.snapshot()),
   );
   try {
-    await page.locator('[data-action="training"]').click();
-    await expect(page.locator(".dossier-disciplines")).toContainText("Arms");
-    await expect(page.locator(".mastery-total b")).toHaveText("2");
-    await page.locator('[data-invest="heavy-hands"]').click();
-    await expect(page.locator(".mastery-total b")).toHaveText("1");
-    expect(
-      await page.evaluate(() =>
-        window.__ddd.game.buildStat(window.__ddd.game.active, "physical"),
-      ),
-    ).toBe(1);
-    const attack = await page.evaluate(() => {
-      const g = window.__ddd.game;
-      return g
-        .powerIds(g.active)
-        .find((id) =>
-          g.powerSpec(id)?.effects.some((e) => e.kind === "damage"),
-        );
-    });
-    await page.locator("#specialize-power").selectOption(attack);
-    await page.locator('[data-specialize="sweeping"]').click();
-    await expect(page.locator(".mastery-total b")).toHaveText("0");
-    await page.locator(".sheet-content").evaluate((e) => (e.scrollTop = 0));
-    await page.screenshot({ path: "test-results/build-forge-0.5.png" });
-    await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
-    await page.reload();
-    await page.waitForFunction(() => window.__ddd);
-    await page.locator('[data-action="training"]').click();
-    await expect(page.locator(".mastery-total b")).toHaveText("0");
-    await page.locator("#reset-mastery").click();
-    await expect(page.locator(".mastery-total b")).toHaveText("2");
-    await page.keyboard.press("Escape");
-    await page.evaluate(() =>
-      window.__ddd.game.awardXP("v05-level-test", 400, "Build forge trial"),
-    );
     await page.locator('[data-hero="0"]').click();
-    await expect(page.locator("#sheet-training")).toHaveText("Level up → 2");
-    await page.locator("#sheet-training").click();
-    await page.locator('[data-step="7"]').click();
-    await page.getByRole("button", { name: "Commit training" }).click();
-    expect(
-      await page.evaluate(() => window.__ddd.game.party[0].preview.state.level),
-    ).toBe(2);
-    await page.locator('[data-action="training"]').click();
-    await expect(page.locator(".mastery-total b")).toHaveText("4");
     await page.locator('[data-tab="equipment"]').click();
     const original = await page.evaluate(
       () =>
@@ -214,7 +170,7 @@ export async function verifyBuildForge(page) {
     await page.screenshot({ path: "test-results/vanish-and-relic-0.5.png" });
     await page.keyboard.press("Escape");
     console.log(
-      "Build forge spending/refunds/persistence, visible level-up, starting-gear transfer, world drops/recovery, Vanish and relic runes passed in native desktop.",
+      "Starting-gear transfer, world drops/recovery, Vanish and relic runes passed in native desktop.",
     );
   } catch (e) {
     console.error("Build forge interaction failure:", e);

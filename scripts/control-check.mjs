@@ -163,10 +163,10 @@ export async function verifyControls(page) {
   });
   await page.mouse.move(target.x, target.y);
   await page.mouse.click(target.x, target.y);
-  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 4);
+  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 5);
   expect(
     await page.evaluate(() => window.__ddd.game.enemies[0].conditions[0]),
-  ).toMatchObject({ key: "burning", rating: 1 });
+  ).toMatchObject({ key: "burning", rating: 2 });
   expect(
     await page.evaluate(() =>
       window.__ddd.game.party.slice(0, 3).map((h) => [h.x, h.z]),
@@ -217,9 +217,12 @@ export async function verifyControls(page) {
   await page.locator('[data-hero="0"]').click();
   await page.locator('[data-tab="journey"]').click();
   await page.getByRole("button", { name: "Develop this hero" }).click();
-  await expect(page.locator(".training-banner")).toContainText("10");
-  await page.locator('[data-step="7"]').click();
-  await page.getByRole("button", { name: "Commit training" }).click();
+  await expect(
+    page.getByRole("dialog", { name: "Discipline forge" }),
+  ).toBeVisible();
+  await page.locator(".forge-train").click();
+  await page.locator(".forge-close").click();
+  await page.keyboard.press("Escape");
   expect(
     await page.evaluate(() => ({
       level: window.__ddd.game.party[0].preview.state.level,

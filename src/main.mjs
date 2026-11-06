@@ -1,4 +1,7 @@
-import { gameCatalog, POWERS } from "./core/powers.mjs";
+import { forgeScreen } from "./ui/forge.mjs";
+import { forgeCatalog } from "./core/forge.mjs";
+import { forgeStartingDrafts } from "./core/forge-presets.mjs";
+import { POWERS } from "./core/powers.mjs";
 import { workshopScreen } from "./ui/workshop.mjs";
 import { campScreen } from "./ui/camp.mjs";
 import { SaveLibrary, browserSaveStorage } from "./core/save-library.mjs";
@@ -9,7 +12,7 @@ import { lootScreen } from "./ui/treasure.mjs";
 import { abilityType } from "./ui/book-symbols.mjs";
 import { rosterScreen } from "./ui/roster.mjs";
 import { xpMeter } from "./ui/experience.mjs";
-import { creationScreen } from "./ui/creation.mjs";
+import { creationScreen } from "./ui/forge-creation.mjs";
 import "./style.css";
 import { characterSheet } from "./ui/character.mjs";
 import { icon, itemIcon, actionIcon } from "./ui/icons.mjs";
@@ -18,7 +21,6 @@ import { FORMATIONS } from "./core/formations.mjs";
 import { GameAudio } from "./view/audio.mjs";
 import { Scene } from "./view/scene.mjs";
 import { Game } from "./core/game.mjs";
-import { readyExample } from "./core/presets.mjs";
 import { key, distance } from "./core/dungeon.mjs";
 import { serialize, deserialize } from "./core/save.mjs";
 const ui = document.querySelector("#ui"),
@@ -102,7 +104,7 @@ async function init() {
   const [choices, inventory, wounds, party, creatures] = await Promise.all(
     ["choices", "inventory", "wounds", "party", "creatures"].map(load),
   );
-  C = gameCatalog({
+  C = forgeCatalog({
     choices: choices.records,
     inventory,
     creatures,
@@ -111,6 +113,7 @@ async function init() {
   });
   examples = party;
   game = new Game(R, C, toast);
+  R = game.R;
   scene = new Scene(
     document.querySelector("#world"),
     clickTile,
@@ -396,6 +399,10 @@ async function init() {
     receiveUpdateStatus(await window.desktop.updates.status());
   }
   if (!library.active) await openRuns();
+  if (library.incompatibleLegacy)
+    toast(
+      "Your earlier-edition save is preserved. A fresh v0.6 journey has begun.",
+    );
   window.__ddd = {
     game,
     scene,
@@ -426,7 +433,7 @@ function render() {
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("Training & builds", "training", "LEVEL UP & SPECIALIZE")}${button("The workshop", "workshop", "DOWNTIME CRAFTING")}${button("Camp & supplies", "camp", "REST & PROVISIONS")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">EARLY PLAYABLE · COMBAT COVERAGE IN PROGRESS</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("The discipline forge", "training", "LEVEL UP & SHAPE YOUR PATH")}${button("The workshop", "workshop", "DOWNTIME CRAFTING")}${button("Camp & supplies", "camp", "REST & PROVISIONS")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">DISCIPLINE FORGE EDITION · v0.6</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
     if (scene.follow)
       scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
   } else {
@@ -741,7 +748,7 @@ function respecHero(index) {
   const h = game.party[index];
   dialog(
     "Rebuild your hero",
-    `<p>Start <b>${esc(h.name)}</b> again from the first character-creation step. Reselect attributes, ancestry traits, origins, class, disciplines, abilities and signatures through level ${h.preview.state.level}.</p><div class="respec-summary"><span><b>${h.xp.toLocaleString()}</b> XP kept</span><span><b>${h.preview.state.level}</b> trained level kept</span><span><b>${h.preview.inventory.items.length}</b> inventory stacks kept</span></div><p>Mastery and specializations return to unspent points. Your equipment, remaining supplies, wounds, learned recipes and history stay with you. Rebuilding does not heal or refill Grit.</p><p class="cost-note">Free in Greyhaven. Your current build stays intact until you confirm the completed rebuild.</p>`,
+    `<p>Start <b>${esc(h.name)}</b> again from the first character-creation step. Reselect attributes, ancestry traits, origins, class, and discipline paths at level ${h.preview.state.level}.</p><div class="respec-summary"><span><b>${h.xp.toLocaleString()}</b> XP kept</span><span><b>${h.preview.state.level}</b> trained level kept</span><span><b>${h.preview.inventory.items.length}</b> inventory stacks kept</span></div><p>All purchased circles return to unspent DP. Your equipment, remaining supplies, wounds, learned recipes and history stay with you. Rebuilding does not heal or refill Grit.</p><p class="cost-note">Free in Greyhaven. Your current build stays intact until you confirm the completed rebuild.</p>`,
     '<button id="cancel-respec">Keep current build</button><button id="begin-respec" class="primary">Begin rebuild</button>',
   );
   modal.querySelector("#cancel-respec").onclick = () => sheet(index);
@@ -750,6 +757,17 @@ function respecHero(index) {
 }
 function workshop(slot, development = false, respec = false) {
   closeModal();
+  if (development) {
+    modalCleanup = forgeScreen({
+      root: modal,
+      game,
+      C,
+      index: slot,
+      attempt,
+      close: () => sheet(slot),
+    });
+    return;
+  }
   modalCleanup = creationScreen({
     root: modal,
     game,
@@ -918,7 +936,7 @@ function actions() {
       .map((c) => {
         const a = game.powerSpec(c.id) ?? ABILITIES[c.id];
         const reason = game.actionReason(c.id);
-        return `<button data-card="${c.id}" title="${esc(coverage(c.id).reason)}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c, game.powerSpec(c.id) ?? ABILITIES[c.id])}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
+        return `<button data-card="${c.id}" title="${esc(game.powerSpec(c.id)?.description ?? coverage(c.id).reason)}" class="action-choice ${selectedAction?.id === c.id ? "chosen" : ""}" ${reason ? "disabled" : ""}>${abilityType(c, game.powerSpec(c.id) ?? ABILITIES[c.id])}<span>${esc(c.name)}<small>${reason ? esc(reason) : `${a.attribute ?? "No roll"}${a.range ? ` · ${a.range} squares` : " · Self"}`}</small></span></button>`;
       })
       .join("")}</div>`,
     '<button id="main-convert">Main → Maneuver</button><button id="stand">Stand · 2 movement</button>',
@@ -1160,12 +1178,13 @@ function scheduleSave() {
   );
 }
 function startingDrafts() {
-  return [
+  const ordered = [
     "borin-bridgekeeper",
     "lira-ashbow",
     "pip-copperwink",
     "vaelis-emberglass",
-  ].map((id) => readyExample(examples.find((e) => e.id === id).draft, R, C));
+  ].map((id) => examples.find((e) => e.id === id));
+  return forgeStartingDrafts(ordered, C);
 }
 async function save(show = false) {
   clearTimeout(saveTimer);

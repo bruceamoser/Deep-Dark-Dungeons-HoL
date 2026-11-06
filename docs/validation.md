@@ -1,4 +1,8 @@
-# Validation — development preview 0.1
+# Validation history
+
+Current release: [v0.6.0 discipline atlas](#v060--discipline-atlas-and-fresh-ruleset). The entries below retain the evidence and limits of earlier releases; later sections supersede their test counts and feature boundaries.
+
+## Development preview 0.1
 
 ## Automated rules and state checks
 
@@ -222,3 +226,13 @@ then saves/reloads the same level-seven identity, XP, inventory and spent HP/Gri
 The complete existing desktop regression also passes. Installer and update
 checks are recorded in the release PR before merge; native Linux remains the
 full interactive test surface, with Windows installer smoke verification in CI.
+
+## v0.6.0 — discipline atlas and fresh ruleset
+
+Author review, not independent review: **170 automated tests passed**. New checks cover every node's legal reachability within the level-30 budget, all exact confluence contacts, dependency-aware refunds, actual effects for every active technique, profile replacement/range, Twin Shot rolls/actions/ammunition, combined buffs and barriers, recipe bonuses, default combat favorites, creation, training/respec conservation, and byte-for-byte preservation of earlier-edition saves. The existing source-hash, dungeon, survival, inventory, movement and update checks remain in the suite.
+
+The packaged Linux game passed the full native interaction suite through `launch-game.sh` under `aa-exec -p unconfined`, with a space-free runtime and renderer seccomp filtering. New interaction coverage includes the atlas, grab panning, zoom, search, refund previews, earned-level training, additional origins, the three-contact Cinder Tempest border, save/reload, a blank-to-valid creator, equipment shopping, and full respec. Existing combat, creature/condition rendering, audio signal/mute, inventory/world interactions, crafting, torches, recovery, runs and native-close save checks also passed. Atlas, gate and creator screenshots were visually inspected.
+
+A real local AppImage update from v0.5.1 to v0.6.0 passed: a bad checksum was rejected, simulated disk-full prevented installation, a valid download replaced the executable and restarted, the earlier save remained intact, and a new forge journey could be created. The updated AppImage also passed installed-renderer/forge/save/update-control smoke checks. The installer workflow separately installs and opens Linux Debian and Windows NSIS packages, as well as exercising the AppImage; its screenshots include the forge.
+
+These checks establish the implemented mechanics and tested interaction paths, not long-term balance, complete controller/accessibility coverage, or final production art quality. Full gameplay interaction was tested locally on Linux; Windows validation is the installer/render/save/forge smoke flow on its CI runner.

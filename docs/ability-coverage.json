@@ -4247,7 +4247,7 @@
       "id": "trait-human-far-walker",
       "name": "Adaptable",
       "decision": "keep",
-      "text": "Gain one additional DP at each level, including level 0. Source creation and advancement rules apply.",
+      "text": "Far Walker grants +1 movement and +2 carrying capacity in the discipline forge.",
       "source": {
         "path": "design/ancestries/trait-human-far-walker.md",
         "sha256": "4c98cdb9ad7662e35cf90374ea7f2ab11130eea8af3368a5109440c622c095f5"

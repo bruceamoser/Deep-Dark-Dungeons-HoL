@@ -1,4 +1,5 @@
 import { verifyRespec } from "./respec-check.mjs";
+import { verifyForgeUI } from "./forge-ui-check.mjs";
 import { verifyBuildForge } from "./build-forge-check.mjs";
 import { verifyGameplayIdentity } from "./identity-preview-check.mjs";
 import { verifyExpeditionUI } from "./expedition-check.mjs";
@@ -82,6 +83,7 @@ try {
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
   await w.screenshot({ path: "test-results/native-town.png" });
   await verifyRespec(w);
+  await verifyForgeUI(w);
   await verifyBuildForge(w);
   await verifyGameplayIdentity(w);
   await verifyExpeditionUI(w);

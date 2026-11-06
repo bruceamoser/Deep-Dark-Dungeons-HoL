@@ -44,9 +44,8 @@ export async function verifyExpeditionUI(page) {
   await page.keyboard.press("Escape");
   await page.evaluate(async () => {
     const { game: g } = window.__ddd;
-    const data = await (await fetch("/vendor/hol/data/party.json")).json();
-    const d = data.find((x) => x.id === "oren-brass").draft;
-    d.languages.home = "elven";
+    const d = structuredClone(g.party[3].draft);
+    d.name = "Craft trial";
     g.party[0] = g.hero(d, 0);
     Object.assign(g.party[0], g.map.start);
     g.campaign.bank = 200;
@@ -186,7 +185,7 @@ export async function verifyExpeditionUI(page) {
     g.emit("change");
   }, saved);
   console.log(
-    "Expedition UI: ancestry preparation, retraining chooser, well, materials/crafting, held torch, enemy hover and surveyed coffers without creature revelation passed.",
+    "Expedition UI: ancestry preparation, well, materials/crafting, held torch, enemy hover and surveyed coffers without creature revelation passed.",
   );
 }
 if (fileURLToPath(import.meta.url) === process.argv[1]) {

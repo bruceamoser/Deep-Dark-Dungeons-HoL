@@ -1,6 +1,11 @@
-import { TALENTS, BUILD_BRANCHES } from "../src/core/builds.mjs";
+import { forgePower, forgePowerText } from "../src/core/forge.mjs";
+import {
+  FORGE_NODES,
+  FORGE_DISCIPLINES,
+  FORGE_PATHS,
+} from "../src/core/forge-catalog.mjs";
 import { RELICS } from "../src/core/treasure.mjs";
-import { POWERS, mappedPower } from "../src/core/powers.mjs";
+import { POWERS } from "../src/core/powers.mjs";
 import { RECIPES } from "../src/core/recipes.mjs";
 import { DUNGEON_TRAITS } from "../src/core/ancestry-game.mjs";
 import fs from "node:fs/promises";
@@ -52,43 +57,39 @@ await fs.writeFile(
   new URL("../docs/game-power-coverage.json", import.meta.url),
   JSON.stringify(
     {
-      revision: 3,
+      revision: 4,
+      ruleset: "discipline-forge-v1",
       policy:
-        "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
+        "Game-owned discipline paths replace prior staged ability purchases, mastery and fixed signatures. Fresh v0.6 saves only; historical source-card coverage is retained in ability-coverage.json.",
       counts: {
-        powers: Object.keys(POWERS).length,
-        disciplinePowers: Object.values(POWERS).filter((p) => p.discipline)
+        disciplines: FORGE_DISCIPLINES.length,
+        paths: FORGE_PATHS.length,
+        nodes: FORGE_NODES.length,
+        confluences: FORGE_NODES.filter((n) => n.kind === "intersection")
           .length,
-        signatures: Object.values(POWERS).filter((p) => p.classId).length,
-        generalPowers: Object.values(POWERS).filter(
-          (p) => !p.discipline && !p.classId && !p.universal,
-        ).length,
-        starterPowersPerDiscipline: Object.fromEntries(
-          input.records
-            .filter((r) => r.kind === "discipline")
-            .map((r) => [
-              r.id,
-              Object.values(POWERS).filter(
-                (p) => p.discipline === r.id && p.rank === 1,
-              ).length,
-            ]),
-        ),
-        consumableActions: Object.values(POWERS).filter((p) => p.universal)
-          .length,
+        powers: new Set(FORGE_NODES.map((n) => n.power).filter(Boolean)).size,
         recipes: RECIPES.length,
-        masteryTalents: Object.keys(TALENTS).length,
-        buildBranches: BUILD_BRANCHES.length,
         namedRelics: Object.keys(RELICS).length,
       },
-      powers: Object.values(POWERS),
-      legacyMappings: input.records
-        .filter((c) => c.kind === "ability")
-        .map((c) => ({
-          id: c.id,
-          current: mappedPower(c.id, { choices: input.records }),
-        })),
+      disciplines: FORGE_DISCIPLINES,
+      paths: FORGE_PATHS,
+      nodes: FORGE_NODES,
+      powers: [...new Set(FORGE_NODES.map((n) => n.power).filter(Boolean))].map(
+        (id) => {
+          const p = forgePower(POWERS[id], {
+            draft: { forge: {} },
+            preview: {
+              forge: {
+                stats: {},
+                profiles: { melee: [1, 1, 2], ranged: [1, 1, 2] },
+                upgrades: [],
+              },
+            },
+          });
+          return { ...p, description: forgePowerText(p) };
+        },
+      ),
       recipes: RECIPES,
-      masteryTalents: TALENTS,
       namedRelics: RELICS,
     },
     null,

@@ -197,6 +197,7 @@ export function attackPresentation(from, data) {
     return { kind: "shield", clip: "Block_Attack", contact: 0.43 };
   if (
     data.ability === "ability-basic-unarmed" ||
+    data.ability === "power-forge-unarmed" ||
     (!melee && !from.isEnemy) ||
     (from.isEnemy &&
       ["bite", "claw", "slam"].includes(from.model.userData.equipment?.weapon))
@@ -261,7 +262,15 @@ export function createAttackEffect(host, data, callbacks = {}) {
       if (!o.isMesh) return;
       o.material = owned.material(o.material.clone());
       o.material.transparent = true;
-      o.material.emissive.setHex(0x463626);
+      o.material.emissive.setHex(
+        {
+          fire: 0xff641d,
+          cold: 0x3baacf,
+          lightning: 0x9b88ff,
+          mental: 0xa864c8,
+          radiant: 0xffcf65,
+        }[data.element] ?? 0x463626,
+      );
       o.material.emissiveIntensity = 0.4;
     });
     wrapper.add(projectile);
@@ -371,7 +380,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
     kind: spec.kind,
     root,
     projectile,
-    age: 0,
+    age: -(data.shot ?? 0) * 0.24,
     contact,
     flight,
     release: spec.release,
@@ -381,6 +390,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
     update(dt) {
       effect.age += dt;
       const age = effect.age;
+      root.visible = age >= 0;
+      if (age < 0) return true;
       if (lunge) {
         const phase =
           age < contact

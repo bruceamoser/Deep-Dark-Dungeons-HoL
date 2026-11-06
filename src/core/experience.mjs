@@ -8,18 +8,18 @@ export const XP_RULES = Object.freeze({
   coin: 5,
 });
 export function xpForLevel(level) {
-  const n = Math.max(0, Math.min(100, level) - 1);
+  const n = Math.max(0, Math.min(30, level) - 1);
   return n * XP_RULES.firstLevel + (n * (n - 1) * XP_RULES.levelGrowth) / 2;
 }
 export function levelForXP(xp) {
   let level = 1;
-  while (level < 100 && xp >= xpForLevel(level + 1)) level++;
+  while (level < 30 && xp >= xpForLevel(level + 1)) level++;
   return level;
 }
 export function xpProgress(hero) {
   const level = Math.max(hero.earnedLevel, levelForXP(hero.xp ?? 0));
   const floor = xpForLevel(level),
-    next = level < 100 ? xpForLevel(level + 1) : null;
+    next = level < 30 ? xpForLevel(level + 1) : null;
   return {
     level,
     total: hero.xp ?? 0,
