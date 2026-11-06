@@ -112,16 +112,23 @@ try {
     inspector.addEventListener("open", resolve, { once: true }),
   );
   await evaluate(`(() => {
-    const updater = process.mainModule.require('electron-updater').autoUpdater;
-    updater.setFeedURL({provider:'generic',url:'http://127.0.0.1:${server.address().port}'});
-    updater.disableDifferentialDownload = true;
+    const { AppImageUpdater } = process.mainModule.require('electron-updater');
+    const check = AppImageUpdater.prototype.checkForUpdates;
+    // Since 0.3.1 the app creates an explicit AppImageUpdater to avoid a Debian
+    // package marker selecting the wrong updater. Patch the prototype only in
+    // this inspector session so the real instance receives the diagnostic feed.
+    AppImageUpdater.prototype.checkForUpdates = function (...args) {
+    this.setFeedURL({provider:'generic',url:'http://127.0.0.1:${server.address().port}'});
+    this.disableDifferentialDownload = true;
     // Observe the real restarted release; only diagnostic flags/stdio differ.
-    updater.spawnLog = async (file, args, env) => {
+    this.spawnLog = async (file, args, env) => {
       const fs = process.mainModule.require('node:fs');
       const fd = fs.openSync(${JSON.stringify(restartLog)}, 'a');
       const child = process.mainModule.require('node:child_process').spawn(file,
         ['--remote-debugging-port=0'], {env, detached:true, stdio:['ignore','ignore',fd]});
       fs.closeSync(fd); child.unref(); return true;
+    };
+    return check.apply(this, args);
     };
   })()`);
   browser = await chromium.connectOverCDP(

@@ -137,3 +137,12 @@ coverage; long campaigns, economy/balance, physical speaker output and final
 production-art acceptance still require playtesting. Windows installation and
 release smoke are checked in the release workflow; the complete interactive
 suite is native Linux.
+
+Release candidate checks on GitHub passed for installed Windows, Linux AppImage
+and Debian packages. A real v0.3.1 → v0.4.0 AppImage round trip passed: corrupt
+checksum rejection, save-failure blocking, replacement, restart and restored
+journey state. The diagnostic feed is supplied only through the Node inspector;
+production exposes no feed override. The test now hooks the explicit
+AppImageUpdater instance used since v0.3.1 rather than the unused default updater.
+All ten ancestry variants were additionally rendered through the creator and
+inspected together in `test-results/ancestry-identity-gallery.png`.
