@@ -238,7 +238,7 @@ test("creation equipment can be handed over and dropped, without duplication or 
   );
   assert.ok(item);
   const before = h.preview.inventory.bulk;
-  h.supplies[item.instanceId] = 2;
+  h.supplies[item.instanceId] = 4;
   g.transferTreasure(0, item.instanceId, 1);
   assert.equal(
     h.preview.inventory.items.some((i) => i.instanceId === item.instanceId),
@@ -248,17 +248,17 @@ test("creation equipment can be handed over and dropped, without duplication or 
   const moved = target.treasure.find((i) =>
     i.instanceId.includes(item.instanceId),
   );
-  assert.equal(target.supplies[moved.instanceId], 2);
+  assert.equal(target.supplies[moved.instanceId], 4);
   g.mode = "exploration";
   g.dropItem(1, moved.instanceId);
   const pile = g.map.chests.find((c) => c.dropped);
-  assert.equal(pile.items[0].supplyRemaining, 2);
+  assert.equal(pile.items[0].supplyRemaining, 4);
   const saved = deserialize(serialize(g.snapshot())),
     copy = fresh();
   copy.load(saved, { resume: false });
   copy.mode = "exploration";
   copy.takeTreasure(`coffer:${pile.id}`, moved.instanceId, 1);
-  assert.equal(copy.party[1].supplies[moved.instanceId], 2);
+  assert.equal(copy.party[1].supplies[moved.instanceId], 4);
   assert.equal(
     copy.party[0].preview.inventory.items.some(
       (i) => i.instanceId === item.instanceId,

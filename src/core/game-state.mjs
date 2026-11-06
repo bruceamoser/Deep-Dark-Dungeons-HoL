@@ -36,12 +36,14 @@ export function validateGameState(campaign) {
       (item.quantity !== undefined &&
         (!nonnegative(item.quantity) || item.quantity < 1)) ||
       (item.supplyRemaining != null &&
-        ![0, 2, 4, 6, 8, 10, 12].includes(item.supplyRemaining))
+        ![0, 4, 6, 8, 10, 12, 20].includes(item.supplyRemaining))
     )
       throw new Error("Saved portable equipment is invalid.");
   }
   for (const h of heroes) {
     validateBuild(h);
+    if (h.respecGritSpent !== undefined && !nonnegative(h.respecGritSpent))
+      throw new Error("Saved respec Grit accounting is invalid.");
     if (
       (h.recipeBook !== undefined &&
         (!Array.isArray(h.recipeBook) ||

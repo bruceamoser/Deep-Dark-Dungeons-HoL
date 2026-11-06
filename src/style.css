@@ -4712,3 +4712,39 @@ p {
   border-color: #dfbc68;
   background: linear-gradient(145deg, #3b3223, #132a2c);
 }
+
+.respec-button {
+  margin: 8px 18px 0;
+  color: #c7bbc8;
+  border-color: #73617d;
+  background: #201a2988;
+  font-size: 12px;
+}
+.respec-summary {
+  display: flex;
+  gap: 24px;
+  border-block: 1px solid var(--line);
+  padding: 18px 0;
+  margin: 20px 0;
+}
+.respec-summary span {
+  flex: 1;
+  color: #94a5a8;
+  font:
+    12px Arial,
+    sans-serif;
+}
+.respec-summary b {
+  display: block;
+  margin-bottom: 6px;
+  font:
+    24px Cinzel,
+    serif;
+  color: #e7d5a4;
+}
+.respec-review {
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #a38a54;
+  background: #b5995512;
+}

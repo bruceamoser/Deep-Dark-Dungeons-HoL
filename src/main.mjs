@@ -735,7 +735,20 @@ function roster(options = {}) {
     ...options,
   });
 }
-function workshop(slot, development = false) {
+function respecHero(index) {
+  const reason = game.respecReason(index);
+  if (reason) return toast(reason);
+  const h = game.party[index];
+  dialog(
+    "Rebuild your hero",
+    `<p>Start <b>${esc(h.name)}</b> again from the first character-creation step. Reselect attributes, ancestry traits, origins, class, disciplines, abilities and signatures through level ${h.preview.state.level}.</p><div class="respec-summary"><span><b>${h.xp.toLocaleString()}</b> XP kept</span><span><b>${h.preview.state.level}</b> trained level kept</span><span><b>${h.preview.inventory.items.length}</b> inventory stacks kept</span></div><p>Mastery and specializations return to unspent points. Your equipment, remaining supplies, wounds, learned recipes and history stay with you. Rebuilding does not heal or refill Grit.</p><p class="cost-note">Free in Greyhaven. Your current build stays intact until you confirm the completed rebuild.</p>`,
+    '<button id="cancel-respec">Keep current build</button><button id="begin-respec" class="primary">Begin rebuild</button>',
+  );
+  modal.querySelector("#cancel-respec").onclick = () => sheet(index);
+  modal.querySelector("#begin-respec").onclick = () =>
+    workshop(index, false, true);
+}
+function workshop(slot, development = false, respec = false) {
   closeModal();
   modalCleanup = creationScreen({
     root: modal,
@@ -746,6 +759,12 @@ function workshop(slot, development = false) {
     examples,
     slot,
     development,
+    respec,
+    onRespecced: async (index) => {
+      await save(false);
+      sheet(index);
+      modal.querySelector('[data-tab="build"]')?.click();
+    },
     close: closeModal,
     attempt,
     toast,
@@ -768,6 +787,7 @@ function sheet(index) {
     attempt,
     activate: activateAction,
     train: (i) => workshop(i, true),
+    respec: respecHero,
   });
 }
 function cancelTargeting(refresh = true) {

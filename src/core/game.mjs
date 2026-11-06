@@ -6,6 +6,7 @@ import { gameCareMethods } from "./game-care.mjs";
 import { POWERS, mappedPower, isTrainable } from "./powers.mjs";
 import { powerMethods } from "./power-engine.mjs";
 import { battlefieldMethods } from "./battlefield.mjs";
+import { respecMethods } from "./respec.mjs";
 import { retrainingMethods } from "./retraining.mjs";
 import { tacticMethods } from "./tactics.mjs";
 import { ancestryGameMethods, traitsOf, traitIds } from "./ancestry-game.mjs";
@@ -1481,6 +1482,18 @@ export class Game {
       gritDelta = preview.summary.gritGranted - h.preview.summary.gritGranted;
     h.survival.maxHp += hpDelta; // Training does not heal existing damage or refill spent Grit.
     h.survival.gritAvailable += gritDelta;
+    if (h.respecGritSpent !== undefined) {
+      // A lower-Grit rebuild can hide already-spent grants. New training must
+      // cover that debt before any Grit becomes available again.
+      h.respecGritSpent = Math.max(
+        h.respecGritSpent,
+        preview.summary.gritGranted - h.survival.gritAvailable,
+      );
+      h.survival.gritAvailable = Math.max(
+        0,
+        preview.summary.gritGranted - h.respecGritSpent,
+      );
+    }
     h.draft = next;
     h.preview = preview;
     this.note(
@@ -2245,7 +2258,7 @@ Object.assign(Game.prototype, ancestryGameMethods);
 
 Object.assign(Game.prototype, tacticMethods);
 
-Object.assign(Game.prototype, retrainingMethods);
+Object.assign(Game.prototype, retrainingMethods, respecMethods);
 
 Object.assign(Game.prototype, powerMethods, battlefieldMethods);
 Object.assign(Game.prototype, buildMethods);
