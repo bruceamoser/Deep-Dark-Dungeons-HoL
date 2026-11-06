@@ -11,6 +11,7 @@ try {
       viewport: { width: 1600, height: 1000 },
     }),
     errors = [];
+  page.setDefaultTimeout(30000);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(process.env.DDD_TEST_URL ?? "http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd);
