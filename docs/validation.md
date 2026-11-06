@@ -105,3 +105,35 @@ Linux and Windows x64 ZIP packages rebuilt successfully. Windows execution remai
 - Added a real UI sequence for prepared traits, retraining choices, well refills, buying materials/crafting, held-torch meshes and enemy hover identification. Screenshots are generated in ignored `test-results/`.
 - Source card hashes remain pinned and no vendor, book or Foundry files are edited.
 - The complete native Linux suite passes on v0.3.0 through the exact `launch-game.sh`, under `aa-exec -p unconfined`, without `--no-sandbox`; renderer seccomp is verified. It covers the new expedition screens plus creation, model equipment, favorites, audio, camera, targeting, ally passage, loot, projectiles, wound treatment across days, merchants, 58 creature models, 17 condition layers, run copies, pending reactions and save-on-close. Test data is isolated from real saves.
+
+## v0.4.0 game powers, identity and tactical clarity
+
+- 122 automated tests pass. The added suite executes every active game design,
+  checks complete creation with game acquisitions/signatures, rejection before
+  spending, damage/DR/absorption, healing vs wounds/Grit, sleep charges, resource
+  limits, a usable queued bonus Maneuver, and saved spell opportunity decisions.
+- Surface checks cover both sides, forced entry, extinguishing, sight/barriers,
+  one-use traps, healing turns, expiry and save/load. Recipes test learning,
+  real outputs, replenishment, batches/time, exhaustion and persistence.
+- Appearance normalization covers ten ancestries, supported styles, malformed
+  colors and round trips. Invalid power/surface/recipe save data is rejected
+  before replacing the current campaign. Existing vendored hashes still match.
+- Movement tests cover weighted terrain, ally passage, legal endpoints, Slowed
+  and buffs before the turn begins. Deletion tests cover active/inactive saves,
+  storage failure rollback and deletion of the last migrated run without
+  resurrecting its legacy backup.
+- The native suite additionally edits and reloads appearance, compares the
+  equipped scene model with the preview, creates a valid hero with custom hair,
+  verifies the true grid/range, previews/cancels an area, casts fire and dousing,
+  and deletes active/inactive runs with cancellation and restart checks. It also
+  runs the existing camera/audio, gear, combat, effects, recovery, merchant,
+  creature, condition, roster and save-on-close checks.
+- Screenshots of the appearance sheet, movement overlay and area preview were
+  visually inspected. The actual launcher runs under `aa-exec -p unconfined`
+  with isolated test saves, a space-free runtime, seccomp and no `--no-sandbox`.
+
+Author review is not independent review. All 87 designs have automated execution
+coverage; long campaigns, economy/balance, physical speaker output and final
+production-art acceptance still require playtesting. Windows installation and
+release smoke are checked in the release workflow; the complete interactive
+suite is native Linux.

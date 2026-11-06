@@ -1,3 +1,4 @@
+import { dressIdentity } from "./hero-identity.mjs";
 import { creatureAppearance } from "./creatures.mjs";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
@@ -260,6 +261,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       });
   }
   // Rig dimensions are consistent; ignore hidden source accessories when scaling.
+  if (!enemy) dressIdentity(model, hero, owned);
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
   return { model, clips: assets.get(name).animations };
 }
@@ -300,7 +302,8 @@ export function heroPreview(canvas, assets, hero) {
     frame,
     angle = 0.28,
     drag = null,
-    last = performance.now();
+    last = performance.now(),
+    zoom = 1;
   const update = (h) => {
     if (current) {
       current.userData.dispose?.();
@@ -319,6 +322,7 @@ export function heroPreview(canvas, assets, hero) {
     if (idle) mixer.clipAction(idle).play();
     canvas.dataset.armor = current.userData.equipment.armor;
     canvas.dataset.weapon = current.userData.equipment.weapon;
+    canvas.dataset.appearance = JSON.stringify(current.userData.appearance);
   };
   update(hero);
   const down = (e) => {
@@ -332,6 +336,11 @@ export function heroPreview(canvas, assets, hero) {
       }
     },
     up = () => (drag = null);
+  const wheel = (e) => {
+    e.preventDefault();
+    zoom = T.MathUtils.clamp(zoom + e.deltaY * 0.001, 0.43, 1.3);
+  };
+  canvas.addEventListener("wheel", wheel, { passive: false });
   canvas.addEventListener("pointerdown", down);
   canvas.addEventListener("pointermove", move);
   canvas.addEventListener("pointerup", up);
@@ -348,6 +357,13 @@ export function heroPreview(canvas, assets, hero) {
     mixer.update(Math.min(0.05, (now - last) / 1000));
     last = now;
     current.rotation.y = angle;
+    const height = current.userData.height ?? 1.9;
+    camera.position.set(
+      0,
+      height * (zoom < 0.7 ? 0.8 : 0.65),
+      Math.max(2.4, height * 2.7) * zoom,
+    );
+    camera.lookAt(0, height * (zoom < 0.7 ? 0.75 : 0.48), 0);
     renderer.render(scene, camera);
   };
   frame = requestAnimationFrame(tick);
@@ -366,6 +382,7 @@ export function heroPreview(canvas, assets, hero) {
       pedestal.material.dispose();
       renderer.dispose();
       renderer.forceContextLoss();
+      canvas.removeEventListener("wheel", wheel);
       canvas.removeEventListener("pointerdown", down);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerup", up);

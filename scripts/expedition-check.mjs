@@ -57,15 +57,21 @@ export async function verifyExpeditionUI(page) {
     g.emit("change");
   });
   await page.locator('[data-action="workshop"]').click();
-  await expect(
-    page.getByRole("dialog", { name: "Downtime workshop" }),
-  ).toBeVisible();
-  await page.locator('[data-recipe^="recipe-bound-torches/"]').first().click();
-  await page.locator("#materials").click();
-  await page.locator("#craft").click();
+  await expect(page.getByRole("dialog", { name: "Recipe book" })).toBeVisible();
+  await page.locator('[data-recipe="recipe-bound-torches"]').first().click();
+  await page.locator("#recipe-materials").click();
+  await page.locator("#craft-recipe").click();
   expect(await page.evaluate(() => window.__ddd.game.clock().seconds)).toBe(
-    saved.clockSeconds + 3600,
+    saved.clockSeconds +
+      (await page.evaluate(
+        () =>
+          window.__ddd.game.recipeTime(window.__ddd.game.active, {
+            minutes: 30,
+          }) * 60,
+      )),
   );
+  while (await page.locator(".supply-alert button").count())
+    await page.locator(".supply-alert button").click();
   await page.screenshot({ path: "test-results/native-crafting.png" });
   await page.keyboard.press("Escape");
   await page.evaluate(() => {
@@ -156,8 +162,8 @@ export async function verifyExpeditionUI(page) {
   ).toBe(false);
   await page.evaluate(() => {
     const g = window.__ddd.game;
-    g.active.preview.state.abilities.push("ability-read-the-remains");
-    g.useAbility("ability-read-the-remains");
+    g.active.preview.state.abilities.push("power-read-the-depths");
+    g.useAbility("power-read-the-depths");
   });
   expect(
     await page.evaluate(

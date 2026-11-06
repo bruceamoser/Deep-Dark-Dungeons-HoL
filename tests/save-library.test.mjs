@@ -96,3 +96,41 @@ test("invalid paths, broken saves and failed writes cannot replace another valid
   await lib.write(a, fixture(4));
   assert.equal(deserialize(await lib.read(a)).depth, 4);
 });
+test("confirmed active-run deletion clears selection, preserves other runs, and survives restart", async (t) => {
+  const { storage } = await disk(t),
+    lib = new SaveLibrary(storage);
+  const a = await lib.create("Delete me", fixture(2)),
+    b = await lib.create("Keep me", fixture(5), false);
+  await lib.remove(a, { allowActive: true });
+  assert.equal(lib.active, null);
+  assert.equal((await lib.list()).length, 1);
+  assert.equal(deserialize(await lib.read(b)).depth, 5);
+  const reopened = new SaveLibrary(storage);
+  assert.equal(await reopened.initialize(), null);
+  assert.equal((await reopened.list())[0].id, b);
+});
+test("a failed deletion restores active-run selection", async (t) => {
+  const { storage } = await disk(t),
+    lib = new SaveLibrary(storage);
+  const id = await lib.create("Retain", fixture());
+  const remove = storage.remove;
+  storage.remove = async () => {
+    throw new Error("disk failure");
+  };
+  await assert.rejects(lib.remove(id, { allowActive: true }), /disk failure/);
+  assert.equal(lib.active, id);
+  assert.equal(JSON.parse(await storage.get("index")).active, id);
+  storage.remove = remove;
+});
+
+test("deleting the last migrated run leaves an empty library on restart", async (t) => {
+  const { storage, dir } = await disk(t);
+  await fs.writeFile(path.join(dir, "campaign.json"), fixture(9));
+  const lib = new SaveLibrary(storage);
+  const id = await lib.initialize();
+  await lib.remove(id, { allowActive: true });
+  const reopened = new SaveLibrary(storage);
+  assert.equal(await reopened.initialize(), null);
+  assert.deepEqual(await reopened.list(), []);
+  assert.equal(reopened.firstLaunch, false);
+});

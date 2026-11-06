@@ -1,3 +1,4 @@
+import { wallAt } from "./battlefield.mjs";
 import { ABILITIES } from "./abilities.mjs";
 import { distance, key } from "./dungeon.mjs";
 const uuid = (prefix) => `${prefix}-${crypto.randomUUID()}`;
@@ -156,6 +157,7 @@ export const recoveryMethods = {
     );
   },
   suffer(h, amount, type = "physical", source = null) {
+    amount = this.absorbPowerDamage(h, amount, type);
     amount = this.interceptDamage(h, amount, type, source);
     if (amount > 0)
       h.lastHarm = source?.name
@@ -286,6 +288,7 @@ export const recoveryMethods = {
       const hard = next.some(
         (p, i) =>
           !this.map.tiles[key(p.x, p.z)] ||
+          wallAt(this.map, p.x, p.z) ||
           this.map.obstacles?.[key(p.x, p.z)] ||
           (dir.x &&
             dir.z &&
@@ -316,7 +319,10 @@ export const recoveryMethods = {
         if (!remaining) break;
         continue;
       }
-      group.forEach((h, i) => Object.assign(h, next[i]));
+      group.forEach((h, i) => {
+        Object.assign(h, next[i]);
+        this.surfaceContact(h, { entry: true });
+      });
       remaining -= Math.max(
         ...next.map((p) => (this.map.tiles[key(p.x, p.z)].difficult ? 2 : 1)),
       );
@@ -337,8 +343,12 @@ export const recoveryMethods = {
     const plan = this.R.conditionEndPlan(h.conditions, {
       turnId: uuid("condition"),
       durationPolicies,
-      resistances: Object.entries(h.preview.resistances).map(
-        ([type, value]) => ({ type, value }),
+      resistances: this.powerResistances(
+        h,
+        Object.entries(h.preview.resistances).map(([type, value]) => ({
+          type,
+          value,
+        })),
       ),
     });
     if (!plan.ready) throw new Error("A condition duration policy is missing.");

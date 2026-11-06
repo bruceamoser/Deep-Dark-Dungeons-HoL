@@ -1,3 +1,4 @@
+import { surfaceAt } from "./battlefield.mjs";
 import { Random, key, distance, lineOfSight, pathfind } from "./dungeon.mjs";
 import { CREATURE_ROSTER, BOSSES } from "./creature-roster.mjs";
 export { CREATURE_ROSTER };
@@ -124,11 +125,12 @@ export const bestiaryMethods = {
       : null;
   },
   creatureResistances(e) {
-    return (
+    return this.powerResistances(
+      e,
       this.creature(e)?.resistances.numeric.map((r) => ({
         type: r.type.toLowerCase(),
         value: r.value,
-      })) ?? [{ type: "physical", value: 1 }]
+      })) ?? [{ type: "physical", value: 1 }],
     );
   },
   creatureWeaknesses(e) {
@@ -270,7 +272,17 @@ export const bestiaryMethods = {
       .sort((a, b) => a.length - b.length);
     const route = routes[0],
       speed = this.enemySpeed(e);
-    const points = (route ?? []).slice(0, speed);
+    const points = [];
+    let spent = 0;
+    for (const p of route ?? []) {
+      spent +=
+        this.map.tiles[key(p.x, p.z)]?.difficult ||
+        surfaceAt(this.map, p, "difficult")
+          ? 2
+          : 1;
+      if (spent > speed) break;
+      points.push(p);
+    }
     if (!planOnly && points.length) Object.assign(e, points.at(-1));
     return points;
   },

@@ -1,3 +1,10 @@
+import {
+  isTrainable,
+  POWERS,
+  gamePurchaseEligibility,
+} from "../core/powers.mjs";
+import { normalizeAppearance, ANCESTRY_LOOKS } from "../core/identity.mjs";
+import { appearanceControls } from "./appearance.mjs";
 import { DUNGEON_TRAITS } from "../core/ancestry-game.mjs";
 import { CRAFT_MATERIALS } from "../core/crafting.mjs";
 import { originGrant, originPicker } from "./origins.mjs";
@@ -57,6 +64,7 @@ export function creationScreen({
     "Hero training",
     "Equipment",
     "Review",
+    "Appearance",
   ];
   const record = (id) => C.choices.find((c) => c.id === id),
     name = (id) => record(id)?.name ?? id ?? "Not chosen";
@@ -65,7 +73,9 @@ export function creationScreen({
   const field = (label, html) =>
     `<label class="creator-field"><span>${label}</span>${html}</label>`;
   const info = (c) =>
-    `<p class="dungeon-rule"><b>${DUNGEON_TRAITS[c?.id]?.decision === "keep" ? "Dungeon rule" : "Dungeon version"}</b> ${esc(DUNGEON_TRAITS[c?.id]?.text ?? (c?.kind === "ability" ? coverage(c.id).reason : ""))}</p><details class="choice-reference" data-rules="${esc(c?.id)}"><summary>Original HoL rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
+    c?.gamePower
+      ? `<p class="dungeon-rule"><b>Game power</b> ${esc(coverage(c.id).reason)}</p>`
+      : `<p class="dungeon-rule"><b>${DUNGEON_TRAITS[c?.id]?.decision === "keep" ? "Dungeon rule" : "Dungeon version"}</b> ${esc(DUNGEON_TRAITS[c?.id]?.text ?? (c?.kind === "ability" ? coverage(c.id).reason : ""))}</p><details class="choice-reference" data-rules="${esc(c?.id)}"><summary>Original HoL rules</summary>${(c?.reference?.rules?.details ?? []).map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("")}${(c?.reference?.rules?.body ?? []).map((b) => (b.text ? `<p>${esc(b.text)}</p>` : b.items ? `<p>${b.items.map(esc).join("<br>")}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("")}</details>`;
   const changed = ({ preserveScroll = true } = {}) => {
     const scroll = preserveScroll
       ? [".creation-content", ".purchase-scroll"].map((selector) => ({
@@ -114,8 +124,8 @@ export function creationScreen({
       level = draft.progression?.level ?? 1,
       cls = record(draft.classId),
       ancestry = record(draft.ancestryId);
-    const visibleSteps = development ? [5, 7] : steps.map((_, i) => i);
-    root.innerHTML = `<div class="veil"><section class="creator-window character-window" role="dialog" aria-modal="true" aria-label="${development ? "Character development" : "Create character"}"><header class="character-header"><div><span class="eyebrow">${development ? "GROW INTO YOUR LEGEND" : "A NAME WORTH REMEMBERING"}</span><h2>${development ? "Train in Greyhaven" : "A new companion"}</h2></div><span class="creator-slot">${development ? `COMPANY SLOT 0${slot + 1}` : "CHARACTER REPOSITORY"}</span><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="creator-body"><nav class="creation-steps">${visibleSteps.map((i) => `<button data-step="${i}" class="${step === i ? "chosen" : ""}"><span>0${i + 1}</span>${development && i === 5 ? "Development" : steps[i]}</button>`).join("")}<div class="creation-note">${development ? "Your injuries and spent resources stay with you." : "Every choice follows the HoL character rules. Unused creation DP expires between stages."}</div>${!development ? '<button id="blank-hero" class="subtle-button">Start a blank hero</button>' : ""}</nav><main class="creation-content"><div class="section-heading"><div><span class="eyebrow">${development ? "EARNED LEVEL " + original.earnedLevel : "CHAPTER " + (step + 1) + " OF 8"}</span><h3>${development && step === 5 ? "Develop your hero" : steps[step]}</h3></div><span class="creator-step-mark">${icon(step === 6 ? "pack" : step === 5 || step === 3 ? "bolt" : "book")}</span></div><div id="creation-fields"></div></main><aside class="creation-summary"><div class="creation-preview"><canvas id="recruit-preview"></canvas></div><h3>${esc(draft.name || "Unnamed adventurer")}</h3><p>${esc(name(draft.ancestryId))}<br>${esc(name(draft.classId))}</p><div class="creation-totals"><span>Health<b>${p.summary?.maximumHp ?? "—"}</b></span><span>Grit<b>${p.summary?.gritGranted ?? "—"}</b></span><span>Speed<b>${p.summary?.speed ?? "—"}</b></span><span>Coins<b>${p.inventory.remainingCoins}</b></span></div><div class="creation-validation">${p.valid ? '<span class="ready-seal">◆ Ready for the company</span>' : `<span>${p.errors.length} choices need attention</span><small>Review lists every remaining requirement.</small>`}</div></aside></div><footer class="character-footer creator-footer"><button id="creator-back" ${visibleSteps.indexOf(step) === 0 ? "disabled" : ""}>Back</button><span>${development ? "Training commits only earned, supported choices." : "Draft saved locally as you make choices."}</span>${step === 7 ? `<button id="recruit" class="primary" ${!p.valid ? "disabled" : ""}>${development ? "Commit training" : "Save hero to repository"}</button>` : '<button id="creator-next" class="primary">Continue →</button>'}</footer></section></div>`;
+    const visibleSteps = development ? [5, 7] : [0, 1, 8, 2, 3, 4, 5, 6, 7];
+    root.innerHTML = `<div class="veil"><section class="creator-window character-window" role="dialog" aria-modal="true" aria-label="${development ? "Character development" : "Create character"}"><header class="character-header"><div><span class="eyebrow">${development ? "GROW INTO YOUR LEGEND" : "A NAME WORTH REMEMBERING"}</span><h2>${development ? "Train in Greyhaven" : "A new companion"}</h2></div><span class="creator-slot">${development ? `COMPANY SLOT 0${slot + 1}` : "CHARACTER REPOSITORY"}</span><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="creator-body"><nav class="creation-steps">${visibleSteps.map((i, n) => `<button data-step="${i}" class="${step === i ? "chosen" : ""}"><span>0${n + 1}</span>${development && i === 5 ? "Development" : steps[i]}</button>`).join("")}<div class="creation-note">${development ? "Your injuries and spent resources stay with you." : "HoL attributes, disciplines and development. Powers are designed for this dungeon. Unused creation DP expires between stages."}</div>${!development ? '<button id="blank-hero" class="subtle-button">Start a blank hero</button>' : ""}</nav><main class="creation-content"><div class="section-heading"><div><span class="eyebrow">${development ? "EARNED LEVEL " + original.earnedLevel : "CHAPTER " + (visibleSteps.indexOf(step) + 1) + " OF 9"}</span><h3>${development && step === 5 ? "Develop your hero" : steps[step]}</h3></div><span class="creator-step-mark">${icon(step === 6 ? "pack" : step === 5 || step === 3 ? "bolt" : "book")}</span></div><div id="creation-fields"></div></main><aside class="creation-summary"><div class="creation-preview"><canvas id="recruit-preview"></canvas></div><h3>${esc(draft.name || "Unnamed adventurer")}</h3><p>${esc(name(draft.ancestryId))}<br>${esc(name(draft.classId))}</p><div class="creation-totals"><span>Health<b>${p.summary?.maximumHp ?? "—"}</b></span><span>Grit<b>${p.summary?.gritGranted ?? "—"}</b></span><span>Speed<b>${p.summary?.speed ?? "—"}</b></span><span>Coins<b>${p.inventory.remainingCoins}</b></span></div><div class="creation-validation">${p.valid ? '<span class="ready-seal">◆ Ready for the company</span>' : `<span>${p.errors.length} choices need attention</span><small>Review lists every remaining requirement.</small>`}</div></aside></div><footer class="character-footer creator-footer"><button id="creator-back" ${visibleSteps.indexOf(step) === 0 ? "disabled" : ""}>Back</button><span>${development ? "Training commits only earned, supported choices." : "Draft saved locally as you make choices."}</span>${step === 7 ? `<button id="recruit" class="primary" ${!p.valid ? "disabled" : ""}>${development ? "Commit training" : "Save hero to repository"}</button>` : '<button id="creator-next" class="primary">Continue →</button>'}</footer></section></div>`;
     const host = root.querySelector("#creation-fields");
     const model = [
       "class-arcanist",
@@ -130,6 +140,8 @@ export function creationScreen({
           : "Barbarian";
     view = heroPreview(root.querySelector("#recruit-preview"), scene.assets, {
       model,
+      draft,
+      name: draft.name,
       preview: p,
     });
     root.querySelector(".close").onclick = close;
@@ -173,7 +185,18 @@ export function creationScreen({
         );
       }),
     );
-    if (step === 0) {
+    if (step === 8) {
+      appearanceControls(host, {
+        appearance: draft.appearance,
+        ancestry: draft.ancestryId,
+        name: draft.name,
+        onChange: (value) => {
+          draft.appearance = value;
+          localStorage.setItem(key, JSON.stringify(draft));
+          view.update({ model, draft, name: draft.name, preview: p });
+        },
+      });
+    } else if (step === 0) {
       host.innerHTML = `${resumeDraft ? `<button id="resume-recruit" class="resume-draft">Resume saved draft · ${esc(resumeDraft.name || "Unnamed adventurer")}</button>` : ""}<p class="section-intro">Choose a name and assign your six attributes. Values range from −2 to +2 and must total +3.</p>${field("Hero name", `<input id="hero-name" maxlength="80" value="${esc(draft.name)}" placeholder="A name for the register">`)}<div class="attribute-allocation">${Object.entries(
         draft.attributes,
       )
@@ -251,6 +274,20 @@ export function creationScreen({
           : ""
       }`;
       bind("[data-ancestry]", "click", (e) => {
+        const previous = ANCESTRY_LOOKS[draft.ancestryId];
+        if (
+          !draft.appearance ||
+          previous?.skins.includes(draft.appearance.skin)
+        ) {
+          draft.appearance = {
+            ...normalizeAppearance(
+              draft.appearance,
+              e.dataset.ancestry,
+              draft.name,
+            ),
+            skin: ANCESTRY_LOOKS[e.dataset.ancestry].skins[0],
+          };
+        }
         draft.ancestryId = e.dataset.ancestry;
         draft.traitIds = [];
         delete draft.borrowedAncestryId;
@@ -317,9 +354,17 @@ export function creationScreen({
           const eligible = R.classEligibility(c, draft.attributes);
           return `<button class="choice-card ${draft.classId === c.id ? "chosen" : ""}" data-class="${c.id}" ${eligible.eligible ? "" : "disabled"} title="${esc(eligible.reasons.map((r) => r.text).join(" "))}"><strong>${esc(c.name)}</strong><small>HP +${c.hp} · ${c.minimumAttributes.join(" / ")} ≥ 0</small></button>`;
         })
-        .join(
-          "",
-        )}</div>${cls ? `<h3 class="subheading">Starting disciplines · Choose two</h3><div class="choice-grid">${cls.startingDisciplines.map((id) => `<button data-class-discipline="${id}" class="choice-card ${draft.classDisciplines.includes(id) ? "chosen" : ""}">${disciplineIcon(id)}${esc(name(id))}</button>`).join("")}</div><h3 class="subheading">Signature</h3><div class="trait-list">${cls.signatures[1].map((id) => `<article class="trait-choice ${draft.signatureId === id ? "chosen" : ""}"><button data-signature="${id}">${draft.signatureId === id ? "◆" : "◇"} ${esc(name(id))}<small>${esc(coverage(id).status)}</small></button>${abilityType(record(id))}${info(record(id))}</article>`).join("")}</div>` : ""}`;
+        .join("")}</div>${
+        cls
+          ? `<h3 class="subheading">Starting disciplines · Choose two</h3><div class="choice-grid">${cls.startingDisciplines.map((id) => `<button data-class-discipline="${id}" class="choice-card ${draft.classDisciplines.includes(id) ? "chosen" : ""}">${disciplineIcon(id)}${esc(name(id))}</button>`).join("")}</div><h3 class="subheading">Signature</h3><div class="trait-list">${cls.signatures[1]
+              .filter((id) => !C.gamePowers || POWERS[id])
+              .map(
+                (id) =>
+                  `<article class="trait-choice ${draft.signatureId === id ? "chosen" : ""}"><button data-signature="${id}">${draft.signatureId === id ? "◆" : "◇"} ${esc(name(id))}<small>${esc(coverage(id).status)}</small></button>${abilityType(record(id))}${info(record(id))}</article>`,
+              )
+              .join("")}</div>`
+          : ""
+      }`;
       bind("[data-class]", "click", (e) => {
         draft.classId = e.dataset.class;
         draft.classDisciplines = [];
@@ -420,7 +465,10 @@ export function creationScreen({
         });
         const drawChoices = () => {
           const records = C.choices
-            .filter((c) => c.kind === purchaseKind && !c.universal)
+            .filter(
+              (c) =>
+                c.kind === purchaseKind && !c.universal && isTrainable(c, C),
+            )
             .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
             .filter((c) => {
               if (!isAbility || disciplineFilter === "all") return true;
@@ -432,7 +480,7 @@ export function creationScreen({
                 return !reqs.length || reqs.some((r) => state.ranks[r.id] > 0);
               return reqs.some((r) => r.id === disciplineFilter);
             })
-            .map((c) => ({ c, e: R.purchaseEligibility(c, state, C.choices) }))
+            .map((c) => ({ c, e: gamePurchaseEligibility(c, state, C, R) }))
             .filter(
               ({ c, e }) =>
                 showAll ||
@@ -493,10 +541,11 @@ export function creationScreen({
                     coverage(c.id).status !== "included"
                   )
                     throw new Error(coverage(c.id).reason);
-                  const check = R.purchaseEligibility(
+                  const check = gamePurchaseEligibility(
                     c,
                     state,
-                    C.choices,
+                    C,
+                    R,
                     selection,
                   );
                   if (!check.eligible)
@@ -553,7 +602,11 @@ export function creationScreen({
                     `<select data-advance-signature="${t}">${options(
                       (cls?.signatures[t] ?? [])
                         .map(record)
-                        .filter((c) => coverage(c.id).status === "included"),
+                        .filter(
+                          (c) =>
+                            isTrainable(c, C) &&
+                            coverage(c.id).status === "included",
+                        ),
                       draft.progression.levels[level].signatures[t],
                       "Choose a supported signature",
                     )}</select>`,

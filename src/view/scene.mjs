@@ -1,3 +1,5 @@
+import { tacticalViewMethods } from "./tactical-grid.mjs";
+import { battlefieldViewMethods } from "./battlefield.mjs";
 import { traitsOf } from "../core/ancestry-game.mjs";
 import {
   partyCanSee,
@@ -698,6 +700,8 @@ export class Scene {
     }
   }
   updateVisibility(party, seen) {
+    this.battlefieldSeen = seen;
+    this.syncBattlefield();
     const visible = (p) => partyCanSee(this.map, party, p);
     this.tiles.forEach((p, i) => {
       const v = terrainVisible(this.map, party, p);
@@ -736,6 +740,7 @@ export class Scene {
           visible(e.data);
   }
   tick(dt) {
+    this.animateBattlefield(performance.now() / 1000, this.battlefieldSeen);
     const t = this.clock.elapsedTime;
     for (const e of this.entities.values()) {
       e.mixer.update(dt);
@@ -834,3 +839,7 @@ export class Scene {
     this.composer.setSize(innerWidth, innerHeight);
   }
 }
+
+Object.assign(Scene.prototype, battlefieldViewMethods);
+
+Object.assign(Scene.prototype, tacticalViewMethods);

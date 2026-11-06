@@ -1,3 +1,39 @@
+# Current adaptations — v0.4.0
+
+Bruce's November 6 direction supersedes the earlier ability-by-ability automation
+approach: HoL supplies core mechanics, while powers are designed for this game.
+The historical decisions below are retained as an audit trail; current coverage
+is in [implementation status](implementation-status.md).
+
+- New training: three ranked powers per discipline, one signature at each class
+  tier (1/3/7), ordinary basic actions, retained armor/general training, and three
+  consumable actions. Legacy receipts stay immutable and map to current powers.
+  Multiple source cards mapping to one power do not multiply charges.
+- HP healing does not remove injuries. Normal treatment costs one field dressing
+  and 60 minutes, or 15 coins minimum / five times Recovery in town. Exceptional
+  care costs one restoration draught or 100 coins and 240 minutes. Trait time
+  discounts apply. Wound count/scars and spent Grit persist. This simplification
+  was explicitly requested; printed exceptional remedies are not gameplay gates.
+- Recipe knowledge is independent of DP. Eleven recipes define tools, batches,
+  location, time and full output/refill. Three basics are known; others are
+  learned, found or power-granted. No repeatable free ingredient loop.
+- Power buffs use the strongest matching positive and negative modifiers.
+  Expiry follows the recipient's own turns, with a campaign-time ceiling for
+  exploration. Instant areas spare allies; persistent surfaces affect both sides.
+  Surface rounds are six campaign seconds. One-use traps fire once. Water
+  extinguishes fire/Burning; smoke blocks distant sight; barriers block movement
+  and projectiles. Magical light defeats darkness.
+- An ally's bonus Maneuver is queued for their next turn retaining that category,
+  once per recipient per encounter. Reaction restoration requires an actually
+  spent and retained Reaction. Neither permits a resource loop.
+- Cosmetic sex, ancestry mesh features, colors and body style have no bonuses.
+  Appearance and equipped visual gear use one pipeline across creation/play.
+- Tactical squares reflect game coordinates. Range overlays use actual weighted
+  route costs and cannot end on allies. Deleting a named save removes only that
+  run, including its own reserves/fallen history, after explicit confirmation.
+
+---
+
 # Computer-game adaptations — proposals
 
 Bruce approved Linux/Windows, a four-character single-player party, real-time exploration with turn-based combat, a persistent town, recovery with roguelike new parties, stylized dark fantasy and free initial assets.

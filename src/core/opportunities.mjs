@@ -193,13 +193,17 @@ export const opportunityMethods = {
         components: [
           {
             type: "physical",
-            amount: { weak: 2, standard: 3, strong: 5 }[result.tier],
+            amount:
+              { weak: 2, standard: 3, strong: 5 }[result.tier] +
+              this.consumeDamageBonus(h),
           },
           ...effects.map((x) => ({ type: x.type, amount: x.value })),
         ],
         resistances: defense.resistances,
         weaknesses: this.creatureWeaknesses(e),
       });
+      this.breakConcealment(h);
+      damage.total = this.absorbPowerDamage(e, damage.total, "physical");
       e.hp = Math.max(0, e.hp - damage.total);
       if (result.tier === "strong")
         for (const effect of effects)

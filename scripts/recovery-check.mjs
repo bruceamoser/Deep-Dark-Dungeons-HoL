@@ -41,22 +41,26 @@ export async function verifyRecovery(page) {
   ).toBe("active");
   await page.locator('[data-companion="0"]').click();
   await page.locator('[data-tab="journey"]').click();
-  await expect(page.locator(".wound")).toContainText("Recovery 0/5");
-  await page.evaluate(() => {
-    window.__ddd.game.dice = (n) => Array(n).fill(4);
+  await expect(page.locator(".wound")).toContainText("Treatable wound");
+  const beforeCare = await page.evaluate(() => {
+    const g = window.__ddd.game;
+    g.campaign.bank = 100;
+    g.emit("change");
+    return {
+      hp: g.party[0].survival.hp,
+      grit: g.party[0].survival.gritAvailable,
+    };
   });
-  await page.locator("[data-treat]").first().click();
+  await page.locator('[data-tab="journey"]').click();
+  await page.locator('[data-care][data-method="town"]').first().click();
   await notices();
-  await expect(page.locator(".wound")).toContainText("Recovery 2/5");
-  await expect(page.locator("[data-treat]").first()).toBeDisabled();
-  await page.locator("#next-care-day").click();
-  await notices();
-  await page.locator("[data-treat]").first().click();
-  await notices();
-  await page.locator("#next-care-day").click();
-  await notices();
-  await page.locator("[data-treat]").first().click();
-  await notices();
+  await expect(page.locator(".wound")).toContainText("Recovered");
+  expect(
+    await page.evaluate(() => ({
+      hp: window.__ddd.game.party[0].survival.hp,
+      grit: window.__ddd.game.party[0].survival.gritAvailable,
+    })),
+  ).toEqual(beforeCare);
   expect(
     await page.evaluate(() =>
       window.__ddd.game.party[0].conditions.some((c) => c.key === "blinded"),
@@ -77,7 +81,7 @@ export async function verifyRecovery(page) {
     ),
   ).toBe(true);
   console.log(
-    "Desktop wound acknowledgement, ally potion, daily treatment, persistent scar and restored sight passed.",
+    "Desktop wound acknowledgement, ally potion, predictable infirmary treatment, persistent scar and restored sight passed.",
   );
 }
 if (process.argv[1]?.endsWith("recovery-check.mjs")) {

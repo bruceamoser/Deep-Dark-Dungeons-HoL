@@ -1,27 +1,45 @@
-# Implementation status — v0.3.0
+# Implementation status — v0.4.0
 
-An early playable desktop dungeon RPG. Rules decisions are now explicit; bespoke art, encounter balance and final presentation still need work.
+Playable desktop dungeon RPG with game-owned powers over HoL's base mechanics.
+The production presentation target remains; the current modular art and balance
+are a playable iteration rather than final production assets.
 
 ## Playable
 
-- Four equipped animated heroes, isometric camera, real-time exploration and alternating-side HoL combat. Formations, individual combat movement, ally passage, ground-grab pan and zoom.
-- 58 source-book creatures, party/depth encounter budgets, bosses every fifth floor, procedural slotted magic equipment with discipline requirements, six merchants and paired town recall scrolls.
-- Full staged source character validation, visible culture/background grants, discipline filters, separate purchase dialogs, 90 usable class signatures, all 50 ancestry traits with documented game behavior, and 205 supported abilities overall.
-- The remaining 222 source abilities are deliberately retired from new training. Legacy purchases and source text remain intact; town retraining offers legal replacements at the original DP cost and stage without deleting XP, injuries or possessions. Published source presets retain their legacy purchases for compatibility.
-- All origin grant pairs have a usable dungeon benefit. Game rules appear before expandable original rules. A/M/R/P badges reflect the actual game action. The sheet exposes daily trait preparation, favorites and explicit equip/stow controls.
-- Opportunity attacks interrupt voluntary departure, casting, standing and inventory handling before effects. Player reactions are optional, NPC reactions automatic; saved pending decisions resume. Forced movement and Disengage do not provoke.
-- Source wounds, death marks, Last Words, Grit, typed conditions, healing and daily treatment. Sleep does not grant Grit or remove injuries.
-- Persistent world clock, daily automatic food/water use, supply exhaustion alerts, fatigue after 16 hours awake, eight-hour sleep with possible dungeon ambushes.
-- Torches occupy one hand, automatically douse in fixed/magical light, and check supplies per 30 burning minutes. Light falloff imposes visual Banes; low-light vision reduces those Banes, never grants darkvision. Seismic sense detects grounded creatures. Remembered floors remain navigable when dark.
-- Town crafting for torches, arrows, food, cord, healing bottles and smoke flasks: knowledge, tools, compatible paid materials, source progress/supply steps and time. Field harvesting uses a single finite edible patch per floor.
-- Named independent saved journeys, active/reserve hero repository, Hall of Fallen Heroes, shared expedition XP and earned town development.
-- Linux AppImage and Debian packages, Windows NSIS installer, GitHub release update checks/downloads and save-before-install. The Debian package supplies its own configured Chromium helper.
+- Four equipped, animated heroes; isometric camera; real-time exploration and alternating HoL turns; formations and individual combat movement. Right-drag grabs the ground. Actual tactical squares and a weighted movement overlay distinguish legal destinations, ally passage and the last movement point.
+- 58 book creatures; party/depth encounter budgets; bosses every fifth floor; procedural slotted magic gear with discipline requirements; six merchants and two-way recall scrolls.
+- Full staged HoL character validation and DP progression in a nine-chapter game creator. Visible origin grants, book discipline icons, A/M/R/P badges, separate purchase dialogs and scroll retention. New training uses 54 discipline powers, 30 class signatures and five retained general/armor training choices. Three consumable actions round out the 87 game designs. Basic actions remain available.
+- A common effect engine for damage/healing, areas, physical DR, reduction, absorption, Boons/Banes, conditions, movement, push/pull, swaps, teleportation, protection, counters, concealment, light and limited action resources. Bonus Maneuvers queue for the recipient's next eligible turn, so they can actually be used in alternating combat.
+- Persistent fire, water, smoke, difficult ground, magical light/darkness, barriers, healing circles and one-use traps. Ground previews precede spending; cancellation is free. Surfaces affect both sides; instant area strikes spare allies.
+- All 50 ancestry traits retain explicit game behavior. Crafting and treatment traits now benefit the new recipe/care systems. Class signatures establish tactical roles rather than expose the old tabletop card roster.
+- Eleven learned recipes with ingredients, tools, locations, level gates and explicit times. Learn from artisans, discover a manuscript in the first searched coffer per floor, craft new supplies or replenish an existing bundle. Knowledge and prepared batches belong to each hero.
+- HP healing, stabilization and wound treatment remain distinct. Normal camp treatment consumes a field dressing; exceptional treatment consumes a restoration draught. The town infirmary supplies a priced alternative. Treatment removes wound-linked penalties but retains scars/counts and never restores Grit. HoL's injury tables, death marks and Last Words remain.
+- Persistent time, daily food/water, supply exhaustion notices, fatigue after 16 hours, eight-hour sleep with possible ambushes, held torches with automatic dousing and 30-minute consumption checks.
+- Saved sex, build, face, skin, eight hairstyles, seven facial-hair styles, eye/hair/clothing/accent colors. Ten ancestry silhouettes and facial features, including pointed ears and constructed Oath-Bound faces. Live rotate/zoom preview; appearance carries into equipped dungeon models, reserves, development and fallen records. Edit cosmetics in town.
+- Named independent runs, copies, active and inactive deletion with confirmation, persistent reserves, fallen heroes, visible XP and town training. Deleting the last migrated run cannot reimport it on restart.
+- Linux AppImage and Debian installers, Windows NSIS installer, release update checks/downloads and save-before-install. Linux launcher keeps sandboxing enabled with a space-free per-user runtime.
 
-## Remaining limits
+## Compatibility and limits
 
-- Many source abilities have substantial replacements, including dialogue, investigation, summons and free-form expertise. Summon replacements are immediate support/attack effects, not autonomous creatures. Ground-targeted areas, vertical traversal, water environments, broad social simulation and full stealth remain outside this roster. This is a curated computer game, not complete tabletop simulation.
-- Class/trait balance and long-run economy need playtesting. Similar tactical functions intentionally share a non-stacking effect category; repeatedly casting a buff does not multiply its strength. Once-per-encounter signatures reset on a new encounter.
-- Creature alternate actions, full footprint variety, exceptional anatomical wound remedies and expedition rescue remain incomplete. Current time/food/fatigue/lighting policies are game adaptations.
-- Current models are a first art pass. Full ancestry appearance, bespoke equipment sets, polished animation blending, authored room variety, designed town spaces, production audio, accessibility and performance tuning remain future work.
+Original source rules, cards, receipts and inventories remain intact. Legacy
+abilities map to the new designs by class/tier or discipline/rank, with explicit
+general-ability mappings. Duplicate mappings share one power and its limits; new
+training cannot charge DP for a power already supplied by legacy training. Source
+stat benefits and past purchases are preserved. This is compatibility mapping,
+not a refund or rewrite of the character's historical build.
 
-The per-card decisions and pinned hashes are in [ability-coverage.json](ability-coverage.json). [computer-game-deltas.md](computer-game-deltas.md) records adaptations; [validation.md](validation.md) records executed checks. Original book/Foundry files and vendored source rules are unchanged.
+Signatures share some discipline effect templates. Autonomous summons, vertical
+traversal, full social simulation, elaborate fluid physics, broader recipes,
+creature alternate actions and long-term balance remain future work. Concealment
+is an explicit targeting rule, not a complete stealth simulation. Camp treatment
+is predictable once a safe location is established; sleep remains interruptible.
+
+Appearance uses original modular geometry on the existing licensed KayKit rigs.
+It is not a bespoke set of production character sculpts; animation blending,
+more equipment silhouettes, town environments and final art/audio still need
+production work. Two GPUs are not required or combined.
+
+[Current game designs and mappings](game-power-coverage.json) ·
+[Historical source-card review](ability-coverage.json) ·
+[Approved plan](gameplay-and-identity-plan.md) ·
+[Adaptations](computer-game-deltas.md) · [Validation](validation.md)

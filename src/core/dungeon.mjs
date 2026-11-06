@@ -1,3 +1,4 @@
+import { wallAt, surfaceAt } from "./battlefield.mjs";
 export const key = (x, z) => `${x},${z}`;
 export const distance = (a, b) =>
   Math.max(Math.abs(a.x - b.x), Math.abs(a.z - b.z));
@@ -164,6 +165,7 @@ export function neighbors(map, p, blocked = new Set()) {
       z = p.z + dz;
     if (
       !map.tiles[key(x, z)] ||
+      wallAt(map, x, z) ||
       map.obstacles?.[key(x, z)] ||
       blocked.has(key(x, z))
     )
@@ -172,7 +174,9 @@ export function neighbors(map, p, blocked = new Set()) {
       dx &&
       dz &&
       (!map.tiles[key(p.x + dx, p.z)] ||
+        wallAt(map, p.x + dx, p.z) ||
         !map.tiles[key(p.x, p.z + dz)] ||
+        wallAt(map, p.x, p.z + dz) ||
         map.obstacles?.[key(p.x + dx, p.z)] ||
         map.obstacles?.[key(p.x, p.z + dz)] ||
         blocked.has(key(p.x + dx, p.z)) ||
@@ -218,6 +222,15 @@ export function lineOfSight(map, a, b) {
   const steps = Math.max(Math.abs(a.x - b.x), Math.abs(a.z - b.z)) * 3;
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
+    const p = {
+      x: Math.round(a.x + (b.x - a.x) * t),
+      z: Math.round(a.z + (b.z - a.z) * t),
+    };
+    if (
+      wallAt(map, p.x, p.z) ||
+      (distance(a, b) > 1 && surfaceAt(map, p, "smoke"))
+    )
+      return false;
     if (
       !map.tiles[
         key(

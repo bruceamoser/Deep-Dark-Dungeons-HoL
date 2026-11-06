@@ -1,7 +1,9 @@
+import { surfaceAt, wallAt } from "./battlefield.mjs";
 import { key, neighbors } from "./dungeon.mjs";
 const prone = (actor) => actor.conditions?.some((c) => c.key === "prone");
 export function traversalCost(map, actors, point) {
-  return map.tiles[key(point.x, point.z)]?.difficult ||
+  return surfaceAt(map, point, "difficult") ||
+    map.tiles[key(point.x, point.z)]?.difficult ||
     actors.some((a) => a.x === point.x && a.z === point.z && prone(a))
     ? 2
     : 1;
@@ -100,4 +102,35 @@ export function companyStep(marching, paths, occupants, blockedFor) {
     paths.get(hero.id).splice(0, points.length);
   }
   return steps;
+}
+
+// A single weighted flood computes the actual movement budget, including ally
+// passage. Occupied cells can be crossed but are never valid destinations.
+export function reachableCells(
+  map,
+  start,
+  budget,
+  blocked,
+  cost,
+  occupied = new Set(),
+) {
+  const costs = new Map([[key(start.x, start.z), 0]]),
+    open = [{ ...start, cost: 0 }],
+    result = [];
+  while (open.length) {
+    open.sort((a, b) => a.cost - b.cost);
+    const p = open.shift(),
+      k = key(p.x, p.z);
+    if (p.cost !== costs.get(k)) continue;
+    result.push({ x: p.x, z: p.z, cost: p.cost, canEnd: !occupied.has(k) });
+    for (const n of neighbors(map, p, blocked)) {
+      const nk = key(n.x, n.z),
+        next = p.cost + cost(n);
+      if (next <= budget && next < (costs.get(nk) ?? Infinity)) {
+        costs.set(nk, next);
+        open.push({ ...n, cost: next });
+      }
+    }
+  }
+  return result;
 }

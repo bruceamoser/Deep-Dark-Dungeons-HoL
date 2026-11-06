@@ -1,3 +1,4 @@
+import { surfaceAt } from "./battlefield.mjs";
 import { traitsOf } from "./ancestry-game.mjs";
 import { distance, lineOfSight } from "./dungeon.mjs";
 
@@ -22,6 +23,7 @@ export function prepareLighting(map) {
     throw new Error("Invalid dungeon lighting.");
 }
 export function naturallyLit(map, p) {
+  if (surfaceAt(map, p, "darkness")) return false;
   return (map.lights ?? []).some(
     (l) => distance(l, p) <= l.radius && lineOfSight(map, l, p),
   );
@@ -40,16 +42,22 @@ export function illuminated(map, party, p) {
   );
 }
 export function magicallyLit(map, party, p) {
-  return party.some(
-    (h) =>
-      h.lantern &&
-      h.survival.status === "active" &&
-      distance(h, p) <= 3 &&
-      lineOfSight(map, h, p),
+  return (
+    surfaceAt(map, p, "light") ||
+    surfaceAt(map, p, "fire") ||
+    party.some(
+      (h) =>
+        h.lantern &&
+        h.survival.status === "active" &&
+        distance(h, p) <= 3 &&
+        lineOfSight(map, h, p),
+    )
   );
 }
 export function lightBanes(map, party, p) {
-  if (naturallyLit(map, p) || magicallyLit(map, party, p)) return 0;
+  if (magicallyLit(map, party, p)) return 0;
+  if (surfaceAt(map, p, "darkness")) return Infinity;
+  if (naturallyLit(map, p)) return 0;
   const ranges = party
     .filter(
       (h) =>

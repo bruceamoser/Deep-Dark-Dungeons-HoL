@@ -1,3 +1,4 @@
+import { appearanceControls } from "./appearance.mjs";
 import { EQUIPMENT_SLOTS, slotOf } from "../core/treasure.mjs";
 import { enchantmentDetails, itemComparison } from "./treasure.mjs";
 import { abilityType, disciplineIcon } from "./book-symbols.mjs";
@@ -73,6 +74,7 @@ export function characterSheet({
      ["equipment", "pack", "Equipment"],
      ["abilities", "bolt", "Abilities"],
      ["journey", "book", "Journey"],
+     ["appearance", "star", "Appearance"],
    ]
      .map(([id, i, t]) => `<button data-tab="${id}">${icon(i)}${t}</button>`)
      .join(
@@ -372,7 +374,7 @@ export function characterSheet({
       const cards = C.choices.filter(
         (c) =>
           c.kind === "ability" &&
-          (p.state.abilities.includes(c.id) || c.universal),
+          (game.powerIds(h).includes(c.id) || c.universal),
       );
       content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">YOUR COMBAT REPERTOIRE</span><h3>Abilities & favorites</h3></div><span class="favorite-count">${icon("star")} ${(h.favorites ?? []).length} / 8</span></div><p class="section-intro">Pin actions to your combat bar. Select a card for its cost, range and full rules.</p><h3 class="subheading">Ancestry gifts</h3><div class="ancestry-gifts">${game
         .traits(h)
@@ -385,10 +387,11 @@ export function characterSheet({
         )}</div><h3 class="subheading">Learned actions</h3><div class="ability-library">${cards
         .sort((a, b) => Number(!!ABILITIES[b.id]) - Number(!!ABILITIES[a.id]))
         .map((c) => {
-          const a = ABILITIES[c.id],
+          const a =
+              ABILITIES[c.id]?.category === "passive" ? null : ABILITIES[c.id],
             f = h.favorites?.includes(c.id),
             status = coverage(c.id);
-          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule"><b>Dungeon version</b> ${esc(status.reason)}</p><details class="choice-reference"><summary>Original HoL rules</summary>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}</details>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
+          return `<article class="ability-entry ${a ? "playable" : ""}"><div class="ability-symbol">${abilityType(c)}</div><details><summary><strong>${esc(c.name)}</strong><small>${a ? `${a.category.toUpperCase()} · ${a.range ? `${a.range} SQUARES` : "SELF"}${a.attribute ? " · " + a.attribute.toUpperCase() : ""}` : esc(status.status === "included" ? "PASSIVE / CONTEXTUAL" : status.status.toUpperCase())}</small></summary><div class="ability-rules"><p class="dungeon-rule"><b>Dungeon version</b> ${esc(status.reason)}</p><details class="choice-reference"><summary>${c.gamePower ? "Game rules" : "Original HoL rules"}</summary>${c.reference?.rules.details.map((d) => `<p><b>${esc(d.label)}</b> ${esc(d.value)}</p>`).join("") ?? ""}${c.reference?.rules.body.map((b) => (b.text ? `<p>${esc(b.text)}</p>` : (b.outcomes ?? []).map((o) => `<p><b>${esc(o.label)}</b> ${esc(o.text)}</p>`).join(""))).join("") ?? ""}</details>${a ? `<button data-use="${c.id}" ${game.actionReason(c.id, h) ? "disabled" : ""}>Use action</button><p class="cost-note">${esc(game.actionReason(c.id, h) || "Select a target in the dungeon.")}</p>` : `<p class="cost-note">${esc(status.reason)}</p>`}</div></details>${a ? `<button class="favorite-toggle ${f ? "pinned" : ""}" data-favorite="${c.id}" aria-label="${f ? "Unfavorite" : "Favorite"} ${esc(c.name)}" aria-pressed="${!!f}" title="${f ? "Remove from" : "Pin to"} combat bar">${icon("star")}</button>` : ""}</article>`;
         })
         .join("")}</div>`;
       root.querySelectorAll("[data-prepare-trait]").forEach(
@@ -410,6 +413,17 @@ export function characterSheet({
       root
         .querySelectorAll("[data-use]")
         .forEach((b) => (b.onclick = () => activate(b.dataset.use)));
+    } else if (tab === "appearance") {
+      appearanceControls(content, {
+        appearance: h.draft.appearance,
+        ancestry: h.draft.ancestryId,
+        name: h.name,
+        disabled: game.mode !== "town",
+        onChange: (value) => {
+          game.setAppearance(index, value);
+          view.update(h);
+        },
+      });
     } else {
       content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">A LIFE BEFORE THE DARK</span><h3>Journey & development</h3></div><b class="level-medallion">${p.state.level}</b></div><div class="journey-grid"><div><span class="eyebrow">ORIGINS</span><h3>${esc(name(h.draft.culture.id))}</h3><p>${esc(name(h.draft.background.id))}</p><p>${esc(p.summary.languages.map((l) => l.name).join(" · "))}</p></div><div><span class="eyebrow">TRAINING</span><h3>${p.development.current} DP available</h3><p>Earned level ${h.earnedLevel} · ${p.development.spent} DP spent</p><p>Gain XP from discovery, encounters and treasure. Apply earned levels by training here.</p>${game.mode === "town" ? '<button id="train-hero" class="primary">Develop this hero</button>' : '<span class="cost-note">Return to Greyhaven to train.</span>'}</div></div>${experienceDetails(h, game.campaign.depth)}<h3 class="subheading">Disciplines</h3><div class="discipline-grid">${Object.entries(
         p.state.ranks,
@@ -438,7 +452,27 @@ export function characterSheet({
         .join(
           "",
         )}${game.mode === "town" && h.wounds.length ? `<p class="cost-note">Campaign day ${game.clock().day} · One attempt per wound per day across all healers.</p><button id="next-care-day">Wait until next treatment day</button>` : ""}`;
-      const retired = game.retiredPurchases(h);
+      if (C.gamePowers) {
+        content.querySelectorAll(".wound").forEach((node, n) => {
+          const w = h.wounds[n],
+            q = game.careQuote(index, w.id, "camp"),
+            town = game.careQuote(index, w.id, "town");
+          node.innerHTML = `<h3>${esc(w.record.injury)}</h3><p>${w.treatment?.completed ? "Recovered · scar and injury history retained" : q.exceptional ? "Severe injury · restoration treatment required" : "Treatable wound · field dressing or town care"}</p>${w.treatment?.completed ? "" : `<button data-care="${w.id}" data-method="camp" ${q.reason ? "disabled" : ""}>${q.exceptional ? "Use restoration draught" : "Use field dressing"} · ${q.minutes} min</button><p class="cost-note">${esc(q.reason || "Consumes one supply. Repairs this wound; HP and Grit are unchanged.")}</p>${game.mode === "town" ? `<button data-care="${w.id}" data-method="town" ${town.reason ? "disabled" : ""}>Infirmary · ${town.cost} coins · ${town.minutes} min</button>` : ""}`}`;
+        });
+        content
+          .querySelector("#next-care-day")
+          ?.previousElementSibling?.remove();
+        content.querySelector("#next-care-day")?.remove();
+        content.querySelectorAll("[data-care]").forEach(
+          (b) =>
+            (b.onclick = () =>
+              attempt(() => {
+                game.treatGameWound(index, b.dataset.care, b.dataset.method);
+                draw();
+              })),
+        );
+      }
+      const retired = C.gamePowers ? [] : game.retiredPurchases(h);
       if (retired.length)
         content.insertAdjacentHTML(
           "beforeend",

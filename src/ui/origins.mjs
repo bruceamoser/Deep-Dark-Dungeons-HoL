@@ -57,6 +57,8 @@ export function originPicker({
     const target = overlay.querySelector(".origin-detail");
     target.innerHTML = `<div class="origin-detail-heading"><div><span class="eyebrow">${type.toUpperCase()}</span><h3>${esc(selected.name)}</h3></div><span class="origin-coins">${icon("coins")}<b>${selected.coins}</b> starting coins</span></div><p class="origin-choice-hint">Choose <b>one</b> of these two pairs. You receive its discipline rank and ability together.</p><div class="origin-pairs">${selected.pairs
       .map((pair, index) => {
+        if (selected.legacyPairCount && index < selected.legacyPairCount)
+          return "";
         const ability = choices.find((c) => c.id === pair.abilityId),
           status = coverage(pair.abilityId),
           owned = current?.id === selected.id && current?.pair === index;
@@ -64,7 +66,7 @@ export function originPicker({
           (status.status === "included" ? status.reason : null) ??
           ability.reference?.rules?.body?.find((b) => b.text)?.text ??
           "Read the ability’s source rules below.";
-        return `<article class="origin-pair ${owned ? "chosen" : ""}" data-origin-pair="${index}"><span class="eyebrow">${owned ? "YOUR CURRENT PAIR" : `OPTION ${index + 1}`}</span>${originGrant(pair, choices)}<p class="origin-ability-description">${esc(description)}</p><span class="origin-coverage ${status.status === "included" ? "supported" : ""}">${status.status === "included" ? "Supported in the dungeon" : status.status === "excluded" ? "Source ability · Not included in dungeon play" : "Source ability · Dungeon automation pending"}</span>${info(ability)}<button class="primary" data-choose-origin-pair="${index}">${owned ? "Keep this pair" : "Choose this pair"}</button></article>`;
+        return `<article class="origin-pair ${owned ? "chosen" : ""}" data-origin-pair="${index}"><span class="eyebrow">${owned ? "YOUR CURRENT PAIR" : `OPTION ${index + 1 - (selected.legacyPairCount ?? 0)}`}</span>${originGrant(pair, choices)}<p class="origin-ability-description">${esc(description)}</p><span class="origin-coverage ${status.status === "included" ? "supported" : ""}">${status.status === "included" ? "Supported in the dungeon" : status.status === "excluded" ? "Source ability · Not included in dungeon play" : "Source ability · Dungeon automation pending"}</span>${info(ability)}<button class="primary" data-choose-origin-pair="${index}">${owned ? "Keep this pair" : "Choose this pair"}</button></article>`;
       })
       .join("")}</div>`;
     target.scrollTop = 0;
@@ -100,7 +102,13 @@ export function originPicker({
       matches
         .map(
           (c) =>
-            `<button data-browse-origin="${c.id}" aria-pressed="${c.id === selected.id}" class="${c.id === selected.id ? "chosen" : ""}"><strong>${esc(c.name)}</strong>${c.pairs.map((pair) => `<span>${disciplineIcon(pair.disciplineId)}<span><b>${esc(name(pair.disciplineId))} ${pair.rank}</b><small>${esc(name(pair.abilityId))}</small></span></span>`).join("")}</button>`,
+            `<button data-browse-origin="${c.id}" aria-pressed="${c.id === selected.id}" class="${c.id === selected.id ? "chosen" : ""}"><strong>${esc(c.name)}</strong>${c.pairs
+              .filter((p) => !c.legacyPairCount || p.gamePower)
+              .map(
+                (pair) =>
+                  `<span>${disciplineIcon(pair.disciplineId)}<span><b>${esc(name(pair.disciplineId))} ${pair.rank}</b><small>${esc(name(pair.abilityId))}</small></span></span>`,
+              )
+              .join("")}</button>`,
         )
         .join("") ||
       '<p class="empty-state">No matching origins. Try another name, discipline or ability.</p>';

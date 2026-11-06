@@ -1,3 +1,4 @@
+import { POWERS } from "./powers.mjs";
 import { FIELD_ABILITIES } from "./field-abilities.mjs";
 import { gameDescription } from "./signatures.mjs";
 import { SIGNATURES } from "./signatures.mjs";
@@ -13,6 +14,7 @@ const attack = (attribute, range, damage, type = "physical", extra = {}) => ({
   ...extra,
 });
 export const ABILITIES = Object.freeze({
+  ...POWERS,
   ...CURATED_ATTACKS,
   ...SIGNATURES,
   ...FIELD_ABILITIES,
@@ -201,6 +203,12 @@ export const SUPPORT_ACTIONS = new Set([
   "ability-move",
 ]);
 export function coverage(id) {
+  if (POWERS[id])
+    return {
+      status: "included",
+      decision: "game-design",
+      reason: POWERS[id].description,
+    };
   if (ABILITIES[id])
     return {
       status: "included",

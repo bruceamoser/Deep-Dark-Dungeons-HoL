@@ -6,7 +6,7 @@ A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, base
 
 ## Download and install
 
-Get the [latest release](https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest). Windows has an installer; Linux has a `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
+Get the [latest release](https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Deep-Dark-Dungeons-HoL-0.4.0-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
 
 The installed game checks for updates on startup and every four hours, downloads them in the background, and offers **Updates → Save & restart to install**. Your active journey is saved before installation. Updates preserve all saved runs and heroes. Source-checkout/unpacked builds link to the release installer instead of self-updating. See [release details and publishing](docs/releases.md).
 
@@ -30,7 +30,7 @@ npm run package:linux
 npm run package:windows
 ```
 
-Packaging creates an AppImage or Windows NSIS setup executable in `release/`, plus update metadata. `npm run package:dir` builds only the local Linux directory for `launch-game.sh`. Use the launcher for that unpacked build; use the installed release for automatic updates.
+Packaging creates Linux AppImage/Debian packages or a Windows NSIS setup executable in `release/`, plus update metadata. `npm run package:dir` builds only the local Linux directory for `launch-game.sh`. Use the launcher for that unpacked build; use the installed release for automatic updates.
 
 ## Controls
 
@@ -51,10 +51,13 @@ Packaging creates an AppImage or Windows NSIS setup executable in `release/`, pl
 - The market quarter has six merchants. Search coffers for individual magical items and choose who carries each. The sheet shows ten equipment slots and discipline requirements: a dormant enchanted weapon still works as an ordinary weapon.
 - Find or buy a Scroll of Return. Read it outside combat with a free hand to reach town; Return to depth resumes the same preserved floor without healing.
 - Red/green numbers show damage/healing; conditions have persistent visual effects.
-- Runs (or Escape with no targeting/dialog open) pauses and saves. Name, copy, continue or create independent journeys. Save & exit run leaves the run paused in the library; Save & quit game closes the desktop application. Escape also opens Runs during mandatory combat decisions.
+- Runs (or Escape with no targeting/dialog open) pauses and saves. Name, copy, continue, create or delete independent journeys. Deletion asks for confirmation and keeps other runs intact. Save & exit run leaves the run paused in the library; Save & quit game closes the desktop application. Escape also opens Runs during mandatory combat decisions.
 - The company register holds all living heroes, both the active four and the reserve. Create a hero saves a validated character to the repository; choose a slot and Assign to put them in the party. Replaced companions remain in reserve with their gear, injuries and XP. The Hall of Fallen Heroes records each resolved final death and preserves that hero's last state.
-- The eight-step creator starts blank; saved drafts and example characters are explicit choices. Culture and background choosers show both grant pairs, discipline icons, ability types and full rules before selection. Early training at level 0 permits ability purchases only; discipline purchases unlock at level 1. Separate discipline/ability purchase dialogs show owned ranks, book symbols and action letters. Choices and purchases preserve your scroll position. Equipment lists granted gear before additional shopping.
-- Journey offers matching one-hour wound treatment in town, with one attempt per wound per campaign day. Healing potions are usable from inventory or the combat action bar.
+- The nine-chapter creator starts blank; saved drafts and example characters are explicit choices. Culture and background choosers show both grant pairs, discipline icons, ability types and full rules before selection. Early training at level 0 permits ability purchases only; discipline purchases unlock at level 1. Separate discipline/ability purchase dialogs show owned ranks, book symbols and action letters. Choices and purchases preserve your scroll position. Equipment lists granted gear before additional shopping.
+- Appearance offers sex, ancestry features, build/face, hair/facial hair and skin/eye/hair/clothing colors, with live rotation and zoom. Edit looks in town.
+- The tactical grid shows real squares; teal/gold shading shows reachable/last-point movement. Hover for costs; G toggles exploration squares.
+- Powers are game-designed over HoL mechanics. Ground actions preview areas; fire, water, smoke, barriers and other surfaces affect battlefield positioning.
+- Recipes lets you learn, create or replenish supplies with tools and ingredient batches. Journey offers predictable field-dressing/restoration treatment or priced town care. Wound scars and spent Grit remain. Healing potions are usable from inventory or the combat bar.
 
 Named saves live under the desktop application's user-data `runs/` directory (`~/.config/deep-dark-dungeons-hol/runs/` on this Linux installation). Development saves use browser local storage. Startup restores the active run, or opens the library if you exited it. The old `campaign.json` is imported once as Original expedition and retained as a backup. Each slot includes its own hero repository and Hall; playing a slot autosaves only that slot. Older saves retain their party and earned levels, which migrate to the matching minimum XP. Newly created heroes are saved immediately; final-death records trigger an immediate save.
 
@@ -62,4 +65,4 @@ Named saves live under the desktop application's user-data `runs/` directory (`~
 
 [Production brief](docs/production-brief.md) · [Rules intake](docs/rules-intake.md) · [Computer-game proposals](docs/computer-game-deltas.md) · [Assets](docs/assets.md) · [Artcraft integration](docs/artcraft.md)
 
-The authoritative book and Foundry repositories are not modified. Source files are imported from a pinned Git revision with per-file hashes in `docs/hol-source-lock.json`. Ordinary rest never refreshes Grit; all five wound tables are retained. Numerical wound effects, conditions, treatment and survival are integrated; exceptional anatomical remedies and the remaining rules coverage are documented explicitly.
+The authoritative book and Foundry repositories are not modified. Source files are imported from a pinned Git revision with per-file hashes in `docs/hol-source-lock.json`. Ordinary rest never refreshes Grit; all five wound tables are retained. Numerical wound effects, conditions, treatment and survival are integrated; game-specific recovery and power rules are documented explicitly.

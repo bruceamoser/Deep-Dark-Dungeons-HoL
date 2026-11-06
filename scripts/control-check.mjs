@@ -148,7 +148,7 @@ export async function verifyControls(page) {
     window.__ddd.game.party.slice(0, 3).map((h) => [h.x, h.z]),
   );
   await page.getByRole("button", { name: "Actions", exact: false }).click();
-  await page.locator('[data-card="ability-cinder-cast"]').click();
+  await page.locator('[data-card="power-ember-lance"]').click();
   const target = await page.evaluate(() => {
     const { game: g, scene: s } = window.__ddd,
       e = g.enemies[0],
@@ -163,10 +163,10 @@ export async function verifyControls(page) {
   });
   await page.mouse.move(target.x, target.y);
   await page.mouse.click(target.x, target.y);
-  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 5);
+  await page.waitForFunction(() => window.__ddd.game.enemies[0].hp === 4);
   expect(
     await page.evaluate(() => window.__ddd.game.enemies[0].conditions[0]),
-  ).toMatchObject({ key: "burning", rating: 2 });
+  ).toMatchObject({ key: "burning", rating: 1 });
   expect(
     await page.evaluate(() =>
       window.__ddd.game.party.slice(0, 3).map((h) => [h.x, h.z]),
@@ -231,7 +231,7 @@ export async function verifyControls(page) {
     "Earned level and native workshop training preserved spent HP/Grit.",
   );
   console.log(
-    "Right-drag camera, wheel zoom, marching order, full sheet, nonzero/muted audio, Cinder Cast and actor-only tactical movement passed.",
+    "Right-drag camera, wheel zoom, marching order, full sheet, nonzero/muted audio, Ember Lance and actor-only tactical movement passed.",
   );
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

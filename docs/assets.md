@@ -14,7 +14,7 @@ Cinzel and EB Garamond font licenses are retained under `public/vendor/hol/fonts
 
 The Greyhaven seal is original SVG artwork authored for the game. `art/source/greyhaven-seal.vectorcraft` is the editable MCP-created document and `art/exports/greyhaven-seal.png` its VectorCraft export.
 
-The character command screen uses original SVG line icons (`src/ui/icons.mjs`), CSS framing and a lit Three.js preview. The readied recurve bow in `src/view/appearance.mjs` is original procedural geometry. Armor tiers reuse CC0 KayKit adventurer body/limb meshes, rebound to the selected character rig; heads remain attached to the original rig. Cloth, leather, mixed plate and full plate are equipment-driven variants, not new commissioned character models. Ancestry-specific bodies/faces and individual weapon silhouettes remain future asset work.
+The character command screen uses original SVG line icons (`src/ui/icons.mjs`), CSS framing and a lit Three.js preview. The readied recurve bow in `src/view/appearance.mjs` is original procedural geometry. Armor tiers reuse CC0 KayKit adventurer body/limb meshes, rebound to the selected character rig; heads remain attached to the original rig. Cloth, leather, mixed plate and full plate are equipment-driven variants, not new commissioned character models. The v0.4.0 identity layer below adds ancestry-specific proportions and faces; further weapon silhouettes remain future art work.
 
 Physical projectiles reuse the CC0 KayKit Adventurers `arrow.gltf` mesh (wooden shaft, metal head and fletching). Blade trails, impact shards, elemental ribbons, bowstring motion and attack sound synthesis are original runtime code in `src/view/combat-effects.mjs` and `src/view/audio.mjs`. No additional third-party art or audio license was introduced.
 
@@ -27,3 +27,13 @@ World interaction highlights clone and tint the existing CC0 dungeon coffer/stai
 Quaternius supplies CC0 rigged meshes from [Ultimate Monsters](https://quaternius.com/packs/ultimatemonsters.html), [Ultimate Animated Animals](https://quaternius.com/packs/ultimateanimatedanimals.html) and [Animated Monster](https://quaternius.com/packs/animatedmonster.html). Creator downloads were quota-limited; the imported Orc, Orc Skull, Yeti, Goleling, Green Blob, Wolf, Bat, Demon and Ghost files came from public mirrors. Exact pinned download URLs and SHA-256 hashes for both original and packaged files are recorded in [creature-assets.json](creature-assets.json). Embedded glTF files were repacked to self-contained GLB without geometry or animation edits.
 
 Species variants share those rigs with palette/scale/equipment changes. They are not 58 bespoke models. Rats and spiders, all persistent condition effects, floating feedback and accessory geometry are original runtime code. Book illustrations remain the pinned HoL assets with their existing source provenance. No extra license for the HoL content is implied by the CC0 meshes.
+
+## Individual heroes (v0.4.0)
+
+`src/view/hero-identity.mjs` contains original modular head, ears, eyes/irises,
+hair, beard, braid, bindings and Oath-Bound seam geometry fitted to KayKit's
+CC0 Adventurers head bone. Ancestry/build/sex alter proportions; garment palette
+recoloring preserves the equipment pipeline. No downloaded character creator,
+paid asset or AI-generated bitmap is used. The original pack files stay unchanged.
+Tactical overlays and battlefield flames, water, smoke, ice walls and runes are
+original procedural Three.js geometry/materials.

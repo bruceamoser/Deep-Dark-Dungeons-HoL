@@ -1,0 +1,4090 @@
+{
+  "revision": 1,
+  "policy": "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
+  "counts": {
+    "powers": 87,
+    "disciplinePowers": 54,
+    "signatures": 30,
+    "consumableActions": 3,
+    "recipes": 11
+  },
+  "powers": [
+    {
+      "id": "power-driving-cut",
+      "name": "Driving Cut",
+      "description": "Strike with a readied melee weapon for 2/4/6 physical damage and push the target 1 square. Twice per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "push",
+          "amount": 1
+        }
+      ],
+      "weapon": "melee",
+      "gamePower": true
+    },
+    {
+      "id": "power-sweeping-blade",
+      "name": "Sweeping Blade",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. Twice per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true
+    },
+    {
+      "id": "power-execution-edge",
+      "name": "Execution Edge",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. Once per encounter.",
+      "discipline": "discipline-arms",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 4,
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-brace",
+      "name": "Brace",
+      "description": "Reduce incoming damage by 2 until the end of your next turn. Twice per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "reduction": 2
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-iron-skin",
+      "name": "Iron Skin",
+      "description": "Gain 1 physical DR for two turns. Twice per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-adamant-ward",
+      "name": "Adamant Ward",
+      "description": "Absorb the next 8 damage you receive. Lasts two turns. Once per encounter.",
+      "discipline": "discipline-armor",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 8,
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-fleet-step",
+      "name": "Fleet Step",
+      "description": "Gain 3 movement this turn and disengage. Twice per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "movement": 3,
+            "disengage": true
+          },
+          "turns": 1
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-vault",
+      "name": "Vault",
+      "description": "Leap up to 4 squares to an empty visible space. Cross creatures and ground hazards, but never walls. Twice per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "leap"
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-rescue-line",
+      "name": "Rescue Line",
+      "description": "Pull an ally up to 4 squares toward you without provoking opportunity attacks. Twice per encounter.",
+      "discipline": "discipline-athletics",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 5,
+      "effects": [
+        {
+          "kind": "pull",
+          "amount": 4
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-spirit-ward",
+      "name": "Spirit Ward",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns. Twice per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 4,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-phantom-sentry",
+      "name": "Phantom Sentry",
+      "description": "Place a spectral trap. The first creature to cross it suffers 5 mental damage. Lasts three rounds. Twice per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 0,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "trap",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-spirit-crossing",
+      "name": "Spirit Crossing",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can. Once per encounter.",
+      "discipline": "discipline-calling",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "swap"
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-field-artisan",
+      "name": "Field Artisan",
+      "description": "Learn the smoke flask and cord recipes. Crafting takes 25% less time. Use the recipe book at camp or in town.",
+      "discipline": "discipline-craft",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-smoke-flask",
+        "recipe-twisted-cord"
+      ],
+      "passive": {
+        "craftSpeed": 0.25
+      },
+      "gamePower": true
+    },
+    {
+      "id": "power-resourceful-maker",
+      "name": "Resourceful Maker",
+      "description": "Learn field dressing and flash powder recipes. Crafting returns a full supply; known recipes remain available without an action slot.",
+      "discipline": "discipline-craft",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-field-dressing",
+        "recipe-flash-powder"
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-master-artisan",
+      "name": "Master Artisan",
+      "description": "Learn restoration draught and ward charm recipes. Crafting takes 50% less time; this replaces the smaller speed bonus.",
+      "discipline": "discipline-craft",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 2,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "recipes": [
+        "recipe-restoration-draught",
+        "recipe-ward-charm"
+      ],
+      "passive": {
+        "craftSpeed": 0.5
+      },
+      "gamePower": true
+    },
+    {
+      "id": "power-ember-lance",
+      "name": "Ember Lance",
+      "description": "Deal 2/4/6 fire damage and apply Burning 1. Twice per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "burning",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-firebreak",
+      "name": "Firebreak",
+      "description": "Ignite a radius of 1 for three rounds. Entering or starting a turn in fire deals 2 fire damage and Burning 1 to either side. Twice per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "fire",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-sunburst",
+      "name": "Sunburst",
+      "description": "Deal 4/6/8 fire damage to enemies in a radius of 2. Allies are spared. Once per encounter.",
+      "discipline": "discipline-flame",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            4,
+            6,
+            8
+          ]
+        }
+      ],
+      "radius": 2,
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-winter-bolt",
+      "name": "Winter Bolt",
+      "description": "Deal 2/4/6 cold damage and apply Slowed 1. Twice per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "cold",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "slowed",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-dousing-rain",
+      "name": "Dousing Rain",
+      "description": "Create shallow water in a radius of 1 for three rounds. Extinguishes fire and temporary Burning on both sides. Twice per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "water",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-glacial-wall",
+      "name": "Glacial Wall",
+      "description": "Raise a three-square wall perpendicular to your aim for three rounds. Blocks travel and projectiles. Cannot cover creatures or stairs. Once per encounter.",
+      "discipline": "discipline-frost",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "wall",
+          "rounds": 3
+        }
+      ],
+      "shape": "wall",
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-guardian-link",
+      "name": "Guardian Link",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn. Twice per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "guard"
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-retaliating-guard",
+      "name": "Retaliating Guard",
+      "description": "Prepare a melee counterattack using your Reaction after the next physical hit. Lasts through your next turn. Twice per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "counter"
+        }
+      ],
+      "weapon": "melee",
+      "gamePower": true
+    },
+    {
+      "id": "power-hold-the-line",
+      "name": "Hold the Line",
+      "description": "Allies within 2 squares gain 2 damage reduction for two turns. Once per encounter.",
+      "discipline": "discipline-guard",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "reduction": 2
+          },
+          "turns": 2
+        }
+      ],
+      "radius": 2,
+      "gamePower": true
+    },
+    {
+      "id": "power-rally",
+      "name": "Rally",
+      "description": "Give an ally 1 attack Boon for two turns. Twice per encounter.",
+      "discipline": "discipline-influence",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-draw-attention",
+      "name": "Draw Attention",
+      "description": "Mark an enemy to prioritize attacking you for two turns, if you are a legal target. Apply 1 attack Bane. Twice per encounter.",
+      "discipline": "discipline-influence",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 5,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "taunt": true,
+            "attack": -1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-second-wind",
+      "name": "Second Wind",
+      "description": "Grant an ally one bonus Maneuver on their next turn that retains Maneuver. At most once per recipient per encounter. Cannot target yourself. Once per encounter.",
+      "discipline": "discipline-influence",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "maneuver",
+          "amount": 1
+        }
+      ],
+      "otherOnly": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-mending-touch",
+      "name": "Mending Touch",
+      "description": "Restore 3/5/7 HP to an ally. Three uses per rest; no wound or Grit recovery.",
+      "discipline": "discipline-life",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "heal",
+          "amount": [
+            3,
+            5,
+            7
+          ]
+        }
+      ],
+      "attribute": "reason",
+      "spell": true,
+      "restLimit": 3,
+      "field": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-renewal-circle",
+      "name": "Renewal Circle",
+      "description": "Create a healing circle for three rounds. An ally starting a turn there regains 2 HP. Two uses per rest.",
+      "discipline": "discipline-life",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 0,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "healing",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "restLimit": 2,
+      "gamePower": true
+    },
+    {
+      "id": "power-renew-flesh",
+      "name": "Renew Flesh",
+      "description": "Repair one recoverable wound on an ally and restore 5 HP. One use per rest. Does not restore Grit or erase injury history.",
+      "discipline": "discipline-life",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "wound"
+        },
+        {
+          "kind": "heal",
+          "amount": 5
+        }
+      ],
+      "spell": true,
+      "restLimit": 1,
+      "field": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-barbed-arrow",
+      "name": "Barbed Arrow",
+      "description": "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition. Twice per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 8,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "ranged",
+      "gamePower": true
+    },
+    {
+      "id": "power-piercing-flight",
+      "name": "Piercing Flight",
+      "description": "Shoot through enemies in a line up to 7 squares for 2/4/6 physical damage. Allies are spared; walls stop the shot. Twice per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 7,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "weapon": "ranged",
+      "shape": "line",
+      "gamePower": true
+    },
+    {
+      "id": "power-hunters-focus",
+      "name": "Hunter’s Focus",
+      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. Once per encounter.",
+      "discipline": "discipline-marksmanship",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 3,
+            "attack": 2
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-field-care",
+      "name": "Field Care",
+      "description": "Stabilize an ally and remove temporary Bleeding. Two uses per rest. Also learn the field dressing recipe.",
+      "discipline": "discipline-medicine",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "stabilize"
+        },
+        {
+          "kind": "cleanse",
+          "keys": [
+            "bleeding"
+          ],
+          "amount": 99
+        }
+      ],
+      "restLimit": 2,
+      "field": true,
+      "recipes": [
+        "recipe-field-dressing"
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-purging-tonic",
+      "name": "Purging Tonic",
+      "description": "Remove temporary Poisoned, Dazed, Burning and Freezing from an ally. Two uses per rest.",
+      "discipline": "discipline-medicine",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 0,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "cleanse",
+          "keys": [
+            "poisoned",
+            "dazed",
+            "burning",
+            "freezing"
+          ],
+          "amount": 99
+        }
+      ],
+      "restLimit": 2,
+      "field": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-battle-surgeon",
+      "name": "Battle Surgeon",
+      "description": "Restore 6/9/12 HP and stabilize an ally. Two uses per rest. Learn the restoration draught recipe.",
+      "discipline": "discipline-medicine",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "stabilize"
+        },
+        {
+          "kind": "heal",
+          "amount": [
+            6,
+            9,
+            12
+          ]
+        }
+      ],
+      "attribute": "knowledge",
+      "restLimit": 2,
+      "recipes": [
+        "recipe-restoration-draught"
+      ],
+      "field": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-fracture-focus",
+      "name": "Fracture Focus",
+      "description": "Deal 1/3/5 mental damage and apply Dazed 1. Twice per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "dazed",
+          "rating": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-force-hand",
+      "name": "Force Hand",
+      "description": "Move a visible enemy 3 squares directly away from you. Twice per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 3
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-mindstorm",
+      "name": "Mindstorm",
+      "description": "Enemies in a radius of 2 suffer 2/4/6 mental damage and Dazed 1. Once per encounter.",
+      "discipline": "discipline-mind",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "mental",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "dazed",
+          "rating": 1
+        }
+      ],
+      "radius": 2,
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-guiding-light",
+      "name": "Guiding Light",
+      "description": "Illuminate a radius of 2 for three rounds and reveal concealed creatures there. Twice per encounter.",
+      "discipline": "discipline-radiance",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 2,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "light",
+          "rounds": 3
+        },
+        {
+          "kind": "reveal"
+        }
+      ],
+      "spell": true,
+      "field": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-dawn-shield",
+      "name": "Dawn Shield",
+      "description": "Absorb 6 damage on an ally and remove temporary Frightened. Two uses per rest.",
+      "discipline": "discipline-radiance",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 0,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 6,
+          "turns": 2
+        },
+        {
+          "kind": "cleanse",
+          "keys": [
+            "frightened"
+          ],
+          "amount": 99
+        }
+      ],
+      "spell": true,
+      "restLimit": 2,
+      "gamePower": true
+    },
+    {
+      "id": "power-judgments-cone",
+      "name": "Judgment’s Cone",
+      "description": "Enemies in a cone up to 4 squares take 4/6/8 radiant damage. Once per encounter.",
+      "discipline": "discipline-radiance",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 4,
+      "attribute": "reason",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "radiant",
+          "amount": [
+            4,
+            6,
+            8
+          ]
+        }
+      ],
+      "shape": "cone",
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-read-the-depths",
+      "name": "Read the Depths",
+      "description": "Reveal the nearby floor and its interactable objects within 8 squares. Does not reveal enemies. Usable while exploring.",
+      "discipline": "discipline-scholarship",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 0,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "survey"
+        }
+      ],
+      "field": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-expose-weakness",
+      "name": "Expose Weakness",
+      "description": "Reduce an enemy’s DR by 1 for two turns. Twice per encounter.",
+      "discipline": "discipline-scholarship",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-calculated-opening",
+      "name": "Calculated Opening",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns. Once per encounter.",
+      "discipline": "discipline-scholarship",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "reaction",
+          "amount": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-gale-bolt",
+      "name": "Gale Bolt",
+      "description": "Deal 2/4/6 lightning damage and push the target 1 square. Twice per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "lightning",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "push",
+          "amount": 1
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-crosswind",
+      "name": "Crosswind",
+      "description": "Reposition to an empty square within a walkable route of 4 squares. Movement does not provoke; casting can. Twice per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "route"
+        }
+      ],
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-thunder-line",
+      "name": "Thunder Line",
+      "description": "Enemies in a line up to 7 squares take 4/6/8 lightning damage and are pushed 2 squares. Once per encounter.",
+      "discipline": "discipline-storm",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 7,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "lightning",
+          "amount": [
+            4,
+            6,
+            8
+          ]
+        },
+        {
+          "kind": "push",
+          "amount": 2
+        }
+      ],
+      "shape": "line",
+      "spell": true,
+      "gamePower": true
+    },
+    {
+      "id": "power-vanish",
+      "name": "Vanish",
+      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. Twice per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-smoke-screen",
+      "name": "Smoke Screen",
+      "description": "Fill a radius of 1 with smoke for three rounds. Blocks sight and ranged targeting through it for both sides; adjacent targeting remains possible. Twice per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "smoke",
+          "rounds": 3
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-shadow-step",
+      "name": "Shadow Step",
+      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. Once per encounter.",
+      "discipline": "discipline-subterfuge",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "teleport"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-snaring-roots",
+      "name": "Snaring Roots",
+      "description": "Create difficult ground in a radius of 1 for three rounds. Costs 2 movement per square for both sides. Twice per encounter.",
+      "discipline": "discipline-wilderness",
+      "rank": 1,
+      "minimumLevel": 1,
+      "cost": 2,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "difficult",
+          "rounds": 3
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-field-replenishment",
+      "name": "Field Replenishment",
+      "description": "At camp or in town, replenish arrows, torches or food using their recipe and materials. Basic recipes are always known; crafting time is reduced by 25%.",
+      "discipline": "discipline-wilderness",
+      "rank": 2,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "passive",
+      "target": "self",
+      "effects": [],
+      "passive": {
+        "craftSpeed": 0.25
+      },
+      "gamePower": true
+    },
+    {
+      "id": "power-nightfall",
+      "name": "Nightfall",
+      "description": "Darken a radius of 2 for three rounds. Counters ordinary light; magical light wins. Conceal yourself for two turns. Once per encounter.",
+      "discipline": "discipline-wilderness",
+      "rank": 3,
+      "minimumLevel": 7,
+      "cost": 6,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 2,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "darkness",
+          "rounds": 3
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true
+          },
+          "turns": 2,
+          "self": true
+        }
+      ],
+      "gamePower": true
+    },
+    {
+      "id": "power-signature-arcane-reservoir",
+      "name": "Arcane Reservoir",
+      "description": "A spirit absorbs the next 4 damage an ally receives. Lasts two turns. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 4,
+          "turns": 2
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true
+    },
+    {
+      "id": "power-signature-fold-space",
+      "name": "Fold Space",
+      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "teleport"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true
+    },
+    {
+      "id": "power-signature-arcane-cataclysm",
+      "name": "Arcane Cataclysm",
+      "description": "Deal 4/6/8 fire damage to enemies in a radius of 2. Allies are spared. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "attribute": "knowledge",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "fire",
+          "amount": [
+            4,
+            6,
+            8
+          ]
+        }
+      ],
+      "radius": 2,
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-arcanist",
+      "signature": true
+    },
+    {
+      "id": "power-signature-duelists-tempo",
+      "name": "Duelist’s Tempo",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 4,
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true
+    },
+    {
+      "id": "power-signature-whirling-steel",
+      "name": "Whirling Steel",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true
+    },
+    {
+      "id": "power-signature-relentless-edge",
+      "name": "Relentless Edge",
+      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 3,
+            "attack": 2
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-blade",
+      "signature": true
+    },
+    {
+      "id": "power-signature-battle-plan",
+      "name": "Battle Plan",
+      "description": "Give an ally 1 attack Boon for two turns. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true
+    },
+    {
+      "id": "power-signature-fault-line",
+      "name": "Fault Line",
+      "description": "Reduce an enemy’s DR by 1 for two turns. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "enemy",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "dr": -1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true
+    },
+    {
+      "id": "power-signature-perfect-timing",
+      "name": "Perfect Timing",
+      "description": "Restore a spent Reaction and grant 1 defense Boon to an ally for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "reaction",
+          "amount": 1
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "defense": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-intellect",
+      "signature": true
+    },
+    {
+      "id": "power-signature-commanding-presence",
+      "name": "Commanding Presence",
+      "description": "Give an ally 1 attack Boon for two turns. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true
+    },
+    {
+      "id": "power-signature-reposition-company",
+      "name": "Reposition Company",
+      "description": "Pull an ally up to 4 squares toward you without provoking opportunity attacks. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 5,
+      "effects": [
+        {
+          "kind": "pull",
+          "amount": 4
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true
+    },
+    {
+      "id": "power-signature-seize-the-moment",
+      "name": "Seize the Moment",
+      "description": "Grant an ally one bonus Maneuver on their next turn that retains Maneuver. At most once per recipient per encounter. Cannot target yourself. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "resource",
+          "resource": "maneuver",
+          "amount": 1
+        }
+      ],
+      "otherOnly": true,
+      "gamePower": true,
+      "classId": "class-leader",
+      "signature": true
+    },
+    {
+      "id": "power-signature-unseen-angle",
+      "name": "Unseen Angle",
+      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true
+    },
+    {
+      "id": "power-signature-impossible-exchange",
+      "name": "Impossible Exchange",
+      "description": "Swap places with a visible ally within 6 squares. The swap does not provoke; casting can. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "swap"
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true
+    },
+    {
+      "id": "power-signature-borrowed-night",
+      "name": "Borrowed Night",
+      "description": "Darken a radius of 2 for three rounds. Counters ordinary light; magical light wins. Conceal yourself for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 2,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "darkness",
+          "rounds": 3
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true
+          },
+          "turns": 2,
+          "self": true
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-odd",
+      "signature": true
+    },
+    {
+      "id": "power-signature-sworn-guardian",
+      "name": "Sworn Guardian",
+      "description": "Intercept the next hit against an adjacent ally, spending your Reaction. Stay adjacent. Protection lasts through their next turn. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "ally",
+      "range": 1,
+      "effects": [
+        {
+          "kind": "guard"
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true
+    },
+    {
+      "id": "power-signature-unyielding-wall",
+      "name": "Unyielding Wall",
+      "description": "Absorb the next 8 damage you receive. Lasts two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 8,
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true
+    },
+    {
+      "id": "power-signature-company-bulwark",
+      "name": "Company Bulwark",
+      "description": "Allies within 2 squares gain 2 damage reduction for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "reduction": 2
+          },
+          "turns": 2
+        }
+      ],
+      "radius": 2,
+      "gamePower": true,
+      "classId": "class-protector",
+      "signature": true
+    },
+    {
+      "id": "power-signature-fade-away",
+      "name": "Fade Away",
+      "description": "Become concealed for two turns. Enemies cannot target you from farther than 1 square. Attacking or taking damage ends concealment. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "hidden": true
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true
+    },
+    {
+      "id": "power-signature-behind-the-lines",
+      "name": "Behind the Lines",
+      "description": "Teleport up to 6 squares to visible empty ground, then gain 1 attack Boon for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 6,
+      "effects": [
+        {
+          "kind": "move",
+          "mode": "teleport"
+        },
+        {
+          "kind": "buff",
+          "stats": {
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true
+    },
+    {
+      "id": "power-signature-assassins-moment",
+      "name": "Assassin’s Moment",
+      "description": "Your next attack within two turns deals +4 damage. Gain 1 attack Boon for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 4,
+            "attack": 1
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-shadow",
+      "signature": true
+    },
+    {
+      "id": "power-signature-life-thread",
+      "name": "Life Thread",
+      "description": "Restore 3/5/7 HP to an ally. Three uses per rest; no wound or Grit recovery.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "heal",
+          "amount": [
+            3,
+            5,
+            7
+          ]
+        }
+      ],
+      "attribute": "reason",
+      "spell": true,
+      "restLimit": 3,
+      "field": true,
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true
+    },
+    {
+      "id": "power-signature-sanctuary",
+      "name": "Sanctuary",
+      "description": "Create a healing circle for three rounds. An ally starting a turn there regains 2 HP. Two uses per rest.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 0,
+      "category": "main",
+      "target": "ground",
+      "range": 5,
+      "radius": 1,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "healing",
+          "rounds": 3
+        }
+      ],
+      "spell": true,
+      "restLimit": 2,
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true
+    },
+    {
+      "id": "power-signature-restore-the-broken",
+      "name": "Restore the Broken",
+      "description": "Repair one recoverable wound on an ally and restore 5 HP. One use per rest. Does not restore Grit or erase injury history.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 0,
+      "category": "main",
+      "target": "ally",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "wound"
+        },
+        {
+          "kind": "heal",
+          "amount": 5
+        }
+      ],
+      "spell": true,
+      "restLimit": 1,
+      "field": true,
+      "gamePower": true,
+      "classId": "class-shepherd",
+      "signature": true
+    },
+    {
+      "id": "power-signature-reckless-momentum",
+      "name": "Reckless Momentum",
+      "description": "Strike with a readied melee weapon for 2/4/6 physical damage and push the target 1 square. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "push",
+          "amount": 1
+        }
+      ],
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true
+    },
+    {
+      "id": "power-signature-break-their-line",
+      "name": "Break Their Line",
+      "description": "Move a visible enemy 3 squares directly away from you. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 5,
+      "effects": [
+        {
+          "kind": "push",
+          "amount": 3
+        }
+      ],
+      "spell": true,
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true
+    },
+    {
+      "id": "power-signature-storm-of-blows",
+      "name": "Storm of Blows",
+      "description": "Strike enemies in a radius of 1 around an adjacent target for 2/4/6 physical damage. Allies are spared. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 1,
+      "attribute": "brawn",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "radius": 1,
+      "weapon": "melee",
+      "gamePower": true,
+      "classId": "class-unbalanced",
+      "signature": true
+    },
+    {
+      "id": "power-signature-quarry-mark",
+      "name": "Quarry Mark",
+      "description": "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 1,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "enemy",
+      "range": 8,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        },
+        {
+          "kind": "condition",
+          "key": "bleeding",
+          "rating": 1
+        }
+      ],
+      "weapon": "ranged",
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true
+    },
+    {
+      "id": "power-signature-watchers-focus",
+      "name": "Watcher’s Focus",
+      "description": "Your next attack within two turns deals +3 damage. Gain 2 attack Boons for two turns. Once per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 3,
+      "cost": 4,
+      "limit": 1,
+      "category": "maneuver",
+      "target": "self",
+      "range": 4,
+      "effects": [
+        {
+          "kind": "buff",
+          "stats": {
+            "damage": 3,
+            "attack": 2
+          },
+          "turns": 2
+        }
+      ],
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true
+    },
+    {
+      "id": "power-signature-wardens-volley",
+      "name": "Warden’s Volley",
+      "description": "Shoot through enemies in a line up to 7 squares for 2/4/6 physical damage. Allies are spared; walls stop the shot. Twice per encounter.",
+      "discipline": null,
+      "rank": 0,
+      "minimumLevel": 7,
+      "cost": 4,
+      "limit": 2,
+      "category": "main",
+      "target": "ground",
+      "range": 7,
+      "attribute": "agility",
+      "effects": [
+        {
+          "kind": "damage",
+          "type": "physical",
+          "amount": [
+            2,
+            4,
+            6
+          ]
+        }
+      ],
+      "weapon": "ranged",
+      "shape": "line",
+      "gamePower": true,
+      "classId": "class-warden",
+      "signature": true
+    },
+    {
+      "id": "power-use-smoke",
+      "name": "Throw smoke flask",
+      "description": "Use a smoke supply to obscure a radius of 1 for three rounds. Supply checked after use.",
+      "gamePower": true,
+      "universal": true,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 4,
+      "radius": 1,
+      "supply": "item-smoke-supply",
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "smoke",
+          "rounds": 3
+        }
+      ]
+    },
+    {
+      "id": "power-use-flash",
+      "name": "Throw flash powder",
+      "description": "Consume flash powder to reveal and illuminate a radius of 2 for three rounds.",
+      "gamePower": true,
+      "universal": true,
+      "category": "maneuver",
+      "target": "ground",
+      "range": 5,
+      "radius": 2,
+      "supply": "item-flash-powder",
+      "consume": true,
+      "effects": [
+        {
+          "kind": "zone",
+          "surface": "light",
+          "rounds": 3
+        },
+        {
+          "kind": "reveal"
+        }
+      ]
+    },
+    {
+      "id": "power-use-ward",
+      "name": "Break ward charm",
+      "description": "Consume a ward charm to absorb 6 damage for two turns.",
+      "gamePower": true,
+      "universal": true,
+      "category": "maneuver",
+      "target": "self",
+      "supply": "item-ward-charm",
+      "consume": true,
+      "effects": [
+        {
+          "kind": "barrier",
+          "amount": 6,
+          "turns": 2
+        }
+      ]
+    }
+  ],
+  "legacyMappings": [
+    {
+      "id": "ability-a-bough-for-the-fallen",
+      "current": "power-renewal-circle"
+    },
+    {
+      "id": "ability-a-breath-beneath-the-water",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-a-camp-without-a-trace",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-a-coal-for-a-promise",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-a-common-tongue",
+      "current": "power-second-wind"
+    },
+    {
+      "id": "ability-a-company-of-reflections",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-a-courtesy-unanswered",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-a-door-that-is-not-there",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-a-friend-beneath-the-door",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-a-good-place-to-stop",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-a-hand-from-before",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-a-knot-you-can-trust",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-a-line-for-everyone",
+      "current": "power-vault"
+    },
+    {
+      "id": "ability-a-lock-has-a-language",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-a-marvel-on-wheels",
+      "current": "power-master-artisan"
+    },
+    {
+      "id": "ability-a-name-worth-knowing",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-a-party-piece",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-a-place-at-any-fire",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-a-ribcage-for-a-shield",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-a-road-through-rain",
+      "current": "power-crosswind"
+    },
+    {
+      "id": "ability-a-roof-before-nightfall",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-a-shadow-at-the-heart",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-a-shelter-of-light",
+      "current": "power-dawn-shield"
+    },
+    {
+      "id": "ability-a-sign-against-harm",
+      "current": "power-guardian-link"
+    },
+    {
+      "id": "ability-a-small-and-watchful-shape",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-a-splendid-mistake",
+      "current": "power-sunburst"
+    },
+    {
+      "id": "ability-a-steady-hand-at-dawn",
+      "current": "power-purging-tonic"
+    },
+    {
+      "id": "ability-a-sword-made-of-dawn",
+      "current": "power-sunburst"
+    },
+    {
+      "id": "ability-a-thought-that-is-not-yours",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-a-verse-for-courage",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-a-voice-across-the-valley",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-a-word-apart",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-aid",
+      "current": "ability-aid"
+    },
+    {
+      "id": "ability-all-voices-as-one",
+      "current": "power-second-wind"
+    },
+    {
+      "id": "ability-an-impossible-theft",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-an-invitation-elsewhere",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-anatomy-of-an-opening",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-another-tongue",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-answer-for-what-you-did",
+      "current": "power-second-wind"
+    },
+    {
+      "id": "ability-armored-recovery",
+      "current": "power-iron-skin"
+    },
+    {
+      "id": "ability-arrive-under-guard",
+      "current": "power-retaliating-guard"
+    },
+    {
+      "id": "ability-ask-the-falling-ash",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-bank-the-embers",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-basic-melee",
+      "current": "ability-basic-melee"
+    },
+    {
+      "id": "ability-basic-ranged",
+      "current": "ability-basic-ranged"
+    },
+    {
+      "id": "ability-basic-throw",
+      "current": "ability-basic-throw"
+    },
+    {
+      "id": "ability-basic-unarmed",
+      "current": "ability-basic-unarmed"
+    },
+    {
+      "id": "ability-beacon-through-terror",
+      "current": "power-dawn-shield"
+    },
+    {
+      "id": "ability-behind-the-hawthorn",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-bind-and-turn",
+      "current": "power-sweeping-blade"
+    },
+    {
+      "id": "ability-blood-in-the-teeth",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-borrow-a-voice",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-borrow-the-beast",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-borrow-the-shadow",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-borrow-tomorrow-s-weather",
+      "current": "power-firebreak"
+    },
+    {
+      "id": "ability-borrowed-clothes-borrowed-manners",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-borrowed-identity",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-borrowed-silhouette",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-bottled-morning",
+      "current": "power-resourceful-maker"
+    },
+    {
+      "id": "ability-bow-to-the-balcony",
+      "current": "power-execution-edge"
+    },
+    {
+      "id": "ability-braced-harness",
+      "current": "power-brace"
+    },
+    {
+      "id": "ability-break-the-charge",
+      "current": "power-execution-edge"
+    },
+    {
+      "id": "ability-break-the-formation",
+      "current": "power-sweeping-blade"
+    },
+    {
+      "id": "ability-breakaway-rig",
+      "current": "power-master-artisan"
+    },
+    {
+      "id": "ability-breath-of-the-wyrmling",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-breath-of-white",
+      "current": "power-winter-bolt"
+    },
+    {
+      "id": "ability-briar-gate",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-bridge-of-winter",
+      "current": "power-dousing-rain"
+    },
+    {
+      "id": "ability-call-a-burrower",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-call-a-sentinel",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-call-a-tempest-beast",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-call-the-elder-stag",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-call-the-faithful-hound",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-call-the-hunting-cat",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-call-the-opening",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-call-their-name",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-carry-the-sunrise",
+      "current": "power-judgments-cone"
+    },
+    {
+      "id": "ability-carry-them-to-shore",
+      "current": "power-nightfall"
+    },
+    {
+      "id": "ability-carry-to-safety",
+      "current": "power-hold-the-line"
+    },
+    {
+      "id": "ability-cast-off-the-venom",
+      "current": "power-renew-flesh"
+    },
+    {
+      "id": "ability-cast-through-the-reflection",
+      "current": "power-calculated-opening"
+    },
+    {
+      "id": "ability-catch-a-falling-friend",
+      "current": "power-rescue-line"
+    },
+    {
+      "id": "ability-catch-that",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-catch-the-ledge",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-catch-the-mechanism",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-catch-the-root",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-catch-the-spell",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-catch-them-falling",
+      "current": "power-rescue-line"
+    },
+    {
+      "id": "ability-checkmate-in-three-steps",
+      "current": "power-calculated-opening"
+    },
+    {
+      "id": "ability-cinder-cast",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-circle-of-old-names",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-clear-the-airway",
+      "current": "power-purging-tonic"
+    },
+    {
+      "id": "ability-clear-the-smoke",
+      "current": "power-gale-bolt"
+    },
+    {
+      "id": "ability-close-shot",
+      "current": "power-barbed-arrow"
+    },
+    {
+      "id": "ability-cold-cuirass",
+      "current": "power-winter-bolt"
+    },
+    {
+      "id": "ability-command-a-summon",
+      "current": "ability-command-a-summon"
+    },
+    {
+      "id": "ability-conditioned-body",
+      "current": "ability-conditioned-body"
+    },
+    {
+      "id": "ability-convert-an-action",
+      "current": "ability-convert-an-action"
+    },
+    {
+      "id": "ability-create-a-distraction",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-crosswind",
+      "current": "power-gale-bolt"
+    },
+    {
+      "id": "ability-cup-the-flame",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-cut-off-the-escape",
+      "current": "power-piercing-flight"
+    },
+    {
+      "id": "ability-dance-beyond-the-circle",
+      "current": "power-mindstorm"
+    },
+    {
+      "id": "ability-dawn-shard",
+      "current": "power-guiding-light"
+    },
+    {
+      "id": "ability-defend",
+      "current": "ability-defend"
+    },
+    {
+      "id": "ability-derive-a-mechanism",
+      "current": "power-resourceful-maker"
+    },
+    {
+      "id": "ability-disengage",
+      "current": "ability-disengage"
+    },
+    {
+      "id": "ability-doors-for-the-host",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-drain-warmth",
+      "current": "power-mending-touch"
+    },
+    {
+      "id": "ability-draw-the-current",
+      "current": "power-crosswind"
+    },
+    {
+      "id": "ability-draw-the-tether",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-dread-reflection",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-driving-volley",
+      "current": "power-piercing-flight"
+    },
+    {
+      "id": "ability-duck-into-the-brush",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-ease-the-spasm",
+      "current": "power-mending-touch"
+    },
+    {
+      "id": "ability-ember-along-the-edge",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-enchanting-workshop",
+      "current": "power-master-artisan"
+    },
+    {
+      "id": "ability-expert-river-crossing",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-field-triage",
+      "current": "power-battle-surgeon"
+    },
+    {
+      "id": "ability-find-the-seam",
+      "current": "power-hunters-focus"
+    },
+    {
+      "id": "ability-find-your-footing",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-fit-a-replacement",
+      "current": "power-purging-tonic"
+    },
+    {
+      "id": "ability-follow-my-leap",
+      "current": "power-rescue-line"
+    },
+    {
+      "id": "ability-forage-coast",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-forage-mountains",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-forage-wetlands",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-forage-woodland",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-force",
+      "current": "ability-force"
+    },
+    {
+      "id": "ability-forked-sky",
+      "current": "power-thunder-line"
+    },
+    {
+      "id": "ability-four-winds-at-once",
+      "current": "power-crosswind"
+    },
+    {
+      "id": "ability-furnace-sweep",
+      "current": "power-firebreak"
+    },
+    {
+      "id": "ability-guide-a-frightened-animal",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-guide-the-crossing",
+      "current": "power-nightfall"
+    },
+    {
+      "id": "ability-gust-hammer",
+      "current": "power-gale-bolt"
+    },
+    {
+      "id": "ability-handle-an-item",
+      "current": "ability-handle-an-item"
+    },
+    {
+      "id": "ability-haul-them-home",
+      "current": "power-vault"
+    },
+    {
+      "id": "ability-high-guard",
+      "current": "power-hold-the-line"
+    },
+    {
+      "id": "ability-hold-a-conversation",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-hold-the-passage",
+      "current": "power-retaliating-guard"
+    },
+    {
+      "id": "ability-hold-the-pulse",
+      "current": "power-renewal-circle"
+    },
+    {
+      "id": "ability-hook-and-drive",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-hook-with-the-shield",
+      "current": "power-retaliating-guard"
+    },
+    {
+      "id": "ability-hurl-aside",
+      "current": "power-execution-edge"
+    },
+    {
+      "id": "ability-i-have-seen-this-step",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-ice-across-the-break",
+      "current": "power-dousing-rain"
+    },
+    {
+      "id": "ability-icebound-path",
+      "current": "power-dousing-rain"
+    },
+    {
+      "id": "ability-identify-a-mixture",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-identify-an-enchantment",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-intrusive-echo",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-invitation-to-the-blade",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-ironbound-advance",
+      "current": "power-adamant-ward"
+    },
+    {
+      "id": "ability-keep-pressure",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-keep-the-door-closed",
+      "current": "power-mending-touch"
+    },
+    {
+      "id": "ability-keep-time-with-steel",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-keep-your-bearings",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-lantern-in-the-palm",
+      "current": "power-guiding-light"
+    },
+    {
+      "id": "ability-lantern-moths",
+      "current": "power-guiding-light"
+    },
+    {
+      "id": "ability-last-light-of-the-watch",
+      "current": "power-judgments-cone"
+    },
+    {
+      "id": "ability-lend-your-eyes",
+      "current": "power-mindstorm"
+    },
+    {
+      "id": "ability-let-the-spark-decide",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-live-in-the-mask",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-look-over-here",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-make-something-useful",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-measured-appeal",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-mercy-in-the-light",
+      "current": "power-guiding-light"
+    },
+    {
+      "id": "ability-message-by-heart",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-move",
+      "current": "ability-move"
+    },
+    {
+      "id": "ability-name-the-reckoning",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-name-what-is-real",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-no-footfall-at-all",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-no-road-away",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-noonday-judgment",
+      "current": "power-judgments-cone"
+    },
+    {
+      "id": "ability-not-yet-your-name",
+      "current": "power-renew-flesh"
+    },
+    {
+      "id": "ability-notice-the-human-detail",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-oathlight-strike",
+      "current": "power-guiding-light"
+    },
+    {
+      "id": "ability-one-more-dawn",
+      "current": "ability-one-more-dawn"
+    },
+    {
+      "id": "ability-open-the-furnace-door",
+      "current": "power-sunburst"
+    },
+    {
+      "id": "ability-opportunity-attack",
+      "current": "ability-opportunity-attack"
+    },
+    {
+      "id": "ability-ordinary-recipe-study",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-pack-with-purpose",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-palm-of-the-gale",
+      "current": "power-gale-bolt"
+    },
+    {
+      "id": "ability-pinning-shot",
+      "current": "power-barbed-arrow"
+    },
+    {
+      "id": "ability-play-it-off",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-pounce-of-the-red-claw",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-press-and-bind",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-procession-of-the-quiet",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-quick-exit",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-quiet-conference",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-quiet-latch",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-read-a-dangerous-trail",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-read-the-maker-s-hand",
+      "current": "power-resourceful-maker"
+    },
+    {
+      "id": "ability-read-the-next-blow",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-read-the-quarry",
+      "current": "power-barbed-arrow"
+    },
+    {
+      "id": "ability-read-the-remains",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-read-the-ward",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-recall-the-shape",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-recast-the-footprint",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-reconstruct-the-event",
+      "current": "power-calculated-opening"
+    },
+    {
+      "id": "ability-reduce-a-condition",
+      "current": "ability-reduce-a-condition"
+    },
+    {
+      "id": "ability-relieve-poison",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-remember-this-name",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-rest-for-the-restless",
+      "current": "power-renewal-circle"
+    },
+    {
+      "id": "ability-return-to-strength",
+      "current": "power-renew-flesh"
+    },
+    {
+      "id": "ability-reveal-the-threshold",
+      "current": "power-dawn-shield"
+    },
+    {
+      "id": "ability-ride-the-falling-stone",
+      "current": "power-vault"
+    },
+    {
+      "id": "ability-ride-the-furnace-breath",
+      "current": "power-sunburst"
+    },
+    {
+      "id": "ability-rim-strike",
+      "current": "power-guardian-link"
+    },
+    {
+      "id": "ability-rime-footholds",
+      "current": "power-winter-bolt"
+    },
+    {
+      "id": "ability-rime-grip",
+      "current": "power-winter-bolt"
+    },
+    {
+      "id": "ability-road-of-dawn",
+      "current": "power-judgments-cone"
+    },
+    {
+      "id": "ability-road-of-rime",
+      "current": "power-glacial-wall"
+    },
+    {
+      "id": "ability-roots-remember-feet",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-rouse-the-senses",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-running-vault",
+      "current": "power-vault"
+    },
+    {
+      "id": "ability-saddle-and-rein",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-sap-and-breath",
+      "current": "power-mending-touch"
+    },
+    {
+      "id": "ability-scales-beneath-the-skin",
+      "current": "power-firebreak"
+    },
+    {
+      "id": "ability-secure-a-hold",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-sell-the-feint",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-set-the-wedge",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-sever-the-pursuit",
+      "current": "power-hunters-focus"
+    },
+    {
+      "id": "ability-shade-the-eyes",
+      "current": "power-guiding-light"
+    },
+    {
+      "id": "ability-shared-breath",
+      "current": "power-mending-touch"
+    },
+    {
+      "id": "ability-shatterguard",
+      "current": "power-dousing-rain"
+    },
+    {
+      "id": "ability-shield-block",
+      "current": "ability-shield-block"
+    },
+    {
+      "id": "ability-shield-roof",
+      "current": "power-hold-the-line"
+    },
+    {
+      "id": "ability-shielded-advance",
+      "current": "power-guardian-link"
+    },
+    {
+      "id": "ability-shielding-step",
+      "current": "power-guardian-link"
+    },
+    {
+      "id": "ability-signature-arcanist-arcane-deflection",
+      "current": "power-signature-fold-space"
+    },
+    {
+      "id": "ability-signature-arcanist-bent-trajectory",
+      "current": "power-signature-arcane-reservoir"
+    },
+    {
+      "id": "ability-signature-arcanist-cast-and-scatter",
+      "current": "power-signature-fold-space"
+    },
+    {
+      "id": "ability-signature-arcanist-choose-the-edge",
+      "current": "power-signature-arcane-cataclysm"
+    },
+    {
+      "id": "ability-signature-arcanist-deliberate-spark",
+      "current": "power-signature-arcane-reservoir"
+    },
+    {
+      "id": "ability-signature-arcanist-fold-the-distance",
+      "current": "power-signature-arcane-cataclysm"
+    },
+    {
+      "id": "ability-signature-arcanist-leave-a-window",
+      "current": "power-signature-fold-space"
+    },
+    {
+      "id": "ability-signature-arcanist-open-the-circle",
+      "current": "power-signature-arcane-cataclysm"
+    },
+    {
+      "id": "ability-signature-arcanist-study-the-pattern",
+      "current": "power-signature-arcane-reservoir"
+    },
+    {
+      "id": "ability-signature-blade-cut-and-turn",
+      "current": "power-signature-duelists-tempo"
+    },
+    {
+      "id": "ability-signature-blade-dance-through-steel",
+      "current": "power-signature-relentless-edge"
+    },
+    {
+      "id": "ability-signature-blade-fell-the-balance",
+      "current": "power-signature-whirling-steel"
+    },
+    {
+      "id": "ability-signature-blade-measured-guard",
+      "current": "power-signature-duelists-tempo"
+    },
+    {
+      "id": "ability-signature-blade-perfect-placement",
+      "current": "power-signature-relentless-edge"
+    },
+    {
+      "id": "ability-signature-blade-pressure-point",
+      "current": "power-signature-duelists-tempo"
+    },
+    {
+      "id": "ability-signature-blade-relentless-pursuit",
+      "current": "power-signature-relentless-edge"
+    },
+    {
+      "id": "ability-signature-blade-return-stroke",
+      "current": "power-signature-whirling-steel"
+    },
+    {
+      "id": "ability-signature-blade-sweeping-entry",
+      "current": "power-signature-whirling-steel"
+    },
+    {
+      "id": "ability-signature-intellect-a-better-angle",
+      "current": "power-signature-fault-line"
+    },
+    {
+      "id": "ability-signature-intellect-a-route-for-everyone",
+      "current": "power-signature-perfect-timing"
+    },
+    {
+      "id": "ability-signature-intellect-diagnose-the-failure",
+      "current": "power-signature-fault-line"
+    },
+    {
+      "id": "ability-signature-intellect-expose-the-mechanism",
+      "current": "power-signature-perfect-timing"
+    },
+    {
+      "id": "ability-signature-intellect-make-the-connection",
+      "current": "power-signature-battle-plan"
+    },
+    {
+      "id": "ability-signature-intellect-predict-the-motion",
+      "current": "power-signature-fault-line"
+    },
+    {
+      "id": "ability-signature-intellect-prepared-explanation",
+      "current": "power-signature-battle-plan"
+    },
+    {
+      "id": "ability-signature-intellect-spot-the-leverage",
+      "current": "power-signature-battle-plan"
+    },
+    {
+      "id": "ability-signature-intellect-test-the-hypothesis",
+      "current": "power-signature-perfect-timing"
+    },
+    {
+      "id": "ability-signature-leader-coordinated-rush",
+      "current": "power-signature-seize-the-moment"
+    },
+    {
+      "id": "ability-signature-leader-follow-my-signal",
+      "current": "power-signature-commanding-presence"
+    },
+    {
+      "id": "ability-signature-leader-hold-your-nerve",
+      "current": "power-signature-reposition-company"
+    },
+    {
+      "id": "ability-signature-leader-lead-the-step",
+      "current": "power-signature-commanding-presence"
+    },
+    {
+      "id": "ability-signature-leader-orderly-withdrawal",
+      "current": "power-signature-reposition-company"
+    },
+    {
+      "id": "ability-signature-leader-press-the-opening",
+      "current": "power-signature-reposition-company"
+    },
+    {
+      "id": "ability-signature-leader-refuse-the-rout",
+      "current": "power-signature-seize-the-moment"
+    },
+    {
+      "id": "ability-signature-leader-stand-together",
+      "current": "power-signature-commanding-presence"
+    },
+    {
+      "id": "ability-signature-leader-watch-the-rear",
+      "current": "power-signature-seize-the-moment"
+    },
+    {
+      "id": "ability-signature-odd-always-a-way-around",
+      "current": "power-signature-unseen-angle"
+    },
+    {
+      "id": "ability-signature-odd-an-unexpected-exit",
+      "current": "power-signature-borrowed-night"
+    },
+    {
+      "id": "ability-signature-odd-change-the-question",
+      "current": "power-signature-impossible-exchange"
+    },
+    {
+      "id": "ability-signature-odd-one-last-remark",
+      "current": "power-signature-borrowed-night"
+    },
+    {
+      "id": "ability-signature-odd-sideways-thinking",
+      "current": "power-signature-unseen-angle"
+    },
+    {
+      "id": "ability-signature-odd-strange-but-effective",
+      "current": "power-signature-borrowed-night"
+    },
+    {
+      "id": "ability-signature-odd-unlikely-assistant",
+      "current": "power-signature-impossible-exchange"
+    },
+    {
+      "id": "ability-signature-odd-useful-interruption",
+      "current": "power-signature-unseen-angle"
+    },
+    {
+      "id": "ability-signature-odd-wrong-place-for-that",
+      "current": "power-signature-impossible-exchange"
+    },
+    {
+      "id": "ability-signature-protector-between-them",
+      "current": "power-signature-sworn-guardian"
+    },
+    {
+      "id": "ability-signature-protector-break-their-advance",
+      "current": "power-signature-unyielding-wall"
+    },
+    {
+      "id": "ability-signature-protector-close-the-gap",
+      "current": "power-signature-sworn-guardian"
+    },
+    {
+      "id": "ability-signature-protector-defiant-rescue",
+      "current": "power-signature-company-bulwark"
+    },
+    {
+      "id": "ability-signature-protector-drive-back-the-circle",
+      "current": "power-signature-company-bulwark"
+    },
+    {
+      "id": "ability-signature-protector-make-a-refuge",
+      "current": "power-signature-unyielding-wall"
+    },
+    {
+      "id": "ability-signature-protector-set-your-feet",
+      "current": "power-signature-sworn-guardian"
+    },
+    {
+      "id": "ability-signature-protector-shelter-the-fallen",
+      "current": "power-signature-unyielding-wall"
+    },
+    {
+      "id": "ability-signature-protector-unbroken-passage",
+      "current": "power-signature-company-bulwark"
+    },
+    {
+      "id": "ability-signature-shadow-exploit-confusion",
+      "current": "power-signature-assassins-moment"
+    },
+    {
+      "id": "ability-signature-shadow-fade-behind",
+      "current": "power-signature-fade-away"
+    },
+    {
+      "id": "ability-signature-shadow-leave-no-pursuit",
+      "current": "power-signature-assassins-moment"
+    },
+    {
+      "id": "ability-signature-shadow-open-the-way",
+      "current": "power-signature-behind-the-lines"
+    },
+    {
+      "id": "ability-signature-shadow-pass-the-guard",
+      "current": "power-signature-behind-the-lines"
+    },
+    {
+      "id": "ability-signature-shadow-soft-landing",
+      "current": "power-signature-fade-away"
+    },
+    {
+      "id": "ability-signature-shadow-strike-and-vanish",
+      "current": "power-signature-behind-the-lines"
+    },
+    {
+      "id": "ability-signature-shadow-turn-their-eye",
+      "current": "power-signature-fade-away"
+    },
+    {
+      "id": "ability-signature-shadow-unseen-passage",
+      "current": "power-signature-assassins-moment"
+    },
+    {
+      "id": "ability-signature-shepherd-a-hand-in-darkness",
+      "current": "power-signature-restore-the-broken"
+    },
+    {
+      "id": "ability-signature-shepherd-bring-them-near",
+      "current": "power-signature-sanctuary"
+    },
+    {
+      "id": "ability-signature-shepherd-careful-transfer",
+      "current": "power-signature-sanctuary"
+    },
+    {
+      "id": "ability-signature-shepherd-ease-the-burden",
+      "current": "power-signature-life-thread"
+    },
+    {
+      "id": "ability-signature-shepherd-gentle-return",
+      "current": "power-signature-life-thread"
+    },
+    {
+      "id": "ability-signature-shepherd-hear-me-still",
+      "current": "power-signature-life-thread"
+    },
+    {
+      "id": "ability-signature-shepherd-quiet-the-tremor",
+      "current": "power-signature-sanctuary"
+    },
+    {
+      "id": "ability-signature-shepherd-restore-composure",
+      "current": "power-signature-restore-the-broken"
+    },
+    {
+      "id": "ability-signature-shepherd-shared-resolve",
+      "current": "power-signature-restore-the-broken"
+    },
+    {
+      "id": "ability-signature-unbalanced-break-their-grip",
+      "current": "power-signature-storm-of-blows"
+    },
+    {
+      "id": "ability-signature-unbalanced-crash-down",
+      "current": "power-signature-storm-of-blows"
+    },
+    {
+      "id": "ability-signature-unbalanced-crush-the-barrier",
+      "current": "power-signature-break-their-line"
+    },
+    {
+      "id": "ability-signature-unbalanced-fling-the-captive",
+      "current": "power-signature-break-their-line"
+    },
+    {
+      "id": "ability-signature-unbalanced-laugh-at-the-fall",
+      "current": "power-signature-reckless-momentum"
+    },
+    {
+      "id": "ability-signature-unbalanced-raging-recoil",
+      "current": "power-signature-break-their-line"
+    },
+    {
+      "id": "ability-signature-unbalanced-scatter-the-line",
+      "current": "power-signature-storm-of-blows"
+    },
+    {
+      "id": "ability-signature-unbalanced-shoulder-through",
+      "current": "power-signature-reckless-momentum"
+    },
+    {
+      "id": "ability-signature-unbalanced-wild-approach",
+      "current": "power-signature-reckless-momentum"
+    },
+    {
+      "id": "ability-signature-warden-a-watchful-rest",
+      "current": "power-signature-watchers-focus"
+    },
+    {
+      "id": "ability-signature-warden-bring-them-through",
+      "current": "power-signature-wardens-volley"
+    },
+    {
+      "id": "ability-signature-warden-follow-my-footsteps",
+      "current": "power-signature-quarry-mark"
+    },
+    {
+      "id": "ability-signature-warden-keep-the-quarry-close",
+      "current": "power-signature-quarry-mark"
+    },
+    {
+      "id": "ability-signature-warden-know-what-you-hunt",
+      "current": "power-signature-wardens-volley"
+    },
+    {
+      "id": "ability-signature-warden-read-the-passing",
+      "current": "power-signature-quarry-mark"
+    },
+    {
+      "id": "ability-signature-warden-stay-on-the-scent",
+      "current": "power-signature-watchers-focus"
+    },
+    {
+      "id": "ability-signature-warden-through-bramble-and-stone",
+      "current": "power-signature-watchers-focus"
+    },
+    {
+      "id": "ability-signature-warden-turn-the-hunt",
+      "current": "power-signature-wardens-volley"
+    },
+    {
+      "id": "ability-silence-the-alarm",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-silent-cue",
+      "current": "power-fracture-focus"
+    },
+    {
+      "id": "ability-slip-the-closing-door",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-smile-before-steel",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-smoke-in-a-bottle",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-smoke-through-the-keyhole",
+      "current": "power-firebreak"
+    },
+    {
+      "id": "ability-snare-the-missile",
+      "current": "power-resourceful-maker"
+    },
+    {
+      "id": "ability-speak-with-the-hearth",
+      "current": "power-ember-lance"
+    },
+    {
+      "id": "ability-spot-the-tell",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-spring-in-the-sleeve",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-stabilize",
+      "current": "ability-stabilize"
+    },
+    {
+      "id": "ability-stand",
+      "current": "ability-stand"
+    },
+    {
+      "id": "ability-stay-with-my-voice",
+      "current": "power-battle-surgeon"
+    },
+    {
+      "id": "ability-steel-at-the-wrist",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-step-between-lanterns",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-step-through-the-spark",
+      "current": "power-firebreak"
+    },
+    {
+      "id": "ability-still-the-avalanche",
+      "current": "power-glacial-wall"
+    },
+    {
+      "id": "ability-still-the-will",
+      "current": "power-mindstorm"
+    },
+    {
+      "id": "ability-stillness-at-the-center",
+      "current": "power-rescue-line"
+    },
+    {
+      "id": "ability-stitch-the-living-pattern",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-stone-on-your-shoulders",
+      "current": "power-iron-skin"
+    },
+    {
+      "id": "ability-storm-on-a-string",
+      "current": "power-gale-bolt"
+    },
+    {
+      "id": "ability-stride-of-the-giant",
+      "current": "power-adamant-ward"
+    },
+    {
+      "id": "ability-summon-construct-master",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-summon-construct-novice",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-summon-elemental-adept",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-summon-elemental-novice",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-summon-fey-adept",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-summon-fey-master",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-summon-undead-adept",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-sure-ascent",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-sustain-the-failing",
+      "current": "power-renewal-circle"
+    },
+    {
+      "id": "ability-swing-into-trouble",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-take-the-measure",
+      "current": "power-barbed-arrow"
+    },
+    {
+      "id": "ability-take-them-alive",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-teach-stone-to-bend",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-tell-a-worthy-story",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-terms-before-swords",
+      "current": "power-second-wind"
+    },
+    {
+      "id": "ability-the-ancestors-stand",
+      "current": "power-spirit-crossing"
+    },
+    {
+      "id": "ability-the-angle-of-unease",
+      "current": "power-force-hand"
+    },
+    {
+      "id": "ability-the-bones-rise",
+      "current": "power-spirit-ward"
+    },
+    {
+      "id": "ability-the-chorus-advances",
+      "current": "power-draw-attention"
+    },
+    {
+      "id": "ability-the-circle-holds",
+      "current": "power-hold-the-line"
+    },
+    {
+      "id": "ability-the-city-opens-its-doors",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-the-cleverest-mixture",
+      "current": "power-master-artisan"
+    },
+    {
+      "id": "ability-the-debt-comes-due",
+      "current": "power-firebreak"
+    },
+    {
+      "id": "ability-the-forest-takes-the-blow",
+      "current": "power-nightfall"
+    },
+    {
+      "id": "ability-the-grove-gives-back",
+      "current": "power-renew-flesh"
+    },
+    {
+      "id": "ability-the-hunt-ends-here",
+      "current": "power-hunters-focus"
+    },
+    {
+      "id": "ability-the-impossible-escape",
+      "current": "power-shadow-step"
+    },
+    {
+      "id": "ability-the-key-changes-hands",
+      "current": "power-vanish"
+    },
+    {
+      "id": "ability-the-land-keeps-no-secrets",
+      "current": "power-nightfall"
+    },
+    {
+      "id": "ability-the-last-word",
+      "current": "power-execution-edge"
+    },
+    {
+      "id": "ability-the-lucky-trinket",
+      "current": "power-calculated-opening"
+    },
+    {
+      "id": "ability-the-moment-foretold",
+      "current": "power-calculated-opening"
+    },
+    {
+      "id": "ability-the-mountain-walks",
+      "current": "power-iron-skin"
+    },
+    {
+      "id": "ability-the-orchard-wakes",
+      "current": "power-nightfall"
+    },
+    {
+      "id": "ability-the-otter-s-bargain",
+      "current": "power-snaring-roots"
+    },
+    {
+      "id": "ability-the-patient-metal",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-the-right-small-courtesy",
+      "current": "power-rally"
+    },
+    {
+      "id": "ability-the-road-remembers",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-the-shape-of-escape",
+      "current": "power-calculated-opening"
+    },
+    {
+      "id": "ability-the-sky-comes-down",
+      "current": "power-thunder-line"
+    },
+    {
+      "id": "ability-the-strong-arm",
+      "current": "power-driving-cut"
+    },
+    {
+      "id": "ability-the-tale-will-tell-of-you",
+      "current": "power-second-wind"
+    },
+    {
+      "id": "ability-the-unlit-road",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-the-untroubled-hand",
+      "current": "power-fleet-step"
+    },
+    {
+      "id": "ability-the-walking-toolbox",
+      "current": "power-phantom-sentry"
+    },
+    {
+      "id": "ability-the-web-of-whispers",
+      "current": "power-read-the-depths"
+    },
+    {
+      "id": "ability-the-wind-makes-room",
+      "current": "power-thunder-line"
+    },
+    {
+      "id": "ability-thought-before-the-blow",
+      "current": "power-mindstorm"
+    },
+    {
+      "id": "ability-through-the-spearpoints",
+      "current": "power-sweeping-blade"
+    },
+    {
+      "id": "ability-thunder-at-the-door",
+      "current": "power-gale-bolt"
+    },
+    {
+      "id": "ability-thunder-ring",
+      "current": "power-crosswind"
+    },
+    {
+      "id": "ability-touched-by-the-divine",
+      "current": "power-mending-touch"
+    },
+    {
+      "id": "ability-trail-workshop",
+      "current": "power-field-artisan"
+    },
+    {
+      "id": "ability-translate-the-fragment",
+      "current": "power-expose-weakness"
+    },
+    {
+      "id": "ability-traverse-the-impossible",
+      "current": "power-rescue-line"
+    },
+    {
+      "id": "ability-treat-bone",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-treat-elemental-injury",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-treat-life-injury",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-treat-mental-trauma",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-treat-radiant-injury",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-treat-soft-tissue",
+      "current": "power-field-care"
+    },
+    {
+      "id": "ability-turn-the-fall",
+      "current": "power-crosswind"
+    },
+    {
+      "id": "ability-turn-the-river",
+      "current": "power-vault"
+    },
+    {
+      "id": "ability-under-their-guard",
+      "current": "power-sweeping-blade"
+    },
+    {
+      "id": "ability-undertow-answer",
+      "current": "power-field-replenishment"
+    },
+    {
+      "id": "ability-unravel-the-bolt",
+      "current": "power-retaliating-guard"
+    },
+    {
+      "id": "ability-urgent-bandaging",
+      "current": "power-purging-tonic"
+    },
+    {
+      "id": "ability-use-a-healing-potion",
+      "current": "ability-use-a-healing-potion"
+    },
+    {
+      "id": "ability-veiled-crossing",
+      "current": "power-smoke-screen"
+    },
+    {
+      "id": "ability-wake-the-iron-rune",
+      "current": "power-brace"
+    },
+    {
+      "id": "ability-wake-the-nerves",
+      "current": "power-renewal-circle"
+    },
+    {
+      "id": "ability-walk-the-thunder",
+      "current": "power-crosswind"
+    },
+    {
+      "id": "ability-wear-heavy-armor",
+      "current": "power-adamant-ward"
+    },
+    {
+      "id": "ability-wear-light-armor",
+      "current": "power-brace"
+    },
+    {
+      "id": "ability-wear-medium-armor",
+      "current": "power-iron-skin"
+    },
+    {
+      "id": "ability-wear-the-great-beast",
+      "current": "power-nightfall"
+    },
+    {
+      "id": "ability-weight-of-iron",
+      "current": "power-adamant-ward"
+    },
+    {
+      "id": "ability-when-the-stars-look-back",
+      "current": "power-mindstorm"
+    },
+    {
+      "id": "ability-where-only-eagles-pass",
+      "current": "power-rescue-line"
+    },
+    {
+      "id": "ability-white-heat",
+      "current": "power-sunburst"
+    },
+    {
+      "id": "ability-whiteout",
+      "current": "power-glacial-wall"
+    },
+    {
+      "id": "ability-wind-the-sight",
+      "current": "power-resourceful-maker"
+    },
+    {
+      "id": "ability-wings-over-the-battle",
+      "current": "power-sunburst"
+    },
+    {
+      "id": "ability-winter-hold",
+      "current": "power-glacial-wall"
+    },
+    {
+      "id": "ability-winter-store",
+      "current": "power-winter-bolt"
+    },
+    {
+      "id": "ability-write-the-final-line",
+      "current": "power-execution-edge"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "recipe-bound-torches",
+      "name": "Bound torches",
+      "product": "item-lighting-bundle",
+      "maximumDie": 6,
+      "minutes": 30,
+      "materialPrice": 3,
+      "tool": "item-craft-tools",
+      "level": 1,
+      "learnPrice": 20,
+      "location": "camp",
+      "basic": true,
+      "materials": "Wood, fiber and tallow"
+    },
+    {
+      "id": "recipe-fletched-ammunition",
+      "name": "Fletched arrows",
+      "product": "item-ammunition-bundle",
+      "maximumDie": 8,
+      "minutes": 30,
+      "materialPrice": 5,
+      "tool": "item-craft-tools",
+      "level": 1,
+      "learnPrice": 20,
+      "location": "camp",
+      "basic": true,
+      "materials": "Shafts, feathers and binding"
+    },
+    {
+      "id": "recipe-travel-food",
+      "name": "Trail rations",
+      "product": "item-food-bundle",
+      "maximumDie": 8,
+      "minutes": 30,
+      "materialPrice": 5,
+      "tool": null,
+      "level": 1,
+      "learnPrice": 20,
+      "location": "camp",
+      "basic": true,
+      "materials": "Preserved grain and vegetables"
+    },
+    {
+      "id": "recipe-twisted-cord",
+      "name": "Braided rope",
+      "product": "item-rope-coil",
+      "maximumDie": null,
+      "minutes": 45,
+      "materialPrice": 4,
+      "tool": "item-craft-tools",
+      "level": 1,
+      "learnPrice": 20,
+      "location": "camp",
+      "materials": "Cordage fibers"
+    },
+    {
+      "id": "recipe-smoke-flask",
+      "name": "Smoke flask",
+      "product": "item-smoke-supply",
+      "maximumDie": 6,
+      "minutes": 45,
+      "materialPrice": 8,
+      "tool": "item-mixing-kit",
+      "level": 1,
+      "learnPrice": 20,
+      "location": "camp",
+      "materials": "Resin, charcoal and salts"
+    },
+    {
+      "id": "recipe-lesser-healing-bottle",
+      "name": "Healing potion",
+      "product": "item-lesser-healing-bottle",
+      "maximumDie": 4,
+      "minutes": 60,
+      "materialPrice": 12,
+      "tool": "item-mixing-kit",
+      "level": 1,
+      "learnPrice": 30,
+      "location": "town",
+      "materials": "Moonmint and life salts"
+    },
+    {
+      "id": "recipe-field-dressing",
+      "name": "Field dressing",
+      "product": "item-field-dressing",
+      "maximumDie": 4,
+      "minutes": 30,
+      "materialPrice": 8,
+      "tool": null,
+      "level": 1,
+      "learnPrice": 20,
+      "location": "camp",
+      "materials": "Clean linen and antiseptic herbs"
+    },
+    {
+      "id": "recipe-flash-powder",
+      "name": "Flash powder",
+      "product": "item-flash-powder",
+      "maximumDie": 4,
+      "minutes": 60,
+      "materialPrice": 15,
+      "tool": "item-mixing-kit",
+      "level": 3,
+      "learnPrice": 40,
+      "location": "camp",
+      "materials": "Glowstone dust and white salts"
+    },
+    {
+      "id": "recipe-greater-healing-bottle",
+      "name": "Greater healing potion",
+      "product": "item-greater-healing-bottle",
+      "maximumDie": 4,
+      "minutes": 120,
+      "materialPrice": 30,
+      "tool": "item-mixing-kit",
+      "level": 3,
+      "learnPrice": 50,
+      "location": "town",
+      "materials": "Distilled life salts"
+    },
+    {
+      "id": "recipe-restoration-draught",
+      "name": "Restoration draught",
+      "product": "item-restoration-draught",
+      "maximumDie": 4,
+      "minutes": 240,
+      "materialPrice": 80,
+      "tool": "item-mixing-kit",
+      "level": 7,
+      "learnPrice": 100,
+      "location": "town",
+      "materials": "Silverleaf and phoenix resin"
+    },
+    {
+      "id": "recipe-ward-charm",
+      "name": "Ward charm",
+      "product": "item-ward-charm",
+      "maximumDie": 4,
+      "minutes": 90,
+      "materialPrice": 20,
+      "tool": "item-craft-tools",
+      "level": 3,
+      "learnPrice": 60,
+      "location": "town",
+      "materials": "Etched silver and braided silk"
+    }
+  ]
+}

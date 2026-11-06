@@ -137,6 +137,8 @@ export const interactionMethods = {
     if (item.kind === "coffer" && item.source.opened) return;
     if (item.kind === "cache") item.source.recovered = true;
     else item.source.opened = true;
+    if (this.C.gamePowers && item.kind === "coffer")
+      this.discoverRecipe(item.source);
     this.campaign.haul += item.coins;
     if (item.kind === "coffer")
       this.campaign.pendingTreasureXP += item.coins * XP_RULES.coin;

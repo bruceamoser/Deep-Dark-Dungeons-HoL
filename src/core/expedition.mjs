@@ -334,6 +334,7 @@ export const expeditionMethods = {
       throw new Error("Time must be whole nonnegative seconds.");
     prepareExpedition(this.campaign);
     this.campaign.clockSeconds += seconds;
+    this.expireBattlefield();
     this.campaign.hours = Math.floor(this.campaign.clockSeconds / 3600);
     for (const h of this.party.filter((h) => h.survival.status !== "dead")) {
       if (sleeping && h.survival.status === "active") {
@@ -342,6 +343,7 @@ export const expeditionMethods = {
         if (h.needs.sleepProgress >= EXPEDITION_TIME.sleep) {
           h.needs.restedAt = this.clock().seconds;
           h.needs.sleepProgress = 0;
+          h.restPowerUses = {};
           h.needs.warned = h.needs.warned.filter((k) => k !== "fatigue");
         }
       }

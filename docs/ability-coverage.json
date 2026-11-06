@@ -3942,7 +3942,7 @@
       "id": "trait-dwarf-maker-s-eye",
       "name": "An Honest Maker’s Hand",
       "decision": "adapt",
-      "text": "Automatically improve the first Weak or Standard crafting result each day by one tier.",
+      "text": "The first crafted recipe each day preserves its prepared ingredient batch. Tools and ingredients must still be present.",
       "craftImprove": true,
       "source": {
         "path": "design/ancestries/trait-dwarf-maker-s-eye.md",
@@ -3953,7 +3953,7 @@
       "id": "trait-dwarf-stone-reader",
       "name": "Stone Mason",
       "decision": "replace",
-      "text": "Read the structure: gain one Boon when attacking constructs or crafting ammunition and cord.",
+      "text": "Read the structure: gain one Boon when attacking constructs. Craft recipes 25% faster.",
       "structure": true,
       "source": {
         "path": "design/ancestries/trait-dwarf-stone-reader.md",
@@ -4037,7 +4037,7 @@
       "id": "trait-gnome-fingers-in-the-works",
       "name": "Fingers in the Works",
       "decision": "replace",
-      "text": "Gain one Boon to attacks made with a crafted device, such as Spring in the Sleeve.",
+      "text": "Crafted smoke and flash-powder surfaces last one extra round. Ward charms absorb 2 additional damage.",
       "device": 1,
       "source": {
         "path": "design/ancestries/trait-gnome-fingers-in-the-works.md",
@@ -4069,7 +4069,7 @@
       "id": "trait-gnome-whats-it-made-of",
       "name": "What’s It Made Of?",
       "decision": "replace",
-      "text": "Practical analysis grants one Boon to Knowledge crafting rolls.",
+      "text": "Practical analysis reduces recipe crafting time by 25%.",
       "craft": 1,
       "source": {
         "path": "design/ancestries/trait-gnome-whats-it-made-of.md",
@@ -4123,7 +4123,7 @@
       "id": "trait-goblin-scavenger",
       "name": "Waste Nothing",
       "decision": "replace",
-      "text": "When checking crafting materials, roll the supply die twice and keep the higher result.",
+      "text": "Salvage expertise reduces the price of recipe ingredients by 25%.",
       "salvage": true,
       "source": {
         "path": "design/ancestries/trait-goblin-scavenger.md",
@@ -4267,9 +4267,9 @@
       "id": "trait-human-practiced-patience",
       "name": "The Impossible Streak",
       "decision": "adapt",
-      "text": "Prepare the difficult way: once per day, add three Boons to your next crafting or treatment roll.",
-      "daily": 3,
-      "noncombat": true,
+      "text": "Patient hands reduce recipe crafting and wound treatment time by 25%.",
+      "careSpeed": 0.25,
+      "craftTime": 0.25,
       "source": {
         "path": "design/ancestries/trait-human-practiced-patience.md",
         "sha256": "81660be3514904af635aad04010f80ee29270d78aa53b8df5bbfbca2587e7c35"
@@ -4279,7 +4279,7 @@
       "id": "trait-human-shared-table",
       "name": "Ingenuity",
       "decision": "replace",
-      "text": "Improvise workshop tools when crafting in town. Gain one Boon to your first crafting roll on each expedition floor.",
+      "text": "Improvise craft tools and mixing equipment for known recipes at camp or in town.",
       "improvise": true,
       "source": {
         "path": "design/ancestries/trait-human-shared-table.md",
@@ -4356,7 +4356,7 @@
       "id": "trait-tallfolk-a-big-shadow",
       "name": "A Big Shadow",
       "decision": "replace",
-      "text": "Overawe: gain one Boon to attacks that can inflict Frightened.",
+      "text": "Your imposing presence grants one defense Boon against adjacent enemies.",
       "terror": 1,
       "source": {
         "path": "design/ancestries/trait-tallfolk-a-big-shadow.md",
