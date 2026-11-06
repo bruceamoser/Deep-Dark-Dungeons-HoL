@@ -46,12 +46,12 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-dwarf-maker-s-eye": rule(
     "adapt",
-    "Automatically improve the first Weak or Standard crafting result each day by one tier.",
+    "The first crafted recipe each day preserves its prepared ingredient batch. Tools and ingredients must still be present.",
     { craftImprove: true },
   ),
   "trait-dwarf-stone-reader": rule(
     "replace",
-    "Read the structure: gain one Boon when attacking constructs or crafting ammunition and cord.",
+    "Read the structure: gain one Boon when attacking constructs. Craft recipes 25% faster.",
     { structure: true },
   ),
   "trait-elf-age-of-memory": rule(
@@ -85,7 +85,7 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-gnome-fingers-in-the-works": rule(
     "replace",
-    "Gain one Boon to attacks made with a crafted device, such as Spring in the Sleeve.",
+    "Crafted smoke and flash-powder surfaces last one extra round. Ward charms absorb 2 additional damage.",
     { device: 1 },
   ),
   "trait-gnome-one-more-question": rule(
@@ -99,7 +99,7 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-gnome-whats-it-made-of": rule(
     "replace",
-    "Practical analysis grants one Boon to Knowledge crafting rolls.",
+    "Practical analysis reduces recipe crafting time by 25%.",
     { craft: 1 },
   ),
   "trait-goblin-more-of-us-than-you": rule(
@@ -123,7 +123,7 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-goblin-scavenger": rule(
     "replace",
-    "When checking crafting materials, roll the supply die twice and keep the higher result.",
+    "Salvage expertise reduces the price of recipe ingredients by 25%.",
     { salvage: true },
   ),
   "trait-halfling-good-cheer": rule(
@@ -185,12 +185,12 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-human-practiced-patience": rule(
     "adapt",
-    "Prepare the difficult way: once per day, add three Boons to your next crafting or treatment roll.",
-    { daily: 3, noncombat: true },
+    "Patient hands reduce recipe crafting and wound treatment time by 25%.",
+    { careSpeed: 0.25, craftTime: 0.25 },
   ),
   "trait-human-shared-table": rule(
     "replace",
-    "Improvise workshop tools when crafting in town. Gain one Boon to your first crafting roll on each expedition floor.",
+    "Improvise craft tools and mixing equipment for known recipes at camp or in town.",
     { improvise: true },
   ),
   "trait-human-weathered": rule(
@@ -225,7 +225,7 @@ export const DUNGEON_TRAITS = Object.freeze({
   ),
   "trait-tallfolk-a-big-shadow": rule(
     "replace",
-    "Overawe: gain one Boon to attacks that can inflict Frightened.",
+    "Your imposing presence grants one defense Boon against adjacent enemies.",
     { terror: 1 },
   ),
   "trait-tallfolk-broad-back": rule(
@@ -289,7 +289,11 @@ export const ancestryGameMethods = {
         e.effects.charges ? { ...e, effects: { ...e.effects, attack: 0 } } : e,
       );
     }
-    if (mode === "defense") bonus += this.tacticValue(h, "defense");
+    if (mode === "defense") {
+      bonus += this.tacticValue(h, "defense");
+      if (target && distance(h, target) <= 1 && traits.some((t) => t.terror))
+        bonus++;
+    }
     for (const t of traits) {
       bonus += t[attribute] ?? 0;
       if (t.death && mode === "death") bonus += t.death;

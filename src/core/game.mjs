@@ -1,3 +1,10 @@
+import { validateGameState } from "./game-state.mjs";
+import { normalizeAppearance, identityMethods } from "./identity.mjs";
+import { recipeMethods } from "./recipes.mjs";
+import { gameCareMethods } from "./game-care.mjs";
+import { POWERS, mappedPower, isTrainable } from "./powers.mjs";
+import { powerMethods } from "./power-engine.mjs";
+import { battlefieldMethods } from "./battlefield.mjs";
 import { retrainingMethods } from "./retraining.mjs";
 import { tacticMethods } from "./tactics.mjs";
 import { ancestryGameMethods, traitsOf, traitIds } from "./ancestry-game.mjs";
@@ -22,6 +29,7 @@ import {
 import { populateEncounters, bestiaryMethods } from "./bestiary.mjs";
 import {
   movementBlockers,
+  reachableCells,
   traversalCost,
   leastCostPath,
   companyStep,
@@ -128,7 +136,18 @@ export class Game {
         .map((c) => c.id),
       preview,
     };
+    hero.draft.appearance = normalizeAppearance(
+      draft.appearance,
+      draft.ancestryId,
+      draft.name,
+    );
     hero.preview = gearPreview(this.R, this.C, hero);
+    if (this.C.gamePowers)
+      hero.favorites = [
+        ...new Set(hero.favorites.map((id) => mappedPower(id, this.C))),
+      ]
+        .filter((id) => this.availableActions(hero).some((c) => c.id === id))
+        .slice(0, 8);
     return hero;
   }
   fresh(drafts) {
@@ -162,6 +181,7 @@ export class Game {
     this.resume();
   }
   load(c, { resume = true } = {}) {
+    validateGameState(c);
     this.pause();
     prepareRoster(c);
     c.woundNotices ??= [];
@@ -171,6 +191,11 @@ export class Game {
       ...c.reserve,
       ...c.fallenHeroes.map((e) => e.hero),
     ]) {
+      h.draft.appearance = normalizeAppearance(
+        h.draft.appearance,
+        h.draft.ancestryId,
+        h.name,
+      );
       const p = gearPreview(this.R, this.C, h);
       if (!p.valid)
         throw new Error("A saved hero no longer passes character validation.");
@@ -185,7 +210,9 @@ export class Game {
             this.availableActions(h)
               .slice(0, 6)
               .map((c) => c.id)
-          ).filter((id) => this.availableActions(h).some((c) => c.id === id)),
+          )
+            .map((id) => (this.C.gamePowers ? mappedPower(id, this.C) : id))
+            .filter((id) => this.availableActions(h).some((c) => c.id === id)),
         ),
       ].slice(0, 8);
       h.earnedLevel ??= p.state.level;
@@ -468,7 +495,16 @@ export class Game {
           { ...this.budget, speed: this.speed(this.active) },
           this.restrictions(this.active),
         )
-      : this.speed(this.active);
+      : this.R.movementRemaining(
+          {
+            ...this.R.startTurn({
+              turnId: "movement-preview",
+              speed: this.speed(this.active),
+            }),
+            bonusMovement: this.tacticValue(this.active, "movement"),
+          },
+          this.restrictions(this.active),
+        );
   }
   held(h, catalogId) {
     return h.preview.inventory.items.find(
@@ -488,10 +524,12 @@ export class Game {
     return this.C.choices.filter(
       (c) =>
         ABILITIES[c.id] &&
-        (c.universal || h.preview.state.abilities.includes(c.id)),
+        ABILITIES[c.id].category !== "passive" &&
+        (c.universal || this.powerIds(h).includes(c.id)),
     );
   }
   useAbility(id, targetId, options = {}) {
+    if (POWERS[id]) return this.usePower(id, targetId);
     if (ABILITIES[id]?.tactic) return this.useTactic(id, targetId);
     if (id === "ability-lantern-in-the-palm")
       return this.toggleLantern(this.selected);
@@ -516,7 +554,11 @@ export class Game {
     if (this.mode !== "combat" || this.busy)
       throw new Error("Wait for your company’s turn.");
     const spec = ABILITIES[id],
-      card = this.availableActions().find((c) => c.id === id),
+      card = this.C.choices.find(
+        (c) =>
+          c.id === id &&
+          (c.universal || this.active.preview.state.abilities.includes(id)),
+      ),
       h = this.active;
     if (!spec || !card)
       throw new Error("This hero has not learned that dungeon action.");
@@ -710,12 +752,17 @@ export class Game {
         : [];
       const damage = this.R.damageEvent({
         components: [
-          { type: spec.type, amount: spec.damage[tier] },
+          {
+            type: spec.type,
+            amount: spec.damage[tier] + this.consumeDamageBonus(h),
+          },
           ...enchantments.map((e) => ({ type: e.type, amount: e.value })),
         ],
         resistances: defense.resistances,
         weaknesses: this.creatureWeaknesses(target),
       });
+      this.breakConcealment(h);
+      damage.total = this.absorbPowerDamage(target, damage.total, spec.type);
       target.hp = Math.max(0, target.hp - damage.total);
       target.conditions ??= [];
       for (const [condition, rating] of [
@@ -914,6 +961,7 @@ export class Game {
       },
     ];
     const boons =
+        Math.max(0, -this.powerStat(e, "attack")) +
         Number(!!h.buffs.defend) +
         Number(!!h.buffs.shield && action.type === "physical") +
         sources
@@ -945,8 +993,12 @@ export class Game {
           amount: Number(outcome.match(/^\d+/)[0]),
         },
       ],
-      resistances: Object.entries(h.preview.resistances).map(
-        ([type, value]) => ({ type, value }),
+      resistances: this.powerResistances(
+        h,
+        Object.entries(h.preview.resistances).map(([type, value]) => ({
+          type,
+          value,
+        })),
       ),
     });
     this.suffer(h, damage.total, action.type, e);
@@ -1208,6 +1260,7 @@ export class Game {
     this.emit("change");
   }
   actionReason(id, h = this.active) {
+    if (POWERS[id]) return this.powerReason(id, h);
     const spec = ABILITIES[id];
     if (spec?.supply && !this.supplyItem(h, spec.supply))
       return "Craft or carry a usable smoke supply first.";
@@ -1217,7 +1270,11 @@ export class Game {
       return "This floor’s edible patch has been harvested.";
     if (this.pendingProvocation || this.pendingDefense)
       return "Resolve the pending reaction first.";
-    if (spec && !this.availableActions(h).some((c) => c.id === id))
+    if (
+      spec &&
+      !this.availableActions(h).some((c) => c.id === id) &&
+      !(this.continuingProvocation && h.preview.state.abilities.includes(id))
+    )
       return "Not learned.";
     if (
       spec?.exploration &&
@@ -1351,6 +1408,7 @@ export class Game {
           "Committed development choices cannot be refunded or rewritten.",
         );
     }
+    const alreadyKnown = new Set(this.powerIds(h));
     for (const [level, entry] of Object.entries(progression.levels ?? {})) {
       if (+level > progression.level)
         throw new Error(
@@ -1360,9 +1418,17 @@ export class Game {
         prior[level]?.purchases?.length ?? 0,
       )) {
         const choice = this.C.choices.find((c) => c.id === purchase.id);
+        if (this.C.gamePowers && POWERS[purchase.id]) {
+          if (alreadyKnown.has(purchase.id))
+            throw new Error(
+              "This game power is already known through existing training.",
+            );
+          alreadyKnown.add(purchase.id);
+        }
         if (
           choice?.kind === "ability" &&
-          coverage(choice.id).status !== "included"
+          (coverage(choice.id).status !== "included" ||
+            !isTrainable(choice, this.C))
         )
           throw new Error(
             `${choice.name} is not in the playable dungeon roster.`,
@@ -1461,6 +1527,41 @@ export class Game {
         ),
         ...this.enemies.filter((e) => e.hp > 0 && e.id !== except),
       ].map((p) => key(p.x, p.z)),
+    );
+  }
+  movementRange() {
+    if (
+      this.mode !== "combat" ||
+      this.busy ||
+      this.encounter.nextSide !== "players" ||
+      !this.canAct(this.active) ||
+      this.paths.get(this.active.id)?.length ||
+      this.pendingDefense ||
+      this.pendingProvocation
+    )
+      return [];
+    if (this.encounter.current && this.encounter.current !== this.active.id)
+      return [];
+    if (
+      !this.encounter.current &&
+      !this.R.availableParticipants(this.encounter).some(
+        (p) => p.id === this.active.id,
+      )
+    )
+      return [];
+    const blocked = movementBlockers(
+      this.party,
+      this.enemies,
+      this.active,
+      (h) => this.canAct(h),
+    );
+    return reachableCells(
+      this.map,
+      this.active,
+      this.movementLeft(),
+      blocked,
+      (p) => this.moveCost(p),
+      this.occupied(this.active.id),
     );
   }
   route(to) {
@@ -1592,6 +1693,27 @@ export class Game {
     if (steps.length) {
       if (this.mode === "exploration")
         this.advanceTime(EXPEDITION_TIME.explorationStep, { provisions: true });
+      for (const step of steps) {
+        const { hero, points } = step;
+        const traversed = [];
+        const end = { x: hero.x, z: hero.z };
+        for (const p of points) {
+          Object.assign(hero, p);
+          traversed.push(p);
+          this.surfaceContact(hero, { entry: true });
+          if (!this.canAct(hero)) {
+            this.paths.delete(hero.id);
+            // A yielding ally is a waypoint, never a legal final position.
+            if (this.occupied(hero.id).has(key(hero.x, hero.z))) {
+              Object.assign(hero, end);
+              traversed.push(end);
+            }
+            step.points = traversed;
+            break;
+          }
+        }
+        if (this.canAct(hero)) Object.assign(hero, end);
+      }
       this.syncTorches();
       this.emit("move", {
         steps: steps.map(({ hero, points }) => ({ heroId: hero.id, points })),
@@ -1626,6 +1748,11 @@ export class Game {
       h.grudgeTaken = false;
       h.tactics = [];
       h.signatureUses = [];
+      h.powerEffects = [];
+      h.powerUses = {};
+      h.powerResourceUsed = [];
+      h.powerPendingManeuver = false;
+      h.powerTurn = 0;
     });
     this.mode = "combat";
     this.encounter = this.R.startEncounter(
@@ -1661,6 +1788,8 @@ export class Game {
     this.encounter = this.R.chooseParticipant(this.encounter, h.id);
     h.survival = this.R.startSurvivalTurn(h.survival, h.survival.ownTurn + 1);
     h.buffs = {};
+    h.powerTurn = (h.powerTurn ?? 0) + 1;
+    this.surfaceContact(h);
     this.budgets[h.id] = this.R.startTurn({
       turnId: `turn-${this.encounter.serial}`,
       retained,
@@ -1668,6 +1797,10 @@ export class Game {
       conditions: this.restrictions(h),
     });
     this.budgets[h.id].bonusMovement = this.tacticValue(h, "movement");
+    if (h.powerPendingManeuver && retained.includes("maneuver")) {
+      this.budgets[h.id].remaining.maneuver++;
+      h.powerPendingManeuver = false;
+    }
     if (h.survival.status === "dying") this.emit("dying", { hero: h });
     this.emit("change");
   }
@@ -1818,11 +1951,24 @@ export class Game {
     if (!next) return;
     this.encounter = this.R.chooseParticipant(this.encounter, next.id);
     const e = this.enemies.find((e) => e.id === next.id);
+    e.powerTurn = (e.powerTurn ?? 0) + 1;
+    this.surfaceContact(e);
+    const taunt = (e.powerEffects ?? []).find(
+      (t) =>
+        t.stats.taunt &&
+        t.expiresAt > this.clock().seconds &&
+        t.expiresTurn >= e.powerTurn,
+    );
     const targets = this.party
       .filter((h) =>
         ["active", "lastWords", "dying"].includes(h.survival.status),
       )
-      .sort((a, b) => distance(e, a) - distance(e, b));
+      .filter((h) => this.powerTargetable(h, e))
+      .sort(
+        (a, b) =>
+          Number(b.id === taunt?.source) - Number(a.id === taunt?.source) ||
+          distance(e, a) - distance(e, b),
+      );
     const h = targets[0];
     this.enemyManeuver(e);
     if (h && this.enemyCapable(e) && e.retained.includes("main")) {
@@ -1862,6 +2008,11 @@ export class Game {
       )
         return;
       Object.assign(e, points[i]);
+      this.surfaceContact(e, { entry: true });
+      if (e.hp <= 0) {
+        this.finishEnemyTurn(e);
+        return;
+      }
     }
     this.enemyAttack(e, h);
   }
@@ -2070,3 +2221,7 @@ Object.assign(Game.prototype, ancestryGameMethods);
 Object.assign(Game.prototype, tacticMethods);
 
 Object.assign(Game.prototype, retrainingMethods);
+
+Object.assign(Game.prototype, powerMethods, battlefieldMethods);
+
+Object.assign(Game.prototype, recipeMethods, gameCareMethods, identityMethods);

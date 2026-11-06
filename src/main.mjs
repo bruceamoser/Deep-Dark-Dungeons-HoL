@@ -1,3 +1,4 @@
+import { gameCatalog, POWERS } from "./core/powers.mjs";
 import { workshopScreen } from "./ui/workshop.mjs";
 import { campScreen } from "./ui/camp.mjs";
 import { SaveLibrary, browserSaveStorage } from "./core/save-library.mjs";
@@ -101,13 +102,13 @@ async function init() {
   const [choices, inventory, wounds, party, creatures] = await Promise.all(
     ["choices", "inventory", "wounds", "party", "creatures"].map(load),
   );
-  C = {
+  C = gameCatalog({
     choices: choices.records,
     inventory,
     creatures,
     wounds,
     commit: choices.sourceCommit,
-  };
+  });
   examples = party;
   game = new Game(R, C, toast);
   scene = new Scene(
@@ -122,6 +123,46 @@ async function init() {
         ["exploration", "combat"].includes(game.mode) &&
         game.worldInteractions().find((i) => i.id === id);
       scene.highlightInteraction(item ? id : null);
+      if (
+        selectedAction &&
+        POWERS[selectedAction.id] &&
+        p &&
+        !modal.children.length
+      ) {
+        const spec = POWERS[selectedAction.id],
+          unit =
+            spec.target === "enemy"
+              ? game.enemies.find(
+                  (e) => e.id === id?.slice(9) || (e.x === p.x && e.z === p.z),
+                )
+              : game.party.find((h) => h.x === p.x && h.z === p.z);
+        let target = document.querySelector("#power-target-hint");
+        if (!target) {
+          target = document.createElement("div");
+          target.id = "power-target-hint";
+          document.body.append(target);
+        }
+        try {
+          const plan = game.powerPlan(
+            spec.id,
+            spec.target === "ground"
+              ? p
+              : spec.target === "self"
+                ? game.active.id
+                : unit?.id,
+          );
+          scene.showPowerTarget(plan);
+          target.className = "power-target-hint";
+          target.innerHTML = `<b>${esc(spec.name)}</b><small>${esc(plan.recipients.map((p) => p.name).join(", ") || `${plan.cells.length} affected squares`)} · ${spec.effects.some((e) => e.kind === "zone") ? "Persistent surfaces affect both sides" : "Allies spared by hostile effects"}</small>`;
+        } catch (error) {
+          scene.showPowerTarget({ cells: [p] }, false);
+          target.className = "power-target-hint invalid";
+          target.textContent = error.message;
+        }
+        scene.showPath([]);
+        hint.hidden = true;
+        return;
+      }
       const creature = id?.startsWith("creature:")
         ? game.enemies.find((e) => e.id === id.slice(9))
         : null;
@@ -134,18 +175,32 @@ async function init() {
         hint.innerHTML = `<strong>${esc(creature.name)}${creature.boss ? " · GUARDIAN" : ""}</strong><small>${creature.hp}/${creature.maxHp} HP · CV ${creature.cv ?? 8} · SHIFT-CLICK TO INSPECT</small>`;
         hint.style.left = `${Math.min(innerWidth - 300, event.clientX + 18)}px`;
         hint.style.top = `${Math.max(12, event.clientY - 65)}px`;
-      } else if (p && !modal.children.length && game.mode !== "town")
+      } else if (p && !modal.children.length && game.mode !== "town") {
         scene.showPath(game.route(p));
-      else scene.showPath([]);
+        if (game.mode === "combat" && !selectedAction) {
+          const cell = scene.movementCells?.get(`${p.x},${p.z}`);
+          hint.hidden = false;
+          hint.innerHTML = `<strong>${cell?.canEnd ? `Move · ${cell.cost} / ${game.movementLeft()}` : cell ? "Companion · pass through only" : "Outside movement range"}</strong><small>TEAL: REACHABLE · GOLD: LAST MOVEMENT</small>`;
+          hint.style.left = `${Math.min(innerWidth - 280, event.clientX + 18)}px`;
+          hint.style.top = `${Math.max(12, event.clientY - 65)}px`;
+        }
+      } else {
+        scene.showPath([]);
+        if (!p) {
+          scene.showPowerTarget(null);
+          document.querySelector("#power-target-hint")?.remove();
+        }
+      }
     },
   );
   await scene.load();
   game.listeners.push((type, data) => {
     if (type === "feedback") scene.floatingText(data);
-    if (["time", "light", "change"].includes(type) && scene.map)
+    if (["time", "light", "change", "battlefield"].includes(type) && scene.map)
       scene.updateVisibility(game.party, game.seen);
     if (type === "supply") queueMicrotask(showSupplyNotice);
     if (type === "floor") {
+      scene.clearBattlefield();
       scene.clearFloatingText();
       scene.tilesDetail = [];
       scene.build(game.map);
@@ -203,14 +258,17 @@ async function init() {
     if (type === "interact-ready") worldMenu(data.id);
     if (
       selectedAction &&
-      (game.mode !== "combat" ||
-        game.encounter.nextSide !== "players" ||
+      ((game.mode !== "combat" && !POWERS[selectedAction.id]?.field) ||
+        (game.mode === "combat" && game.encounter.nextSide !== "players") ||
         selectedAction.hero !== game.active.id ||
-        selectedAction.round !== game.encounter.round ||
-        selectedAction.serial !== game.encounter.serial ||
+        selectedAction.round !== game.encounter?.round ||
+        selectedAction.serial !== game.encounter?.serial ||
         game.actionReason(selectedAction.id))
-    )
+    ) {
       selectedAction = null;
+      scene.showPowerTarget(null);
+      scene.showPath([]);
+    }
     if (
       type !== "move" ||
       (game.mode === "combat" && !game.paths.get(game.active.id)?.length)
@@ -226,7 +284,7 @@ async function init() {
   if (saved) game.load(deserialize(saved));
   else {
     game.fresh(startingDrafts());
-    if (!(await library.list()).length)
+    if (library.firstLaunch)
       await library.create("The first company", serialize(game.snapshot()));
   }
   // Demo starts from legal published characters, never randomized partial builds.
@@ -290,6 +348,18 @@ async function init() {
     if (e.key.toLowerCase() === "q") scene.rotate(-1);
     if (e.key.toLowerCase() === "e") scene.rotate(1);
     if (e.key.toLowerCase() === "f") scene.focusOn(game.active);
+    if (e.key.toLowerCase() === "g") {
+      scene.gridEnabled = !scene.gridEnabled;
+      scene.updateTacticalGrid(game, {
+        targeting: !!selectedAction,
+        force: true,
+      });
+      toast(
+        scene.gridEnabled
+          ? "Exploration grid on · combat grid is always visible"
+          : "Exploration grid off · combat grid is always visible",
+      );
+    }
     if (e.key === "Escape") {
       if (selectedAction) cancelTargeting();
       else attempt(openRuns);
@@ -333,6 +403,9 @@ function button(label, action, sub = "", primary = false) {
   return `<button data-action="${action}" class="${primary ? "primary" : ""}">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
 }
 function render() {
+  if (!selectedAction) document.querySelector("#power-target-hint")?.remove();
+  if (scene?.map && game?.map)
+    scene.updateTacticalGrid(game, { targeting: !!selectedAction });
   if (!game?.campaign) return;
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
@@ -374,7 +447,7 @@ function render() {
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
           "",
-        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Safe breath", "rest", "RESTORE HP") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Actions opens learned cards · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · Formation sets marching order"}</div></div>`;
+        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Recipes", "workshop", "CRAFT & REPLENISH") + button("Safe breath", "rest", "RESTORE HP") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Formation sets marching order"}</div></div>`;
     drawMap();
   }
   bind();
@@ -558,6 +631,10 @@ function clickTile(p, interactionId, event) {
     if (selectedAction) {
       const ally = game.party.find((h) => h.x === p.x && h.z === p.z);
       const type = ABILITIES[selectedAction.id].target;
+      if (type === "ground") {
+        commitTarget(p);
+        return;
+      }
       const target = type === "enemy" ? enemy : ally;
       if (!target || (type === "self" && target.id !== game.active.id))
         throw new Error(
@@ -624,7 +701,7 @@ function dialog(title, content, footer = "") {
 function help() {
   dialog(
     "A light in the dark",
-    `<p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures stop real-time movement and begin alternating HoL turns.</p><p>Choose heroes with <b>1–4</b>. In combat, click an adjacent creature for Basic Melee (a held melee weapon) or Basic Unarmed. Click the floor to spend movement; convert a Maneuver for more. <b>Space</b> ends a turn. Right-drag pans, <b>Q / E</b> rotate, mouse wheel zooms, <b>F</b> follows your selected hero. Formation controls marching order outside combat.</p><p>The in-game creator uses the full character-creation catalog. C or I opens your equipment sheet; pin favorites in Abilities, then use them from the combat bar. Combat includes melee/unarmed, ranged ammunition, Cinder Cast, Rime Grip, Hook and Drive, Pinning Shot, Defend, Shield Block, Stabilize and alternating turns. The playable roster is curated: Actions lists supported learned cards. Character sheets mark included, excluded, planned adaptations and cards awaiting review. Wounds use all five tables and apply numerical penalties, conditions and Last Words. Acknowledge the injury, resolve any displacement, and continue. The Journey tab offers matching one-hour wound treatment in Greyhaven. Scars and spent Grit persist.</p><p><b>Runs</b> pauses and saves your company. Keep named journeys or save a separate copy before a descent. <b>Save &amp; exit run</b> returns to the library; Escape opens it during a pending combat decision. <b>Bestiary</b> covers the 58 dungeon creatures, and the market has six merchants. A Scroll of Return opens a two-way passage to your preserved floor. Every fifth floor has a guardian.</p><p>Expedition recovery, loot and Greyhaven are game-specific playtest proposals. This is an early playable foundation, not a finished HoL adaptation.</p>`,
+    `<p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures start alternating HoL turns. Choose heroes with <b>1–4</b>; only the acting hero moves in combat.</p><p><b>Right-drag</b> grabs and pans the ground, <b>wheel</b> zooms, <b>Q / E</b> rotate, and <b>F</b> follows. <b>G</b> toggles exploration squares; combat always shows the tactical grid. Teal squares are reachable with your remaining movement; gold squares use the last of it. Hover a square for its cost. Allies allow passage but cannot be endpoints.</p><p><b>C / I</b> opens your hero. Ready weapons and armor in Equipment, pin favorite powers in Abilities, and customize individual looks in Appearance while in town. In combat, choose a power then its target; Escape cancels freely. Ground powers preview their affected squares. Instant area strikes spare allies; persistent fire and hazards affect both sides. Strongest matching power buffs and debuffs apply; extra actions and healing have limits.</p><p>HP healing, stabilization and wound treatment are separate. Journey shows camp supplies or infirmary prices for treatment. Scars, wound count and spent Grit persist. The <b>recipe book</b> lets you learn, craft, or replenish supplies using prepared batches. Crafting and treatment advance time; food, water, torches and sleep matter.</p><p><b>Runs</b> pauses and saves. Name journeys, keep separate checkpoints, or delete old saves after confirmation. Save &amp; exit returns to the library. Escape reaches it during a combat decision. The company register holds reserve heroes and the fallen hall. XP comes from exploration, encounters and recovered treasure; train in town. Six merchants supply the expedition, a Scroll of Return opens a two-way passage, and every fifth floor has a guardian.</p><p>HoL supplies the base mechanics. This game's powers, recipes, simplified treatment and dungeon progression are explicit computer-game adaptations.</p>`,
   );
 }
 function roster(options = {}) {
@@ -677,6 +754,8 @@ function sheet(index) {
 }
 function cancelTargeting(refresh = true) {
   selectedAction = null;
+  document.querySelector("#power-target-hint")?.remove();
+  scene.showPowerTarget(null);
   scene.showPath([]);
   if (refresh) render();
 }
@@ -685,8 +764,8 @@ function selectAction(id, options) {
     id,
     options,
     hero: game.active.id,
-    round: game.encounter.round,
-    serial: game.encounter.serial,
+    round: game.encounter?.round,
+    serial: game.encounter?.serial,
   };
   scene.showPath([]);
   render();
@@ -716,6 +795,27 @@ function activateAction(id) {
     ) {
       game.useAbility(id);
       return;
+    }
+    if (POWERS[id]?.field && game.mode !== "combat") {
+      if (POWERS[id].target === "self") {
+        game.useAbility(id, game.active.id);
+        return;
+      }
+      if (game.mode === "town" && POWERS[id].target === "ally") {
+        dialog(
+          POWERS[id].name,
+          `<p>${esc(POWERS[id].description)}</p><div class="catalog-list">${game.party.map((h) => `<button data-field-target="${h.id}">${esc(h.name)} · ${h.survival.hp}/${h.survival.maxHp} HP</button>`).join("")}</div>`,
+        );
+        modal.querySelectorAll("[data-field-target]").forEach(
+          (b) =>
+            (b.onclick = () =>
+              attempt(() => {
+                game.useAbility(id, b.dataset.fieldTarget);
+                closeModal();
+              })),
+        );
+        return;
+      }
     }
     if (id === "ability-reduce-a-condition") {
       dialog(
@@ -976,7 +1076,7 @@ function woundReview({ hero, wound }) {
   const forced = wound.effects.filter((e) => e.kind === "forcedMovement");
   dialog(
     "A lasting wound",
-    `<p><b>${esc(hero.name)} · ${esc(wound.record.injury)}</b></p><p>${esc(wound.record.remedy)}</p><div class="condition-tags">${wound.effects.map((e) => `<span>${esc(e.kind === "condition" ? `${e.key} ${e.rating}${e.persistence === "starred" ? "*" : ""}` : e.kind === "movementPenalty" ? `Movement −${e.amount}` : e.kind === "rollModifier" ? `${e.amount} ${e.polarity}: ${e.context}` : e.kind === "forcedMovement" ? `${e.direction} ${e.distance}` : "Last Words")}</span>`).join("")}</div>${
+    `<p><b>${esc(hero.name)} · ${esc(wound.record.injury)}</b></p><p>${esc(C.gamePowers ? (wound.record.recoveryValue ? "Treat this injury with a field dressing at a safe camp, or pay the Greyhaven infirmary. Open Character → Journey for the exact cost and time." : "This exceptional injury requires a restoration draught or advanced care at the Greyhaven infirmary. Open Character → Journey.") : wound.record.remedy)}</p><div class="condition-tags">${wound.effects.map((e) => `<span>${esc(e.kind === "condition" ? `${e.key} ${e.rating}${e.persistence === "starred" ? "*" : ""}` : e.kind === "movementPenalty" ? `Movement −${e.amount}` : e.kind === "rollModifier" ? `${e.amount} ${e.polarity}: ${e.context}` : e.kind === "forcedMovement" ? `${e.direction} ${e.distance}` : "Last Words")}</span>`).join("")}</div>${
       forced.length
         ? '<p>Select displacement direction on the dungeon grid. Walls and creatures resolve collision damage and Stability.</p><select id="wound-direction"><option value="">Choose direction…</option>' +
           [
@@ -1048,6 +1148,7 @@ async function openRuns() {
   selectedAction = null;
   scene.freezePositions();
   scene.showPath([]);
+  scene.showPowerTarget(null);
   runsOpen = true;
   runsBusy = true;
   closeModal();
@@ -1072,6 +1173,10 @@ async function openRuns() {
     exit: async () => {
       await save();
       await library.activate(null);
+      render();
+    },
+    remove: async (id) => {
+      await library.remove(id, { allowActive: true });
       render();
     },
     copy: (name) => library.create(name, serialize(game.snapshot()), false),

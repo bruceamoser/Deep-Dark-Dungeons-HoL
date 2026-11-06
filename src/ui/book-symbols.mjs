@@ -29,9 +29,12 @@ export function disciplineIcon(id) {
 export function abilityType(record) {
   const action =
     (ABILITIES[record.id]
-      ? { main: "Main Action", maneuver: "Maneuver", reaction: "Reaction" }[
-          ABILITIES[record.id].category
-        ]
+      ? {
+          main: "Main Action",
+          maneuver: "Maneuver",
+          reaction: "Reaction",
+          passive: "Passive",
+        }[ABILITIES[record.id].category]
       : null) ??
     record.reference?.rules?.details?.find((d) => d.label === "Action")
       ?.value ??

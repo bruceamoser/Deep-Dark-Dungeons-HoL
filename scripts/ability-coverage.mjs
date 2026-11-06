@@ -1,3 +1,5 @@
+import { POWERS, mappedPower } from "../src/core/powers.mjs";
+import { RECIPES } from "../src/core/recipes.mjs";
 import { DUNGEON_TRAITS } from "../src/core/ancestry-game.mjs";
 import fs from "node:fs/promises";
 import { coverage } from "../src/core/abilities.mjs";
@@ -43,3 +45,33 @@ await fs.writeFile(
   ) + "\n",
 );
 console.log(JSON.stringify({ total: abilities.length, ...counts }));
+
+await fs.writeFile(
+  new URL("../docs/game-power-coverage.json", import.meta.url),
+  JSON.stringify(
+    {
+      revision: 1,
+      policy:
+        "Game-owned powers replace new tabletop ability training. Historical source choices and acquisitions remain immutable; mapping provides their current playable benefits without stacking duplicate mappings.",
+      counts: {
+        powers: Object.keys(POWERS).length,
+        disciplinePowers: Object.values(POWERS).filter((p) => p.discipline)
+          .length,
+        signatures: Object.values(POWERS).filter((p) => p.classId).length,
+        consumableActions: Object.values(POWERS).filter((p) => p.universal)
+          .length,
+        recipes: RECIPES.length,
+      },
+      powers: Object.values(POWERS),
+      legacyMappings: input.records
+        .filter((c) => c.kind === "ability")
+        .map((c) => ({
+          id: c.id,
+          current: mappedPower(c.id, { choices: input.records }),
+        })),
+      recipes: RECIPES,
+    },
+    null,
+    2,
+  ) + "\n",
+);

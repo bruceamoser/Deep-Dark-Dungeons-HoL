@@ -1,12 +1,10 @@
 import { chromium, expect } from "@playwright/test";
 export async function verifyCharacter(page) {
   const preservedScroll = async (selector, before) => {
-    const after = await page
-      .locator(selector)
-      .evaluate((e) => ({
-        top: e.scrollTop,
-        maximum: e.scrollHeight - e.clientHeight,
-      }));
+    const after = await page.locator(selector).evaluate((e) => ({
+      top: e.scrollTop,
+      maximum: e.scrollHeight - e.clientHeight,
+    }));
     // Completing a required choice removes its validation message and can shorten the panel.
     expect(after.top).toBe(Math.min(before, after.maximum));
   };
@@ -92,6 +90,14 @@ export async function verifyCharacter(page) {
   await page.locator('[data-ancestry="ancestry-dwarf"]').click();
   await page.locator('[data-trait="trait-dwarf-deep-constitution"]').click();
   await page.locator('[data-trait="trait-dwarf-carved-history"]').click();
+  await page.locator('[data-step="8"]').click();
+  await page.getByLabel("Sex", { exact: true }).selectOption("female");
+  await page.getByLabel("Hairstyle", { exact: true }).selectOption("topknot");
+  await page.getByLabel("Facial hair", { exact: true }).selectOption("braided");
+  await expect(page.locator("#recruit-preview")).toHaveAttribute(
+    "data-appearance",
+    /topknot/,
+  );
   await page.locator('[data-step="2"]').click();
   await page.locator('[data-origin="culture"]').click();
   const cultureDialog = page.getByRole("dialog", {
@@ -106,17 +112,19 @@ export async function verifyCharacter(page) {
   await expect(cultureDialog.locator(".origin-pair .ability-type")).toHaveCount(
     2,
   );
-  await page.locator("#origin-search").fill("Wear Light Armor");
+  await page.locator("#origin-search").fill("Brace");
   await page
     .locator('[data-browse-origin="origin-culture-walled-communities"]')
     .click();
-  await expect(cultureDialog.locator('[data-origin-pair="0"]')).toContainText(
+  await expect(cultureDialog.locator('[data-origin-pair="2"]')).toContainText(
     "Armor",
   );
   await expect(
-    cultureDialog.locator('[data-origin-pair="0"] .ability-type b'),
-  ).toHaveText("P");
-  await cultureDialog.locator('[data-origin-pair="0"] summary').click();
+    cultureDialog.locator('[data-origin-pair="2"] .ability-type b'),
+  ).toHaveText("M");
+  await expect(cultureDialog.locator('[data-origin-pair="2"]')).toContainText(
+    "damage by 2",
+  );
   await page.screenshot({ path: "test-results/culture-grant-preview.png" });
   // Browsing and canceling do not silently choose the first pair.
   await page.keyboard.press("Escape");
@@ -127,9 +135,9 @@ export async function verifyCharacter(page) {
   await page
     .locator('[data-browse-origin="origin-culture-walled-communities"]')
     .click();
-  await page.locator('[data-choose-origin-pair="1"]').click();
+  await page.locator('[data-choose-origin-pair="3"]').click();
   await expect(page.locator('[data-origin-summary="culture"]')).toContainText(
-    "Shielding Step",
+    "Guardian Link",
   );
   await page.locator('[data-step="3"]').click();
   await expect(
@@ -143,10 +151,10 @@ export async function verifyCharacter(page) {
   await page.keyboard.press("Escape");
   await page.locator('[data-step="2"]').click();
   await page.locator('[data-origin="culture"]').click();
-  await expect(page.locator('[data-origin-pair="1"]')).toHaveClass(/chosen/);
-  await page.locator('[data-choose-origin-pair="0"]').click();
+  await expect(page.locator('[data-origin-pair="3"]')).toHaveClass(/chosen/);
+  await page.locator('[data-choose-origin-pair="2"]').click();
   await expect(page.locator('[data-origin-summary="culture"]')).toContainText(
-    "Wear Light Armor",
+    "Brace",
   );
   await page.locator('[data-origin="background"]').click();
   await expect(page.locator("[data-browse-origin]")).toHaveCount(32);
@@ -156,32 +164,32 @@ export async function verifyCharacter(page) {
   await page
     .locator('[data-browse-origin="origin-background-household-guard"]')
     .click();
-  await expect(page.locator('[data-origin-pair="0"]')).toContainText(
-    "Hook and Drive",
+  await expect(page.locator('[data-origin-pair="2"]')).toContainText(
+    "Driving Cut",
   );
   await expect(
-    page.locator('[data-origin-pair="0"] .ability-type b'),
+    page.locator('[data-origin-pair="2"] .ability-type b'),
   ).toHaveText("A");
   await page.screenshot({ path: "test-results/background-grant-preview.png" });
-  await page.locator('[data-choose-origin-pair="0"]').click();
+  await page.locator('[data-choose-origin-pair="2"]').click();
   await expect(
     page.locator('[data-origin-summary="background"]'),
-  ).toContainText("Hook and Drive");
+  ).toContainText("Driving Cut");
   await page.screenshot({ path: "test-results/origin-grants-selected.png" });
   await page.locator('[data-step="6"]').click();
   await expect(
-    page.locator('[data-finish-grant="ability-hook-and-drive"]'),
+    page.locator('[data-finish-grant="power-driving-cut"]'),
   ).toBeVisible();
-  await page.locator('[data-finish-grant="ability-hook-and-drive"]').click();
+  await page.locator('[data-finish-grant="power-driving-cut"]').click();
   await page
-    .locator('[data-acquire="ability-hook-and-drive"][data-key="meleeHands"]')
+    .locator('[data-acquire="power-driving-cut"][data-key="meleeHands"]')
     .selectOption("1");
   await page.locator('[data-step="4"]').click();
   await page.locator('[data-class="class-protector"]').click();
   await page.locator('[data-class-discipline="discipline-armor"]').click();
   await page.locator('[data-class-discipline="discipline-guard"]').click();
   const signature = page.locator(
-    '[data-signature="ability-signature-protector-between-them"]',
+    '[data-signature="power-signature-sworn-guardian"]',
   );
   await signature.scrollIntoViewIfNeeded();
   const callingScroll = await page
@@ -231,16 +239,16 @@ export async function verifyCharacter(page) {
   ).toHaveCount(0);
   await page.locator("#discipline-filter").selectOption("discipline-flame");
   await expect(
-    page.locator('[data-choice="ability-cinder-cast"] .ability-type'),
+    page.locator('[data-choice="power-ember-lance"] .ability-type'),
   ).toHaveAttribute("aria-label", "Main Action");
   await expect(
-    page.locator('[data-choice="ability-cinder-cast"] .ability-type b'),
+    page.locator('[data-choice="power-ember-lance"] .ability-type b'),
   ).toHaveText("A");
   await expect(
     page.locator('[data-buy="ability-conditioned-body"]'),
   ).toHaveCount(0);
   await page.screenshot({ path: "test-results/ability-purchases.png" });
-  await page.locator('[data-buy="ability-cinder-cast"]').click();
+  await page.locator('[data-buy="power-ember-lance"]').click();
   await page.locator("#discipline-filter").selectOption("general");
   await expect(
     page.locator('[data-choice="ability-conditioned-body"] .ability-type b'),
@@ -252,7 +260,7 @@ export async function verifyCharacter(page) {
   await page.locator('[data-step="6"]').click();
   await expect(
     page.locator('[data-owned-item="item-ordinary-melee-weapon"]'),
-  ).toContainText("Granted by Hook and Drive");
+  ).toContainText("Granted by Driving Cut");
   await expect(
     page.locator('[data-stock="item-ordinary-melee-weapon"]'),
   ).toContainText("Owned 1 · 1 granted");
@@ -288,8 +296,9 @@ export async function verifyCharacter(page) {
     await page.evaluate(() => ({
       name: window.__ddd.game.party[2].name,
       valid: window.__ddd.game.party[2].preview.valid,
+      hair: window.__ddd.game.party[2].draft.appearance.hair,
     })),
-  ).toEqual({ name: "Mara of the Gate", valid: true });
+  ).toEqual({ name: "Mara of the Gate", valid: true, hair: "topknot" });
   console.log(
     "Rendered armor/weapon changes, saved favorites and complete blank-to-valid native character creation passed.",
   );

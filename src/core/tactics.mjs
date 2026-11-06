@@ -7,6 +7,7 @@ export const tacticMethods = {
   },
   tacticValue(h, key) {
     return (
+      this.powerStat(h, key) +
       Math.max(0, ...this.activeTactics(h).map((e) => e.effects[key] ?? 0)) +
       Math.min(0, ...this.activeTactics(h).map((e) => e.effects[key] ?? 0))
     );

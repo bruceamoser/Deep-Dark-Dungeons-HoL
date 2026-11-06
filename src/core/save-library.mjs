@@ -25,9 +25,10 @@ export class SaveLibrary {
     const index = await this.storage.get("index");
     this.active = index ? JSON.parse(index).active : null;
     const slots = await this.list();
+    this.firstLaunch = !index && !slots.length;
     if (this.active && !slots.some((s) => s.id === this.active && !s.invalid))
       this.active = null;
-    if (!slots.length) {
+    if (!index && !slots.length) {
       const legacy = await this.storage.get("legacy");
       if (legacy) await this.create("Original expedition", legacy);
     }
@@ -127,12 +128,22 @@ export class SaveLibrary {
       await this.storage.set(id, JSON.stringify({ ...record, name }));
     });
   }
-  remove(id) {
+  remove(id, { allowActive = false } = {}) {
     slotKey(id);
     return this.operation(async () => {
-      if (id === this.active)
+      const wasActive = id === this.active;
+      if (wasActive && !allowActive)
         throw new Error("Exit this run before deleting its save.");
-      await this.storage.remove(id);
+      if (wasActive)
+        await this.storage.set("index", JSON.stringify({ active: null }));
+      try {
+        await this.storage.remove(id);
+      } catch (error) {
+        if (wasActive)
+          await this.storage.set("index", JSON.stringify({ active: id }));
+        throw error;
+      }
+      if (wasActive) this.active = null;
     });
   }
 }

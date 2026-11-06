@@ -141,8 +141,34 @@ export async function verifySaveSlots(page) {
   expect(await page.evaluate(() => !!window.__ddd.game.pendingDefense)).toBe(
     true,
   );
+  await page.keyboard.press("Escape");
+  await page.locator(`[data-run="${checkpoint}"]`).click();
+  await page.locator("#delete-run").click();
+  await expect(page.locator(".run-delete-confirm")).toContainText(
+    "Before the descent",
+  );
+  await page.locator("#cancel-delete").click();
+  expect(
+    await page.evaluate(async () => (await window.__ddd.library.list()).length),
+  ).toBe(4);
+  await page.locator("#delete-run").click();
+  await page.locator("#confirm-delete").click();
+  await expect(page.locator("[data-run]")).toHaveCount(3);
+  await page.locator(`[data-run="${battle}"]`).click();
+  await page.locator("#delete-run").click();
+  await expect(page.locator(".run-delete-confirm")).toContainText("Mid battle");
+  await page.locator("#confirm-delete").click();
+  await expect(page.locator("[data-run]")).toHaveCount(2);
+  expect(await page.evaluate(() => window.__ddd.library.active)).toBe(null);
+  await page.reload();
+  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await expect(page.locator(".runs-window")).toBeVisible();
+  await expect(page.locator(`[data-run="${battle}"]`)).toHaveCount(0);
+  await page.locator(`[data-run="${original}"]`).click();
+  await page.locator("#load-run").click();
+  await expect(page.locator(".runs-window")).toHaveCount(0);
   console.log(
-    "Named run slots, independent checkpoint, exit/restart, new company, mid-combat budget and pending reaction restoration passed.",
+    "Named run slots, independent checkpoint, exit/restart, new company, mid-combat budget and pending reaction restoration, cancel/delete confirmation and active-run deletion/restart passed.",
   );
 }
 if (process.argv[1]?.endsWith("save-slots-check.mjs")) {

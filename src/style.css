@@ -4203,9 +4203,271 @@ p {
   border: 1px solid #554b37;
 }
 
-.ancestry-gifts { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin-bottom:24px; }
-.ancestry-gifts .trait-choice { border:1px solid #63563a; background:linear-gradient(145deg,#25302f,#131e22); padding:18px; }
-.ancestry-gifts p,.dungeon-rule { color:#b9c8c5; line-height:1.55; font-size:13px; }
-.dungeon-rule b { color:#dfc693; }
-.ancestry-gifts button[aria-pressed="true"] { border-color:#bca875; color:#ffe4a6; background:#3c3a29; }
-.choice-reference { margin-top:10px; }
+.ancestry-gifts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.ancestry-gifts .trait-choice {
+  border: 1px solid #63563a;
+  background: linear-gradient(145deg, #25302f, #131e22);
+  padding: 18px;
+}
+.ancestry-gifts p,
+.dungeon-rule {
+  color: #b9c8c5;
+  line-height: 1.55;
+  font-size: 13px;
+}
+.dungeon-rule b {
+  color: #dfc693;
+}
+.ancestry-gifts button[aria-pressed="true"] {
+  border-color: #bca875;
+  color: #ffe4a6;
+  background: #3c3a29;
+}
+.choice-reference {
+  margin-top: 10px;
+}
+/* Hero identity and the field recipe book share the equipment UI's materials. */
+.appearance-editor {
+  max-width: 780px;
+  margin: auto;
+}
+.appearance-heading h3 {
+  font-size: 1.7rem;
+  margin: 8px 0;
+}
+.appearance-heading p,
+.appearance-note {
+  color: var(--muted, #92a5a5);
+  line-height: 1.65;
+}
+.appearance-editor fieldset {
+  border: 0;
+  padding: 0;
+  margin: 22px 0;
+}
+.appearance-selects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.appearance-palette {
+  margin: 22px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #314144;
+}
+.appearance-palette > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.look-swatch {
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--swatch) !important;
+  border: 3px solid #1a2528;
+  box-shadow: 0 0 0 1px #58625d;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.look-swatch:hover {
+  transform: scale(1.13);
+}
+.look-swatch.chosen {
+  box-shadow:
+    0 0 0 2px #e7c17a,
+    0 0 16px #e7c17a40;
+}
+.custom-swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #a4b3ad;
+  margin-left: auto;
+}
+.custom-swatch input {
+  width: 36px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid #59645d;
+  background: #122025;
+}
+.appearance-tools {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+.appearance-note {
+  font-size: 12px;
+}
+.appearance-editor fieldset:disabled {
+  opacity: 0.6;
+}
+.recipe-book {
+  max-width: 1060px;
+  width: min(1060px, 95vw);
+}
+.recipe-layout {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  min-height: 470px;
+  max-height: 65vh;
+  overflow: hidden;
+}
+.recipe-layout > aside {
+  padding: 22px;
+  border-right: 1px solid #344346;
+  overflow: auto;
+  background: #0e191d80;
+}
+.recipe-layout > article {
+  padding: 32px;
+  overflow: auto;
+}
+.recipe-layout h3 {
+  font-size: 27px;
+  margin: 8px 0 18px;
+}
+.recipe-layout p {
+  line-height: 1.7;
+  color: #a2b4b3;
+}
+.recipe-layout input[type="search"] {
+  width: 100%;
+  padding: 11px;
+  background: #0d191c;
+  color: #e8e4d5;
+  border: 1px solid #344346;
+}
+.recipe-filters {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+.recipe-filters button {
+  flex: 1;
+}
+.recipe-layout nav {
+  display: grid;
+  gap: 8px;
+}
+.recipe-layout nav button {
+  display: flex;
+  gap: 14px;
+  text-align: left;
+  padding: 16px 12px;
+  border: 1px solid #314043;
+  background: #18272b;
+}
+.recipe-layout nav button.chosen,
+.recipe-filters button.chosen {
+  border-color: #c5a35c;
+  background: #30342a;
+}
+.recipe-layout nav svg {
+  width: 23px;
+  flex-shrink: 0;
+  color: #bfa46b;
+}
+.recipe-layout nav small {
+  display: block;
+  color: #849c9c;
+  font-size: 10px;
+  margin-top: 7px;
+  line-height: 1.4;
+}
+.recipe-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 25px 0;
+}
+.recipe-facts small,
+.recipe-facts b {
+  display: block;
+}
+.recipe-facts small {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #b69f71;
+  margin-bottom: 8px;
+}
+.recipe-facts b {
+  font-size: 13px;
+}
+.recipe-ingredients {
+  border: 1px solid #455149;
+  padding: 20px;
+  background: #1d2b28;
+  margin-bottom: 20px;
+}
+.recipe-ingredients h4 {
+  font-weight: 400;
+  font-size: 17px;
+  margin: 10px 0;
+}
+.power-target-hint {
+  position: fixed;
+  left: 50%;
+  top: 90px;
+  transform: translateX(-50%);
+  z-index: 25;
+  padding: 14px 24px;
+  background: #102027eb;
+  border: 1px solid #73c9bc;
+  color: #e5e6da;
+  pointer-events: none;
+  max-width: 65vw;
+  text-align: center;
+}
+.power-target-hint.invalid {
+  border-color: #d17761;
+  color: #e6b5a8;
+}
+.power-target-hint small {
+  display: block;
+  color: #a9bcba;
+  margin-top: 5px;
+}
+@media (max-width: 1100px) {
+  .appearance-selects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .recipe-layout {
+    grid-template-columns: 250px 1fr;
+  }
+  .recipe-layout > article {
+    padding: 22px;
+  }
+}
+.delete-run-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px !important;
+  border: 1px solid #9f6054 !important;
+  color: #e7b0a4 !important;
+}
+.delete-run-button svg {
+  width: 16px;
+}
+.run-delete-confirm {
+  border: 1px solid #a45f51;
+  background: #442d2a;
+  padding: 20px;
+  margin-top: 20px;
+}
+.run-delete-confirm p {
+  line-height: 1.6;
+}
