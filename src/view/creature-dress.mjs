@@ -7,18 +7,24 @@
 
 import * as T from "three";
 
+const boneKey = (name) => name.toLowerCase().replace(/[._-]/g, "");
+
 function bonesOf(model) {
   const bones = new Map();
   model.traverse((o) => {
-    if (o.isBone) bones.set(o.name.toLowerCase(), o);
+    if (!o.isBone) return;
+    bones.set(o.name.toLowerCase(), o);
+    bones.set(boneKey(o.name), o);
   });
   return bones;
 }
 
 function findBone(bones, ...names) {
   for (const n of names) {
-    const b = bones.get(n.toLowerCase());
-    if (b) return b;
+    const exact = bones.get(n.toLowerCase());
+    if (exact) return exact;
+    const normalised = bones.get(boneKey(n));
+    if (normalised) return normalised;
   }
   return null;
 }

@@ -1,10 +1,11 @@
 import { dressIdentity } from "./hero-identity.mjs";
 import { dressEquipped } from "./outfit.mjs";
 import { creatureAppearance } from "./creatures.mjs";
-import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
+import { CREATURE_ROSTER, HUMANOID_MODELS } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
+import { clipsOrFallback } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 // Original recurve bow: curved wooden limbs, a wrapped grip and a taut string.
 const bowAsset = (() => {
@@ -49,19 +50,9 @@ const bowAsset = (() => {
 })();
 export function equipmentAppearance(assets, hero, enemy = false) {
   const look = enemy ? CREATURE_ROSTER[hero.type] : null;
-  if (
-    enemy &&
-    look &&
-    ![
-      "Skeleton",
-      "SkeletonRogue",
-      "SkeletonMage",
-      "Knight",
-      "Rogue",
-      "Mage",
-      "Barbarian",
-    ].includes(look.model)
-  )
+  // KayKit character models are complete rigged humanoids and take this path; the
+  // Quaternius animals and constructs go to the procedural creature path.
+  if (enemy && look && !HUMANOID_MODELS.has(look.model))
     return creatureAppearance(assets, hero, bowAsset);
   const name = enemy ? (look?.model ?? "Skeleton") : hero.model;
   const model = clone(assets.get(name).scene),
@@ -138,8 +129,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   });
   let right, left;
   model.traverse((o) => {
-    if (["handslotr", "handslot.r"].includes(o.name)) right = o;
-    if (["handslotl", "handslot.l"].includes(o.name)) left = o;
+    const slot = o.name.toLowerCase().replace(/[._-]/g, "");
+    if (slot === "handslotr") right = o;
+    if (slot === "handslotl") left = o;
   });
   const held = (id) =>
     items.find((i) => i.carried && i.held && i.catalogId === id);
@@ -320,7 +312,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     });
   }
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
-  return { model, clips: assets.get(name).animations };
+  return { model, clips: clipsOrFallback(assets.get(name).animations) };
 }
 export function heroPreview(canvas, assets, hero) {
   const renderer = new T.WebGLRenderer({

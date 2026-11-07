@@ -12,6 +12,7 @@ import * as T from "three";
 import { createAttackEffect } from "./combat-effects.mjs";
 import { equipmentAppearance } from "./appearance.mjs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { loadAnimationLibrary } from "./animation-library.mjs";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -294,12 +295,18 @@ export class Scene {
   }
   async load() {
     const loader = new GLTFLoader();
+    // The 2.0 rigs carry no clips of their own; merge the shared library once.
+    await loadAnimationLibrary(loader);
     const entries = {
-      Knight: "/assets/adventurer/Characters/gltf/Knight.glb",
-      Rogue: "/assets/adventurer/Characters/gltf/Rogue_Hooded.glb",
-      Mage: "/assets/adventurer/Characters/gltf/Mage.glb",
-      Barbarian: "/assets/adventurer/Characters/gltf/Barbarian.glb",
-      Skeleton: "/assets/skeleton/Characters/gltf/Skeleton_Warrior.glb",
+      // Adventurers 2.0: same rig family, better proportions, and clips supplied by the
+      // shared animation library rather than embedded per model.
+      Knight: "/assets/characters/adventurersv2/Knight.glb",
+      Rogue: "/assets/characters/adventurersv2/Rogue_Hooded.glb",
+      Mage: "/assets/characters/adventurersv2/Mage.glb",
+      Barbarian: "/assets/characters/adventurersv2/Barbarian.glb",
+      Ranger: "/assets/characters/adventurersv2/Ranger.glb",
+      Druid: "/assets/characters/adventurersv2/Druid.glb",
+      Skeleton: "/assets/characters/skeletons/Skeleton_Warrior.glb",
       ...CREATURE_MODELS,
       sword: "/assets/adventurer/Assets/gltf/sword_1handed.gltf",
       staff: "/assets/adventurer/Assets/gltf/staff.gltf",

@@ -92,18 +92,26 @@ function add(owned, parent, name, geometry, material, position = [0, 0, 0], rota
   return mesh;
 }
 
+// KayKit's 1.x rig names joints "upperarm.l"; the 2.0 and Series rigs drop the
+// separator and use "upperarml". Index both spellings so one lookup serves either.
+const boneKey = (name) => name.toLowerCase().replace(/[._-]/g, "");
+
 function bonesOf(model) {
   const bones = new Map();
   model.traverse((o) => {
-    if (o.isBone) bones.set(o.name.toLowerCase(), o);
+    if (!o.isBone) return;
+    bones.set(o.name.toLowerCase(), o);
+    bones.set(boneKey(o.name), o);
   });
   return bones;
 }
 
 const pick = (bones, ...names) => {
   for (const n of names) {
-    const b = bones.get(n.toLowerCase());
-    if (b) return b;
+    const exact = bones.get(n.toLowerCase());
+    if (exact) return exact;
+    const normalised = bones.get(boneKey(n));
+    if (normalised) return normalised;
   }
   return null;
 };
@@ -757,9 +765,15 @@ export function dressOutfit(model, hero, owned, opts = {}) {
   variationSeed = opts.seed ?? 7;
   const mats = palette(owned, spec, opts.seed ?? 7);
 
-  lowerBody(owned, bones, mats, spec, occupied);
-  torsoBody(owned, bones, mats, spec, occupied);
-  sleeves(owned, bones, mats, spec, occupied);
+  // The KayKit character packs already model their own clothing, so a generated
+  // garment shell on top of it hides that detail and thickens the silhouette. Culture
+  // is expressed through the existing cloth recolour instead. Pass `garments: true`
+  // for a bare rig that needs clothes drawn onto it.
+  if (opts.garments) {
+    lowerBody(owned, bones, mats, spec, occupied);
+    torsoBody(owned, bones, mats, spec, occupied);
+    sleeves(owned, bones, mats, spec, occupied);
+  }
   beltAndPouch(owned, bones, mats, spec, occupied);
   boots(owned, bones, mats, spec, occupied);
   carryGear(owned, bones, mats, spec, occupied);

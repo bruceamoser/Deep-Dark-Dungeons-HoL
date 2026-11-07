@@ -3,6 +3,7 @@ import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
 import { creatureLook } from "../core/creature-variation.mjs";
 import { dressCreature } from "./creature-dress.mjs";
+import { gameClips } from "./animation-library.mjs";
 const mat = (color, extra = {}) =>
   new T.MeshStandardMaterial({ color, roughness: 0.75, ...extra });
 function joint(a, b, r, material) {
@@ -232,5 +233,9 @@ export function creatureAppearance(assets, data, bow) {
     shield: look.shield,
   };
   root.userData.height = desired;
-  return { model: root, clips };
+  // Skeleton-rigged enemies use the skeleton clip set (idle, walk, death) where the
+  // library has one; everything else falls back to the human locomotion clips.
+  const skinnedSkeleton = /^Skeleton/.test(look.model ?? "");
+  const shared = gameClips({ skeleton: skinnedSkeleton });
+  return { model: root, clips: shared.length ? [...shared, ...clips] : clips };
 }

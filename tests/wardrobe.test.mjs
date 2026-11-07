@@ -123,17 +123,31 @@ test("the Shadow class raises a hood and masks the face", () => {
   assert.equal(protector.silhouette.gauntlets, true);
 });
 
-test("a dressed hero gains geometry for every culture", () => {
+test("a dressed hero gains accessories for every culture by default", () => {
   for (const culture of CULTURES) {
     const model = heroRig();
     const owned = [];
     dressOutfit(model, { draft: { culture: { id: culture } } }, owned, { seed: 1 });
     const { meshes, triangles } = countMeshes(model);
-    assert.ok(meshes >= 8, `${culture} produced only ${meshes} meshes`);
-    assert.ok(triangles < 2600, `${culture} costs ${triangles} triangles`);
+    // Garment shells stay off by default so the packs' own clothing shows through.
+    assert.ok(meshes >= 2, `${culture} produced only ${meshes} meshes`);
+    assert.ok(triangles < 1200, `${culture} costs ${triangles} triangles`);
     for (const asset of owned)
       assert.equal(typeof asset.dispose, "function", `${culture} leaked a undisposable asset`);
   }
+});
+
+test("garment shells are drawn only when a bare rig asks for them", () => {
+  const bare = heroRig();
+  dressOutfit(bare, { draft: { culture: { id: "origin-culture-oasis-cities" } } }, [], {});
+  const dressed = heroRig();
+  dressOutfit(
+    dressed,
+    { draft: { culture: { id: "origin-culture-oasis-cities" } } },
+    [],
+    { garments: true },
+  );
+  assert.ok(countMeshes(dressed).meshes > countMeshes(bare).meshes + 4);
 });
 
 test("background accessories change the geometry a hero carries", () => {
@@ -264,4 +278,60 @@ test("theme colours are valid and infernal differs from rime", () => {
   const rime = creatureLook({ theme: "rime" });
   assert.notEqual(infernal.colors.glow, rime.colors.glow);
   assert.notDeepEqual(infernal.features, rime.features);
+});
+
+// The Adventurers 2.0 and Series 4-6 rigs drop the separator from joint names:
+// "upperarml" rather than "upperarm.l". Both must dress identically.
+const RIG_2_JOINTS = [
+  "root", "hips", "spine", "chest", "upperarml", "lowerarml", "wristl", "handl",
+  "handslotl", "upperarmr", "lowerarmr", "wristr", "handr", "handslotr", "head",
+  "upperlegl", "lowerlegl", "footl", "toesl", "upperlegr", "lowerlegr", "footr", "toesr",
+];
+
+function rig2() {
+  const model = new T.Group();
+  for (const name of RIG_2_JOINTS) {
+    const bone = new T.Bone();
+    bone.name = name;
+    model.add(bone);
+  }
+  return model;
+}
+
+test("the 2.0 rig dresses the same as the 1.x rig", () => {
+  const draft = {
+    culture: { id: "origin-culture-oasis-cities" },
+    background: { id: "origin-background-poacher" },
+    classId: "class-shadow",
+  };
+  const old = heroRig();
+  const next = rig2();
+  dressOutfit(old, { draft }, [], {});
+  dressOutfit(next, { draft }, [], {});
+  const a = countMeshes(old);
+  const b = countMeshes(next);
+  assert.ok(a.meshes > 0);
+  assert.equal(b.meshes, a.meshes, "both rigs must produce the same part count");
+});
+
+test("a 2.0 rig with no recognisable joints still resolves its wardrobe", () => {
+  const bare = new T.Group();
+  const bone = new T.Bone();
+  bone.name = "unknown";
+  bare.add(bone);
+  const spec = dressOutfit(bare, { draft: { culture: { id: "origin-culture-deep-halls" } } }, [], {});
+  assert.equal(spec.wear.label, "Deep Halls");
+  assert.equal(countMeshes(bare).meshes, 0);
+});
+
+test("equipped gear draws on the 2.0 rig", () => {
+  const model = rig2();
+  dressEquipped(model, {}, [], [
+    { worn: true, slot: "head", catalogId: "item-ordinary-heavy-armor", effects: [] },
+    { worn: true, slot: "feet", catalogId: "item-y", effects: [] },
+  ]);
+  const names = [];
+  model.traverse((o) => { if (o.isMesh) names.push(o.name); });
+  assert.ok(names.includes("Equipped head"));
+  assert.equal(names.filter((n) => n === "Equipped feet").length, 2);
 });
