@@ -299,3 +299,11 @@ Native integration checks now wait for actual gate arrival before exercising the
 dungeon, including return to a preserved floor. The previous immediate-entry
 assumption was invalid after adding deliberate town travel; camera-pan and recall
 state assertions themselves remain unchanged.
+
+The final Greyhaven native interaction run passed in full under the exact
+sandboxed Linux launcher: respec/training and creation, appearance/gear, roster,
+controls, combat, objects, effects, infirmary treatment, merchants, preserved-floor
+recall, all 58 creature/17 condition adapters, run checkpoints and native close
+saving. Personal saves/system installation were untouched. Final status-label
+spacing was separately rendered at both screen sizes. Author review only;
+Windows runtime remains untested.
