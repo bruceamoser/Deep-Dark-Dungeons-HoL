@@ -58,6 +58,35 @@ not a preference.
 
 Downloads are served through itch.io. Both packs above are CC0 and free.
 
+## The in-game test overrides the studio render
+
+A studio render of the Quaternius base body looks clearly better than the current
+heroes. Dropped into the running dungeon at true isometric gameplay distance, it does
+not. Measured in the live scene (`window.__ddd.scene`, same camera, fog and lighting):
+
+- The realistic body reads as a thin, spindly silhouette against the chunky heroes.
+- Its anatomy detail is invisible at the on-screen size a hero occupies, roughly two
+  tiles tall, so the extra 7,000 triangles buy nothing at play distance.
+- The current chibi heroes hold a stronger silhouette and their weapons and shields stay
+  legible.
+
+So the proportion number alone is the wrong target. Two things matter more at isometric
+distance: silhouette mass and per-part readability. Pure realism fails both while the
+chibi build overshoots the other way.
+
+### Measured head-to-body options, rendered in the live scene
+
+| Option | Head : body | Cost | Effect in game |
+| --- | --- | --- | --- |
+| Current | 1 : 3.1 | none | Clear read, but meeple |
+| Head bone x0.8 | 1 : 3.9 | one line, no asset change | Noticeably more adult, silhouette intact |
+| Head bone x0.65 | 1 : 4.8 | one line, no asset change | Adult heroic build, still readable |
+| Quaternius base | 1 : 7.4 | full rig swap, new animations | Reads thin and loses detail |
+
+The middle band is worth taking seriously precisely because it costs almost nothing: the
+generated clothing in `src/view/outfit.mjs` is authored against joint positions, so it
+follows a rescaled head without changes, and all 76 existing animation clips keep working.
+
 ## Direction
 
 1. **Base bodies** — replace the KayKit heroes with the Quaternius base characters. This
