@@ -20,6 +20,8 @@ import { ABILITIES, coverage } from "./core/abilities.mjs";
 import { FORMATIONS } from "./core/formations.mjs";
 import { GameAudio } from "./view/audio.mjs";
 import { Scene } from "./view/scene.mjs";
+import { TownView } from "./view/town.mjs";
+import { TOWN_SERVICES } from "./core/town-navigation.mjs";
 import { Game } from "./core/game.mjs";
 import { key, distance } from "./core/dungeon.mjs";
 import { serialize, deserialize } from "./core/save.mjs";
@@ -60,6 +62,7 @@ ui.innerHTML =
   '<div class="loading-screen"><div class="eyebrow">HEROES OF LEGEND</div><h1>Deep Dark Dungeons</h1><div class="spinner"></div><p>Lighting the way beneath Greyhaven…</p></div>';
 let game,
   scene,
+  townView,
   C,
   R,
   examples,
@@ -197,12 +200,23 @@ async function init() {
     },
   );
   await scene.load();
+  townView = new TownView(
+    scene.assets,
+    (id) => {
+      if (game.mode === "town" && !modal.children.length)
+        attempt(() => action(id, true));
+    },
+    () => game.mode === "town" && !modal.children.length && !runsOpen,
+  );
+  await townView.load();
   game.listeners.push((type, data) => {
     if (type === "feedback") scene.floatingText(data);
     if (["time", "light", "change", "battlefield"].includes(type) && scene.map)
       scene.updateVisibility(game.party, game.seen);
     if (type === "supply") queueMicrotask(showSupplyNotice);
     if (type === "floor") {
+      townView.cancel();
+      townView.navigator.position = { x: 0, z: 3 };
       scene.clearBattlefield();
       scene.clearFloatingText();
       scene.tilesDetail = [];
@@ -212,6 +226,7 @@ async function init() {
       scene.updateVisibility(game.party, game.seen);
     }
     if (type === "party") {
+      if (townView.active) townView.setParty(game.party);
       scene.syncInteractions(game.worldInteractions());
       scene.resetEntities(game.party, game.enemies);
       scene.updateVisibility(game.party, game.seen);
@@ -349,6 +364,21 @@ async function init() {
       ["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)
     )
       return;
+    if (game.mode === "town") {
+      if (e.key === "Escape" && townView.navigator.destination) {
+        e.preventDefault();
+        townView.cancel();
+        return;
+      }
+      const destination = TOWN_SERVICES.find(
+        (s) => s.hotkey === e.key.toLowerCase(),
+      );
+      if (destination && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        townView.navigate(destination.id);
+        return;
+      }
+    }
     if (e.code === "Space") {
       e.preventDefault();
       attempt(() => game.endTurn());
@@ -360,8 +390,10 @@ async function init() {
       if (id) activateAction(id);
     }
     if (/^[1-4]$/.test(e.key)) attempt(() => game.select(Number(e.key) - 1));
-    if (e.key.toLowerCase() === "q") scene.rotate(-1);
-    if (e.key.toLowerCase() === "e") scene.rotate(1);
+    if (e.key.toLowerCase() === "q")
+      (townView.active ? townView : scene).rotate(-1);
+    if (e.key.toLowerCase() === "e")
+      (townView.active ? townView : scene).rotate(1);
     if (e.key.toLowerCase() === "f") scene.focusOn(game.active);
     if (e.key.toLowerCase() === "g") {
       scene.gridEnabled = !scene.gridEnabled;
@@ -406,6 +438,7 @@ async function init() {
   window.__ddd = {
     game,
     scene,
+    town: townView,
     R,
     C,
     sound,
@@ -430,12 +463,14 @@ function render() {
     h = game.active,
     c = game.campaign;
   const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  townView.setActive(town, game.party);
+  townView.party.visible = game.mode === "town";
+  scene.renderEnabled = !town;
+  scene.canvas.style.visibility = town ? "hidden" : "visible";
   if (town) {
     ui.innerHTML =
       header +
-      `<section class="town"><div class="town-copy"><div class="eyebrow">A COMPANY OF FOUR</div><h1>${game.mode === "defeat" ? "The dark<br>remembers." : "Some things<br>should stay<br>buried."}</h1><p class="intro">${game.mode === "defeat" ? "Their expedition ended below. Assemble a new company. What they carried may still be found." : "Below Greyhaven, the old roads descend into a kingdom without a sun. Choose your companions. Bring back what you can."}</p><div class="rule"></div><div class="town-actions">${button(game.mode === "defeat" ? "Assemble a new company" : game.campaign.returnPassage ? `Return to depth ${game.campaign.returnPassage.depth}` : "Enter the depths", game.mode === "defeat" ? "new-party" : "descend", "BEGIN EXPEDITION", true)}${button("The company register", "roster", "HEROES & PARTY")}${button("Hall of Fallen Heroes", "fallen", "REMEMBER THEIR NAMES")}${button("The market quarter", "shop", "EQUIPMENT & SUPPLIES")}${button("The discipline forge", "training", "LEVEL UP & SHAPE YOUR PATH")}${button("The workshop", "workshop", "DOWNTIME CRAFTING")}${button("Camp & supplies", "camp", "REST & PROVISIONS")}${button("Saved journeys", "runs", "RUNS & CHECKPOINTS")}</div><div class="town-status"><div><b>${c.bank}</b><small>Vault coins</small></div><div><b>${c.expeditions}</b><small>Expeditions</small></div><div><b>${c.fallenHeroes.length}</b><small>Fallen heroes</small></div></div><div class="edition">DISCIPLINE FORGE EDITION · v0.6</div></div></section><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
-    if (scene.follow)
-      scene.focusOn({ x: game.map.start.x - 3, z: game.map.start.z + 1 });
+      `<aside class="town-directory"><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Welcome to<br>Greyhaven</h1><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><span>${esc(s.id === "descend" && c.returnPassage ? `Return to depth ${c.returnPassage.depth}` : s.label)}</span><small>${esc(s.place)}<kbd>${s.hotkey.toUpperCase()}</kbd></small></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
   } else {
     const combat = game.mode === "combat",
       b = game.budget;
@@ -509,7 +544,15 @@ function bind() {
     (b) => (b.onclick = () => attempt(() => action(b.dataset.action))),
   );
 }
-function action(a) {
+function action(a, arrived = false) {
+  if (
+    game.mode === "town" &&
+    !arrived &&
+    TOWN_SERVICES.some((s) => s.id === a)
+  ) {
+    townView.navigate(a);
+    return;
+  }
   switch (a) {
     case "descend":
       game.descend();
@@ -546,6 +589,10 @@ function action(a) {
     case "workshop":
       closeModal();
       workshopScreen({ root: modal, game, close: closeModal, attempt });
+      break;
+    case "infirmary":
+      sheet(game.selected);
+      modal.querySelector('[data-tab="journey"]')?.click();
       break;
     case "camp":
       closeModal();
@@ -726,7 +773,7 @@ function dialog(title, content, footer = "") {
 function help() {
   dialog(
     "A light in the dark",
-    `<p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures start alternating HoL turns. Choose heroes with <b>1–4</b>; only the acting hero moves in combat.</p><p><b>Right-drag</b> grabs and pans the ground, <b>wheel</b> zooms, <b>Q / E</b> rotate, and <b>F</b> follows. <b>G</b> toggles exploration squares; combat always shows the tactical grid. Teal squares are reachable with your remaining movement; gold squares use the last of it. Hover a square for its cost. Allies allow passage but cannot be endpoints.</p><p><b>C / I</b> opens your hero. Ready weapons and armor in Equipment, pin favorite powers in Abilities, and customize individual looks in Appearance while in town. In combat, choose a power then its target; Escape cancels freely. Ground powers preview their affected squares. Instant area strikes spare allies; persistent fire and hazards affect both sides. Strongest matching power buffs and debuffs apply; extra actions and healing have limits.</p><p>HP healing, stabilization and wound treatment are separate. Journey shows camp supplies or infirmary prices for treatment. Scars, wound count and spent Grit persist. The <b>recipe book</b> lets you learn, craft, or replenish supplies using prepared batches. Crafting and treatment advance time; food, water, torches and sleep matter.</p><p><b>Runs</b> pauses and saves. Name journeys, keep separate checkpoints, or delete old saves after confirmation. Save &amp; exit returns to the library. Escape reaches it during a combat decision. The company register holds reserve heroes and the fallen hall. XP comes from exploration, encounters and recovered treasure; train in town. Six merchants supply the expedition, a Scroll of Return opens a two-way passage, and every fifth floor has a guardian.</p><p>HoL supplies the base mechanics. This game's powers, recipes, simplified treatment and dungeon progression are explicit computer-game adaptations.</p>`,
+    `<p>In Greyhaven, select a building and your company walks to its entrance before the service opens. <b>R</b> inn/company, <b>M</b> market, <b>T</b> guildhall, <b>W</b> workshop, <b>P</b> provisions, <b>V</b> infirmary, <b>H</b> fallen shrine, <b>D</b> dungeon gate. These hotkeys take the same routes. Choose another destination to redirect; <b>Escape</b> cancels travel.</p><p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures start alternating HoL turns. Choose heroes with <b>1–4</b>; only the acting hero moves in combat.</p><p><b>Right-drag</b> grabs and pans the ground, <b>wheel</b> zooms, <b>Q / E</b> rotate, and <b>F</b> follows. <b>G</b> toggles exploration squares; combat always shows the tactical grid. Teal squares are reachable with your remaining movement; gold squares use the last of it. Hover a square for its cost. Allies allow passage but cannot be endpoints.</p><p><b>C / I</b> opens your hero. Ready weapons and armor in Equipment, pin favorite powers in Abilities, and customize individual looks in Appearance while in town. In combat, choose a power then its target; Escape cancels freely. Ground powers preview their affected squares. Instant area strikes spare allies; persistent fire and hazards affect both sides. Strongest matching power buffs and debuffs apply; extra actions and healing have limits.</p><p>HP healing, stabilization and wound treatment are separate. Journey shows camp supplies or infirmary prices for treatment. Scars, wound count and spent Grit persist. The <b>recipe book</b> lets you learn, craft, or replenish supplies using prepared batches. Crafting and treatment advance time; food, water, torches and sleep matter.</p><p><b>Runs</b> pauses and saves. Name journeys, keep separate checkpoints, or delete old saves after confirmation. Save &amp; exit returns to the library. Escape reaches it during a combat decision. The company register holds reserve heroes and the fallen hall. XP comes from exploration, encounters and recovered treasure; train in town. Six merchants supply the expedition, a Scroll of Return opens a two-way passage, and every fifth floor has a guardian.</p><p>HoL supplies the base mechanics. This game's powers, recipes, simplified treatment and dungeon progression are explicit computer-game adaptations.</p>`,
   );
 }
 function roster(options = {}) {
@@ -742,7 +789,15 @@ function roster(options = {}) {
     ...options,
   });
 }
+function requireTownService(id, index, onArrival) {
+  if (game.mode !== "town" || townView.currentService === id) return true;
+  closeModal();
+  game.select(index);
+  townView.navigate(id, () => attempt(onArrival));
+  return false;
+}
 function respecHero(index) {
+  if (!requireTownService("training", index, () => respecHero(index))) return;
   const reason = game.respecReason(index);
   if (reason) return toast(reason);
   const h = game.party[index];
@@ -756,6 +811,13 @@ function respecHero(index) {
     workshop(index, false, true);
 }
 function workshop(slot, development = false, respec = false) {
+  if (
+    (development || respec) &&
+    !requireTownService("training", slot, () =>
+      workshop(slot, development, respec),
+    )
+  )
+    return;
   closeModal();
   if (development) {
     modalCleanup = forgeScreen({
@@ -806,6 +868,16 @@ function sheet(index) {
     activate: activateAction,
     train: (i) => workshop(i, true),
     respec: respecHero,
+    treat: (i, woundId, method) => {
+      const perform = () => {
+        game.treatGameWound(i, woundId, method);
+        sheet(i);
+        modal.querySelector('[data-tab="journey"]')?.click();
+      };
+      if (method === "town" && !requireTownService("infirmary", i, perform))
+        return;
+      perform();
+    },
   });
 }
 function cancelTargeting(refresh = true) {

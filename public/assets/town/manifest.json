@@ -1,0 +1,172 @@
+{
+  "pack": "KayKit Medieval Hexagon Pack 1.0.1",
+  "source": "https://kaylousberg.itch.io/kaykit-complete",
+  "license": "CC0-1.0",
+  "files": [
+    {
+      "file": "building_tavern_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_tavern_blue.gltf",
+      "sha256": "58a3573cf468f9c5f1d03a6da74fbc884f5f662ccddbfef2a10860abfe50109b"
+    },
+    {
+      "file": "building_tavern_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_tavern_blue.bin",
+      "sha256": "00a4f91c275d168a4fcaea5f35cd4839047b498232f5f807d29ec17aa9490fe9"
+    },
+    {
+      "file": "hexagons_medieval.png",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/hexagons_medieval.png",
+      "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e"
+    },
+    {
+      "file": "building_market_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_market_blue.gltf",
+      "sha256": "24874a4651dfff0d1aea31e15a32b9c35122958764c6f968ca55f286285ffbe9"
+    },
+    {
+      "file": "building_market_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_market_blue.bin",
+      "sha256": "35713e17b24a26274ba38def66f17fe838987e4e8f803cf680140b3754676442"
+    },
+    {
+      "file": "building_townhall_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_townhall_blue.gltf",
+      "sha256": "5aa6a45ea0909a951d259550fe1268862e3360e9b7f014a1d6fa0c4e2f916317"
+    },
+    {
+      "file": "building_townhall_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_townhall_blue.bin",
+      "sha256": "d733fa2eb34d63d7aae4c38628d35ced5a4bd4e5997ada6df34611018e6a5ccc"
+    },
+    {
+      "file": "building_blacksmith_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_blacksmith_blue.gltf",
+      "sha256": "b9b76474cde5a379334b31cf8ef108c26e8051b6f7560402cd7c2a100fb4bf54"
+    },
+    {
+      "file": "building_blacksmith_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_blacksmith_blue.bin",
+      "sha256": "2b5f91972249f3b4acee5d293b0291769213f3bd6272bd3fdacbd2b113b82853"
+    },
+    {
+      "file": "building_home_A_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_home_A_blue.gltf",
+      "sha256": "60b3568e086d586b491eed8168c46acb61bb9670fb2c296faa64929b18dfcbea"
+    },
+    {
+      "file": "building_home_A_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_home_A_blue.bin",
+      "sha256": "31c30bc9d4fb9ac6182e20331f2501ec153131ca01a57d8412a6b8e6219c23fd"
+    },
+    {
+      "file": "building_home_B_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_home_B_blue.gltf",
+      "sha256": "bf503f4edcd3a744a021ccdd5b9215f6c8934ef87fa44d95632cb653422797eb"
+    },
+    {
+      "file": "building_home_B_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_home_B_blue.bin",
+      "sha256": "a9736eef43b33d8963f1f54b709eb4395cd5069aa6317b09856687d4045059ca"
+    },
+    {
+      "file": "building_shrine_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_shrine_blue.gltf",
+      "sha256": "01028b405749d5a3121166fe49d314443aeae701d7ee4d9160ee6865a77d09c5"
+    },
+    {
+      "file": "building_shrine_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_shrine_blue.bin",
+      "sha256": "515ff0ce9e9377a8839297786aca871063f012f783822c1b0506ef76688e0395"
+    },
+    {
+      "file": "building_well_blue.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_well_blue.gltf",
+      "sha256": "66305823322b2e6a7f1cb8d8bf0d91ed9b94b8d96f61d0f7af77bd0d09f6463e"
+    },
+    {
+      "file": "building_well_blue.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/blue/building_well_blue.bin",
+      "sha256": "5c50811c6666df2a9b43afc1a83ccccf19678c0f8e40c3ca0bf341722dc5133f"
+    },
+    {
+      "file": "wall_straight_gate.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/neutral/wall_straight_gate.gltf",
+      "sha256": "877f3e95f89c23741c38b9d2f8f307c1369042ec5c354d7858d72ab2b9666c3a"
+    },
+    {
+      "file": "wall_straight_gate.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/neutral/wall_straight_gate.bin",
+      "sha256": "9e64ec5b8c23113bc1bdb57ae824e067216dcf3d8475e6303e3198556fb8da28"
+    },
+    {
+      "file": "wall_straight.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/neutral/wall_straight.gltf",
+      "sha256": "7f466420a00fac9c6eb568178a81ef2719ac3c710f1fdc4027f8fc46a262ad7a"
+    },
+    {
+      "file": "wall_straight.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/buildings/neutral/wall_straight.bin",
+      "sha256": "919cfc7da53ddfba6143eccfbdf8bdffa4bdb5a01e7099d289b99832971d18f4"
+    },
+    {
+      "file": "tree_single_A.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/nature/tree_single_A.gltf",
+      "sha256": "ac913af6eaed6f15d26a2b75a877aa8dd10de90f26298f3f953abad86a4b4606"
+    },
+    {
+      "file": "tree_single_A.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/nature/tree_single_A.bin",
+      "sha256": "437deac68f35338bb309b01e4d346dd4be37557d7a2f033d04765f63e1b88825"
+    },
+    {
+      "file": "tree_single_B.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/nature/tree_single_B.gltf",
+      "sha256": "1c038591301947c485937e9fdbab182c813ef32df48c02fad3daeb2f1f0421e0"
+    },
+    {
+      "file": "tree_single_B.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/nature/tree_single_B.bin",
+      "sha256": "c6a7423ce62f61216f7d8c77e1bd1d8665cbbee59718e59e0e42485f9acfca36"
+    },
+    {
+      "file": "rock_single_A.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/nature/rock_single_A.gltf",
+      "sha256": "ddf307987fb18aa8e7594bb399de3943e497b50bc01aae0e7292a38418944915"
+    },
+    {
+      "file": "rock_single_A.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/nature/rock_single_A.bin",
+      "sha256": "0f038d45b8df2c9efa034e5d3c3635a475a2683e2e741aa9a0cd197c5689e2ce"
+    },
+    {
+      "file": "crate_A_small.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/props/crate_A_small.gltf",
+      "sha256": "3a7fee2b962949d44bdac360405f2cd9c442bf41eea65e057f08b6b2e2d6f6d8"
+    },
+    {
+      "file": "crate_A_small.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/props/crate_A_small.bin",
+      "sha256": "f46debeb9ad1f44b174f9bd62c382412172676b1cdfa714d15e3b11227f1eeb3"
+    },
+    {
+      "file": "barrel.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/props/barrel.gltf",
+      "sha256": "24673663eb53ffab6c8db612654856f051c4877bfc02ea25fee89cd95ee4d100"
+    },
+    {
+      "file": "barrel.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/decoration/props/barrel.bin",
+      "sha256": "ff1b034f1ac95b063a2baa3d72a0ad0b33f25337f776e7a25fbc811d9c77dee8"
+    },
+    {
+      "file": "hex_grass.gltf",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/tiles/base/hex_grass.gltf",
+      "sha256": "9197814431b5becf69b22bb7a20e340d63155c4aeddfb3a678c3f041ca585e41"
+    },
+    {
+      "file": "hex_grass.bin",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Medieval Hexagon Pack 1.0.1/Assets/gltf/tiles/base/hex_grass.bin",
+      "sha256": "a0a3b96bc755cb0a7b0520e7e5fbc94a4e26663d818450d6c4328d86d386745e"
+    }
+  ]
+}
