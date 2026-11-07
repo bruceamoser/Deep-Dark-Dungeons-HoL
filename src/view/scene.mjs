@@ -3,6 +3,7 @@ import { battlefieldViewMethods } from "./battlefield.mjs";
 import { traitsOf } from "../core/ancestry-game.mjs";
 import {
   partyCanSee,
+  illuminated,
   naturallyLit,
   terrainVisible,
 } from "../core/lighting.mjs";
@@ -13,6 +14,7 @@ import { createAttackEffect } from "./combat-effects.mjs";
 import { equipmentAppearance } from "./appearance.mjs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { loadAnimationLibrary } from "./animation-library.mjs";
+import { createActorEnvironment, lightActor } from "./actor-lighting.mjs";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -46,9 +48,10 @@ export class Scene {
     });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = T.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = T.PCFShadowMap;
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 0.9;
+    this.renderer.toneMappingExposure = 0.98;
+    this.actorEnvironment = createActorEnvironment(this.renderer);
     this.scene = new T.Scene();
     this.scene.background = new T.Color(0x080e13);
     this.scene.fog = new T.FogExp2(0x080e13, 0.012);
@@ -79,7 +82,7 @@ export class Scene {
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.bloom = new UnrealBloomPass(
       new T.Vector2(innerWidth, innerHeight),
-      0.32,
+      0.22,
       0.65,
       1.1,
     );
@@ -567,6 +570,7 @@ export class Scene {
     const entity = {
       group,
       model,
+      lighting: lightActor(model, this.actorEnvironment.texture),
       ring,
       mixer,
       clips,
@@ -589,6 +593,7 @@ export class Scene {
     this.clearEffects();
     for (const e of this.entities.values()) {
       e.statusVisuals.dispose();
+      e.lighting.dispose();
       e.model.userData.dispose?.();
       e.mixer.stopAllAction();
       e.mixer.uncacheRoot(e.model);
@@ -740,11 +745,13 @@ export class Scene {
         this.map.knownInteractions[item.id] = true;
       obj.visible = !!this.map.knownInteractions[item.id];
     }
-    for (const e of this.entities.values())
+    for (const e of this.entities.values()) {
+      e.lighting.setIlluminated(illuminated(this.map, party, e.data));
       if (e.isEnemy)
         e.group.visible =
           (e.data.hp > 0 || e.pendingImpacts > 0 || e.deathGrace > 0) &&
           visible(e.data);
+    }
   }
   tick(dt) {
     this.animateBattlefield(performance.now() / 1000, this.battlefieldSeen);
