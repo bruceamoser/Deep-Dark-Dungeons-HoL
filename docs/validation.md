@@ -367,3 +367,13 @@ author review only. Windows runtime untested.
 - Production package built. Windows untested. Culture palette mapping and
   arbitrary hairstyle/face morphs are not implemented; the editor offers model
   and build choices and preserves old appearance fields for save compatibility.
+
+### Greyhaven branding — #27
+
+- Regenerated the editable VectorCraft document and transparent 512px PNG from
+  the authored SVG; runtime SVG/PNG copies match the sources.
+- Production build and Linux directory package passed.
+- `scripts/branding-check.mjs` captures the real loading screen before assets
+  resolve, checks crest loading and nonoverlapping header bounds at 1600×1000 and
+  1100×720, and captures both town layouts. Focused sandboxed native launch and
+  town/market/gate render checks cover the packaged interface. Windows untested.
