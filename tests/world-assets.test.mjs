@@ -25,7 +25,11 @@ test("world models have all runtime dependencies and recorded source hashes", ()
           .map((o) => path.resolve(path.dirname(file), o.uri)),
       ),
     ]) {
-      const relative = path.relative(path.join(root, "assets/world"), entry);
+      // Manifest keys are URL-style paths on every platform.
+      const relative = path
+        .relative(path.join(root, "assets/world"), entry)
+        .split(path.sep)
+        .join("/");
       assert.ok(recorded.has(relative), relative);
       assert.equal(
         crypto
