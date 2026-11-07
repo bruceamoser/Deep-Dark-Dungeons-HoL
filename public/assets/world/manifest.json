@@ -177,30 +177,6 @@
       "sha256": "331b30051400485f8309d776a3fff31b80b44c6380588a9df62ddf07b617691d"
     },
     {
-      "file": "dungeon/chest.gltf",
-      "pack": "KayKit Dungeon Pack 1.1",
-      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest.gltf",
-      "sha256": "25c1770655f555e266aadbc1936f5608ae2832a328f183277309c82c549afb5d"
-    },
-    {
-      "file": "dungeon/chest.bin",
-      "pack": "KayKit Dungeon Pack 1.1",
-      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest.bin",
-      "sha256": "2c41c61df12691a7bdae510433588ce82bbf0593622b986ae2e0981f67e48ae3"
-    },
-    {
-      "file": "dungeon/stairs_wide.gltf",
-      "pack": "KayKit Dungeon Pack 1.1",
-      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/stairs_wide.gltf",
-      "sha256": "b2a1c1f88ff616ddbf5e8c59146fa6d00fcc52e8980c8956946d309461daea9d"
-    },
-    {
-      "file": "dungeon/stairs_wide.bin",
-      "pack": "KayKit Dungeon Pack 1.1",
-      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/stairs_wide.bin",
-      "sha256": "c806f52abf84b590bad40e3ded8abfb12d2a899b5eaea61aff34b8be7bca4cee"
-    },
-    {
       "file": "dungeon/banner_patternB_green.gltf",
       "pack": "KayKit Dungeon Pack 1.1",
       "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/banner_patternB_green.gltf",
@@ -313,6 +289,42 @@
       "pack": "KayKit Resource Bits 1.0",
       "archivePath": "The Complete KayKit Collection v8/KayKit Resource Bits 1.0/Assets/gltf/resource_bits_texture.png",
       "sha256": "62a252aba7bc9382effe48d93b976605d8fa70a3a40af7fc52362f5ca89c135b"
+    },
+    {
+      "file": "dungeon/stairs_walled.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/stairs_walled.gltf",
+      "sha256": "35021eb30f0598fed68e4f7fb95e9ef06c0e60893b890cb2f345a2cce50d7b48"
+    },
+    {
+      "file": "dungeon/stairs_walled.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/stairs_walled.bin",
+      "sha256": "f239b857ad27c669186a9416581cbaeb1a8f7a9a27421907ba6a55738f004697"
+    },
+    {
+      "file": "dungeon/chest_large.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest_large.gltf",
+      "sha256": "2003b1d12921e80dbd0ba2996dc8fb210a458cd7ea338ad9bdd632ad74e33246"
+    },
+    {
+      "file": "dungeon/chest_large.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest_large.bin",
+      "sha256": "53a3925fe3d8b02802eb5d95f3f7b7bc83f6350d9895c592108017d96f7fd3a9"
+    },
+    {
+      "file": "dungeon/chest_large_gold.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest_large_gold.gltf",
+      "sha256": "5d9f60bc84159f2984fce0371ece57c12af3a6cc6a21f9e735ef38361632d3c1"
+    },
+    {
+      "file": "dungeon/chest_large_gold.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest_large_gold.bin",
+      "sha256": "fc0c9ca378903b45e371df11172fe43db0bc08b3b92e53b9c2c9e25f6c4d0a8a"
     }
   ]
 }

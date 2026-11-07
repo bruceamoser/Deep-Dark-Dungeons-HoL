@@ -1,3 +1,4 @@
+export const STAIR_VISUAL_OFFSET = 1.75;
 const dungeon = (name) => `/assets/world/dungeon/${name}.gltf`;
 export const WORLD_MODELS = {
   floor: dungeon("floor_tile_large"),
@@ -14,8 +15,9 @@ export const WORLD_MODELS = {
   table: dungeon("table_small_decorated_A"),
   candles: dungeon("candle_triple"),
   shelf: dungeon("shelf_small_candles"),
-  chest: dungeon("chest"),
-  stairs: dungeon("stairs_wide"),
+  chest: dungeon("chest_large"),
+  chestGold: dungeon("chest_large_gold"),
+  stairs: dungeon("stairs_walled"),
   banner: dungeon("banner_patternB_green"),
   archiveBookcase: dungeon("bookcase_single_decoratedA"),
   supplyCrates: dungeon("crates_stacked"),

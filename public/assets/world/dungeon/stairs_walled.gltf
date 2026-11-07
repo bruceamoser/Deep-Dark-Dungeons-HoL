@@ -15,7 +15,7 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "stairs_wide"
+            "name" : "stairs_walled"
         }
     ],
     "materials" : [
@@ -32,7 +32,7 @@
     ],
     "meshes" : [
         {
-            "name" : "stairs_wide",
+            "name" : "stairs_walled",
             "primitives" : [
                 {
                     "attributes" : {
@@ -63,14 +63,14 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 736,
+            "count" : 1526,
             "max" : [
-                3.5,
-                5.099999904632568,
+                2.5,
+                4,
                 4
             ],
             "min" : [
-                -3.500000238418579,
+                -2.500000238418579,
                 0,
                 -1.092784742695585e-07
             ],
@@ -79,45 +79,45 @@
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 736,
+            "count" : 1526,
             "type" : "VEC2"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 736,
+            "count" : 1526,
             "type" : "VEC3"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 1074,
+            "count" : 2370,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 8832,
+            "byteLength" : 18312,
             "byteOffset" : 0,
             "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 5888,
-            "byteOffset" : 8832,
+            "byteLength" : 12208,
+            "byteOffset" : 18312,
             "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 8832,
-            "byteOffset" : 14720,
+            "byteLength" : 18312,
+            "byteOffset" : 30520,
             "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 2148,
-            "byteOffset" : 23552,
+            "byteLength" : 4740,
+            "byteOffset" : 48832,
             "target" : 34963
         }
     ],
@@ -129,8 +129,8 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 25700,
-            "uri" : "stairs_wide.bin"
+            "byteLength" : 53572,
+            "uri" : "stairs_walled.bin"
         }
     ]
 }

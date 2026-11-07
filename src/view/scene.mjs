@@ -12,7 +12,12 @@ import { CREATURE_MODELS } from "../core/creature-roster.mjs";
 import * as T from "three";
 import { createAttackEffect } from "./combat-effects.mjs";
 import { equipmentAppearance } from "./appearance.mjs";
-import { WORLD_MODELS, roomArt, roomDressing } from "./world-assets.mjs";
+import {
+  WORLD_MODELS,
+  STAIR_VISUAL_OFFSET,
+  roomArt,
+  roomDressing,
+} from "./world-assets.mjs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { loadAnimationLibrary } from "./animation-library.mjs";
 import { createActorEnvironment, lightActor } from "./actor-lighting.mjs";
@@ -264,22 +269,44 @@ export class Scene {
       let entry = this.interactables.get(item.id);
       if (!entry) {
         const stairs = ["entrance", "descent"].includes(item.kind);
-        const obj =
-          item.kind === "cache"
-            ? this.fittedProp("cacheCrate", item.x, item.z, 0.9, 0, 1.8)
-            : this.prop(
-                stairs ? "stairs" : "chest",
-                item.x,
-                item.z - (item.kind === "entrance" ? 2 : 0),
-                stairs ? 1.2 : 0.9,
-                item.kind === "entrance" ? Math.PI : 0,
-              );
+        const modelName = stairs
+          ? "stairs"
+          : item.kind === "cache"
+            ? "cacheCrate"
+            : item.source?.guardBossId
+              ? "chestGold"
+              : "chest";
+        const obj = this.fittedProp(
+          modelName,
+          item.x,
+          item.z +
+            (stairs
+              ? item.kind === "entrance"
+                ? -STAIR_VISUAL_OFFSET
+                : STAIR_VISUAL_OFFSET
+              : 0),
+          stairs ? 1.7 : item.kind === "cache" ? 0.9 : 1.05,
+          0,
+          stairs ? 2.2 : 1.8,
+        );
         obj.userData.interactionId = item.id;
-        entry = { obj, item };
+        const lids = [];
+        obj.traverse((o) => {
+          if (o.isMesh && /_lid$/.test(o.name)) lids.push(o);
+        });
+        entry = {
+          obj,
+          item,
+          lids,
+          targetLidAngle: item.source?.opened ? -1.05 : 0,
+        };
+        for (const lid of lids) lid.rotation.x = entry.targetLidAngle;
         this.interactables.set(item.id, entry);
       }
       entry.item = item;
       entry.obj.userData.empty = item.available === false;
+      entry.obj.userData.opened = !!item.source?.opened;
+      entry.targetLidAngle = item.source?.opened ? -1.05 : 0;
     }
   }
   panTo(e) {
@@ -544,7 +571,11 @@ export class Scene {
       );
     }
     const portal = new T.PointLight(0x70d9d3, 30, 10, 2);
-    portal.position.set(map.exit.x * TILE, 2, map.exit.z * TILE);
+    portal.position.set(
+      map.exit.x * TILE,
+      2,
+      (map.exit.z + STAIR_VISUAL_OFFSET) * TILE,
+    );
     this.world.add(portal);
     this.props.push({ obj: portal, ...map.exit });
     const dustGeo = new T.BufferGeometry(),
@@ -788,6 +819,14 @@ export class Scene {
     }
   }
   tick(dt) {
+    for (const entry of this.interactables.values())
+      for (const lid of entry.lids ?? [])
+        lid.rotation.x = T.MathUtils.damp(
+          lid.rotation.x,
+          entry.targetLidAngle,
+          12,
+          dt,
+        );
     this.animateBattlefield(performance.now() / 1000, this.battlefieldSeen);
     const t = this.clock.elapsedTime;
     for (const e of this.entities.values()) {

@@ -15,11 +15,11 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "chest_lid",
+            "name" : "chest_large_lid",
             "translation" : [
                 0,
                 0.5,
-                -0.5648832321166992
+                -0.7648830413818359
             ]
         },
         {
@@ -27,7 +27,7 @@
                 0
             ],
             "mesh" : 1,
-            "name" : "chest"
+            "name" : "chest_large"
         }
     ],
     "materials" : [
@@ -44,7 +44,7 @@
     ],
     "meshes" : [
         {
-            "name" : "chest_lid",
+            "name" : "chest_large_lid",
             "primitives" : [
                 {
                     "attributes" : {
@@ -58,7 +58,7 @@
             ]
         },
         {
-            "name" : "chest",
+            "name" : "chest_large",
             "primitives" : [
                 {
                     "attributes" : {
@@ -91,12 +91,12 @@
             "componentType" : 5126,
             "count" : 654,
             "max" : [
-                0.8500000238418579,
+                1.100000023841858,
                 0.800000011920929,
-                1.3106862306594849
+                1.7106863260269165
             ],
             "min" : [
-                -0.8500000238418579,
+                -1.100000023841858,
                 -0.1650022566318512,
                 -0.1351175606250763
             ],
@@ -123,29 +123,29 @@
         {
             "bufferView" : 4,
             "componentType" : 5126,
-            "count" : 475,
+            "count" : 470,
             "max" : [
-                0.800000011920929,
+                1.0500000715255737,
                 0.5999998450279236,
-                0.6458025574684143
+                0.8458026051521301
             ],
             "min" : [
-                -0.800000011920929,
+                -1.0500000715255737,
                 -2.384185791015625e-07,
-                -0.6000003814697266
+                -0.8000003695487976
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 5,
             "componentType" : 5126,
-            "count" : 475,
+            "count" : 470,
             "type" : "VEC2"
         },
         {
             "bufferView" : 6,
             "componentType" : 5126,
-            "count" : 475,
+            "count" : 470,
             "type" : "VEC3"
         },
         {
@@ -182,26 +182,26 @@
         },
         {
             "buffer" : 0,
-            "byteLength" : 5700,
+            "byteLength" : 5640,
             "byteOffset" : 23700,
             "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 3800,
-            "byteOffset" : 29400,
+            "byteLength" : 3760,
+            "byteOffset" : 29340,
             "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 5700,
-            "byteOffset" : 33200,
+            "byteLength" : 5640,
+            "byteOffset" : 33100,
             "target" : 34962
         },
         {
             "buffer" : 0,
             "byteLength" : 1596,
-            "byteOffset" : 38900,
+            "byteOffset" : 38740,
             "target" : 34963
         }
     ],
@@ -213,8 +213,8 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 40496,
-            "uri" : "chest.bin"
+            "byteLength" : 40336,
+            "uri" : "chest_large.bin"
         }
     ]
 }
