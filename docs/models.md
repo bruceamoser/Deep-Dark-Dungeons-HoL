@@ -1,7 +1,9 @@
 # Models: decisions, storage and plan
 
-Status as of November 7, 2026. Branch `codex/kaykit-complete-integration`,
-204 tests passing.
+Status as of November 7, 2026. GitHub #21 tracks the current art overhaul.
+The hero foundation (#22), readable lighting (#28) and navigable Greyhaven (#29)
+are merged. See the continuation sections and `docs/kaykit-world-art.md` for the
+current decisions and full collection audit.
 
 ## The decision
 
@@ -56,7 +58,9 @@ All runtime art lives under `public/assets/`. Every path below is served at `/as
 | `public/assets/characters/skeletons/` | Skeleton_Warrior, Skeleton_Rogue, Skeleton_Mage, Skeleton_Minion, Skeleton_Golem, Necromancer | 6 glb | **In use** for undead |
 | `public/assets/animations/` | Eight shared rig libraries: General, MovementBasic, MovementAdvanced, CombatMelee, CombatRanged, Tools, Simulation, Special | 8 glb, 132 clips | **In use** |
 | `public/assets/creatures/` | Quaternius animals and constructs: Bat, Wolf, Ghost, Demon, Ooze, Goleling (plus the older Orc, Orc_Skull, Yeti, GreenBlob) | 9 glb | **In use** for quadrupeds and drops |
-| `public/assets/dungeon/` | Dungeon Remastered 1.0 — 203 props | 9.1 MB | In use, **queued for replacement** |
+| `public/assets/world/` | Curated Dungeon 1.1, Halloween crypt props, RPG Tools and Resource Bits | 1.2 MB | In use: architecture, room dressing and caches |
+| `public/assets/town/` | Medieval Hexagon buildings, nature, street landmarks | 1 MB | In use: navigable Greyhaven |
+| `public/assets/dungeon/` | Legacy Dungeon Remastered 1.0 | Removed | Superseded after runtime references migrated |
 | `public/assets/adventurer/` | Old Adventurers 1.0 characters and weapons | 19 MB | Weapons still used; characters superseded |
 | `public/assets/skeleton/` | Old Skeletons 1.0 | 19 MB | Superseded |
 
@@ -66,13 +70,13 @@ The raw KayKit archive is **not** committed. It stays at
 `~/Downloads/The Complete KayKit Collection v8.zip`; only the extracted models the game
 loads are in the repository.
 
-### Not yet extracted from the collection
+### Available for further curated imports
 
-These sit in the archive and are not in the tree:
+The archive contains much more than the small runtime subsets selected so far:
 
-| Pack | Models | Planned use |
+| Pack | Models in archive | Further use |
 | --- | --- | --- |
-| Dungeon Pack 1.1 | 283 glTF | Replace Dungeon Remastered 1.0 — verified drop-in, all 12 currently-used prop names exist |
+| Dungeon Pack 1.1 | 283 glTF | More architecture, floor variants and tavern furniture; selected Dungeon 1.1 models already in use |
 | Fantasy Weapons Bits 1.0 | 48 glTF | Visible equipped weapons |
 | RPG Tools Bits 1.0 | 69 glTF | Visible carried gear |
 | Resource Bits 1.0 | 132 glTF | Materials and loot |
@@ -129,20 +133,16 @@ both the mapping and the files' existence.
 
 ## Open problems
 
-1. **Character sheet reads wrong.** `dressIdentity` was written for the 1.0 rig: it hid
-   the model's own `_Head` mesh and built a sphere face with eyes and brows. Over the new
-   models this produced the "goggles" look you spotted. The generated face is now
-   off by default, so the packs' own heads show. **Still needs a visual pass** — the head
-   now reads bare on some models because the helmet/face layering has not been re-checked
-   against the 2.0 sculpt.
-2. **The dungeon is too dark for character detail.** A camera-facing fill was tried and
-   did not help; a layer-scoped light does not work in Three.js because lights outside the
-   camera's layers are culled before the lighting pass. Needs a real lighting decision,
-   not a tweak.
+1. **Real customization still needs work.** Authored heads/hats/clothing are now
+   preserved and checked against pack originals (#22). Palette heuristics still
+   recolor unrelated surfaces and the stored hairstyle/face choices do not change
+   authored heads. Replace these with accurate model/part/palette choices (#24).
+2. **Readable atmospheric lighting is implemented.** Bruce chose clear nearby
+   terrain/characters, warm torchlight and dark unexplored space. Restrained
+   per-actor environment lighting passed rendered and native checks (#28).
 3. **Culture-based clothing is not wired to the new packs.** `src/core/wardrobe.mjs`
    describes 18 cultures, 32 backgrounds and 10 classes, and the generated garment shells
-   are now opt-in because they hid the packs' own clothing. Accessories and the class
-   layer still draw. The real fix is to map cultures onto the packs' actual parts.
+   are now opt-in because they hid the packs' own clothing. Generated accessory and class layers are also suppressed on authored outfits. The real fix is to map cultures onto the packs' actual parts.
 4. **Equipped gear is placeholder geometry.** `dressEquipped` draws helmets, belts and
    boots from primitives. Fantasy Weapons Bits and RPG Tools Bits should replace it.
 5. **Only the Adventurers 2.0 subfolder is reachable from the hero path.** The Series
@@ -156,13 +156,13 @@ both the mapping and the files' existence.
 
 Ordered by value per unit of risk.
 
-1. **Fix the hero look.** Re-check the 2.0 head, helmet and hair layering with the
-   generated face off. Confirm against the pack's own reference render. This is the
-   outstanding complaint and blocks everything else being judged.
-2. **Settle dungeon lighting** so character detail reads at gameplay distance. Treat as a
-   design decision with your input, not an implementation detail.
-3. **Swap in the Dungeon Pack 1.1.** Verified drop-in: all 12 prop names already used
-   exist. Gains 80 new props.
+1. **Hero foundation complete (#22).** Authored head/hat/clothing layering and
+   armor donors checked with actual models and the full native suite.
+2. **Readable lighting complete (#28).** Bruce selected the atmospheric direction;
+   actor fill preserves the floor lighting and core visibility boundaries.
+3. **Dungeon assets and room dressing (#23).** A curated Dungeon 1.1 subset replaces
+   legacy runtime art; crypt/archive/shrine/storeroom props occupy existing blocked
+   cells. Authored half-walls replace primitive cutaways, and lost caches use crates.
 4. **Wire culture, background and class to real parts.** Replace the procedural garment
    shells with mapping onto the packs' modular pieces where they exist.
 5. **Visible equipped gear** from Fantasy Weapons Bits and RPG Tools Bits.

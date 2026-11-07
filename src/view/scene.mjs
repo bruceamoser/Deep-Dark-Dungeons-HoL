@@ -12,6 +12,7 @@ import { CREATURE_MODELS } from "../core/creature-roster.mjs";
 import * as T from "three";
 import { createAttackEffect } from "./combat-effects.mjs";
 import { equipmentAppearance } from "./appearance.mjs";
+import { WORLD_MODELS, roomArt, roomDressing } from "./world-assets.mjs";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { loadAnimationLibrary } from "./animation-library.mjs";
 import { createActorEnvironment, lightActor } from "./actor-lighting.mjs";
@@ -22,7 +23,6 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { key, Random, distance, lineOfSight } from "../core/dungeon.mjs";
 const TILE = 2.4;
-const asset = (name) => `/assets/dungeon/Assets/gltf/${name}.gltf.glb`;
 const color = { gold: 0xe7c17a, teal: 0x64d5c8, red: 0xe46c60 };
 export class Scene {
   constructor(canvas, onClick, onHover) {
@@ -264,13 +264,16 @@ export class Scene {
       let entry = this.interactables.get(item.id);
       if (!entry) {
         const stairs = ["entrance", "descent"].includes(item.kind);
-        const obj = this.prop(
-          stairs ? "stairs" : "chest",
-          item.x,
-          item.z - (item.kind === "entrance" ? 2 : 0),
-          stairs ? 1.2 : 0.9,
-          item.kind === "entrance" ? Math.PI : 0,
-        );
+        const obj =
+          item.kind === "cache"
+            ? this.fittedProp("cacheCrate", item.x, item.z, 0.9, 0, 1.8)
+            : this.prop(
+                stairs ? "stairs" : "chest",
+                item.x,
+                item.z - (item.kind === "entrance" ? 2 : 0),
+                stairs ? 1.2 : 0.9,
+                item.kind === "entrance" ? Math.PI : 0,
+              );
         obj.userData.interactionId = item.id;
         entry = { obj, item };
         this.interactables.set(item.id, entry);
@@ -316,18 +319,7 @@ export class Scene {
       bow: "/assets/adventurer/Assets/gltf/crossbow_2handed.gltf",
       arrow: "/assets/adventurer/Assets/gltf/arrow.gltf",
       shield: "/assets/adventurer/Assets/gltf/shield_round_color.gltf",
-      floor: asset("floor_tile_large"),
-      pillar: asset("pillar_decorated"),
-      wall: asset("wall"),
-      torch: asset("torch_mounted"),
-      rubble: asset("rubble_large"),
-      barrel: asset("barrel_large"),
-      table: asset("table_long_decorated_A"),
-      candles: asset("candle_triple"),
-      shelf: asset("shelf_small_candles"),
-      chest: "/assets/dungeon/Assets/gltf/chest.glb",
-      stairs: asset("stairs_wide"),
-      banner: asset("banner_patternB_green"),
+      ...WORLD_MODELS,
     };
     await Promise.all(
       Object.entries(entries).map(async ([name, url]) => {
@@ -343,6 +335,7 @@ export class Scene {
           this.assets.set(name, g);
         } catch (e) {
           if (
+            Object.hasOwn(WORLD_MODELS, name) ||
             Object.hasOwn(CREATURE_MODELS, name) ||
             [
               "Knight",
@@ -385,14 +378,38 @@ export class Scene {
     this.props.push({ obj, x, z });
     return obj;
   }
+  fittedProp(name, x, z, height, rotation = 0, footprint = 1.9) {
+    const source = this.model(name);
+    const box = new T.Box3().setFromObject(source);
+    const size = box.getSize(new T.Vector3());
+    const scale = Math.min(
+      height / Math.max(0.01, size.y),
+      footprint / Math.max(0.01, size.x, size.z),
+    );
+    source.scale.multiplyScalar(scale);
+    box.setFromObject(source);
+    const center = box.getCenter(new T.Vector3());
+    source.position.set(-center.x, -box.min.y, -center.z);
+    const obj = new T.Group();
+    obj.name = name;
+    obj.add(source);
+    obj.position.set(x * TILE, 0, z * TILE);
+    obj.rotation.y = rotation;
+    this.world.add(obj);
+    this.props.push({ obj, x, z });
+    return obj;
+  }
   build(map) {
     this.clearEffects();
     this.highlightInteraction(null);
     this.interactables.clear();
     this.map = map;
+    for (const resource of this.worldOwned ?? []) resource.dispose();
+    this.worldOwned = [];
     for (const p of this.world.children.slice()) this.world.remove(p);
     this.props = [];
     this.tiles = [];
+    this.tilesDetail = [];
     this.torches = [];
     const rng = new Random(map.seed + map.depth);
     const tileGeo = new T.BoxGeometry(TILE - 0.035, 0.35, TILE - 0.035),
@@ -400,6 +417,7 @@ export class Scene {
     const entries = Object.values(map.tiles);
     this.floor = new T.InstancedMesh(tileGeo, base, entries.length);
     this.floor.receiveShadow = true;
+    this.worldOwned.push(tileGeo, base, this.floor);
     const mat = new T.Matrix4();
     entries.forEach((p, i) => {
       mat.makeTranslation(p.x * TILE, -0.19, p.z * TILE);
@@ -417,6 +435,7 @@ export class Scene {
       if (!o.isMesh) return;
       const inst = new T.InstancedMesh(o.geometry, o.material, entries.length);
       inst.receiveShadow = true;
+      this.worldOwned.push(inst);
       const scale = new T.Matrix4().makeScale(
         TILE / size.x,
         Math.min(1, TILE / size.x),
@@ -434,6 +453,13 @@ export class Scene {
       this.tilesDetail.push(inst);
     });
     for (const p of entries) {
+      const room = map.rooms.find(
+        (r) => p.x >= r.x && p.x < r.x + r.w && p.z >= r.z && p.z < r.z + r.h,
+      );
+      const style = room ? roomArt(map, room) : null;
+      let accent = style?.wall ?? "wall";
+      if (accent === "wallCandles" && !naturallyLit(map, p))
+        accent = "wallCracked";
       for (const [dx, dz] of [
         [-1, 0],
         [0, -1],
@@ -444,7 +470,9 @@ export class Scene {
         const high = dx < 0 || dz < 0;
         let wall;
         if (high) {
-          wall = this.model("wall", 2.8);
+          const variant = (p.x * 7 + p.z * 11) % 3 === 0 ? accent : "wall";
+          wall = this.model(variant, 2.8);
+          wall.name = variant;
           const width = new T.Box3()
             .setFromObject(wall)
             .getSize(new T.Vector3()).x;
@@ -456,21 +484,18 @@ export class Scene {
             (p.z + dz * 0.49) * TILE,
           );
         } else {
-          wall = new T.Mesh(
-            new T.BoxGeometry(
-              dx ? 0.32 : TILE + 0.1,
-              0.48,
-              dz ? 0.32 : TILE + 0.1,
-            ),
-            new T.MeshStandardMaterial({ color: 0x44535a, roughness: 0.95 }),
-          );
+          wall = this.model("wallHalf", 0.65);
+          wall.name = "Authored cutaway wall";
+          const width = new T.Box3()
+            .setFromObject(wall)
+            .getSize(new T.Vector3()).x;
+          wall.scale.x *= TILE / width;
+          wall.rotation.y = dx ? Math.PI / 2 : 0;
           wall.position.set(
             (p.x + dx * 0.49) * TILE,
-            0.16,
+            0,
             (p.z + dz * 0.49) * TILE,
           );
-          wall.castShadow = true;
-          wall.receiveShadow = true;
         }
         this.world.add(wall);
         this.props.push({ obj: wall, x: p.x, z: p.z });
@@ -497,13 +522,19 @@ export class Scene {
           }),
         );
         glow.position.copy(light.position);
+        this.worldOwned.push(glow.geometry, glow.material);
         this.world.add(glow);
         this.props.push({ obj: glow, x, z });
       }
       this.prop("banner", r.cx, r.z - 0.2, 2.7);
-      this.prop("shelf", r.x + 0.05, r.cz, 1.7, Math.PI / 2);
-      this.prop("barrel", r.x + r.w - 1.2, r.z + 0.65, 1.0);
-      this.prop("barrel", r.x + r.w - 1.65, r.z + 1.1, 0.75);
+      for (const dressing of roomDressing(map, r))
+        this.fittedProp(
+          dressing.name,
+          dressing.x,
+          dressing.z,
+          dressing.height,
+          dressing.rotation,
+        );
       this.prop(
         "rubble",
         r.x + r.w - 1.3,
@@ -540,6 +571,7 @@ export class Scene {
       }),
     );
     this.world.add(dust);
+    this.worldOwned.push(dustGeo, dust.material);
     this.endPan();
     this.manualCamera = false;
     this.focus.set(map.start.x * TILE, 0, map.start.z * TILE);
