@@ -238,3 +238,27 @@ The browser-hosted `test:play` flow also passed forge purchases/refunds, the com
 A real local AppImage update from v0.5.1 to v0.6.0 passed: a bad checksum was rejected, simulated disk-full prevented installation, a valid download replaced the executable and restarted, the earlier save remained intact, and a new forge journey could be created. The updated AppImage also passed installed-renderer/forge/save/update-control smoke checks. The installer workflow separately installs and opens Linux Debian and Windows NSIS packages, as well as exercising the AppImage; its screenshots include the forge.
 
 These checks establish the implemented mechanics and tested interaction paths, not long-term balance, complete controller/accessibility coverage, or final production art quality. Full gameplay interaction was tested locally on Linux; Windows validation is the installer/render/save/forge smoke flow on its CI runner.
+
+## Complete KayKit continuation — November 7, 2026 (#20)
+
+Full `npm test` passed (all 14 test-file suites), followed by production build.
+After the appearance/animation corrections, targeted wardrobe, animation and
+creature-asset suites passed. `scripts/kaykit-appearance-check.mjs` loaded real
+assets, verified six authored hero silhouettes and all three armor swaps, and
+captured the pack/game comparison and actual sheet with no page errors or
+missing-animation-target warnings. Screenshots were visually inspected.
+
+The final Linux directory package passed the complete `npm run test:native`
+suite through `launch-game.sh` under `aa-exec -p unconfined`, using temporary
+runtime/save directories. Creator, forge, appearance persistence, equipment,
+roster, combat, controls, object interactions, weapon/spell effects, wound
+recovery, all 58 creature adapters, all 17 condition layers, run/checkpoint
+reloads and native close saving passed. Renderer seccomp filtering stayed enabled.
+The system-installed v0.6.0 package and personal saves were not replaced.
+
+Author review found and corrected missing RogueHooded armor donors, unwanted
+Mage-body replacement for unarmored heroes, hidden authored headgear, duplicate
+procedural accessories, and humanoid animation tracks applied to animals.
+Remaining palette/customization and enemy-casting quality gaps are tracked in
+#24; the whole-game art overhaul is #21. This is author review, not independent
+review or final art acceptance. Windows execution remains untested.

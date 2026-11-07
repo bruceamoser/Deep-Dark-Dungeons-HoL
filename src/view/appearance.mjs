@@ -1,9 +1,11 @@
 import { dressIdentity } from "./hero-identity.mjs";
+import { dressEquipped } from "./outfit.mjs";
 import { creatureAppearance } from "./creatures.mjs";
-import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
+import { CREATURE_ROSTER, HUMANOID_MODELS } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
+import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 // Original recurve bow: curved wooden limbs, a wrapped grip and a taut string.
 const bowAsset = (() => {
@@ -48,19 +50,9 @@ const bowAsset = (() => {
 })();
 export function equipmentAppearance(assets, hero, enemy = false) {
   const look = enemy ? CREATURE_ROSTER[hero.type] : null;
-  if (
-    enemy &&
-    look &&
-    ![
-      "Skeleton",
-      "SkeletonRogue",
-      "SkeletonMage",
-      "Knight",
-      "Rogue",
-      "Mage",
-      "Barbarian",
-    ].includes(look.model)
-  )
+  // KayKit character models are complete rigged humanoids and take this path; the
+  // Quaternius animals and constructs go to the procedural creature path.
+  if (enemy && look && !HUMANOID_MODELS.has(look.model))
     return creatureAppearance(assets, hero, bowAsset);
   const name = enemy ? (look?.model ?? "Skeleton") : hero.model;
   const model = clone(assets.get(name).scene),
@@ -79,7 +71,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   model.traverse((o) => {
     if (o.isBone) bones.set(o.name, o);
   });
-  if (!enemy) {
+  if (!enemy && tier !== "cloth") {
     const replacements = [];
     model.traverse((o) => {
       if (
@@ -94,13 +86,11 @@ export function equipmentAppearance(assets, hero, enemy = false) {
           tier === "medium" && part !== "Body"
             ? "Rogue"
             : (armorNames[tier] ?? "Mage");
-      const donor =
-        assets
-          .get(donorName)
-          .scene.getObjectByName(
-            `${donorName === "Rogue" ? "Rogue_Hooded" : donorName}_${part}`,
-          ) ??
-        assets.get(donorName).scene.getObjectByName(`${donorName}_${part}`);
+      // Pack filenames and mesh prefixes differ (Rogue_Hooded vs RogueHooded).
+      const donor = assets
+        .get(donorName)
+        .scene.getObjectsByProperty("isSkinnedMesh", true)
+        .find((mesh) => mesh.name.endsWith(`_${part}`));
       if (!donor?.isSkinnedMesh) continue;
       const mapped = donor.skeleton.bones.map((b) => bones.get(b.name));
       if (mapped.some((b) => !b)) continue;
@@ -125,8 +115,10 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       )
     )
       o.visible = false;
-    if (o.isMesh && /helmet|_hat/i.test(o.name))
-      o.visible = enemy && look?.shield;
+    // Authored hats, helmets and visors are part of the model's silhouette.
+    // Keep them unless worn head equipment explicitly replaces them.
+    if (!enemy && o.isMesh && /helmet|hat$/i.test(o.name))
+      o.visible = !items.some((i) => i.carried && i.worn && i.slot === "head");
     if (
       enemy &&
       hero.type === "creature-animated-armor" &&
@@ -137,8 +129,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   });
   let right, left;
   model.traverse((o) => {
-    if (["handslotr", "handslot.r"].includes(o.name)) right = o;
-    if (["handslotl", "handslot.l"].includes(o.name)) left = o;
+    const slot = o.name.toLowerCase().replace(/[._-]/g, "");
+    if (slot === "handslotr") right = o;
+    if (slot === "handslotl") left = o;
   });
   const held = (id) =>
     items.find((i) => i.carried && i.held && i.catalogId === id);
@@ -212,40 +205,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     shield: !!held("item-ordinary-shield"),
   };
   if (!enemy) {
-    const adorn = (slot, boneName, geometry, position) => {
-      const item = items.find((i) => i.worn && i.slot === slot);
-      if (!item) return;
-      const material = new T.MeshStandardMaterial({
-        color: activeItemEffects(hero, item)[0]?.color ?? 0x776b52,
-        metalness: 0.7,
-        roughness: 0.35,
-      });
-      owned.push(geometry, material);
-      const mesh = new T.Mesh(geometry, material);
-      mesh.name = `Equipped ${slot}`;
-      mesh.position.set(...position);
-      const bone = [...bones.values()].find((b) => boneName.test(b.name));
-      (bone ?? model).add(mesh);
-    };
-    adorn(
-      "head",
-      /^head$/i,
-      new T.CylinderGeometry(0.29, 0.26, 0.12, 8, true),
-      [0, 0.15, 0],
-    );
-    adorn(
-      "waist",
-      /hips|pelvis/i,
-      new T.BoxGeometry(0.49, 0.1, 0.32),
-      [0, 0, 0],
-    );
-    for (const side of ["l", "r"])
-      adorn(
-        "feet",
-        new RegExp(`foot[._]?${side}$`, "i"),
-        new T.BoxGeometry(0.17, 0.14, 0.3),
-        [0, 0, 0.06],
-      );
+    // Worn gear is drawn with the same builders that dress clothing, so a found
+    // helmet, belt or pair of boots reads as equipment rather than a placeholder box.
+    dressEquipped(model, hero, owned, items);
     const enchanted = items.filter(
       (i) => i.carried && (i.held || i.worn) && i.effects?.length,
     );
@@ -334,9 +296,27 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     model.userData.setConcealed(!!hero.concealed);
   }
   // Rig dimensions are consistent; ignore hidden source accessories when scaling.
-  if (!enemy) dressIdentity(model, hero, owned);
+  if (!enemy) {
+    // Preserve the pack's authored clothing and accessories; equipment and palette
+    // choices still apply through the shared sheet/gameplay appearance pipeline.
+    const wornSlot = (slot) => items.some((i) => i.worn && i.slot === slot);
+    dressIdentity(model, hero, owned, {
+      authoredOutfit: true,
+      occupied: {
+        head: wornSlot("head"),
+        belt: wornSlot("waist"),
+        feet: wornSlot("feet"),
+        torso: tier !== "cloth",
+      },
+      seed: (hero.name ?? "").length + 3,
+    });
+  }
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
-  return { model, clips: assets.get(name).animations };
+  const clips = gameClips({ skeleton: /^Skeleton/.test(name) });
+  return {
+    model,
+    clips: clips.length ? clips : (assets.get(name).animations ?? []),
+  };
 }
 export function heroPreview(canvas, assets, hero) {
   const renderer = new T.WebGLRenderer({

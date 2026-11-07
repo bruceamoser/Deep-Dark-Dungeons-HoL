@@ -1,10 +1,12 @@
 import * as T from "three";
-import { ANCESTRY_LOOKS, normalizeAppearance } from "../core/identity.mjs";
+import { ANCESTRY_LOOKS, normalizeAppearance, signatureFor } from "../core/identity.mjs";
+import { dressOutfit } from "./outfit.mjs";
 // Original modular geometry fitted to KayKit's CC0 Adventurers rig.
-export function dressIdentity(model, hero, owned) {
+export function dressIdentity(model, hero, owned, opts = {}) {
   const ancestry =
     hero.draft?.ancestryId ?? hero.ancestryId ?? "ancestry-human";
   const look = ANCESTRY_LOOKS[ancestry] ?? ANCESTRY_LOOKS["ancestry-human"];
+  const sig = signatureFor(ancestry);
   const a = normalizeAppearance(
     hero.draft?.appearance ?? hero.appearance,
     ancestry,
@@ -28,10 +30,16 @@ export function dressIdentity(model, hero, owned) {
     white = material("#ddd7c7"),
     lip = material(new T.Color(a.skin).multiplyScalar(0.64)),
     accent = material(a.accentColor, { metalness: 0.55, roughness: 0.4 });
+  // The Adventurers 2.0 and Series packs model a complete head and face. Drawing the
+  // generated sphere face over it produced the goggle look and hid the pack's own
+  // sculpt, so the overlay is opt-in: only a bare rig that needs a face asks for it.
+  const drawFace = opts.proceduralFace === true;
+  const female = a.sex === "female";
+  const soft = a.face === "soft";
   let head;
   model.traverse((o) => {
     if (o.isBone && o.name === "head") head = o;
-    if (o.isMesh && /_(Head|Hat)$/.test(o.name)) o.visible = false;
+    if (drawFace && o.isMesh && /_(Head|Hat)$/.test(o.name)) o.visible = false;
   });
   // Recolor existing garment palette, preserving shadows, leather and metal.
   model.traverse((o) => {
@@ -64,7 +72,11 @@ export function dressIdentity(model, hero, owned) {
     m.customProgramCacheKey = () =>
       `identity-${isCape}-${isCloth}-${a.skin}-${a.clothColor}-${a.accentColor}`;
   });
-  if (!head) return a;
+  if (drawFace && head) buildFace();
+  finish();
+  return a;
+
+  function buildFace() {
   const face = new T.Group();
   face.name = "Individual face";
   head.add(face);
@@ -91,8 +103,7 @@ export function dressIdentity(model, hero, owned) {
   };
   const oval = (name, parent, mat, pos, scale, segments = 16) =>
     shape(name, parent, new T.SphereGeometry(1, segments, 12), mat, pos, scale);
-  const female = a.sex === "female",
-    soft = a.face === "soft";
+
   oval(
     "Face",
     face,
@@ -114,7 +125,8 @@ export function dressIdentity(model, hero, owned) {
     8,
   );
   for (const s of [-1, 1]) {
-    const eyeSize = (look.eyes ?? 1) * (female ? 1.03 : 1);
+    const eyeSize =
+      (look.eyes ?? 1) * (female ? 1.03 : 1) * (sig.bigEyes ? 1.24 : 1);
     oval(
       "Eye white",
       face,
@@ -143,10 +155,16 @@ export function dressIdentity(model, hero, owned) {
       face,
       hair,
       [s * 0.15, 0.532, 0.285],
-      [0.105, 0.024, 0.035],
+      [
+        0.105 * (sig.brow === "heavy" ? 1.18 : sig.brow === "fine" ? 0.88 : 1),
+        sig.brow === "heavy" ? 0.032 : sig.brow === "fine" ? 0.018 : 0.024,
+        0.035,
+      ],
       10,
     );
     brow.rotation.z = s * (a.face === "weathered" ? 0.18 : -0.08);
+    if (sig.brow === "heavy")
+      oval("Brow ridge", face, skin, [s * 0.15, 0.55, 0.263], [0.115, 0.03, 0.05], 10);
     if (["pointed", "goblin", "fey"].includes(look.ears)) {
       const geo = new T.ConeGeometry(1, 1, 4),
         ear = shape(
@@ -170,6 +188,16 @@ export function dressIdentity(model, hero, owned) {
         [0.055, 0.13, 0.035],
         8,
       );
+      if (sig.earCuff)
+        shape(
+          "Ear cuff",
+          face,
+          new T.TorusGeometry(0.075, 0.016, 5, 12),
+          accent,
+          [s * 0.4, 0.42, 0.02],
+          [1, 1, 1],
+          [0, Math.PI / 2, -s * 1.03],
+        );
     } else if (look.ears !== "construct")
       oval(
         "Ear",
@@ -185,8 +213,55 @@ export function dressIdentity(model, hero, owned) {
     face,
     lip,
     [0, 0.185, 0.298],
-    [female ? 0.091 : 0.11, 0.018, 0.017],
+    [
+      (female ? 0.091 : 0.11) * (sig.mouth === "wide" ? 1.34 : 1),
+      sig.mouth === "wide" ? 0.024 : 0.018,
+      0.017,
+    ],
   );
+  if (sig.mouth === "wide")
+    for (const s of [-1, 1])
+      oval("Mouth corner", face, lip, [s * 0.145, 0.19, 0.283], [0.03, 0.016, 0.014], 8);
+  if (sig.cheek !== "plain")
+    for (const s of [-1, 1]) {
+      const shapeOf = {
+        high: { p: [s * 0.245, 0.36, 0.235], sc: [0.075, 0.055, 0.055] },
+        broad: { p: [s * 0.265, 0.3, 0.21], sc: [0.105, 0.075, 0.07] },
+        hollow: { p: [s * 0.235, 0.31, 0.245], sc: [0.055, 0.085, 0.045] },
+        round: { p: [s * 0.235, 0.27, 0.245], sc: [0.1, 0.085, 0.075] },
+      }[sig.cheek];
+      oval("Cheekbone", face, skin, shapeOf.p, shapeOf.sc, 10);
+    }
+  if (sig.stonePlating)
+    for (const s of [-1, 1])
+      shape(
+        "Ancestry plate",
+        face,
+        new T.BoxGeometry(0.05, 0.2, 0.03),
+        accent,
+        [s * 0.29, 0.3, 0.2],
+        [1, 1, 1],
+        [0, 0, s * 0.18],
+      );
+  if (sig.circlet) {
+    shape(
+      "Circlet",
+      face,
+      new T.TorusGeometry(0.345, 0.018, 5, 18),
+      accent,
+      [0, 0.52, 0],
+      [1, 1, 1],
+      [Math.PI / 2 - 0.12, 0, 0],
+    );
+    shape(
+      "Circlet gem",
+      face,
+      new T.OctahedronGeometry(0.045),
+      iris,
+      [0, 0.56, 0.3],
+      [1, 1.3, 0.5],
+    );
+  }
   if (a.face === "weathered")
     for (const s of [-1, 1])
       shape(
@@ -344,13 +419,40 @@ export function dressIdentity(model, hero, owned) {
         }
     }
   }
+  if (sig.braidRings && a.beard !== "none")
+    for (const s of [-1, 1])
+      for (let i = 0; i < 2; i += 1)
+        shape(
+          "Braid ring",
+          face,
+          new T.TorusGeometry(0.062, 0.014, 5, 10),
+          accent,
+          [s * 0.12, -0.13 - i * 0.14, 0.232],
+          [1, 1, 1],
+          [Math.PI / 2, 0, 0],
+        );
+  }  // end buildFace
+
+  function finish() {
   const build = { slender: 0.9, balanced: 1, broad: 1.13 }[a.build];
+  // Ancestry posture and reach, applied to the rig rather than the face.
+  if (sig.hunch) {
+    const spine = model.getObjectByName("spine") ?? model.getObjectByName("chest");
+    if (spine) spine.rotation.x += sig.hunch;
+  }
+  if (sig.handScale && sig.handScale !== 1)
+    for (const hand of ["hand.l", "hand.r", "handl", "handr"]) {
+      const bone = model.getObjectByName(hand);
+      if (bone) bone.scale.multiplyScalar(sig.handScale);
+    }
+  if (sig.longNeck && head) head.position.y += 0.12;
   model.scale.set(
     model.scale.x * look.width * build * (female ? 0.96 : 1),
     model.scale.y * look.height,
     model.scale.z * look.width * build,
   );
   model.userData.height = 2.2 * look.height * 0.85;
+  dressOutfit(model, hero, owned, opts);
   model.userData.appearance = { ...a, ancestry };
-  return a;
+  }  // end finish
 }
