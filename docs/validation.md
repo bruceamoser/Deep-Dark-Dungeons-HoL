@@ -324,3 +324,14 @@ visibility, all creature/condition adapters, floor/recall reloads, run checkpoin
 and native close saving. Generated floor resources are disposed on rebuild while
 shared authored geometry/materials remain owned by the asset map. Personal
 installation/saves were untouched. Author review only; Windows runtime untested.
+
+## Straight dirt streets — November 7, 2026 (#31)
+
+Bruce requested dirt rather than tile and explicitly specified dead-straight
+paths. The town now uses one continuous packed-earth surface with straight
+borders/junctions, subtle earth tones and a few authored loose stones. The street
+graph and service logic are unchanged. Existing route tests, production build,
+the browser town interaction suite and desktop/compact renders passed. A focused
+native run through the sandboxed launcher verified the actual town render,
+walking to the market, service arrival and gate entry; renderer seccomp remained
+enabled. Screenshots were inspected. Author review only; Windows untested.
