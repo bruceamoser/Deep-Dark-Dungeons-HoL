@@ -117,3 +117,13 @@ The 203-model legacy Dungeon Remastered runtime folder was removed after all
 runtime references migrated. Its historical source URLs/commits above remain
 the provenance record. The new subset is approximately 1.2 MB versus 9.1 MB for
 the superseded folder; the downloaded collection archive remains outside Git.
+
+### Readable stairways and coffers (#32)
+
+Dungeon landmarks now use the collection's authored `stairs_walled`,
+`chest_large` and `chest_large_gold` models. Source paths/dependencies and hashes
+are recorded in the world manifest. Stairs are centered/fitted and placed clear
+of spawn/guardian positions; ordinary and guarded coffers have distinct wood/gold
+variants. The authored lid meshes hinge open when their existing saved `opened`
+state changes and restore that pose on load. No loot, guard, interaction-distance
+or saved-floor rules changed. The superseded basic stair/coffer files were removed.

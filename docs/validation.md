@@ -335,3 +335,18 @@ the browser town interaction suite and desktop/compact renders passed. A focused
 native run through the sandboxed launcher verified the actual town render,
 walking to the market, service arrival and gate entry; renderer seccomp remained
 enabled. Screenshots were inspected. Author review only; Windows untested.
+
+## Authored dungeon landmarks — November 7, 2026 (#32)
+
+The new `stairs_walled`, `chest_large` and `chest_large_gold` dependencies passed
+manifest/hash checks and production build. Rendered checks verified ordinary,
+opened and guarded/gold coffers, both stair IDs and footprints below one tactical
+cell. Opened coffers restore their authored lid pose; live opening uses the same
+hinge with a short transition. The descent beacon was aligned to the fitted
+stair placement and the final comparison was rendered without page errors.
+
+A focused packaged Linux run under the exact sandboxed launcher passed town
+market/gate travel plus object hover, Inspect/Approach/Collect/Leave, empty coffer
+state, lost-cache recovery and stairs back to town/re-entry. Interaction IDs,
+guard rules, loot and saved floor state are unchanged. Screenshots inspected;
+author review only. Windows runtime untested.
