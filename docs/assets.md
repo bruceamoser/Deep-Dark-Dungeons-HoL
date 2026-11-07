@@ -37,3 +37,49 @@ recoloring preserves the equipment pipeline. No downloaded character creator,
 paid asset or AI-generated bitmap is used. The original pack files stay unchanged.
 Tactical overlays and battlefield flames, water, smoke, ice walls and runes are
 original procedural Three.js geometry/materials.
+
+## The Complete KayKit Collection v8 (purchased)
+
+Purchased November 7, 2026. **CC0 1.0 Universal** — the licence file in the archive
+states the content is free for personal, educational and commercial use, and CC0 applies
+even to the paid SOURCE tier. Attribution is requested but not mandatory.
+
+- Creator: Kay Lousberg, <https://www.kaylousberg.com>
+- Source: <https://kaylousberg.itch.io/kaykit-complete>
+- Archive: `The Complete KayKit Collection v8.zip`, 624 MB,
+  SHA-256 `bde0b7329aaed723c2dcb86b9f067ef3c59518ba5b92003a768bd19d91c09280`
+- Collection creation date: 2026-11-03
+
+Twenty-four packs, 29,709 archive entries. Model counts below are the glTF/GLB payload.
+
+| Pack | glTF | GLB | Role in this game |
+| --- | --- | --- | --- |
+| Adventurers 2.0 | 58 | 13 | Base heroes, incl. new Druid, Engineer, Ranger |
+| Skeletons 1.1 | 19 | 10 | Undead, incl. Necromancer and Skeleton Golem |
+| Mystery Monthly Series 4 (1.1) | 49 | 31 | Paladin, Ninja, Orc Raider, Werewolf, Monster |
+| Mystery Monthly Series 5 (1.1) | 46 | 18 | Black Knight, Tiefling, Vampire, Witch, Frost Golem |
+| Mystery Monthly Series 6 (1.1) | 36 | 18 | Cleric, Lorekeeper, Marksman, Orc Brute, Plant Warrior |
+| Dungeon Pack 1.1 | 283 | 0 | Dungeon architecture and props |
+| Fantasy Weapons Bits 1.0 | 48 | 0 | Weapons, for visible equipped gear |
+| RPG Tools Bits 1.0 | 69 | 0 | Adventuring equipment |
+| Halloween Bits 1.0 | 102 | 0 | Seasonal props and monsters |
+| Resource Bits 1.0 | 132 | 0 | Materials and resources |
+| Furniture Bits 1.0 | 74 | 0 | Interiors |
+| Forest Nature Pack 1.0 | 1588 | 0 | Overland and surface scenes |
+| Medieval Hexagon Pack 1.0.1 | 404 | 0 | Hex terrain |
+| Platformer, Block, Board Game, City Builder, Prototype, Restaurant, Space Base, Holiday, Mixed Bag 1 and 2 | — | — | Available; not yet used |
+
+Verified in engine on November 7, 2026: all **61 character GLB models** load through the
+project's existing `GLTFLoader` path with zero failures. See `docs/art-direction.md` for
+the visual comparison.
+
+The Dungeon Pack 1.1 is a drop-in replacement for the currently bundled Dungeon Remastered
+1.0: every prop the game already references (`floor_tile_large`, `pillar_decorated`,
+`wall`, `torch_mounted`, `rubble_large`, `barrel_large`, `table_long_decorated_A`,
+`candle_triple`, `shelf_small_candles`, `chest`, `stairs_wide`, `banner_patternB_green`)
+is present by the same name.
+
+Series 4 to 6 are documented by the creator as "technically identical to the Adventurer
+characters", so they share the rig and animation format already in use. Series 4 is mixed
+fantasy and modern (it includes a car and an animatronic bear); Series 5 and 6 are
+consistently fantasy.
