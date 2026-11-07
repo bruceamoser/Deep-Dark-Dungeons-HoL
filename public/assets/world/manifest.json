@@ -1,0 +1,318 @@
+{
+  "source": "https://kaylousberg.itch.io/kaykit-complete",
+  "license": "CC0-1.0",
+  "files": [
+    {
+      "file": "dungeon/floor_tile_large.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/floor_tile_large.gltf",
+      "sha256": "c9c8807b44e18ecf1cb058b45f237008a23503e95e2d2282498730c87a734af1"
+    },
+    {
+      "file": "dungeon/floor_tile_large.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/floor_tile_large.bin",
+      "sha256": "d4649c85286ff59fbf4b3fc8e5b228dc63ee2bb6914dbe716ca88acc9937ab23"
+    },
+    {
+      "file": "dungeon/dungeon_texture.png",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/dungeon_texture.png",
+      "sha256": "ceb331d6ed53273da5e26808560bca8496f8f6ebc12d83b570c0e317560f1d03"
+    },
+    {
+      "file": "dungeon/pillar_decorated.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/pillar_decorated.gltf",
+      "sha256": "e37f204f4dc911c8b5a0f13121aa7857026cd2b6d5e9a665dc67bcc247680342"
+    },
+    {
+      "file": "dungeon/pillar_decorated.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/pillar_decorated.bin",
+      "sha256": "83aeabff7f9dfa4521ecb7297445fefc9c13df47dbd9a03ada08049888b53b97"
+    },
+    {
+      "file": "dungeon/wall.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall.gltf",
+      "sha256": "e7262d242545816fde7ab138be802a50e5e4af0a5a392682a32c5657184d4de1"
+    },
+    {
+      "file": "dungeon/wall.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall.bin",
+      "sha256": "9f3f536e63c0cc8320450adaa1bc8dd2d8865b2b45d1986fbb97311f0ab15682"
+    },
+    {
+      "file": "dungeon/wall_half.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_half.gltf",
+      "sha256": "7601b663ca48010159da2800ec572116e8a2a06af981caedef6030aa5db65714"
+    },
+    {
+      "file": "dungeon/wall_half.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_half.bin",
+      "sha256": "e6b485a3e9c6b1b70e1bd9dffa6d91548a51b93628736276b8b3b9a6ba1aa6b3"
+    },
+    {
+      "file": "dungeon/wall_cracked.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_cracked.gltf",
+      "sha256": "4eb34d05e4bc5f38d7e1ba1adb9ce8cb6e73ddcf15daaec433a838c2f0bec38b"
+    },
+    {
+      "file": "dungeon/wall_cracked.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_cracked.bin",
+      "sha256": "8d8b28d627df70806f0f298881cff53af987e16247035fec74b93b1241280c3d"
+    },
+    {
+      "file": "dungeon/wall_inset_shelves_decoratedA.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_inset_shelves_decoratedA.gltf",
+      "sha256": "bc92757b6508389be28d1fad4ede6b4b1f733b703b830ebafec065ad7f9e2d87"
+    },
+    {
+      "file": "dungeon/wall_inset_shelves_decoratedA.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_inset_shelves_decoratedA.bin",
+      "sha256": "f5f694859daf9e2f08bf85d8e33f7f06ce876a4c01e4e5a248cf265a581e5257"
+    },
+    {
+      "file": "dungeon/wall_inset_candles.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_inset_candles.gltf",
+      "sha256": "2f9a39ddb0d7e1aedb19068b4c784292c08692ff3c2f65ad4672c8bfe3884939"
+    },
+    {
+      "file": "dungeon/wall_inset_candles.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_inset_candles.bin",
+      "sha256": "0a2c289eee2be8b05ca5875ff1dfc48b46ce10cded9045c08040ddb16e74a531"
+    },
+    {
+      "file": "dungeon/wall_shelves.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_shelves.gltf",
+      "sha256": "2650bfb9a530a42b863f40a9f90e79788245e4e605c51598998813004d1d1bcc"
+    },
+    {
+      "file": "dungeon/wall_shelves.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/wall_shelves.bin",
+      "sha256": "9d9dce26e6048f930cc7406a1853e5b870c0d698ddfed4ada9d0715bb5193afa"
+    },
+    {
+      "file": "dungeon/torch_mounted.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/torch_mounted.gltf",
+      "sha256": "29f1cb66f59d63b8076ca412e83de474a01aa38f27ae974846ee993caf97e16d"
+    },
+    {
+      "file": "dungeon/torch_mounted.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/torch_mounted.bin",
+      "sha256": "57b8f27ec3c52dcd478e8c916b38dfd0b309e5b68c32d909e282beb4a29559d5"
+    },
+    {
+      "file": "dungeon/rubble_large.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/rubble_large.gltf",
+      "sha256": "ec76b40daae2426b59a9e8cd4078f71280fa73ce1eb8c58a4d58d59a6b581b50"
+    },
+    {
+      "file": "dungeon/rubble_large.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/rubble_large.bin",
+      "sha256": "364e30456c7d2719471c919af1a85a3d117b6b1f1c124eadc728d29c28846510"
+    },
+    {
+      "file": "dungeon/barrel_large.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/barrel_large.gltf",
+      "sha256": "2f9aa50ee9b2dcb4434437afa3658be87b57bcfc7ebea750ab3885aa6dab69de"
+    },
+    {
+      "file": "dungeon/barrel_large.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/barrel_large.bin",
+      "sha256": "a76825e80db9d8508a760d4f72d6d086aebbd0857af5e374e4985a739c664208"
+    },
+    {
+      "file": "dungeon/table_small_decorated_A.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/table_small_decorated_A.gltf",
+      "sha256": "0b4ae0bf50c148d9e77284e63515cf5a89a2dde100e2333949230c4b52d4c1d7"
+    },
+    {
+      "file": "dungeon/table_small_decorated_A.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/table_small_decorated_A.bin",
+      "sha256": "46ee8635f06a093a5aaf3b0a2f48f5b4b570f9989569a9adbf6cd0282f8fe053"
+    },
+    {
+      "file": "dungeon/candle_triple.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/candle_triple.gltf",
+      "sha256": "aaedcfa4c76bd509e808509e2affabaacea71af8287006a157789d75fcd4fef8"
+    },
+    {
+      "file": "dungeon/candle_triple.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/candle_triple.bin",
+      "sha256": "c790898c68fa5da676fd189777ecfa5a6c898544c07cd6f17844a07c5612d614"
+    },
+    {
+      "file": "dungeon/shelf_small_candles.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/shelf_small_candles.gltf",
+      "sha256": "b7b373d0c18b4b5d46a9f027cfd3c83bad2bfc4c087d5fc8a05918826be66cc5"
+    },
+    {
+      "file": "dungeon/shelf_small_candles.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/shelf_small_candles.bin",
+      "sha256": "331b30051400485f8309d776a3fff31b80b44c6380588a9df62ddf07b617691d"
+    },
+    {
+      "file": "dungeon/chest.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest.gltf",
+      "sha256": "25c1770655f555e266aadbc1936f5608ae2832a328f183277309c82c549afb5d"
+    },
+    {
+      "file": "dungeon/chest.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/chest.bin",
+      "sha256": "2c41c61df12691a7bdae510433588ce82bbf0593622b986ae2e0981f67e48ae3"
+    },
+    {
+      "file": "dungeon/stairs_wide.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/stairs_wide.gltf",
+      "sha256": "b2a1c1f88ff616ddbf5e8c59146fa6d00fcc52e8980c8956946d309461daea9d"
+    },
+    {
+      "file": "dungeon/stairs_wide.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/stairs_wide.bin",
+      "sha256": "c806f52abf84b590bad40e3ded8abfb12d2a899b5eaea61aff34b8be7bca4cee"
+    },
+    {
+      "file": "dungeon/banner_patternB_green.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/banner_patternB_green.gltf",
+      "sha256": "5f11661fdb21c33318e5262f994617ade68eee19cf6df80c8ee293ccb06dc3f7"
+    },
+    {
+      "file": "dungeon/banner_patternB_green.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/banner_patternB_green.bin",
+      "sha256": "14eca6a62e50fe58d39aca757ec00c104c5c9c5819b7777b2edef011cc5f3286"
+    },
+    {
+      "file": "dungeon/bookcase_single_decoratedA.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/bookcase_single_decoratedA.gltf",
+      "sha256": "c2181a5b35ca5b7c281b912702399f5a6d1218a2065c8dd462f765c74e9c18cc"
+    },
+    {
+      "file": "dungeon/bookcase_single_decoratedA.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/bookcase_single_decoratedA.bin",
+      "sha256": "00d2fc9d948b6c74a49df2562ce69cfc641c4eaa5c2b03462428824218ef5a4c"
+    },
+    {
+      "file": "dungeon/crates_stacked.gltf",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/crates_stacked.gltf",
+      "sha256": "ffd45fe1637f6ced570b489771958034ae41f077debca69eafd7c825318062ab"
+    },
+    {
+      "file": "dungeon/crates_stacked.bin",
+      "pack": "KayKit Dungeon Pack 1.1",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/crates_stacked.bin",
+      "sha256": "70766a489c2828c489616190d2dfab0cbcda5bce7381c38be1ccdc73e8785575"
+    },
+    {
+      "file": "crypt/coffin.gltf",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/coffin.gltf",
+      "sha256": "cde76bb035c737376745b0285b2fdf8306c716bcd03945aff9cf9c85fa3713cb"
+    },
+    {
+      "file": "crypt/coffin.bin",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/coffin.bin",
+      "sha256": "e1ec36f8d362cb55423ec9b87397c67cbbe68e5ee71c3508e069b591cf9c27b8"
+    },
+    {
+      "file": "crypt/halloweenbits_texture.png",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/halloweenbits_texture.png",
+      "sha256": "d074682caf7f270a9e73097ec28bd7a89585ae5718ec2a498c5851ff8a6919fc"
+    },
+    {
+      "file": "crypt/shrine_candles.gltf",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/shrine_candles.gltf",
+      "sha256": "21bc3c39fc773b4ee0e09813d8dd242dd9ba35dac2c53c53755e9888c073d1e0"
+    },
+    {
+      "file": "crypt/shrine_candles.bin",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/shrine_candles.bin",
+      "sha256": "42b49ad164197c954967b05fd2fc48525541ddc8e32548819d2f73565a6b27ad"
+    },
+    {
+      "file": "crypt/ribcage.gltf",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/ribcage.gltf",
+      "sha256": "ff40320e576fe686a815c43aea656fcd9202a6a944d047182c821300a0aaec6e"
+    },
+    {
+      "file": "crypt/ribcage.bin",
+      "pack": "KayKit Halloween Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/ribcage.bin",
+      "sha256": "71f60385c15b987d2549cc44d0e5ec4b44b41987c0803c05b612d818062f9ea9"
+    },
+    {
+      "file": "tools/anvil.gltf",
+      "pack": "KayKit RPG Tools Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/anvil.gltf",
+      "sha256": "6878db53dfdceac3970dd881808f02f38ea06c59cb3dbfe9ae3a463123d7499a"
+    },
+    {
+      "file": "tools/anvil.bin",
+      "pack": "KayKit RPG Tools Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/anvil.bin",
+      "sha256": "4dabc949ce4c0876731693c2e70e7020da9d48592c7a469803ba2aaa23ff88d2"
+    },
+    {
+      "file": "tools/tools_bits_texture.png",
+      "pack": "KayKit RPG Tools Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/tools_bits_texture.png",
+      "sha256": "e0663527c0c0a8e9f4dba0bb15261c367de31981cb3e3ec80f84bf6a5e47fc60"
+    },
+    {
+      "file": "resources/Containers_Crate_Medium_Wood.gltf",
+      "pack": "KayKit Resource Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Resource Bits 1.0/Assets/gltf/Containers_Crate_Medium_Wood.gltf",
+      "sha256": "a584ad0d00df75f171eda1ba4c3ef9b398c3c5eef01e2caa401367b61bc72968"
+    },
+    {
+      "file": "resources/Containers_Crate_Medium_Wood.bin",
+      "pack": "KayKit Resource Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Resource Bits 1.0/Assets/gltf/Containers_Crate_Medium_Wood.bin",
+      "sha256": "ead1a784828dfbaf0597a76efa367a60d019556733a18e3329f213d9792deef0"
+    },
+    {
+      "file": "resources/resource_bits_texture.png",
+      "pack": "KayKit Resource Bits 1.0",
+      "archivePath": "The Complete KayKit Collection v8/KayKit Resource Bits 1.0/Assets/gltf/resource_bits_texture.png",
+      "sha256": "62a252aba7bc9382effe48d93b976605d8fa70a3a40af7fc52362f5ca89c135b"
+    }
+  ]
+}

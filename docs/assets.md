@@ -98,3 +98,23 @@ geometry. No new external dependency or paid asset was introduced.
 
 Town navigation uses its own street graph and presentation coordinates. It does
 not replace dungeon maps, square-grid rules, saved floor state or service rules.
+
+## Dungeon architecture and room dressing (#23)
+
+`public/assets/world/` contains a curated runtime subset from Dungeon Pack 1.1,
+Halloween Bits 1.0, RPG Tools Bits 1.0 and Resource Bits 1.0, all from the owned
+Complete KayKit Collection v8 (CC0-1.0). The manifest records each source archive
+path, pack and SHA-256 hash, including external buffers and shared atlases.
+The original collection license is included with whitespace normalized.
+
+Dungeon walls, authored cutaway half-walls, floor panels, stairs, coffers and
+practical props now use Dungeon 1.1. Crypt, archive, shrine and storeroom dressing
+uses real coffins, ribs, shrines, bookcases, tables, crates and an anvil. Solid
+dressing is restricted to existing obstacle cells and fitted within a 1.9-unit
+footprint, preserving the 2.4-unit tactical cells and routes. Lost expedition
+caches use a Resource Bits wooden crate rather than another coffer.
+
+The 203-model legacy Dungeon Remastered runtime folder was removed after all
+runtime references migrated. Its historical source URLs/commits above remain
+the provenance record. The new subset is approximately 1.2 MB versus 9.1 MB for
+the superseded folder; the downloaded collection archive remains outside Git.

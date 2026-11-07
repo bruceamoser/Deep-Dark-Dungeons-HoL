@@ -307,3 +307,20 @@ recall, all 58 creature/17 condition adapters, run checkpoints and native close
 saving. Personal saves/system installation were untouched. Final status-label
 spacing was separately rendered at both screen sizes. Author review only;
 Windows runtime remains untested.
+
+## Curated dungeon architecture and dressing — November 7, 2026 (#23)
+
+World-asset tests verified every runtime buffer/atlas dependency against its
+recorded SHA-256, all four deterministic room styles, and blocked-cell-only
+furniture placement. Dungeon-curation tests and production build passed.
+Rendered captures of crypt, archive, shrine and storeroom variants were visually
+inspected; authored cutaways, 1.9-unit dressing footprints and repeated floor
+rebuilds passed without page errors. The unused 9.1 MB legacy dungeon folder was
+removed after all runtime references migrated to the 1.2 MB curated subset.
+
+The full packaged Linux native suite passed under the exact sandboxed launcher,
+including movement, cache hover/collect/recovery, stairs, combat/effects,
+visibility, all creature/condition adapters, floor/recall reloads, run checkpoints
+and native close saving. Generated floor resources are disposed on rebuild while
+shared authored geometry/materials remain owned by the asset map. Personal
+installation/saves were untouched. Author review only; Windows runtime untested.
