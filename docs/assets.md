@@ -146,3 +146,15 @@ magical equipment keeps its existing enchantment feedback. Kobolds use fantasy
 raiders and animated armor uses Black Knight rather than sci-fi robots. Unused
 modern character imports and superseded Adventurers/Skeletons 1.x folders are
 removed from the runtime bundle.
+
+### Greyhaven identity refresh (#27)
+
+Original vector artwork: a warm lantern inside a stone gate, blue town roofs and
+a gold hexagonal frame. `art/source/greyhaven-seal.svg` is the master;
+`greyhaven-seal.vectorcraft` is the editable VectorCraft round-trip and
+`art/exports/greyhaven-seal.png` the 512px export. The runtime uses the matching
+SVG for sharp interface/loading/favicon marks and PNG for native application
+icons. `python3 scripts/artcraft-seal.py` regenerates both runtime copies through
+the locally installed `vectorcraft-cli` found on PATH. No external artwork,
+font or AI-generated raster was introduced. The loading accent respects reduced
+motion preferences.

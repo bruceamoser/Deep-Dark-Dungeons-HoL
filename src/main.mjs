@@ -59,7 +59,7 @@ const attempt = (fn) => {
   }
 };
 ui.innerHTML =
-  '<div class="loading-screen"><div class="eyebrow">HEROES OF LEGEND</div><h1>Deep Dark Dungeons</h1><div class="spinner"></div><p>Lighting the way beneath Greyhaven…</p></div>';
+  '<div class="loading-screen"><img class="loading-seal" src="/art/greyhaven-seal.svg" alt="Greyhaven lantern and gate"><div class="eyebrow">HEROES OF LEGEND</div><h1>Deep Dark<br>Dungeons</h1><div class="loading-rule" aria-hidden="true"></div><p role="status">Lighting the way beneath Greyhaven…</p></div>';
 let game,
   scene,
   townView,
@@ -462,7 +462,7 @@ function render() {
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.png" alt="Greyhaven seal">DEEP DARK DUNGEONS<small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.svg" alt="Greyhaven seal"><span class="brand-title">Deep Dark<br>Dungeons</span><small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2></div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
   townView.setActive(town, game.party);
   townView.party.visible = game.mode === "town";
   scene.renderEnabled = !town;
@@ -470,7 +470,7 @@ function render() {
   if (town) {
     ui.innerHTML =
       header +
-      `<aside class="town-directory"><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Welcome to<br>Greyhaven</h1><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><span>${esc(s.id === "descend" && c.returnPassage ? `Return to depth ${c.returnPassage.depth}` : s.label)}</span><small>${esc(s.place)}<kbd>${s.hotkey.toUpperCase()}</kbd></small></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<aside class="town-directory"><div class="town-masthead"><img src="/art/greyhaven-seal.svg" alt=""><div><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Greyhaven</h1></div></div><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><span>${esc(s.id === "descend" && c.returnPassage ? `Return to depth ${c.returnPassage.depth}` : s.label)}</span><small>${esc(s.place)}<kbd>${s.hotkey.toUpperCase()}</kbd></small></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
   } else {
     const combat = game.mode === "combat",
       b = game.budget;

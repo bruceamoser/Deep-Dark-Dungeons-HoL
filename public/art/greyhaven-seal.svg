@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+ <title id="title">Greyhaven — the last light above</title>
+ <desc id="desc">A warm lantern within a stone gate, framed by blue roofs and a gold hexagonal seal.</desc>
+ <path fill="#0b1820" d="M128 5 235 67v122l-107 62L21 189V67Z"/>
+ <path fill="#d8b46d" d="M128 9 231 69v118l-103 60-103-60V69Zm0 9L33 73v110l95 55 95-55V73Z"/>
+ <path fill="#203b47" d="m128 26 88 51v102l-88 51-88-51V77Z"/>
+ <path fill="#142b36" d="M128 26v204l88-51V77Z"/>
+ <path fill="#375967" d="m40 159 30-33 27 18 31-39 29 34 28-20 31 40v20l-88 51-88-51Z"/>
+ <path fill="#0c1c25" d="m128 190 55-1-55 35-55-35Z"/>
+ <path fill="#b6b9aa" d="M60 95h31v87H60Zm105 0h31v87h-31Z"/>
+ <path fill="#6e817e" d="M78 95h13v87H78Zm105 0h13v87h-13Z"/>
+ <path fill="#d5d2b8" d="M55 94h40v12H55Zm106 0h40v12h-40Z"/>
+ <path fill="#46778b" d="m51 94 24-38 24 38Zm106 0 24-38 24 38Z"/>
+ <path fill="#284d63" d="M75 56v38h24Zm106 0v38h24Z"/>
+ <path fill="#d8b46d" d="m75 47 4 8-4 8-4-8Zm106 0 4 8-4 8-4-8Z"/>
+ <path fill="#a9afa2" d="M83 182v-63a45 45 0 0 1 90 0v63h-23v-61a22 22 0 0 0-44 0v61Z"/>
+ <path fill="#d4d0b5" d="M83 119a45 45 0 0 1 90 0h-23a22 22 0 0 0-44 0Z"/>
+ <path fill="#7b8b83" d="M151 121v61h22v-63h-23Z"/>
+ <path fill="#10232b" d="M111 183v-61a17 17 0 0 1 34 0v61Z"/>
+ <path fill="none" stroke="#6b7c75" stroke-width="3" d="m103 89 13 18m37-18-13 18m-12-33v25M83 139h23m44 0h23M83 163h23m44 0h23M60 126h22m92 0h22M60 153h22m92 0h22"/>
+ <path fill="#d8b46d" d="M126 109h4v15h-4Zm-12 17h28l-5 8h-18Z"/>
+ <path fill="#8b5b2d" d="M117 133h22v32h-22Z"/>
+ <path fill="#ffcf77" d="M121 135h14v25h-14Z"/>
+ <path fill="#ffe4a1" d="m128 138 4 12-4 7-4-7Z"/>
+ <path fill="#e4b462" d="M114 162h28v5h-28Zm10 7h8v5h-8Z"/>
+ <path fill="#d2c7a1" d="M54 181h148v7H54Z"/>
+ <path fill="#a18b5f" d="M76 189h104v5H76Zm18 8h68v4H94Zm17 7h34v4h-34Z"/>
+ <path fill="#d8b46d" d="m128 35 4 7-4 7-4-7ZM43 111l4 6-4 6-4-6Zm170 0 4 6-4 6-4-6Z"/>
+</svg>
