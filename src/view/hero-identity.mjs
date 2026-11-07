@@ -30,10 +30,16 @@ export function dressIdentity(model, hero, owned, opts = {}) {
     white = material("#ddd7c7"),
     lip = material(new T.Color(a.skin).multiplyScalar(0.64)),
     accent = material(a.accentColor, { metalness: 0.55, roughness: 0.4 });
+  // The Adventurers 2.0 and Series packs model a complete head and face. Drawing the
+  // generated sphere face over it produced the goggle look and hid the pack's own
+  // sculpt, so the overlay is opt-in: only a bare rig that needs a face asks for it.
+  const drawFace = opts.proceduralFace === true;
+  const female = a.sex === "female";
+  const soft = a.face === "soft";
   let head;
   model.traverse((o) => {
     if (o.isBone && o.name === "head") head = o;
-    if (o.isMesh && /_(Head|Hat)$/.test(o.name)) o.visible = false;
+    if (drawFace && o.isMesh && /_(Head|Hat)$/.test(o.name)) o.visible = false;
   });
   // Recolor existing garment palette, preserving shadows, leather and metal.
   model.traverse((o) => {
@@ -66,7 +72,11 @@ export function dressIdentity(model, hero, owned, opts = {}) {
     m.customProgramCacheKey = () =>
       `identity-${isCape}-${isCloth}-${a.skin}-${a.clothColor}-${a.accentColor}`;
   });
-  if (!head) return a;
+  if (drawFace && head) buildFace();
+  finish();
+  return a;
+
+  function buildFace() {
   const face = new T.Group();
   face.name = "Individual face";
   head.add(face);
@@ -93,8 +103,7 @@ export function dressIdentity(model, hero, owned, opts = {}) {
   };
   const oval = (name, parent, mat, pos, scale, segments = 16) =>
     shape(name, parent, new T.SphereGeometry(1, segments, 12), mat, pos, scale);
-  const female = a.sex === "female",
-    soft = a.face === "soft";
+
   oval(
     "Face",
     face,
@@ -422,6 +431,9 @@ export function dressIdentity(model, hero, owned, opts = {}) {
           [1, 1, 1],
           [Math.PI / 2, 0, 0],
         );
+  }  // end buildFace
+
+  function finish() {
   const build = { slender: 0.9, balanced: 1, broad: 1.13 }[a.build];
   // Ancestry posture and reach, applied to the rig rather than the face.
   if (sig.hunch) {
@@ -442,5 +454,5 @@ export function dressIdentity(model, hero, owned, opts = {}) {
   model.userData.height = 2.2 * look.height * 0.85;
   dressOutfit(model, hero, owned, opts);
   model.userData.appearance = { ...a, ancestry };
-  return a;
+  }  // end finish
 }
