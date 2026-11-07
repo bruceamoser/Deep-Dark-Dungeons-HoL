@@ -145,10 +145,10 @@ export async function verifyBuildForge(page) {
     const visual = await page.evaluate((id) => {
       const { model, statusVisuals } =
         window.__ddd.scene.entities.get("hero-0");
-      let opacity = 1;
+      let opacity = 0;
       model.traverse((o) => {
         if (o.isMesh && o.visible)
-          opacity = Math.min(
+          opacity = Math.max(
             opacity,
             Array.isArray(o.material)
               ? o.material[0].opacity

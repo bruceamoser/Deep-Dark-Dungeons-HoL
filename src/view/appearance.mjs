@@ -270,13 +270,35 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       }
     }
   }
+  // Rig dimensions are consistent; ignore hidden source accessories when scaling.
+  if (!enemy) {
+    // Preserve the pack's authored clothing and accessories; equipment and palette
+    // choices still apply through the shared sheet/gameplay appearance pipeline.
+    const wornSlot = (slot) => items.some((i) => i.worn && i.slot === slot);
+    dressIdentity(model, hero, owned, {
+      authoredOutfit: true,
+      occupied: {
+        head: wornSlot("head"),
+        belt: wornSlot("waist"),
+        feet: wornSlot("feet"),
+        torso: tier !== "cloth",
+      },
+      seed: (hero.name ?? "").length + 3,
+    });
+  }
   if (!enemy) {
     const faded = [];
+    const cloneMaterial = (source) => {
+      const material = source.clone();
+      material.onBeforeCompile = source.onBeforeCompile;
+      material.customProgramCacheKey = source.customProgramCacheKey;
+      return material;
+    };
     model.traverse((o) => {
       if (!o.isMesh) return;
       o.material = Array.isArray(o.material)
-        ? o.material.map((m) => m.clone())
-        : o.material.clone();
+        ? o.material.map(cloneMaterial)
+        : cloneMaterial(o.material);
       for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
         owned.push(m);
         faded.push({ m, opacity: m.opacity, transparent: m.transparent });
@@ -294,22 +316,6 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       model.userData.concealed = value;
     };
     model.userData.setConcealed(!!hero.concealed);
-  }
-  // Rig dimensions are consistent; ignore hidden source accessories when scaling.
-  if (!enemy) {
-    // Preserve the pack's authored clothing and accessories; equipment and palette
-    // choices still apply through the shared sheet/gameplay appearance pipeline.
-    const wornSlot = (slot) => items.some((i) => i.worn && i.slot === slot);
-    dressIdentity(model, hero, owned, {
-      authoredOutfit: true,
-      occupied: {
-        head: wornSlot("head"),
-        belt: wornSlot("waist"),
-        feet: wornSlot("feet"),
-        torso: tier !== "cloth",
-      },
-      seed: (hero.name ?? "").length + 3,
-    });
   }
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
   const clips = gameClips({ skeleton: /^Skeleton/.test(name) });

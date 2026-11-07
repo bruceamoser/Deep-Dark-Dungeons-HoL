@@ -14,12 +14,12 @@ export function createActorEnvironment(renderer) {
   }
 }
 
-export function lightActor(model, texture) {
+export function lightActor(model, texture, { cloneMaterials = true } = {}) {
   const materials = new Map();
   const copy = (source) => {
     if (!source.isMeshStandardMaterial) return source;
     if (materials.has(source)) return materials.get(source);
-    const material = source.clone();
+    const material = cloneMaterials ? source.clone() : source;
     // Material.clone does not preserve custom palette shader callbacks.
     material.onBeforeCompile = source.onBeforeCompile;
     material.customProgramCacheKey = source.customProgramCacheKey;
@@ -40,7 +40,8 @@ export function lightActor(model, texture) {
         material.envMapIntensity = lit ? 0.38 : 0.12;
     },
     dispose() {
-      for (const material of materials.values()) material.dispose();
+      if (cloneMaterials)
+        for (const material of materials.values()) material.dispose();
       materials.clear();
     },
   };

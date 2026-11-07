@@ -51,3 +51,19 @@ test("shared and multi-material meshes retain sharing inside one actor", () => {
   source.dispose();
   glow.dispose();
 });
+
+test("already-owned hero materials keep live concealment updates and their disposal owner", () => {
+  const material = new T.MeshStandardMaterial();
+  const model = new T.Mesh(new T.BoxGeometry(), material);
+  const light = lightActor(model, new T.Texture(), { cloneMaterials: false });
+  material.opacity = 0.38;
+  assert.equal(model.material.opacity, 0.38);
+  let disposed = false;
+  material.addEventListener("dispose", () => {
+    disposed = true;
+  });
+  light.dispose();
+  assert.equal(disposed, false);
+  model.geometry.dispose();
+  material.dispose();
+});

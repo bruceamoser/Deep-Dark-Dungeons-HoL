@@ -570,7 +570,9 @@ export class Scene {
     const entity = {
       group,
       model,
-      lighting: lightActor(model, this.actorEnvironment.texture),
+      lighting: lightActor(model, this.actorEnvironment.texture, {
+        cloneMaterials: isEnemy,
+      }),
       ring,
       mixer,
       clips,
