@@ -92,9 +92,8 @@ well, trees, rocks, crates, barrels and grass foundation. Runtime glTF/buffer/at
 dependencies total approximately 1 MB under `public/assets/town/`. The manifest
 records each original archive path and SHA-256 hash; the original CC0 license
 text is included (whitespace normalized). Strategic asset pivots are centered in
-presentation wrappers; the original geometry is preserved. Cobblestone street
-instances, party contact shadows and destination markers are original runtime
-geometry. No new external dependency or paid asset was introduced.
+presentation wrappers; the original geometry is preserved. Continuous packed-earth streets, party contact shadows and destination markers
+are original runtime geometry. No new external dependency or paid asset was introduced.
 
 Town navigation uses its own street graph and presentation coordinates. It does
 not replace dungeon maps, square-grid rules, saved floor state or service rules.

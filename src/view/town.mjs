@@ -1,6 +1,5 @@
 import * as T from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { equipmentAppearance } from "./appearance.mjs";
 import { createActorEnvironment, lightActor } from "./actor-lighting.mjs";
@@ -263,39 +262,72 @@ export class TownView {
     return obj;
   }
   buildStreets() {
-    const stones = new Map();
-    for (const [a, b] of TOWN_EDGES) {
-      const start = TOWN_NODES[a],
-        end = TOWN_NODES[b];
-      for (let t = 0; t <= 6; t += 0.46)
-        for (let side = -0.92; side <= 0.93; side += 0.46) {
-          const x =
-              start.x +
-              ((end.x - start.x) * t) / 6 +
-              (start.x === end.x ? side : 0),
-            z =
-              start.z +
-              ((end.z - start.z) * t) / 6 +
-              (start.z === end.z ? side : 0);
-          stones.set(`${x.toFixed(2)},${z.toFixed(2)}`, { x, z });
-        }
-    }
-    const geo = new RoundedBoxGeometry(0.44, 0.09, 0.44, 1, 0.035),
-      material = new T.MeshStandardMaterial({
-        color: 0xc2b69a,
-        roughness: 0.95,
-      });
-    const mesh = new T.InstancedMesh(geo, material, stones.size);
+    const step = 0.25,
+      halfWidth = 1;
+    const edges = TOWN_EDGES.map(([a, b]) => [TOWN_NODES[a], TOWN_NODES[b]]);
+    const inside = (x, z) =>
+      edges.some(([a, b]) =>
+        a.x === b.x
+          ? Math.abs(x - a.x) < halfWidth &&
+            z > Math.min(a.z, b.z) - halfWidth &&
+            z < Math.max(a.z, b.z) + halfWidth
+          : Math.abs(z - a.z) < halfWidth &&
+            x > Math.min(a.x, b.x) - halfWidth &&
+            x < Math.max(a.x, b.x) + halfWidth,
+      );
+    const positions = [],
+      colors = [],
+      indices = [],
+      vertices = new Map();
+    const earth = new T.Color(0xa98159);
+    const vertex = (x, z) => {
+      const key = `${x},${z}`;
+      if (vertices.has(key)) return vertices.get(key);
+      const index = positions.length / 3;
+      vertices.set(key, index);
+      positions.push(x * step, 0.02, z * step);
+      const shade =
+        0.94 +
+        Math.sin(x * 1.13 + z * 0.71) * 0.035 +
+        Math.cos(x * 0.29 - z * 0.63) * 0.025;
+      colors.push(earth.r * shade, earth.g * shade, earth.b * shade);
+      return index;
+    };
+    // One welded surface: straight edges and no paving seams or overlapping strips.
+    for (let x = -28; x < 28; x++)
+      for (let z = -28; z < 28; z++) {
+        if (!inside((x + 0.5) * step, (z + 0.5) * step)) continue;
+        const a = vertex(x, z),
+          b = vertex(x + 1, z),
+          c = vertex(x, z + 1),
+          d = vertex(x + 1, z + 1);
+        indices.push(a, c, b, b, c, d);
+      }
+    const geometry = new T.BufferGeometry();
+    geometry.setAttribute(
+      "position",
+      new T.Float32BufferAttribute(positions, 3),
+    );
+    geometry.setAttribute("color", new T.Float32BufferAttribute(colors, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    const mesh = new T.Mesh(
+      geometry,
+      new T.MeshStandardMaterial({ vertexColors: true, roughness: 1 }),
+    );
+    mesh.name = "Straight dirt streets";
     mesh.receiveShadow = true;
-    const matrix = new T.Matrix4();
-    let i = 0;
-    for (const { x, z } of stones.values()) {
-      matrix.makeTranslation(x, 0.015, z);
-      mesh.setMatrixAt(i, matrix);
-      const shade = 0.84 + 0.12 * (Math.sin(x * 31 + z * 17) * 0.5 + 0.5);
-      mesh.setColorAt(i++, new T.Color(shade, shade, shade));
-    }
     this.scene.add(mesh);
+    for (const [a, b] of edges)
+      for (const [t, side] of [
+        [0.3, 0.84],
+        [0.7, -0.84],
+      ]) {
+        const x = a.x + (b.x - a.x) * t + (a.x === b.x ? side : 0);
+        const z = a.z + (b.z - a.z) * t + (a.z === b.z ? side : 0);
+        const rock = this.place("rock_single_A", x, z, 0.14);
+        rock.rotation.y = x + z;
+      }
   }
   setParty(party) {
     for (const a of this.actors) {
