@@ -844,11 +844,7 @@ export class Scene {
           e.data.torch?.lit || e.data.lantern
             ? 24 + Math.sin(t * 11) * 2 + Math.sin(t * 17)
             : 0;
-        const flame = e.model.getObjectByName("Torch flame");
-        if (flame) {
-          flame.visible = !!e.data.torch?.lit;
-          flame.scale.y = 1 + Math.sin(t * 13) * 0.12;
-        }
+        e.model.userData.setTorchLit?.(!!e.data.torch?.lit);
       }
       e.statusVisuals.sync(
         [

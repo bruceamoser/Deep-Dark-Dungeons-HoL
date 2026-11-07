@@ -125,11 +125,20 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   if (!enemy && hero.torch?.held) {
     const hand = melee ? left : held("item-ordinary-shield") ? right : right;
     if (hand) {
-      const torch = clone(
-        assets.get(hero.torch.lit ? "torchLit" : "torch").scene,
-      );
+      const torch = new T.Group();
       torch.name = "Readied torch";
       torch.scale.setScalar(0.65);
+      const unlit = clone(assets.get("torch").scene);
+      const lit = clone(assets.get("torchLit").scene);
+      unlit.name = "Authored unlit torch";
+      lit.name = "Authored lit torch";
+      torch.add(unlit, lit);
+      model.userData.setTorchLit = (value) => {
+        lit.visible = !!value;
+        unlit.visible = !value;
+        model.userData.torchLit = !!value;
+      };
+      model.userData.setTorchLit(hero.torch.lit);
       hand.add(torch);
     }
   }
