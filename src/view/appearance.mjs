@@ -1,4 +1,5 @@
 import { dressIdentity } from "./hero-identity.mjs";
+import { dressEquipped } from "./outfit.mjs";
 import { creatureAppearance } from "./creatures.mjs";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
@@ -212,40 +213,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     shield: !!held("item-ordinary-shield"),
   };
   if (!enemy) {
-    const adorn = (slot, boneName, geometry, position) => {
-      const item = items.find((i) => i.worn && i.slot === slot);
-      if (!item) return;
-      const material = new T.MeshStandardMaterial({
-        color: activeItemEffects(hero, item)[0]?.color ?? 0x776b52,
-        metalness: 0.7,
-        roughness: 0.35,
-      });
-      owned.push(geometry, material);
-      const mesh = new T.Mesh(geometry, material);
-      mesh.name = `Equipped ${slot}`;
-      mesh.position.set(...position);
-      const bone = [...bones.values()].find((b) => boneName.test(b.name));
-      (bone ?? model).add(mesh);
-    };
-    adorn(
-      "head",
-      /^head$/i,
-      new T.CylinderGeometry(0.29, 0.26, 0.12, 8, true),
-      [0, 0.15, 0],
-    );
-    adorn(
-      "waist",
-      /hips|pelvis/i,
-      new T.BoxGeometry(0.49, 0.1, 0.32),
-      [0, 0, 0],
-    );
-    for (const side of ["l", "r"])
-      adorn(
-        "feet",
-        new RegExp(`foot[._]?${side}$`, "i"),
-        new T.BoxGeometry(0.17, 0.14, 0.3),
-        [0, 0, 0.06],
-      );
+    // Worn gear is drawn with the same builders that dress clothing, so a found
+    // helmet, belt or pair of boots reads as equipment rather than a placeholder box.
+    dressEquipped(model, hero, owned, items);
     const enchanted = items.filter(
       (i) => i.carried && (i.held || i.worn) && i.effects?.length,
     );
@@ -334,7 +304,21 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     model.userData.setConcealed(!!hero.concealed);
   }
   // Rig dimensions are consistent; ignore hidden source accessories when scaling.
-  if (!enemy) dressIdentity(model, hero, owned);
+  if (!enemy) {
+    // The packed armoured bodies already carry clothing, so a garment shell over them
+    // would clip through plate. Cultural cloth therefore only layers onto the
+    // unarmoured body, while accessories still show beside worn gear.
+    const wornSlot = (slot) => items.some((i) => i.worn && i.slot === slot);
+    dressIdentity(model, hero, owned, {
+      occupied: {
+        head: wornSlot("head"),
+        belt: wornSlot("waist"),
+        feet: wornSlot("feet"),
+        torso: tier !== "cloth",
+      },
+      seed: (hero.name ?? "").length + 3,
+    });
+  }
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
   return { model, clips: assets.get(name).animations };
 }

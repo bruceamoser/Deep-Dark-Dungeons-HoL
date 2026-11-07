@@ -210,3 +210,46 @@ export const identityMethods = {
     this.emit("change");
   },
 };
+
+/**
+ * Silhouette traits that separate the ancestries at isometric distance, beyond the
+ * height/width/head scaling in ANCESTRY_LOOKS. Rendered by src/view/hero-identity.mjs.
+ */
+export const ANCESTRY_SIGNATURE = {
+  "ancestry-human": { brow: "plain", cheek: "plain", mouth: "plain" },
+  "ancestry-dwarf": {
+    brow: "heavy", cheek: "broad", mouth: "plain", braidRings: true, handScale: 1.12,
+  },
+  "ancestry-deep-dwarf": {
+    brow: "heavy", cheek: "hollow", mouth: "plain", braidRings: true,
+    stonePlating: true, handScale: 1.12,
+  },
+  "ancestry-elf": {
+    brow: "fine", cheek: "high", mouth: "plain", earCuff: true, handScale: 0.94,
+  },
+  "ancestry-high-elf": {
+    brow: "fine", cheek: "high", mouth: "plain", earCuff: true, circlet: true,
+    handScale: 0.94,
+  },
+  "ancestry-gnome": {
+    brow: "fine", cheek: "round", mouth: "plain", bigEyes: true, handScale: 1.08,
+  },
+  "ancestry-goblin": {
+    brow: "heavy", cheek: "hollow", mouth: "wide", longFingers: true,
+    hunch: 0.12, handScale: 1.05,
+  },
+  "ancestry-halfling": {
+    brow: "plain", cheek: "round", mouth: "plain", handScale: 0.96,
+  },
+  "ancestry-oath-bound": {
+    brow: "plain", cheek: "plain", mouth: "plain", stonePlating: true, noEars: true,
+  },
+  "ancestry-tallfolk": {
+    brow: "plain", cheek: "high", mouth: "plain", longNeck: true, handScale: 1.04,
+  },
+};
+
+/** Signature traits for an ancestry id, always resolving to a usable object. */
+export function signatureFor(ancestryId) {
+  return ANCESTRY_SIGNATURE[ancestryId] ?? ANCESTRY_SIGNATURE["ancestry-human"];
+}

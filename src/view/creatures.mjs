@@ -1,6 +1,8 @@
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
+import { creatureLook } from "../core/creature-variation.mjs";
+import { dressCreature } from "./creature-dress.mjs";
 const mat = (color, extra = {}) =>
   new T.MeshStandardMaterial({ color, roughness: 0.75, ...extra });
 function joint(a, b, r, material) {
@@ -186,6 +188,14 @@ export function creatureAppearance(assets, data, bow) {
       shield.scale.setScalar(0.65);
       hand.add(shield);
     }
+  }
+  // Theme and rank features are attached to the rig before it is scaled, so the
+  // measurements below account for the added silhouette.
+  const dressOwned = [];
+  dressCreature(body, creatureLook(look), dressOwned);
+  for (const asset of dressOwned) {
+    if (asset.isMaterial) ownedMaterials.add(asset);
+    else ownedGeometries.add(asset);
   }
   body.updateMatrixWorld(true);
   const box = new T.Box3().setFromObject(body),
