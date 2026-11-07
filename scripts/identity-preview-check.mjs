@@ -6,16 +6,15 @@ export async function verifyGameplayIdentity(page) {
   try {
     await page.locator('[data-hero="0"]').click();
     await page.locator('[data-tab="appearance"]').click();
-    await page.getByLabel("Sex", { exact: true }).selectOption("female");
-    await page.getByLabel("Hairstyle", { exact: true }).selectOption("braid");
-    await page.getByLabel("Facial hair", { exact: true }).selectOption("none");
+    await page.getByLabel("Hero model", { exact: true }).selectOption("Cleric");
+    await page.getByLabel("Build", { exact: true }).selectOption("broad");
+    await expect(page.locator("canvas[data-avatar=Cleric]")).toBeVisible();
     const appearance = JSON.parse(
       await page.locator("#hero-preview").getAttribute("data-appearance"),
     );
     expect(appearance).toMatchObject({
-      sex: "female",
-      hair: "braid",
-      beard: "none",
+      avatar: "Cleric",
+      build: "broad",
       ancestry: "ancestry-dwarf",
     });
     const model = await page.evaluate(
@@ -29,8 +28,10 @@ export async function verifyGameplayIdentity(page) {
     await page.reload();
     await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
     expect(
-      await page.evaluate(() => window.__ddd.game.active.draft.appearance.sex),
-    ).toBe("female");
+      await page.evaluate(
+        () => window.__ddd.game.active.draft.appearance.avatar,
+      ),
+    ).toBe("Cleric");
     await page.evaluate(() => {
       const { game: g, scene: s } = window.__ddd;
       g.pause();

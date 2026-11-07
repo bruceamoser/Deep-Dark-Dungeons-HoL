@@ -102,7 +102,24 @@ export async function verifyEffects(page) {
       enemyVisible: true,
     });
     expect(nocked.meshes).not.toContain("SphereGeometry");
-    await step(0.48);
+    await step(0.1);
+    expect(
+      await page.evaluate(() => {
+        let tension = 0;
+        window.__ddd.scene.entities
+          .get("hero-1")
+          .model.getObjectByName("Readied bow")
+          .traverse((m) => {
+            if (m.morphTargetDictionary?.Draw !== undefined)
+              tension = Math.max(
+                tension,
+                m.morphTargetInfluences[m.morphTargetDictionary.Draw],
+              );
+          });
+        return tension;
+      }),
+    ).toBeGreaterThan(0.25);
+    await step(0.38);
     const flight = await page.evaluate(() => {
       const s = window.__ddd.scene,
         e = s.effects[0];

@@ -1,3 +1,4 @@
+import { HERO_MODELS } from "../core/hero-avatars.mjs";
 import { tacticalViewMethods } from "./tactical-grid.mjs";
 import { battlefieldViewMethods } from "./battlefield.mjs";
 import { traitsOf } from "../core/ancestry-game.mjs";
@@ -269,25 +270,27 @@ export class Scene {
       let entry = this.interactables.get(item.id);
       if (!entry) {
         const stairs = ["entrance", "descent"].includes(item.kind);
+        const dropped = !!item.source?.dropped;
         const modelName = stairs
           ? "stairs"
-          : item.kind === "cache"
+          : item.kind === "cache" || dropped
             ? "cacheCrate"
             : item.source?.guardBossId
               ? "chestGold"
               : "chest";
         const obj = this.fittedProp(
           modelName,
-          item.x,
+          item.x + (dropped ? 0.65 : 0),
           item.z +
+            (dropped ? 0.65 : 0) +
             (stairs
               ? item.kind === "entrance"
                 ? -STAIR_VISUAL_OFFSET
                 : STAIR_VISUAL_OFFSET
               : 0),
-          stairs ? 1.7 : item.kind === "cache" ? 0.9 : 1.05,
+          stairs ? 1.7 : dropped ? 0.65 : item.kind === "cache" ? 0.9 : 1.05,
           0,
-          stairs ? 2.2 : 1.8,
+          stairs ? 2.2 : dropped ? 0.85 : 1.8,
         );
         obj.userData.interactionId = item.id;
         const lids = [];
@@ -341,11 +344,14 @@ export class Scene {
       Druid: "/assets/characters/adventurersv2/Druid.glb",
       Skeleton: "/assets/characters/skeletons/Skeleton_Warrior.glb",
       ...CREATURE_MODELS,
-      sword: "/assets/adventurer/Assets/gltf/sword_1handed.gltf",
-      staff: "/assets/adventurer/Assets/gltf/staff.gltf",
-      bow: "/assets/adventurer/Assets/gltf/crossbow_2handed.gltf",
-      arrow: "/assets/adventurer/Assets/gltf/arrow.gltf",
-      shield: "/assets/adventurer/Assets/gltf/shield_round_color.gltf",
+      ...HERO_MODELS,
+      sword: "/assets/gear/adventurers/sword_1handed.gltf",
+      staff: "/assets/gear/adventurers/staff.gltf",
+      bow: "/assets/gear/adventurers/bow_withString.gltf",
+      arrow: "/assets/gear/adventurers/arrow_bow.gltf",
+      shield: "/assets/gear/adventurers/shield_round_color.gltf",
+      torch: "/assets/gear/dungeon/torch.gltf",
+      torchLit: "/assets/gear/dungeon/torch_lit.gltf",
       ...WORLD_MODELS,
     };
     await Promise.all(
@@ -362,6 +368,8 @@ export class Scene {
           this.assets.set(name, g);
         } catch (e) {
           if (
+            ["torch", "torchLit", "bow", "shield", "staff"].includes(name) ||
+            Object.hasOwn(HERO_MODELS, name) ||
             Object.hasOwn(WORLD_MODELS, name) ||
             Object.hasOwn(CREATURE_MODELS, name) ||
             [

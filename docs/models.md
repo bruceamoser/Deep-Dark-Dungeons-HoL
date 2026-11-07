@@ -131,26 +131,17 @@ nine. `HUMANOID_MODELS` decides which take the character path and which go to th
 procedural creature path. Every roster row resolves to a file on disk; two tests enforce
 both the mapping and the files' existence.
 
-## Open problems
+## Appearance status
 
-1. **Real customization still needs work.** Authored heads/hats/clothing are now
-   preserved and checked against pack originals (#22). Palette heuristics still
-   recolor unrelated surfaces and the stored hairstyle/face choices do not change
-   authored heads. Replace these with accurate model/part/palette choices (#24).
-2. **Readable atmospheric lighting is implemented.** Bruce chose clear nearby
-   terrain/characters, warm torchlight and dark unexplored space. Restrained
-   per-actor environment lighting passed rendered and native checks (#28).
-3. **Culture-based clothing is not wired to the new packs.** `src/core/wardrobe.mjs`
-   describes 18 cultures, 32 backgrounds and 10 classes, and the generated garment shells
-   are now opt-in because they hid the packs' own clothing. Generated accessory and class layers are also suppressed on authored outfits. The real fix is to map cultures onto the packs' actual parts.
-4. **Equipped gear is placeholder geometry.** `dressEquipped` draws helmets, belts and
-   boots from primitives. Fantasy Weapons Bits and RPG Tools Bits should replace it.
-5. **Only the Adventurers 2.0 subfolder is reachable from the hero path.** The Series
-   models are used for enemies; using them for players needs a model-choice step in
-   character creation.
-6. **Ancient asset folders remain.** `public/assets/adventurer/` and `skeleton/` are
-   superseded for characters (weapons still come from `adventurer/`). Removing them would
-   save 38 MB once the weapon dependency is repointed.
+The shared appearance editor offers 15 real authored fantasy model choices and
+three builds. Original texture colors and heads are preserved; unsupported face,
+hair and color controls have been removed while their legacy save fields survive.
+Culture-specific costume recoloring remains a possible future addition. Held gear
+uses curated KayKit models, worn helmets use rigged Knight parts, and authored
+belts/boots replace overlapping primitive overlays. Enchantment runes still show
+active and dormant magic. Modern/sci-fi imports and superseded 1.x folders were
+removed. See `src/core/hero-avatars.mjs` and `public/assets/gear/manifest.json` for
+the current runtime catalogs; earlier inventory tables document the initial import.
 
 ## Plan
 
