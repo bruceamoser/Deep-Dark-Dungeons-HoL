@@ -377,3 +377,13 @@ author review only. Windows runtime untested.
   resolve, checks crest loading and nonoverlapping header bounds at 1600×1000 and
   1100×720, and captures both town layouts. Focused sandboxed native launch and
   town/market/gate render checks cover the packaged interface. Windows untested.
+
+### Live authored torch follow-up — #37
+
+Both authored torch variants remain attached to the same owned hero model. The
+scene switches their visibility with live lighting state instead of requiring an
+equipment rebuild. `scripts/torch-model-check.mjs` exercises repeated dark/light
+transitions through the real automatic-torch rules, asserts an unchanged model
+UUID, and checks that both variants retain concealment opacity. It is included
+in future full native runs. Focused browser and packaged sandboxed Linux native
+checks, actor-lighting/gear tests and the production package passed.

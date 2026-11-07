@@ -2,6 +2,7 @@ import { verifyRespec } from "./respec-check.mjs";
 import { verifyForgeUI } from "./forge-ui-check.mjs";
 import { verifyBuildForge } from "./build-forge-check.mjs";
 import { verifyGameplayIdentity } from "./identity-preview-check.mjs";
+import { verifyTorchModels } from "./torch-model-check.mjs";
 import { verifyExpeditionUI } from "./expedition-check.mjs";
 import { verifySaveSlots } from "./save-slots-check.mjs";
 import { verifyCreatureVisuals } from "./creature-visual-check.mjs";
@@ -87,6 +88,7 @@ try {
   await verifyBuildForge(w);
   await verifyGameplayIdentity(w);
   await verifyExpeditionUI(w);
+  await verifyTorchModels(w);
   await verifyCharacter(w);
   await verifyRoster(w);
   await w.getByRole("button", { name: "Enter the depths" }).click();
