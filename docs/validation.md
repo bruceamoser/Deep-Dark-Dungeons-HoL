@@ -262,3 +262,23 @@ procedural accessories, and humanoid animation tracks applied to animals.
 Remaining palette/customization and enemy-casting quality gaps are tracked in
 #24; the whole-game art overhaul is #21. This is author review, not independent
 review or final art acceptance. Windows execution remains untested.
+
+## Readable atmospheric lighting — November 7, 2026 (#25)
+
+Bruce selected clear nearby terrain/characters, warm torchlight and dark
+unexplored space. A global front-fill probe washed out the floor and was rejected.
+The accepted implementation uses a shared neutral environment on actor materials,
+with lower strength in unlit areas, restrained exposure and reduced bloom.
+Four camera-angle screenshots were inspected; actor/floor environment separation,
+unlit strength, unrevealed terrain colors and enemy visibility checks passed.
+Material ownership tests and production build passed.
+
+The first native run caught a concealment regression from replacing materials
+referenced by the fade controller. Hero lighting now reuses its already-owned
+materials, and concealment is attached after final palette dressing. Cloning
+preserves palette shader callbacks. The native check now requires the maximum
+visible material opacity to fade, rather than accepting one faded mesh.
+The final packaged Linux build passed the full sandboxed native suite, including
+that stricter Vanish check, gear/rebuilds, effects, all creature/condition adapters,
+recovery, saved runs and close-save behavior. Temporary runtime/save directories
+were used. Windows runtime remains untested. Author review only.
