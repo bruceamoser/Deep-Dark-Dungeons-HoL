@@ -1,3 +1,4 @@
+import { HERO_AVATARS } from "./hero-avatars.mjs";
 export const ANCESTRY_LOOKS = {
   "ancestry-human": {
     name: "Human",
@@ -161,7 +162,10 @@ export function normalizeAppearance(
   const look = ANCESTRY_LOOKS[ancestry] ?? ANCESTRY_LOOKS["ancestry-human"];
   const n = hash(seed),
     base = {
-      version: 1,
+      version: 2,
+      avatar: HERO_AVATARS.some((a) => a.id === input.avatar)
+        ? input.avatar
+        : "auto",
       sex: n % 2 ? "female" : "male",
       build: "balanced",
       face: "angular",
@@ -192,6 +196,7 @@ export function randomAppearance(ancestry, rng = Math.random) {
         Object.entries(LOOK_PALETTES).map(([k, v]) => [k, pick(v)]),
       ),
       skin: pick(look.skins),
+      avatar: pick(HERO_AVATARS.filter((a) => a.url)).id,
     },
     ancestry,
   );
@@ -218,34 +223,69 @@ export const identityMethods = {
 export const ANCESTRY_SIGNATURE = {
   "ancestry-human": { brow: "plain", cheek: "plain", mouth: "plain" },
   "ancestry-dwarf": {
-    brow: "heavy", cheek: "broad", mouth: "plain", braidRings: true, handScale: 1.12,
+    brow: "heavy",
+    cheek: "broad",
+    mouth: "plain",
+    braidRings: true,
+    handScale: 1.12,
   },
   "ancestry-deep-dwarf": {
-    brow: "heavy", cheek: "hollow", mouth: "plain", braidRings: true,
-    stonePlating: true, handScale: 1.12,
+    brow: "heavy",
+    cheek: "hollow",
+    mouth: "plain",
+    braidRings: true,
+    stonePlating: true,
+    handScale: 1.12,
   },
   "ancestry-elf": {
-    brow: "fine", cheek: "high", mouth: "plain", earCuff: true, handScale: 0.94,
+    brow: "fine",
+    cheek: "high",
+    mouth: "plain",
+    earCuff: true,
+    handScale: 0.94,
   },
   "ancestry-high-elf": {
-    brow: "fine", cheek: "high", mouth: "plain", earCuff: true, circlet: true,
+    brow: "fine",
+    cheek: "high",
+    mouth: "plain",
+    earCuff: true,
+    circlet: true,
     handScale: 0.94,
   },
   "ancestry-gnome": {
-    brow: "fine", cheek: "round", mouth: "plain", bigEyes: true, handScale: 1.08,
+    brow: "fine",
+    cheek: "round",
+    mouth: "plain",
+    bigEyes: true,
+    handScale: 1.08,
   },
   "ancestry-goblin": {
-    brow: "heavy", cheek: "hollow", mouth: "wide", longFingers: true,
-    hunch: 0.12, handScale: 1.05,
+    brow: "heavy",
+    cheek: "hollow",
+    mouth: "wide",
+    longFingers: true,
+    hunch: 0.12,
+    handScale: 1.05,
   },
   "ancestry-halfling": {
-    brow: "plain", cheek: "round", mouth: "plain", handScale: 0.96,
+    brow: "plain",
+    cheek: "round",
+    mouth: "plain",
+    handScale: 0.96,
   },
   "ancestry-oath-bound": {
-    brow: "plain", cheek: "plain", mouth: "plain", stonePlating: true, noEars: true,
+    brow: "plain",
+    cheek: "plain",
+    mouth: "plain",
+    stonePlating: true,
+    noEars: true,
   },
   "ancestry-tallfolk": {
-    brow: "plain", cheek: "high", mouth: "plain", longNeck: true, handScale: 1.04,
+    brow: "plain",
+    cheek: "high",
+    mouth: "plain",
+    longNeck: true,
+    handScale: 1.04,
   },
 };
 

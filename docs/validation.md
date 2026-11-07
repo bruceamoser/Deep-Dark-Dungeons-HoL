@@ -350,3 +350,20 @@ market/gate travel plus object hover, Inspect/Approach/Collect/Leave, empty coff
 state, lost-cache recovery and stairs back to town/re-entry. Interaction IDs,
 guard rules, loot and saved floor state are unchanged. Screenshots inspected;
 author review only. Windows runtime untested.
+
+### Authored hero/equipment pass — #24
+
+- Full core suite passed (17 test files); added avatar/save-field validation and
+  curated gear dependency/hash checks passed separately.
+- `scripts/avatar-check.mjs` loaded, animated and rendered all 15 player choices
+  against original palettes; `--gear` rendered each with a rigged helmet and bow.
+  Final headgear fallback and carrying pose were inspected in the contact sheet.
+- Appearance editor save/reload, gameplay model agreement and tactical/power
+  checks passed. Full sandboxed Linux native suite passed after fixing dropped
+  supplies: small KayKit crates sit within the hero's tile rather than a large
+  overlapping coffer. Combat checks now assert the bow's authored Draw morph.
+- Final cosmetic headgear/carry-pose and fantasy enemy scale/head corrections
+  were packaged and checked with focused native launch/combat rendering separately.
+- Production package built. Windows untested. Culture palette mapping and
+  arbitrary hairstyle/face morphs are not implemented; the editor offers model
+  and build choices and preserves old appearance fields for save compatibility.

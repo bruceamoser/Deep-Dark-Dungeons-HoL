@@ -1,5 +1,5 @@
+import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
-import { dressEquipped } from "./outfit.mjs";
 import { creatureAppearance } from "./creatures.mjs";
 import { CREATURE_ROSTER, HUMANOID_MODELS } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
@@ -7,58 +7,24 @@ import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
-// Original recurve bow: curved wooden limbs, a wrapped grip and a taut string.
-const bowAsset = (() => {
-  const g = new T.Group();
-  g.name = "Readied bow";
-  const points = [
-    [-0.12, 0.75, 0],
-    [0.12, 0.57, 0],
-    [0.27, 0.3, 0],
-    [0.15, 0, 0],
-    [0.27, -0.3, 0],
-    [0.12, -0.57, 0],
-    [-0.12, -0.75, 0],
-  ].map((p) => new T.Vector3(...p));
-  g.add(
-    new T.Mesh(
-      new T.TubeGeometry(new T.CatmullRomCurve3(points), 32, 0.035, 8, false),
-      new T.MeshStandardMaterial({ color: 0x6c3821, roughness: 0.6 }),
-    ),
-  );
-  const string = new T.BufferGeometry().setFromPoints([points[0], points[6]]);
-  g.add(new T.Line(string, new T.LineBasicMaterial({ color: 0xddcdae })));
-  const grip = new T.Mesh(
-    new T.CylinderGeometry(0.055, 0.055, 0.2, 8),
-    new T.MeshStandardMaterial({ color: 0x262322, roughness: 1 }),
-  );
-  grip.position.x = 0.15;
-  g.add(grip);
-  for (const y of [-0.27, 0.27]) {
-    const binding = new T.Mesh(
-      new T.SphereGeometry(0.048, 8, 6),
-      new T.MeshStandardMaterial({
-        color: 0xc3a15b,
-        metalness: 0.65,
-        roughness: 0.35,
-      }),
-    );
-    binding.position.set(0.255, y, 0);
-    g.add(binding);
-  }
-  return g;
-})();
 export function equipmentAppearance(assets, hero, enemy = false) {
   const look = enemy ? CREATURE_ROSTER[hero.type] : null;
   // KayKit character models are complete rigged humanoids and take this path; the
   // Quaternius animals and constructs go to the procedural creature path.
   if (enemy && look && !HUMANOID_MODELS.has(look.model))
-    return creatureAppearance(assets, hero, bowAsset);
-  const name = enemy ? (look?.model ?? "Skeleton") : hero.model;
-  const model = clone(assets.get(name).scene),
-    owned = [];
-  model.userData.dispose = () => owned.forEach((r) => r.dispose());
+    return creatureAppearance(assets, hero, assets.get("bow").scene);
+  const name = enemy ? (look?.model ?? "Skeleton") : avatarFor(hero);
   const items = hero.preview?.inventory.items ?? [];
+  const sourceName =
+    !enemy &&
+    name === "PaladinHelmed" &&
+    items.some((i) => i.carried && i.worn && i.slot === "head")
+      ? "Paladin"
+      : name;
+  const model = clone(assets.get(sourceName).scene),
+    owned = [];
+  model.userData.avatar = name;
+  model.userData.dispose = () => owned.forEach((r) => r.dispose());
   const armor = items.find(
     (i) =>
       i.carried &&
@@ -117,15 +83,8 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       o.visible = false;
     // Authored hats, helmets and visors are part of the model's silhouette.
     // Keep them unless worn head equipment explicitly replaces them.
-    if (!enemy && o.isMesh && /helmet|hat$/i.test(o.name))
+    if (!enemy && o.isMesh && /_(Helmet|HelmetVisor|Hat|Hood)$/i.test(o.name))
       o.visible = !items.some((i) => i.carried && i.worn && i.slot === "head");
-    if (
-      enemy &&
-      hero.type === "creature-animated-armor" &&
-      o.isMesh &&
-      /head|face/i.test(o.name)
-    )
-      o.visible = false;
   });
   let right, left;
   model.traverse((o) => {
@@ -150,8 +109,12 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     right.add(sword);
   }
   if (ranged && left) {
-    const bow = bowAsset.clone();
-    bow.rotation.z = Math.PI / 2;
+    const bow = new T.Group();
+    bow.name = "Readied bow";
+    const authored = clone(assets.get("bow").scene);
+    authored.rotation.x = -Math.PI / 2;
+    bow.add(authored);
+    bow.rotation.x = Math.PI / 2;
     left.add(bow);
   }
   if (left && (held("item-ordinary-shield") || look?.shield)) {
@@ -162,34 +125,11 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   if (!enemy && hero.torch?.held) {
     const hand = melee ? left : held("item-ordinary-shield") ? right : right;
     if (hand) {
-      const torch = new T.Group();
+      const torch = clone(
+        assets.get(hero.torch.lit ? "torchLit" : "torch").scene,
+      );
       torch.name = "Readied torch";
-      const wood = new T.MeshStandardMaterial({
-        color: 0x6a3820,
-        roughness: 1,
-      });
-      const iron = new T.MeshStandardMaterial({
-        color: 0x44342d,
-        metalness: 0.6,
-      });
-      const glow = new T.MeshStandardMaterial({
-        color: 0xffb651,
-        emissive: 0xff761b,
-        emissiveIntensity: 4,
-      });
-      const shaft = new T.CylinderGeometry(0.035, 0.045, 0.6, 8);
-      const head = new T.CylinderGeometry(0.085, 0.06, 0.15, 8);
-      const flameGeo = new T.ConeGeometry(0.09, 0.29, 7);
-      owned.push(wood, iron, glow, shaft, head, flameGeo);
-      const stick = new T.Mesh(shaft, wood),
-        cap = new T.Mesh(head, iron),
-        flame = new T.Mesh(flameGeo, glow);
-      stick.position.y = 0.15;
-      cap.position.y = 0.48;
-      flame.position.y = 0.66;
-      flame.name = "Torch flame";
-      flame.visible = !!hero.torch.lit;
-      torch.add(stick, cap, flame);
+      torch.scale.setScalar(0.65);
       hand.add(torch);
     }
   }
@@ -205,9 +145,27 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     shield: !!held("item-ordinary-shield"),
   };
   if (!enemy) {
-    // Worn gear is drawn with the same builders that dress clothing, so a found
-    // helmet, belt or pair of boots reads as equipment rather than a placeholder box.
-    dressEquipped(model, hero, owned, items);
+    // Boots and belts are already modeled into the authored outfit. A worn helm
+    // uses the Knight's rigged helmet instead of an intersecting primitive shell.
+    if (items.some((i) => i.carried && i.worn && i.slot === "head")) {
+      const donor = assets.get("Knight").scene;
+      for (const source of donor
+        .getObjectsByProperty("isSkinnedMesh", true)
+        .filter((m) => /_Helmet(?:Visor)?$/.test(m.name))) {
+        const mapped = source.skeleton.bones.map((b) => bones.get(b.name));
+        if (mapped.some((b) => !b)) continue;
+        const helm = source.clone();
+        helm.name = "Equipped head " + source.name;
+        helm.bind(
+          new T.Skeleton(
+            mapped,
+            source.skeleton.boneInverses.map((m) => m.clone()),
+          ),
+          source.bindMatrix.clone(),
+        );
+        model.add(helm);
+      }
+    }
     const enchanted = items.filter(
       (i) => i.carried && (i.held || i.worn) && i.effects?.length,
     );
@@ -317,7 +275,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     };
     model.userData.setConcealed(!!hero.concealed);
   }
-  model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
+  model.scale.multiplyScalar(
+    enemy ? (look?.theme === "kobolds" ? 0.65 : 0.95) : 0.85,
+  );
   const clips = gameClips({ skeleton: /^Skeleton/.test(name) });
   return {
     model,
@@ -379,6 +339,7 @@ export function heroPreview(canvas, assets, hero) {
     mixer = new T.AnimationMixer(current);
     const idle = out.clips.find((c) => c.name === "Idle");
     if (idle) mixer.clipAction(idle).play();
+    canvas.dataset.avatar = current.userData.avatar;
     canvas.dataset.armor = current.userData.equipment.armor;
     canvas.dataset.weapon = current.userData.equipment.weapon;
     canvas.dataset.appearance = JSON.stringify(current.userData.appearance);

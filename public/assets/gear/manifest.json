@@ -1,0 +1,77 @@
+{
+  "license": "CC0-1.0",
+  "files": {
+    "adventurers/bow_withString.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/bow_withString.gltf",
+      "sha256": "c55e025638cfbdac33e117a83abac8d01b8d7056a0f7514c72daf937512de932"
+    },
+    "adventurers/bow_withString.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/bow_withString.bin",
+      "sha256": "2ae583e6089eddf48f78ddffe1decd4b05f9d9ce47360a113d44856946d78d5a"
+    },
+    "adventurers/ranger_texture.png": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/ranger_texture.png",
+      "sha256": "639cd0ba5106fbdf65370b52b9290091d3bd92fe267693abc8dc474471bb800f"
+    },
+    "adventurers/sword_1handed.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/sword_1handed.gltf",
+      "sha256": "2a6074d46c3e337f84f0295d0ea862b116fec7d816db8d027d75a464311228b6"
+    },
+    "adventurers/sword_1handed.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/sword_1handed.bin",
+      "sha256": "c8acdc21adf19257e66b78e86d37855474a0a9fda796c39b39d6d08a5ca34bd5"
+    },
+    "adventurers/knight_texture.png": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/knight_texture.png",
+      "sha256": "028db4d1cd8b3471e6ba21686515abd4e36ae582f8b314b71ad2ab1fb5453b12"
+    },
+    "adventurers/staff.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/staff.gltf",
+      "sha256": "25646537632555f2a4e5ae90320bce251bbc5af541e8897960ad4514122110b9"
+    },
+    "adventurers/staff.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/staff.bin",
+      "sha256": "578911e8317bfceb428f801ea2701c8ab4e06cce70beeeaaf965ee9a7186ca62"
+    },
+    "adventurers/mage_texture.png": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/mage_texture.png",
+      "sha256": "9ef9672e93b231fc4e0e19238edfae3be22513aaf634df1898f45842ce6e4b5f"
+    },
+    "adventurers/arrow_bow.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/arrow_bow.gltf",
+      "sha256": "db8d6c4bcf7f6119703565220770241a4d98047f22dcd011e66557cb7df795c1"
+    },
+    "adventurers/arrow_bow.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/arrow_bow.bin",
+      "sha256": "9ec104be838c841eb79baf314c54ba6f7cc97505b75978607e0228f1769a1d0b"
+    },
+    "adventurers/shield_round_color.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/shield_round_color.gltf",
+      "sha256": "491b2cc1f36bbc0b38fa41f81b2ca10160b9ae6526ea3ced0109708ac7d9d750"
+    },
+    "adventurers/shield_round_color.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/shield_round_color.bin",
+      "sha256": "0e689cf61e686a108fb5a08229007e429669ed22b9458aad4c096825755a7c62"
+    },
+    "dungeon/torch.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/torch.gltf",
+      "sha256": "2fddf824c0d75accd89ef8fc0c22a73a2bcd3b537e6bb7f22244f84f12322682"
+    },
+    "dungeon/torch.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/torch.bin",
+      "sha256": "467b85c183b788c2e109db392c549d4fe9c6cc574fd6ce7c21aceec545084c36"
+    },
+    "dungeon/dungeon_texture.png": {
+      "source": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/dungeon_texture.png",
+      "sha256": "ceb331d6ed53273da5e26808560bca8496f8f6ebc12d83b570c0e317560f1d03"
+    },
+    "dungeon/torch_lit.gltf": {
+      "source": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/torch_lit.gltf",
+      "sha256": "2962691576e45f5b80debe2ce35f99d9f929f9d013ad9f7bc8e96341beef48e5"
+    },
+    "dungeon/torch_lit.bin": {
+      "source": "The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/torch_lit.bin",
+      "sha256": "8b45647a4ff1e70da274ce997b44c0f875cc8946f589e3ac484b13039bfac9b9"
+    }
+  }
+}

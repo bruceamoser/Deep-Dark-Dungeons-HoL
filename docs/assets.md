@@ -8,19 +8,19 @@ Free asset sources by **Kay Lousberg / KayKit**, CC0-1.0. The original license f
 | Dungeon Remastered 1.0 | https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0        | `b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07` |
 | Skeletons 1.0          | https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0  | `15b62b9bad122f72926c10fb14d622c73819fa54` |
 
-Only published free editions were imported, not paid extras. Geometry is reused and scaled at runtime. The character collection includes rigging, animation and accessories, but is not a complete modular outfit/ancestry solution.
+The initial import used the published free editions; these are now superseded by the purchased collection documented below. Geometry is reused and scaled at runtime. The character collection includes rigging, animation and accessories, but is not a complete modular outfit/ancestry solution.
 
 Cinzel and EB Garamond font licenses are retained under `public/vendor/hol/fonts/`. HoL content remains Bruce's material; no new public distribution license is assigned by this project. Third-party asset licenses do not license the HoL manuscript.
 
 The Greyhaven seal is original SVG artwork authored for the game. `art/source/greyhaven-seal.vectorcraft` is the editable MCP-created document and `art/exports/greyhaven-seal.png` its VectorCraft export.
 
-The character command screen uses original SVG line icons (`src/ui/icons.mjs`), CSS framing and a lit Three.js preview. The readied recurve bow in `src/view/appearance.mjs` is original procedural geometry. Armor tiers reuse CC0 KayKit adventurer body/limb meshes, rebound to the selected character rig; heads remain attached to the original rig. Cloth, leather, mixed plate and full plate are equipment-driven variants, not new commissioned character models. The v0.4.0 identity layer below adds ancestry-specific proportions and faces; further weapon silhouettes remain future art work.
+The character command screen uses original SVG line icons (`src/ui/icons.mjs`), CSS framing and a lit Three.js preview. The original procedural recurve bow was replaced by the authored Adventurers 2.0 bow (#24). Armor tiers reuse CC0 KayKit adventurer body/limb meshes, rebound to the selected character rig; heads remain attached to the original rig. Cloth, leather, mixed plate and full plate are equipment-driven variants, not new commissioned character models. The v0.4.0 identity layer below adds ancestry-specific proportions and faces; further weapon silhouettes remain future art work.
 
-Physical projectiles reuse the CC0 KayKit Adventurers `arrow.gltf` mesh (wooden shaft, metal head and fletching). Blade trails, impact shards, elemental ribbons, bowstring motion and attack sound synthesis are original runtime code in `src/view/combat-effects.mjs` and `src/view/audio.mjs`. No additional third-party art or audio license was introduced.
+Physical projectiles reuse the CC0 KayKit Adventurers 2.0 `arrow_bow.gltf` mesh (wooden shaft, metal head and fletching). Blade trails, impact shards, elemental ribbons, bowstring motion and attack sound synthesis are original runtime code in `src/view/combat-effects.mjs` and `src/view/audio.mjs`. No additional third-party art or audio license was introduced.
 
 Creation and purchase screens reuse the book's existing discipline symbols from `public/vendor/hol/assets/`, with the original source paths and hashes retained in `assets/provenance.json`. A/M/R/P badges use the already bundled Cinzel font and each card's printed Action field, including combined types. Special-duration cards retain their printed label rather than being relabeled as Passive.
 
-World interaction highlights clone and tint the existing CC0 dungeon coffer/stair materials only while highlighted. Recovery caches reuse the bundled coffer mesh; no new external asset was added.
+World interaction highlights clone and tint the existing CC0 dungeon coffer/stair materials only while highlighted. Recovery and dropped-supply caches use curated KayKit crates.
 
 ## Broader creature models and condition effects
 
@@ -28,9 +28,9 @@ Quaternius supplies CC0 rigged meshes from [Ultimate Monsters](https://quaterniu
 
 Species variants share those rigs with palette/scale/equipment changes. They are not 58 bespoke models. Rats and spiders, all persistent condition effects, floating feedback and accessory geometry are original runtime code. Book illustrations remain the pinned HoL assets with their existing source provenance. No extra license for the HoL content is implied by the CC0 meshes.
 
-## Individual heroes (v0.4.0)
+## Historical individual heroes (v0.4.0; superseded by #24)
 
-`src/view/hero-identity.mjs` contains original modular head, ears, eyes/irises,
+The original `src/view/hero-identity.mjs` contained modular head, ears, eyes/irises,
 hair, beard, braid, bindings and Oath-Bound seam geometry fitted to KayKit's
 CC0 Adventurers head bone. Ancestry/build/sex alter proportions; garment palette
 recoloring preserves the equipment pipeline. No downloaded character creator,
@@ -127,3 +127,22 @@ of spawn/guardian positions; ordinary and guarded coffers have distinct wood/gol
 variants. The authored lid meshes hinge open when their existing saved `opened`
 state changes and restore that pose on load. No loot, guard, interaction-distance
 or saved-floor rules changed. The superseded basic stair/coffer files were removed.
+
+### Authored hero choices and held equipment (#24)
+
+The shared creator/sheet/town/dungeon path offers 15 complete fantasy character
+silhouettes via `src/core/hero-avatars.mjs`. These reuse the purchased Adventurers
+2.0 and Mystery Series 4–6 models already licensed under CC0. The original
+atlas colors are retained. Broad RGB recoloring and generated face overlays are
+removed. Old face/hair/color metadata remains in saves; the editor exposes actual
+model and build choices rather than unsupported head morphs. Culture-specific
+recolors are not implemented: culture continues to affect game rules, not costume.
+
+`public/assets/gear/manifest.json` records exact collection paths and hashes for
+Adventurers 2.0 sword, bow with string, arrow, shield and staff, plus Dungeon 1.1
+unlit/lit torches. Worn head items use the Knight's rigged helmet/visor. Authored
+outfit boots and belts remain visible instead of duplicate primitive shells;
+magical equipment keeps its existing enchantment feedback. Kobolds use fantasy
+raiders and animated armor uses Black Knight rather than sci-fi robots. Unused
+modern character imports and superseded Adventurers/Skeletons 1.x folders are
+removed from the runtime bundle.

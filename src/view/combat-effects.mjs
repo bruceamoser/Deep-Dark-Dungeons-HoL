@@ -285,20 +285,13 @@ export function createAttackEffect(host, data, callbacks = {}) {
   }
   const bow = from.model.getObjectByName("Readied bow");
   const bowRotation = bow?.quaternion.clone();
-  const bowString =
-    spec.kind === "arrow" ? bow?.children.find((o) => o.isLine) : null;
-  const stringWasVisible = bowString?.visible;
-  let drawnString;
-  if (bowString) {
-    bowString.visible = false;
-    drawnString = new T.Line(
-      owned.geometry(new T.BufferGeometry().setFromPoints([v(), v(), v()])),
-      owned.material(new T.LineBasicMaterial({ color: 0xe5d6b8 })),
-    );
-    drawnString.name = "Drawn bowstring";
-    drawnString.frustumCulled = false;
-    root.add(drawnString);
-  }
+  const bowDraws = [];
+  if (spec.kind === "arrow")
+    bow?.traverse((mesh) => {
+      const index = mesh.morphTargetDictionary?.Draw;
+      if (index !== undefined)
+        bowDraws.push({ mesh, index, rest: mesh.morphTargetInfluences[index] });
+    });
   const drawTension = (age) =>
     age < spec.release
       ? Math.min(1, age / 0.2)
@@ -320,20 +313,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
       );
     } else bow.quaternion.copy(bowRotation);
     bow.updateWorldMatrix(true, false);
-    if (drawnString) {
-      const tension = drawTension(age);
-      const points = [
-        v(-0.12, 0.75),
-        v(-0.12 - tension * 0.38, 0),
-        v(-0.12, -0.75),
-      ];
-      const positions = drawnString.geometry.attributes.position;
-      points.forEach((p, i) => {
-        bow.localToWorld(p);
-        positions.setXYZ(i, p.x, p.y, p.z);
-      });
-      positions.needsUpdate = true;
-    }
+    for (const { mesh, index } of bowDraws)
+      mesh.morphTargetInfluences[index] = drawTension(age);
   };
   aimBow(0);
   const hand =
@@ -466,7 +447,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
       if (!impacted) to.pendingImpacts = Math.max(0, to.pendingImpacts - 1);
       if (lunge) from.model.position.copy(restingPosition);
       if (bowRotation) bow.quaternion.copy(bowRotation);
-      if (bowString) bowString.visible = stringWasVisible;
+      for (const { mesh, index, rest } of bowDraws)
+        mesh.morphTargetInfluences[index] = rest;
       host.scene.remove(root);
       owned.dispose();
     },

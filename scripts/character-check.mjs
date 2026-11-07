@@ -47,12 +47,12 @@ export async function verifyCharacter(page) {
   await expect(page.locator("#hero-name")).toHaveValue("Mara of the Gate");
   await fillForgeHero(page);
   await page.locator('[data-step="2"]').click();
-  await page.getByLabel("Sex", { exact: true }).selectOption("female");
-  await page.getByLabel("Hairstyle", { exact: true }).selectOption("topknot");
-  await page.getByLabel("Facial hair", { exact: true }).selectOption("braided");
+  await page.getByLabel("Hero model", { exact: true }).selectOption("Cleric");
+  await page.getByLabel("Build", { exact: true }).selectOption("broad");
+  await expect(page.locator("canvas[data-avatar=Cleric]")).toBeVisible();
   await expect(page.locator("#recruit-preview")).toHaveAttribute(
     "data-appearance",
-    /topknot/,
+    /Cleric/,
   );
   await page.locator('[data-step="5"]').click();
   await page.locator("#creation-shop-search").fill("ammunition");
