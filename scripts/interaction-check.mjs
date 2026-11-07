@@ -120,6 +120,11 @@ export async function verifyInteractions(page) {
     page.getByRole("button", { name: "Enter the depths" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Enter the depths" }).click();
+  await page.waitForFunction(
+    () => window.__ddd.game.mode === "exploration",
+    null,
+    { timeout: 15000 },
+  );
   console.log(
     "Object hover highlight, Inspect/Approach/Collect/Leave menus, empty coffers, lost cache recovery and stairs travel passed.",
   );
@@ -138,6 +143,11 @@ if (process.argv[1]?.endsWith("interaction-check.mjs")) {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
     await page.getByRole("button", { name: "Enter the depths" }).click();
+    await page.waitForFunction(
+      () => window.__ddd.game.mode === "exploration",
+      null,
+      { timeout: 15000 },
+    );
     await verifyInteractions(page);
     expect(errors).toEqual([]);
   } catch (error) {

@@ -847,7 +847,7 @@ export class Scene {
       .copy(selected?.group.position ?? this.focus)
       .add(new T.Vector3(0, 4, 0));
     this.updateFloatingText(dt);
-    this.composer.render();
+    if (this.renderEnabled !== false) this.composer.render();
   }
   resize() {
     const aspect = innerWidth / innerHeight;

@@ -183,6 +183,11 @@ export async function verifyDungeonLoop(page) {
     "Return to depth 5",
   );
   await page.locator('[data-action="descend"]').click();
+  await page.waitForFunction(
+    () => window.__ddd.game.mode === "exploration",
+    null,
+    { timeout: 15000 },
+  );
   expect(
     await page.evaluate(() => {
       const g = window.__ddd.game;

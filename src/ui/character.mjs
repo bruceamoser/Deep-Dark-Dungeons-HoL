@@ -19,6 +19,7 @@ export function characterSheet({
   activate,
   train,
   respec,
+  treat,
 }) {
   let tab = "equipment",
     filter = "all",
@@ -516,8 +517,11 @@ export function characterSheet({
           (b) =>
             (b.onclick = () =>
               attempt(() => {
-                game.treatGameWound(index, b.dataset.care, b.dataset.method);
-                draw();
+                if (treat) treat(index, b.dataset.care, b.dataset.method);
+                else {
+                  game.treatGameWound(index, b.dataset.care, b.dataset.method);
+                  draw();
+                }
               })),
         );
       }

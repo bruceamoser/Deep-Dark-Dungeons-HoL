@@ -20,6 +20,11 @@ await page.waitForFunction(() => window.__ddd, { timeout: 45000 });
 await page.waitForTimeout(1800);
 await page.screenshot({ path: "test-results/town.png" });
 await page.getByRole("button", { name: "Enter the depths" }).click();
+await page.waitForFunction(
+  () => window.__ddd.game.mode === "exploration",
+  null,
+  { timeout: 15000 },
+);
 await page.waitForTimeout(1000);
 await page.screenshot({ path: "test-results/dungeon.png" });
 console.log(

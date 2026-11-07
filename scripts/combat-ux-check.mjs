@@ -246,6 +246,11 @@ if (process.argv[1]?.endsWith("combat-ux-check.mjs")) {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
     await page.getByRole("button", { name: "Enter the depths" }).click();
+    await page.waitForFunction(
+      () => window.__ddd.game.mode === "exploration",
+      null,
+      { timeout: 15000 },
+    );
     await verifyCombatUX(page);
     expect(errors).toEqual([]);
   } finally {

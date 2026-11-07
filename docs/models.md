@@ -212,3 +212,14 @@ The comparison still exposes the broad palette recoloring and ancestry scaling;
 this is a foundation repair, not acceptance of final character customization.
 Hair/face options currently do not change the authored head sculpt and need real
 part/model choices in the later wardrobe/creator issue.
+
+### Greyhaven travel (#26)
+
+The town now uses a dedicated KayKit diorama and presentation-only street graph.
+Building selection and R/M/T/W/P/V/H/D hotkeys send the visible four-hero party
+to the corresponding entrance; arrival opens the existing service. Requests for
+training/respec and town wound care from character screens also travel before
+continuing. Escape cancels a trip, choosing another destination redirects, and
+modal/run-library screens pause walking. Floor/run loads clear pending travel.
+Town positions are deliberately not written into a suspended dungeon's hero
+coordinates. The town asset manifest records the curated runtime subset.

@@ -193,3 +193,15 @@ unequipped if its proficiency is absent. This keeps the current loadout while
 allowing purchases and later advancement to use the new build. Unfinished drafts
 are local, separate from recruitment and tied to hero identity. The campaign
 changes only after a valid final confirmation; the old build remains otherwise.
+
+## Greyhaven town presentation
+
+Greyhaven uses a separate street graph and town coordinates for walking to
+services. This does not replace the dungeon's square grid or move heroes inside
+a suspended floor. Selecting a building or its hotkey walks the whole company
+to the entrance before opening the existing service; character-screen training,
+respec and infirmary requests use the same arrival requirement. Town walking is
+presentation time and grants no healing, Grit, XP or recovery. Services retain
+their existing costs, time and source-rule behavior. Trips pause under modals,
+can be cancelled/redirected, and reset on floor/run loading. No new save schema
+is required; town presentation restarts at the central street on load.

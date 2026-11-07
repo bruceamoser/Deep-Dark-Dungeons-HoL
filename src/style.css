@@ -4748,3 +4748,162 @@ p {
   border: 1px solid #a38a54;
   background: #b5995512;
 }
+
+/* Greyhaven is a place to visit; the directory and building pins share routes. */
+#town-world {
+  position: fixed;
+  outline: none;
+}
+#town-world[hidden],
+.town-map-labels[hidden] {
+  display: none;
+}
+.town-map-labels {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.town-place {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  padding: 6px 10px;
+  border: 1px solid #a9956e66;
+  border-radius: 3px;
+  background: #0d1b23e8;
+  box-shadow: 0 3px 12px #0005;
+  font:
+    12px Cinzel,
+    serif;
+  white-space: nowrap;
+}
+.town-place kbd {
+  margin-left: 8px;
+  color: #e6c47e;
+  font:
+    10px Arial,
+    sans-serif;
+}
+.town-place.hovered,
+.town-place.destination {
+  border-color: #e2bd73;
+  background: #34433b;
+}
+.town-directory {
+  position: absolute;
+  left: 26px;
+  top: 107px;
+  bottom: 24px;
+  width: 225px;
+  padding: 0 0 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.town-directory h1 {
+  font-size: 29px;
+  line-height: 1.2;
+  margin: 12px 0;
+}
+.town-welcome {
+  color: #b1bdb9;
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0 0 20px;
+}
+.town-directory nav {
+  display: grid;
+  gap: 7px;
+}
+.town-destination {
+  text-align: left;
+  padding: 10px 12px;
+  background: #0b1820eb;
+  border-color: #64727055;
+}
+.town-destination > span {
+  font-size: 15px;
+}
+.town-destination small {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  color: #a4b6b3;
+  font:
+    11px Arial,
+    sans-serif;
+}
+.town-destination kbd {
+  color: #e0c184;
+  font:
+    10px Arial,
+    sans-serif;
+  border: 1px solid #a08a5a66;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+.town-treasury {
+  display: flex;
+  gap: 18px;
+  padding-top: 17px;
+  color: #9caaa7;
+  font-size: 13px;
+}
+.town-treasury b {
+  color: #dfc187;
+}
+.town-instructions {
+  color: #899f9d;
+  font:
+    11px/1.6 Arial,
+    sans-serif;
+  margin-top: 14px;
+}
+.town-route-status {
+  position: absolute;
+  left: 280px;
+  right: 25px;
+  bottom: 132px;
+  text-align: center;
+  color: #e2c991;
+  font:
+    12px/1.5 Arial,
+    sans-serif;
+  text-shadow: 0 2px 5px #000;
+}
+.town-party {
+  bottom: 22px;
+  right: 32px;
+}
+@media (max-width: 1100px) {
+  .town-directory {
+    left: 16px;
+    width: 180px;
+    top: 95px;
+  }
+  .town-directory h1 {
+    font-size: 23px;
+  }
+  .town-welcome {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .town-destination {
+    padding: 7px 9px;
+  }
+  .town-destination > span {
+    font-size: 13px;
+  }
+  .town-destination small {
+    font-size: 10px;
+  }
+  .town-place {
+    font-size: 10px;
+    padding: 5px 7px;
+  }
+  .town-route-status {
+    left: 210px;
+    bottom: 132px;
+    font-size: 11px;
+  }
+}
