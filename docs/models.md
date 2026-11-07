@@ -184,3 +184,31 @@ The CC0 grant covers KayKit. The Sloyd reference image is CC BY 4.0 and is used 
 as a visual reference, not as a shipped asset; if any Sloyd model is ever imported it needs
 the attribution line `"Adventurer Boy" by VoxelVidal, generated with Sloyd, licensed under
 CC BY 4.0.`
+
+## Continuation: cohesive art overhaul (November 7, 2026)
+
+Bruce expanded the direction to a clean, consistent visual overhaul of the entire
+ game using the purchased KayKit collection. GitHub #21 tracks the whole effort;
+#20 is the first implementation issue. Follow issue → branch → PR → author review
+and applicable checks → merge → next issue. Local source is at
+`/home/bruce/Projects/Deep-Dark-Dungeons-HoL`; the installed game is v0.6.0 and is
+separate from development builds. The connected personal GitHub account works;
+the old `/home/bmoser` helper paths in AGENTS.md belong to another machine.
+
+The first continuation corrects unarmored heroes being replaced by Mage body
+parts, restores authored hats/helmets/visors, resolves RogueHooded donor mesh
+names, and stops generated culture/class accessories covering finished sculpts.
+Worn armor still swaps real skinned parts. Generated faces remain opt-in.
+Animals and procedural creatures retain their own animation clips rather than
+receiving incompatible KayKit humanoid tracks; skeleton humanoids now request
+the skeleton shared clips. Original collection license text is included beside
+the imported characters and animations.
+
+`node scripts/kaykit-appearance-check.mjs` compares the six loaded hero models
+against their pack originals under the same lighting, checks all three armor
+swaps using real loaded assets, and captures the actual character sheet. Run
+against the Vite server on port 5198. Screenshots are in ignored `test-results/`.
+The comparison still exposes the broad palette recoloring and ancestry scaling;
+this is a foundation repair, not acceptance of final character customization.
+Hair/face options currently do not change the authored head sculpt and need real
+part/model choices in the later wardrobe/creator issue.

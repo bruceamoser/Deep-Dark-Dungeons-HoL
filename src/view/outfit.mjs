@@ -17,7 +17,8 @@ const ROUGH = { cloth: 0.94, leather: 0.62, metal: 0.34 };
 
 /** Deterministic value noise so a given hero always wears the same cloth. */
 function hash(x, y, z, seed) {
-  let h = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719 + seed * 4.113) * 43758.5453;
+  let h =
+    Math.sin(x * 12.9898 + y * 78.233 + z * 37.719 + seed * 4.113) * 43758.5453;
   return h - Math.floor(h);
 }
 
@@ -27,7 +28,9 @@ function vary(geometry, amount = 0.1, seed = 1) {
   const colors = new Float32Array(pos.count * 3);
   for (let i = 0; i < pos.count; i += 1) {
     const n =
-      1 - amount * 0.5 + hash(pos.getX(i), pos.getY(i), pos.getZ(i), seed) * amount;
+      1 -
+      amount * 0.5 +
+      hash(pos.getX(i), pos.getY(i), pos.getZ(i), seed) * amount;
     colors[i * 3] = n;
     colors[i * 3 + 1] = n;
     colors[i * 3 + 2] = n;
@@ -79,8 +82,17 @@ function taper(top, bottom, height, segments = 12) {
 
 let variationSeed = 1;
 
-function add(owned, parent, name, geometry, material, position = [0, 0, 0], rotation = null) {
-  if (material.vertexColors) vary(geometry, material.metalness > 0.5 ? 0.05 : 0.14, variationSeed);
+function add(
+  owned,
+  parent,
+  name,
+  geometry,
+  material,
+  position = [0, 0, 0],
+  rotation = null,
+) {
+  if (material.vertexColors)
+    vary(geometry, material.metalness > 0.5 ? 0.05 : 0.14, variationSeed);
   owned.push(geometry);
   const mesh = new T.Mesh(geometry, material);
   mesh.name = name;
@@ -275,14 +287,11 @@ function sleeves(owned, bones, mats, spec, occupied) {
         [Math.PI / 2, 0, 0],
       );
     if (sleeve === "wide")
-      add(
-        owned,
-        upper,
-        "Sleeve drape",
-        taper(0.15, 0.2, 0.2, 9),
-        mats.cloth,
-        [0, -length - 0.06, 0],
-      );
+      add(owned, upper, "Sleeve drape", taper(0.15, 0.2, 0.2, 9), mats.cloth, [
+        0,
+        -length - 0.06,
+        0,
+      ]);
   }
 }
 
@@ -572,7 +581,11 @@ function carryGear(owned, bones, mats, spec, occupied) {
         [0, 0.2, 0],
         [Math.PI / 2, 0.34, 0],
       ).scale.set(1, 1, 0.82);
-    } else if (item === "satchel" || item === "herb-satchel" || item === "net-bag") {
+    } else if (
+      item === "satchel" ||
+      item === "herb-satchel" ||
+      item === "net-bag"
+    ) {
       add(
         owned,
         chest,
@@ -591,7 +604,11 @@ function carryGear(owned, bones, mats, spec, occupied) {
         [-0.26, -0.06, 0.06],
         [0, 0.2, 0],
       );
-    } else if (item === "scroll-case" || item === "despatch-tube" || item === "chart-tubes") {
+    } else if (
+      item === "scroll-case" ||
+      item === "despatch-tube" ||
+      item === "chart-tubes"
+    ) {
       add(
         owned,
         chest,
@@ -640,7 +657,10 @@ function classSilhouette(owned, bones, mats, spec, occupied) {
   const { silhouette } = spec;
 
   if (chest && !occupied.torso) {
-    if (silhouette.shoulders === "plate" || silhouette.shoulders === "leather") {
+    if (
+      silhouette.shoulders === "plate" ||
+      silhouette.shoulders === "leather"
+    ) {
       for (const side of ["l", "r"]) {
         const arm = pick(bones, `upperarm.${side}`, `upperarm${side}`);
         if (!arm) continue;
@@ -649,7 +669,15 @@ function classSilhouette(owned, bones, mats, spec, occupied) {
           owned,
           arm,
           "Pauldron",
-          new T.SphereGeometry(plate ? 0.19 : 0.155, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.62),
+          new T.SphereGeometry(
+            plate ? 0.19 : 0.155,
+            10,
+            8,
+            0,
+            Math.PI * 2,
+            0,
+            Math.PI * 0.62,
+          ),
           plate ? mats.metal : mats.leather,
           [0, 0.11, 0],
         ).scale.set(1, plate ? 1.05 : 0.8, 1);
@@ -664,7 +692,10 @@ function classSilhouette(owned, bones, mats, spec, occupied) {
             [Math.PI / 2, 0, 0],
           );
       }
-    } else if (silhouette.shoulders === "mantle" || silhouette.shoulders === "fur") {
+    } else if (
+      silhouette.shoulders === "mantle" ||
+      silhouette.shoulders === "fur"
+    ) {
       const fur = silhouette.shoulders === "fur";
       add(
         owned,
@@ -705,7 +736,14 @@ function classSilhouette(owned, bones, mats, spec, occupied) {
         owned,
         chest,
         "Cape",
-        new T.CylinderGeometry(0.3, long ? 0.62 : 0.44, long ? 1.15 : 0.62, 14, 1, true),
+        new T.CylinderGeometry(
+          0.3,
+          long ? 0.62 : 0.44,
+          long ? 1.15 : 0.62,
+          14,
+          1,
+          true,
+        ),
         mats.cloth,
         [0, long ? -0.42 : -0.14, -0.16],
         [0, 0, 0],
@@ -762,6 +800,18 @@ export function dressOutfit(model, hero, owned, opts = {}) {
   };
   const bones = bonesOf(model);
   if (!bones.size) return spec;
+  // Complete KayKit characters already include belts, boots, hats and capes.
+  // Keep their authored silhouettes until culture-specific real parts are mapped.
+  if (opts.authoredOutfit) {
+    model.userData.wardrobe = {
+      culture: spec.cultureId,
+      background: spec.backgroundId,
+      class: spec.classId,
+      headgear: "authored",
+      occupied: { ...occupied },
+    };
+    return spec;
+  }
   variationSeed = opts.seed ?? 7;
   const mats = palette(owned, spec, opts.seed ?? 7);
 
@@ -825,14 +875,31 @@ export function dressEquipped(model, hero, owned, items, colorOf) {
     if (head) {
       const metal = materialFor(headItem, 0.78, 0.32);
       const band = add(
-        owned, head, "Equipped head",
+        owned,
+        head,
+        "Equipped head",
         new T.SphereGeometry(0.335, 14, 9, 0, Math.PI * 2, 0, Math.PI * 0.52),
-        metal, [0, 0.2, 0],
+        metal,
+        [0, 0.2, 0],
       );
       band.scale.set(1, 1.05, 1.04);
-      add(owned, head, "Helm rim", new T.TorusGeometry(0.33, 0.026, 5, 16), metal,
-        [0, 0.2, 0], [Math.PI / 2, 0, 0]);
-      add(owned, head, "Helm crest", new T.BoxGeometry(0.035, 0.14, 0.3), metal, [0, 0.42, -0.02]);
+      add(
+        owned,
+        head,
+        "Helm rim",
+        new T.TorusGeometry(0.33, 0.026, 5, 16),
+        metal,
+        [0, 0.2, 0],
+        [Math.PI / 2, 0, 0],
+      );
+      add(
+        owned,
+        head,
+        "Helm crest",
+        new T.BoxGeometry(0.035, 0.14, 0.3),
+        metal,
+        [0, 0.42, -0.02],
+      );
     }
   }
 
@@ -841,13 +908,31 @@ export function dressEquipped(model, hero, owned, items, colorOf) {
     const hips = pick(bones, "hips", "pelvis");
     if (hips) {
       const metal = materialFor(waistItem, 0.7, 0.35);
-      add(owned, hips, "Equipped waist",
-        new T.CylinderGeometry(0.325, 0.325, 0.12, 16, 1, true), metal, [0, 0.04, 0]
+      add(
+        owned,
+        hips,
+        "Equipped waist",
+        new T.CylinderGeometry(0.325, 0.325, 0.12, 16, 1, true),
+        metal,
+        [0, 0.04, 0],
       ).scale.z = 0.88;
-      add(owned, hips, "Belt buckle", new T.BoxGeometry(0.095, 0.085, 0.032), metal,
-        [0, 0.04, 0.285]);
-      add(owned, hips, "Belt pouch", new T.BoxGeometry(0.12, 0.14, 0.08), metal,
-        [0.21, -0.04, 0.23], [0, 0.6, 0]);
+      add(
+        owned,
+        hips,
+        "Belt buckle",
+        new T.BoxGeometry(0.095, 0.085, 0.032),
+        metal,
+        [0, 0.04, 0.285],
+      );
+      add(
+        owned,
+        hips,
+        "Belt pouch",
+        new T.BoxGeometry(0.12, 0.14, 0.08),
+        metal,
+        [0.21, -0.04, 0.23],
+        [0, 0.6, 0],
+      );
     }
   }
 
@@ -858,11 +943,23 @@ export function dressEquipped(model, hero, owned, items, colorOf) {
       const foot = pick(bones, `foot.${side}`, `foot${side}`);
       const lower = pick(bones, `lowerleg.${side}`, `lowerleg${side}`);
       if (foot)
-        add(owned, foot, "Equipped feet", new T.BoxGeometry(0.162, 0.145, 0.29), metal,
-          [0, -0.01, 0.055]);
+        add(
+          owned,
+          foot,
+          "Equipped feet",
+          new T.BoxGeometry(0.162, 0.145, 0.29),
+          metal,
+          [0, -0.01, 0.055],
+        );
       if (lower)
-        add(owned, lower, "Boot shaft", taper(0.086, 0.074, 0.3, 9), metal,
-          [0, -0.17, 0]);
+        add(
+          owned,
+          lower,
+          "Boot shaft",
+          taper(0.086, 0.074, 0.3, 9),
+          metal,
+          [0, -0.17, 0],
+        );
     }
   }
 }

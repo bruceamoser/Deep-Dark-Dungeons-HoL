@@ -5,7 +5,7 @@ import { CREATURE_ROSTER, HUMANOID_MODELS } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
-import { clipsOrFallback } from "./animation-library.mjs";
+import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 // Original recurve bow: curved wooden limbs, a wrapped grip and a taut string.
 const bowAsset = (() => {
@@ -71,7 +71,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   model.traverse((o) => {
     if (o.isBone) bones.set(o.name, o);
   });
-  if (!enemy) {
+  if (!enemy && tier !== "cloth") {
     const replacements = [];
     model.traverse((o) => {
       if (
@@ -86,13 +86,11 @@ export function equipmentAppearance(assets, hero, enemy = false) {
           tier === "medium" && part !== "Body"
             ? "Rogue"
             : (armorNames[tier] ?? "Mage");
-      const donor =
-        assets
-          .get(donorName)
-          .scene.getObjectByName(
-            `${donorName === "Rogue" ? "Rogue_Hooded" : donorName}_${part}`,
-          ) ??
-        assets.get(donorName).scene.getObjectByName(`${donorName}_${part}`);
+      // Pack filenames and mesh prefixes differ (Rogue_Hooded vs RogueHooded).
+      const donor = assets
+        .get(donorName)
+        .scene.getObjectsByProperty("isSkinnedMesh", true)
+        .find((mesh) => mesh.name.endsWith(`_${part}`));
       if (!donor?.isSkinnedMesh) continue;
       const mapped = donor.skeleton.bones.map((b) => bones.get(b.name));
       if (mapped.some((b) => !b)) continue;
@@ -117,8 +115,10 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       )
     )
       o.visible = false;
-    if (o.isMesh && /helmet|_hat/i.test(o.name))
-      o.visible = enemy && look?.shield;
+    // Authored hats, helmets and visors are part of the model's silhouette.
+    // Keep them unless worn head equipment explicitly replaces them.
+    if (!enemy && o.isMesh && /helmet|hat$/i.test(o.name))
+      o.visible = !items.some((i) => i.carried && i.worn && i.slot === "head");
     if (
       enemy &&
       hero.type === "creature-animated-armor" &&
@@ -297,11 +297,11 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   }
   // Rig dimensions are consistent; ignore hidden source accessories when scaling.
   if (!enemy) {
-    // The packed armoured bodies already carry clothing, so a garment shell over them
-    // would clip through plate. Cultural cloth therefore only layers onto the
-    // unarmoured body, while accessories still show beside worn gear.
+    // Preserve the pack's authored clothing and accessories; equipment and palette
+    // choices still apply through the shared sheet/gameplay appearance pipeline.
     const wornSlot = (slot) => items.some((i) => i.worn && i.slot === slot);
     dressIdentity(model, hero, owned, {
+      authoredOutfit: true,
       occupied: {
         head: wornSlot("head"),
         belt: wornSlot("waist"),
@@ -312,7 +312,11 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     });
   }
   model.scale.multiplyScalar(enemy ? 0.95 : 0.85);
-  return { model, clips: clipsOrFallback(assets.get(name).animations) };
+  const clips = gameClips({ skeleton: /^Skeleton/.test(name) });
+  return {
+    model,
+    clips: clips.length ? clips : (assets.get(name).animations ?? []),
+  };
 }
 export function heroPreview(canvas, assets, hero) {
   const renderer = new T.WebGLRenderer({
