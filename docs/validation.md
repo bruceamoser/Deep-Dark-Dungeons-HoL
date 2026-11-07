@@ -282,3 +282,20 @@ The final packaged Linux build passed the full sandboxed native suite, including
 that stricter Vanish check, gear/rebuilds, effects, all creature/condition adapters,
 recovery, saved runs and close-save behavior. Temporary runtime/save directories
 were used. Windows runtime remains untested. Author review only.
+
+## Navigable Greyhaven — November 7, 2026 (#26)
+
+The full core suite passed (16 test-file suites) and production build passed.
+Route tests cover every service, axis-aligned street paths, arrival exactly once,
+redirection, cancellation and unique hotkeys. Rendered checks exercised real 3D
+building clicks, building labels, hotkey travel, cancellation/redirection,
+infirmary arrival, a character-sheet respec request that resumes at the Guildhall,
+paused travel under the run library, preserved dungeon coordinates/HP/Grit,
+save/reload and gate entry. Town screenshots at 1600×1000 and 1100×720 were
+inspected; final route-status placement clears party cards at both sizes with no
+horizontal overflow.
+
+Native integration checks now wait for actual gate arrival before exercising the
+dungeon, including return to a preserved floor. The previous immediate-entry
+assumption was invalid after adding deliberate town travel; camera-pan and recall
+state assertions themselves remain unchanged.

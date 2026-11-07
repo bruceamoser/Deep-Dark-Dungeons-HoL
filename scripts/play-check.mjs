@@ -18,6 +18,11 @@ try {
   await verifyForgeUI(page);
   await verifyCharacter(page);
   await page.getByRole("button", { name: "Enter the depths" }).click();
+  await page.waitForFunction(
+    () => window.__ddd.game.mode === "exploration",
+    null,
+    { timeout: 15000 },
+  );
   await verifyCombatUX(page);
   await page.getByRole("button", { name: "Save", exact: true }).click();
   expect(

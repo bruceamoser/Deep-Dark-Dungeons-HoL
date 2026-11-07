@@ -14,6 +14,11 @@ try {
   await page.goto("http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
   await page.getByRole("button", { name: "Enter the depths" }).click();
+  await page.waitForFunction(
+    () => window.__ddd.game.mode === "exploration",
+    null,
+    { timeout: 15000 },
+  );
   await page.waitForTimeout(700);
   await page.screenshot({ path: "test-results/lighting-dungeon.png" });
   const checks = await page.evaluate(async () => {

@@ -23,10 +23,14 @@ try {
       grit: h.survival.gritAvailable,
     })),
   );
-  await p
-    .getByRole("button", { name: "Visit Market Square", exact: true })
-    .click();
-  expect(await p.locator(".market-window").count()).toBe(0);
+  const marketStart = await p.evaluate(() => {
+    document.querySelector('[data-town-place="shop"]').click();
+    return {
+      immediate: !!document.querySelector(".market-window"),
+      destination: window.__ddd.town.navigator.destination?.id,
+    };
+  });
+  expect(marketStart).toEqual({ immediate: false, destination: "shop" });
   await expect(p.locator(".market-window")).toBeVisible({ timeout: 12000 });
   await p.keyboard.press("Escape");
   await p.keyboard.press("r");
@@ -66,8 +70,14 @@ try {
     ),
   ).toEqual(before);
   await p.locator('[data-hero="0"]').click();
-  await p.locator("#sheet-respec").click();
-  expect(await p.locator("#cancel-respec").count()).toBe(0);
+  const respecStart = await p.evaluate(() => {
+    document.querySelector("#sheet-respec").click();
+    return {
+      immediate: !!document.querySelector("#cancel-respec"),
+      destination: window.__ddd.town.navigator.destination?.id,
+    };
+  });
+  expect(respecStart).toEqual({ immediate: false, destination: "training" });
   await expect(p.locator("#cancel-respec")).toBeVisible({ timeout: 12000 });
   expect(await p.evaluate(() => window.__ddd.town.currentService)).toBe(
     "training",

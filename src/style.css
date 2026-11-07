@@ -4863,7 +4863,7 @@ p {
   position: absolute;
   left: 280px;
   right: 25px;
-  bottom: 113px;
+  bottom: 132px;
   text-align: center;
   color: #e2c991;
   font:
@@ -4903,7 +4903,7 @@ p {
   }
   .town-route-status {
     left: 210px;
-    bottom: 105px;
+    bottom: 132px;
     font-size: 11px;
   }
 }

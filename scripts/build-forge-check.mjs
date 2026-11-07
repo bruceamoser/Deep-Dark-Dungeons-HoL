@@ -33,6 +33,11 @@ export async function verifyBuildForge(page) {
     ).toBe(false);
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "Enter the depths" }).click();
+    await page.waitForFunction(
+      () => window.__ddd.game.mode === "exploration",
+      null,
+      { timeout: 15000 },
+    );
     await page.evaluate(() => {
       const g = window.__ddd.game;
       g.pause();

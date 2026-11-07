@@ -90,6 +90,11 @@ try {
   await verifyCharacter(w);
   await verifyRoster(w);
   await w.getByRole("button", { name: "Enter the depths" }).click();
+  await w.waitForFunction(
+    () => window.__ddd.game.mode === "exploration",
+    null,
+    { timeout: 15000 },
+  );
   await w.getByRole("button", { name: "Save", exact: true }).click();
   await expect(w.locator("#toast")).toContainText("saved");
   const stored = await w.evaluate(() => window.desktop.load());
