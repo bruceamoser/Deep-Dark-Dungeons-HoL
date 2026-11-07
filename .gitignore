@@ -6,3 +6,10 @@ build/
 *.log
 release/
 test-results/
+
+# Local preview harnesses and staged reference assets (not shipped)
+public/_qpreview/
+preview.html
+preview-quaternius.html
+shot-preview.mjs
+shot_q.mjs
