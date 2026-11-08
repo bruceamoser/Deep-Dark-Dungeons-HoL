@@ -81,11 +81,16 @@ try {
   await expect(
     page.getByRole("dialog", { name: "Discipline forge" }),
   ).toBeVisible();
+  await expect(page.locator(".forge-svg")).toBeVisible();
   await expect(page.locator(".forge-node")).toHaveCount(377);
   await page.locator('[data-discipline="arms"]').click();
   await page.screenshot({
     path: `test-results/release-forge-${process.platform}.png`,
   });
+  await page.locator('[data-view="columns"]').click();
+  await expect(page.locator(".forge-path-column")).toHaveCount(4);
+  await page.locator('[data-view="columns"]').click();
+  await expect(page.locator(".forge-svg")).toBeVisible();
   await page.locator(".forge-close").click();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Updates", exact: true }).click();
