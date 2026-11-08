@@ -45,8 +45,8 @@ export function creationScreen({
   const steps = [
     "Identity",
     "Ancestry",
-    "Appearance",
     "Origins",
+    "Appearance",
     "Discipline forge",
     "Equipment",
     "Review",
@@ -225,9 +225,10 @@ export function creationScreen({
         draft.borrowedTraitId = e.value;
         changed();
       });
-    } else if (step === 2) {
+    } else if (step === 3) {
       appearanceControls(host, {
         appearance: draft.appearance,
+        masonAvailable: scene.assets.has("DungeonMason"),
         ancestry: draft.ancestryId,
         name: draft.name,
         onChange: (value) => {
@@ -236,7 +237,7 @@ export function creationScreen({
           view.update({ model, draft, name: draft.name, preview: p });
         },
       });
-    } else if (step === 3) {
+    } else if (step === 2) {
       const disciplineChoices = (ids, current, key) =>
         `<div class="forge-origin-options">${ids.map((id) => `<button data-origin-key="${key}" data-origin-discipline="${id}" class="${current === id ? "chosen" : ""}">${disciplineIcon(id)}<span>${esc(name(id))}<small>Rank I origin · opens four paths</small></span></button>`).join("")}</div>`;
       host.innerHTML = `<p class="section-intro">Class, culture and background each grant one discipline origin. Your choices determine where you begin, never where you must finish. Duplicate origins return 3 DP each.</p>${field(

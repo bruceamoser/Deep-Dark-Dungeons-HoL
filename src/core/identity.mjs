@@ -1,3 +1,4 @@
+import { normalizeMason } from "./mason-appearance.mjs";
 import { HERO_AVATARS } from "./hero-avatars.mjs";
 export const ANCESTRY_LOOKS = {
   "ancestry-human": {
@@ -162,7 +163,15 @@ export function normalizeAppearance(
   const look = ANCESTRY_LOOKS[ancestry] ?? ANCESTRY_LOOKS["ancestry-human"];
   const n = hash(seed),
     base = {
-      version: 2,
+      version: 3,
+      family: "mason",
+      mason: normalizeMason(input.mason),
+      outfitColors: Array.from({ length: 8 }, (_, i) =>
+        typeof input.outfitColors?.[i] === "string" &&
+        /^#[0-9a-f]{6}$/i.test(input.outfitColors[i])
+          ? input.outfitColors[i].toLowerCase()
+          : null,
+      ),
       avatar: HERO_AVATARS.some((a) => a.id === input.avatar)
         ? input.avatar
         : "auto",

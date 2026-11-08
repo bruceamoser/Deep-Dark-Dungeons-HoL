@@ -83,14 +83,18 @@ try {
   w.on("pageerror", (e) => errors.push(e.message));
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
   await w.screenshot({ path: "test-results/native-town.png" });
-  await verifyRespec(w);
-  await verifyForgeUI(w);
-  await verifyBuildForge(w);
-  await verifyGameplayIdentity(w);
-  await verifyExpeditionUI(w);
-  await verifyTorchModels(w);
-  await verifyCharacter(w);
-  await verifyRoster(w);
+  const selectedChecks = process.env.DDD_NATIVE_CHECKS?.split(",");
+  const runCheck = async (fn) => {
+    if (!selectedChecks || selectedChecks.includes(fn.name)) await fn(w);
+  };
+  await runCheck(verifyRespec);
+  await runCheck(verifyForgeUI);
+  await runCheck(verifyBuildForge);
+  await runCheck(verifyGameplayIdentity);
+  await runCheck(verifyExpeditionUI);
+  await runCheck(verifyTorchModels);
+  await runCheck(verifyCharacter);
+  await runCheck(verifyRoster);
   await w.getByRole("button", { name: "Enter the depths" }).click();
   await w.waitForFunction(
     () => window.__ddd.game.mode === "exploration",
@@ -102,14 +106,14 @@ try {
   const stored = await w.evaluate(() => window.desktop.load());
   expect(JSON.parse(stored).campaign.party).toHaveLength(4);
   await w.screenshot({ path: "test-results/native-dungeon.png" });
-  await verifyControls(w);
-  await verifyCombatUX(w);
-  await verifyInteractions(w);
-  await verifyEffects(w);
-  await verifyRecovery(w);
-  await verifyDungeonLoop(w);
-  await verifyCreatureVisuals(w);
-  await verifySaveSlots(w);
+  await runCheck(verifyControls);
+  await runCheck(verifyCombatUX);
+  await runCheck(verifyInteractions);
+  await runCheck(verifyEffects);
+  await runCheck(verifyRecovery);
+  await runCheck(verifyDungeonLoop);
+  await runCheck(verifyCreatureVisuals);
+  await runCheck(verifySaveSlots);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");

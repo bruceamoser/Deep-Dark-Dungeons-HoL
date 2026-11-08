@@ -35,7 +35,7 @@ export async function fillForgeHero(
   await page.locator("#ancestry").selectOption("ancestry-dwarf");
   await page.locator('[data-trait="trait-dwarf-deep-constitution"]').click();
   await page.locator('[data-trait="trait-dwarf-carved-history"]').click();
-  await page.locator('[data-step="3"]').click();
+  await page.locator('[data-step="2"]').click();
   await page.locator("#class").selectOption("class-protector");
   await page
     .locator(
@@ -177,7 +177,8 @@ export async function verifyForgeUI(page) {
       "Forge atlas, grab panning, zoom, search, cascade refunds, training, multiple origins, profiles, three-contact gates and persistence passed.",
     );
   } finally {
-    if(await page.locator("#modal-root > *").count())await page.keyboard.press("Escape");
+    if (await page.locator("#modal-root > *").count())
+      await page.keyboard.press("Escape");
     await page.evaluate((s) => {
       window.__ddd.game.load(s);
       window.__ddd.game.emit("change");

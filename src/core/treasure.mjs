@@ -6,6 +6,7 @@ import { distance, lineOfSight } from "./dungeon.mjs";
 export const EQUIPMENT_SLOTS = [
   ["head", "Head", "hat"],
   ["neck", "Neck", "necklace"],
+  ["back", "Back", "pack"],
   ["body", "Body", "armor"],
   ["hands", "Hands", "hand"],
   ["waist", "Waist", "belt"],
@@ -418,6 +419,7 @@ export function recallScroll(seed, instanceId = `recall-${seed >>> 0}`) {
   };
 }
 export function slotOf(item) {
+  if (item.catalogId === "item-travel-pack") return "back";
   if (item.slot)
     return item.slot === "ring"
       ? (item.equippedSlot ?? "ring-left")

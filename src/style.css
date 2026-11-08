@@ -5069,3 +5069,17 @@ p {
     padding: 6px 9px;
   }
 }
+
+.appearance-palette {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0;
+}
+.appearance-palette input[type="color"] {
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  padding: 3px;
+  cursor: pointer;
+}

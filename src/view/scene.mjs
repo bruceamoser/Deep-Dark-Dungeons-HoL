@@ -1,3 +1,4 @@
+import { MASON_URL } from "./mason-heroes.mjs";
 import { HERO_MODELS } from "../core/hero-avatars.mjs";
 import { tacticalViewMethods } from "./tactical-grid.mjs";
 import { battlefieldViewMethods } from "./battlefield.mjs";
@@ -333,6 +334,13 @@ export class Scene {
     const loader = new GLTFLoader();
     // The 2.0 rigs carry no clips of their own; merge the shared library once.
     await loadAnimationLibrary(loader);
+    try {
+      this.assets.set("DungeonMason", await loader.loadAsync(MASON_URL));
+    } catch {
+      console.info(
+        "Licensed Dungeon Mason assets not staged; using KayKit heroes.",
+      );
+    }
     const entries = {
       // Adventurers 2.0: same rig family, better proportions, and clips supplied by the
       // shared animation library rather than embedded per model.

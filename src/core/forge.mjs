@@ -390,6 +390,7 @@ export function forgeCharacter(draft, C) {
       return {
         ...r,
         definition,
+        slot: r.catalogId === "item-travel-pack" ? "back" : r.slot,
         hands,
         carried: saved?.carried !== false,
         held:

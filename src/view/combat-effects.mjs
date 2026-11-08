@@ -254,9 +254,10 @@ export function createAttackEffect(host, data, callbacks = {}) {
   if (spec.kind === "arrow") {
     projectile = host.assets.get("arrow").scene.clone(true);
     projectile.name = "Flying arrow · shaft, head and fletching";
-    // KayKit arrow points down local Y; flip it so +Y follows the flight tangent.
+    // This glTF's arrowhead is at +Z (fletching at -Z). The flight wrapper
+    // steers its +Y axis, so align the actual shaft with that axis first.
     const wrapper = new T.Group();
-    projectile.rotation.z = Math.PI;
+    projectile.quaternion.setFromUnitVectors(v(0, 0, 1), UP);
     projectile.scale.setScalar(1.65);
     projectile.traverse((o) => {
       if (!o.isMesh) return;
