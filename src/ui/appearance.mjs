@@ -84,7 +84,7 @@ function colourName(hex) {
           ? "Green"
           : h < 205
             ? "Teal"
-            : h < 260
+            : h < 245
               ? "Blue"
               : h < 295
                 ? "Purple"
