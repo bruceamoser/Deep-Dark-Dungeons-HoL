@@ -28,3 +28,9 @@ blender --factory-startup -noaudio -b --python-exit-code 1 \
 Stage the licensed exports before `npm run build` / packaging. A public checkout cannot reproduce the purchased visuals without a licensed copy. Automated public CI validates code with KayKit fallback; release builds intended to ship Dungeon Mason must be built in an environment with the licensed exports staged. Never publish a standalone GLB as a release asset.
 
 Run `node --test tests/mason-appearance.test.mjs` for normalization, save migration and equipment/cosmetic isolation. Build a fresh desktop package before `npm run test:native`: `launch-game.sh` intentionally launches the existing packaged application and does not rebuild it automatically. Native checks use a temporary save profile and Ubuntu's unconfined terminal context with sandboxing enabled.
+
+## Publishing licensed releases
+
+The source-only installer workflow validates pull requests and manual development builds; it does not publish tag builds. Build Linux installers and the Windows portable application locally with licensed exports staged, then upload only finished installers, updater metadata, the Linux installation bundle and a `SHA256SUMS` manifest to a draft release at the reviewed version tag. Keep the source archive and standalone exports private.
+
+Run **Verify and publish staged release** with that draft's tag. It downloads and checks the finished release assets, installs and launches them on Linux and Windows, verifies the reported version, save IPC, sandboxing and loaded Dungeon Mason character art, and publishes only after both platforms pass. The Windows runner wraps the complete staged portable application in the NSIS installer, tests the installed executable, and uploads its installer and updater metadata to the draft. The publish job then updates checksums and makes the release public. Public source-only CI packages must never overwrite the staged licensed installers.

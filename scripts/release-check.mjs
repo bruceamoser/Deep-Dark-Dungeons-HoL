@@ -46,6 +46,19 @@ try {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.waitForFunction(() => window.__ddd, { timeout: 60000 });
+  if (process.env.DDD_REQUIRE_MASON === "1") {
+    expect(
+      await page.evaluate(() => window.__ddd.scene.assets.has("DungeonMason")),
+      "Published installers must contain the licensed character art",
+    ).toBe(true);
+    await page.locator('[data-hero="0"]').click();
+    await page.locator('[data-tab="appearance"]').click();
+    await expect(page.getByLabel("Headpiece", { exact: true })).toBeVisible();
+    await page.screenshot({
+      path: `test-results/release-character-${process.platform}.png`,
+    });
+    await page.keyboard.press("Escape");
+  }
   await page.getByRole("button", { name: "Save", exact: true }).click();
   const saved = await page.evaluate(() => window.desktop.load());
   expect(JSON.parse(saved).campaign.party.length).toBe(4);
