@@ -4,6 +4,12 @@ import { CREATURE_ROSTER } from "./creature-roster.mjs";
 
 export const CAMP_DUTIES = Object.freeze([
   {
+    id: "dressings",
+    name: "Make dressings",
+    detail:
+      "Requires the field dressing recipe and one medicinal-material batch; makes or refills d4 dressings.",
+  },
+  {
     id: "heal",
     name: "Healing care",
     detail:
@@ -38,31 +44,26 @@ export const CAMP_DUTIES = Object.freeze([
       "Craft tools + one torch-material batch; refill or make d6 lighting.",
   },
   {
-    id: "forage-food",
-    name: "Forage ingredients",
+    id: "forage",
+    name: "Forage",
     detail:
-      "Knowledge check for one food batch. Three successful finds per floor.",
-  },
-  {
-    id: "forage-arrows",
-    name: "Forage fletching",
-    detail:
-      "Knowledge check for one arrow-material batch. Shares the floor's three finds.",
-  },
-  {
-    id: "forage-torches",
-    name: "Forage fuel",
-    detail:
-      "Knowledge check for one torch-material batch. Shares the floor's three finds.",
+      "Search for any resource on this hero's d100 table; one find or nothing. Learned skills improve matching bands.",
   },
 ]);
-const dutyIds = new Set(CAMP_DUTIES.map((d) => d.id));
+const dutyIds = new Set([
+  ...CAMP_DUTIES.map((d) => d.id),
+  "forage-food",
+  "forage-arrows",
+  "forage-torches",
+]);
 const recipes = {
+  dressings: "recipe-field-dressing",
   arrows: "recipe-fletched-ammunition",
   cook: "recipe-travel-food",
   torches: "recipe-bound-torches",
 };
 const products = {
+  dressings: ["item-field-dressing", 4],
   arrows: ["item-ammunition-bundle", 8],
   cook: ["item-food-bundle", 8],
   torches: ["item-lighting-bundle", 6],
@@ -192,10 +193,7 @@ export const campMethods = {
   campDutyReason(h, duty, target) {
     if (["heal", "treat"].includes(duty))
       return this.campMedicalReason(h, duty, target);
-    if (duty.startsWith("forage-"))
-      return (this.map.campFinds ?? 0) >= 3
-        ? "This floor's useful materials have been gathered."
-        : "";
+    if (duty === "forage") return "";
     if (duty === "water")
       return !this.campWaterSource()
         ? "No water source within three squares."
@@ -208,8 +206,10 @@ export const campMethods = {
           : "";
     const recipe = recipes[duty];
     if (!recipe) return "";
+    if (duty === "dressings" && !this.knownRecipes(h).has(recipe))
+      return "Learn the field dressing recipe first.";
     if (
-      duty !== "cook" &&
+      ["arrows", "torches"].includes(duty) &&
       !this.traits(h).some((t) => t.improvise) &&
       !this.party.some(
         (p) =>
@@ -241,24 +241,7 @@ export const campMethods = {
       this.campEvent(`${h.name} keeps a dedicated watch.`);
       return;
     }
-    if (duty.startsWith("forage-")) {
-      const recipe =
-        recipes[
-          { food: "cook", arrows: "arrows", torches: "torches" }[duty.slice(7)]
-        ];
-      const roll = this.heroRoll(h, "knowledge");
-      if (roll.tier === "weak")
-        this.campEvent(`${h.name} finds no usable materials (${roll.tier}).`);
-      else {
-        h.recipeMaterials ??= {};
-        h.recipeMaterials[recipe] = (h.recipeMaterials[recipe] ?? 0) + 1;
-        this.map.campFinds = (this.map.campFinds ?? 0) + 1;
-        this.campEvent(
-          `${h.name} forages one ${duty.slice(7)} batch (${roll.tier}); ${3 - this.map.campFinds} finds remain on this floor.`,
-        );
-      }
-      return;
-    }
+    if (duty === "forage") return this.campForage(h, rng);
     if (duty === "water") {
       for (const p of this.party)
         for (const i of p.preview.inventory.items.filter(
@@ -319,7 +302,7 @@ export const campMethods = {
       if (
         !Array.isArray(duties) ||
         duties.length !== 2 ||
-        duties.some((d) => !dutyIds.has(d))
+        duties.some((d) => !CAMP_DUTIES.some((v) => v.id === d))
       )
         throw new Error("Choose two camp duties for every hero.");
       plan[h.heroId] = [...duties];
@@ -348,6 +331,27 @@ export const campMethods = {
     this.campLight();
     this.campEvent(
       `The company makes camp for at least ${total} hours. Sleep restores 2 HP/hour; Grit and injuries remain.`,
+    );
+    this.emit("change");
+  },
+  updateCampDuties(assignments, targets) {
+    if (!this.campCanResume())
+      throw new Error("No paused camp plan to change.");
+    if (
+      Object.values(assignments).some((ds) =>
+        ds.some((id) => !CAMP_DUTIES.some((d) => d.id === id)),
+      )
+    )
+      throw new Error("Choose valid camp duties.");
+    const next = {
+      ...this.campaign.camp,
+      assignments: structuredClone(assignments),
+      targets: structuredClone(targets),
+    };
+    validateCamp({ ...this.campaign, camp: next });
+    this.campaign.camp = next;
+    this.campEvent(
+      "Duties revised for the remaining hours. Completed camp periods are unchanged.",
     );
     this.emit("change");
   },

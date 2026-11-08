@@ -40,6 +40,15 @@ export async function verifyDungeonCamp(page) {
         ) > 3,
     );
     await expect(page.locator("[data-camp-slot]")).toHaveCount(8);
+    await expect(
+      page.locator('select[data-camp-hero] option[value^="forage-"]'),
+    ).toHaveCount(0);
+    const odds = page.locator(".camp-forage-odds").first();
+    await odds.locator("summary").click();
+    await expect(odds.locator("tr")).toHaveCount(6);
+    await expect(odds).toContainText("Nothing found");
+    await page.screenshot({ path: "test-results/camp-foraging-odds.png" });
+    await odds.locator("summary").click();
     await page.evaluate(() => window.__ddd.scene.clearFloatingText());
     await page.screenshot({ path: "test-results/dungeon-camp-preview.png" });
     console.log(
@@ -81,6 +90,13 @@ export async function verifyDungeonCamp(page) {
         window.__ddd.game.party.map((h) => h.survival.hp),
       ),
     ).toEqual(before.map((hp, i) => hp + (i === 0 ? 0 : 2)));
+    const worker = await page.evaluate(() => window.__ddd.game.party[1].heroId);
+    await page
+      .locator(`[data-camp-hero="${worker}"][data-camp-slot="0"]`)
+      .selectOption("guard");
+    expect(
+      await page.evaluate(() => window.__ddd.game.campaign.camp.elapsed),
+    ).toBe(1);
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await page.reload();
