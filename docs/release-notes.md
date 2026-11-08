@@ -2,6 +2,7 @@
 
 A playtest patch for dungeon camping, meaningful supplies, character presentation and clearer progression.
 
+- **A fantasy soundtrack.** Approved music follows exploration, battles, Greyhaven and camp, with crossfades, repeating tracks, separate music/effects volumes and music mute. Camping uses Kevin MacLeod’s guitar-and-strings piece *Windswept*. Credits and CC BY 4.0 licence links are available in Sound.
 - **Dungeon camps replace Safe Breath.** Plan at least eight hours, with six hours of sleep and two duties per hero in each eight-hour rota. Sleep restores 2 HP per hour and never restores Grit. Extend the camp when more recovery is needed. Workers keep watch; dedicated guards get a detection bonus. Wandering creatures can interrupt the camp, with completed hours and recovery preserved.
 - **Healing and wound care.** Learned HP-healing skills add 4 HP per skill per care hour to a chosen companion, requiring a Field Dressing check. Wounds retain their recovery procedure and one treatment attempt per wound per campaign day. Severe treatment requires its existing supplies and care time. The compact planner shows current/projected HP, wounds and supplies over an animated campsite.
 - **Camp duties and general foraging.** Cook, gather water, fletch arrows, make torches or dressings, forage, heal or stand guard. Production requires tools/materials and water needs a nearby source. General foraging uses visible d100 bands: a 50% baseline chance of one find, expanded for relevant training.
@@ -21,5 +22,3 @@ A playtest patch for dungeon camping, meaningful supplies, character presentatio
 - **Windows x64:** run `Deep-Dark-Dungeons-HoL-Setup-0.8.2-x64.exe` (unsigned).
 
 Installed releases can use **Updates → Save & restart to install**. Debian upgrades may request administrator authorization. The finished apps include licensed Dungeon Mason character art and KayKit scenery; public source-only builds use KayKit fallback characters unless purchased exports are staged. Purchased source and standalone models are not distributed. Some unusual cosmetic combinations can still overlap.
-
-Music research for exploration, battle, camping and town is tracked separately in #68.

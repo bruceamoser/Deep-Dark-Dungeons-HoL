@@ -41,7 +41,7 @@ traversal, full social simulation, elaborate fluid physics, broader recipes,
 creature alternate actions and long-term balance remain future work. Concealment
 is an explicit targeting rule, not a complete stealth simulation. Camp treatment preserves the source recovery procedures and daily attempt limits; sleep remains interruptible.
 
-Finished apps use the purchased Dungeon Mason modular characters with KayKit scenery. Source-only builds retain KayKit character fallbacks. Unusual accessory combinations may overlap; final music is tracked separately. Purchased source and standalone models remain private. Two GPUs are not required or combined.
+Finished apps use the purchased Dungeon Mason modular characters with KayKit scenery. Source-only builds retain KayKit character fallbacks. Unusual accessory combinations may overlap; four approved, credited CC BY 4.0 tracks follow town/exploration/combat/camp with independent music/effects levels. Purchased source and standalone models remain private. Two GPUs are not required or combined.
 
 [Current forge coverage](game-power-coverage.json) ·
 [Historical source-card review](ability-coverage.json) ·

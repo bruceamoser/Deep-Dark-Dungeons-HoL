@@ -415,3 +415,17 @@ Linux checks exercise actual market/building arrival, hotkeys, infirmary/respec,
 save/reload, pausing, gate entry and middle-mouse camera rotation, with desktop
 and compact screenshots. Dungeon coordinates and hero resources stay unchanged
 by town travel. Screenshots inspected; author review only.
+
+## Approved context music and issue hygiene — #68 / #43
+
+Bruce approved Fantasy Soundscape, Battle Loop and Tavern Loop One, then selected
+Windswept after rejecting the first camp candidate. Original-creator CC BY 4.0
+sources, unchanged-file hashes and bundled/UI credits are recorded. Unit checks
+cover deferred unlock, rapid-download races, repeat handoffs, independent saved
+music settings, failure/retry and exact asset provenance. Browser checks exercise
+real audible output, context switching, fades/loops, controls, credits and reload.
+Packaged Linux and finished-platform checks exercise the same playback paths.
+
+Bruce also explicitly confirmed the Dungeon Mason decision superseded #43. It is
+closed as not planned with the decision recorded in its body and character docs;
+custom Blender prototype assets remain historical, unmerged reference work.

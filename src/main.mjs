@@ -18,6 +18,8 @@ import { characterSheet } from "./ui/character.mjs";
 import { icon, itemIcon, actionIcon } from "./ui/icons.mjs";
 import { ABILITIES, coverage } from "./core/abilities.mjs";
 import { FORMATIONS } from "./core/formations.mjs";
+import { musicScene } from "./view/music.mjs";
+import { MUSIC_TRACKS } from "./view/music-library.mjs";
 import { GameAudio } from "./view/audio.mjs";
 import { Scene } from "./view/scene.mjs";
 import { TownView } from "./view/town.mjs";
@@ -456,7 +458,15 @@ function className(h) {
 function button(label, action, sub = "", primary = false) {
   return `<button data-action="${action}" class="${primary ? "primary" : ""}">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
 }
+function syncMusic() {
+  if (game?.campaign)
+    sound.music.setScene(
+      musicScene(game.mode, !!modal.querySelector(".dungeon-camp")),
+    );
+}
+new MutationObserver(syncMusic).observe(modal, { childList: true });
 function render() {
+  syncMusic();
   if (!selectedAction) document.querySelector("#power-target-hint")?.remove();
   if (scene?.map && game?.map)
     scene.updateTacticalGrid(game, { targeting: !!selectedAction });
@@ -1088,9 +1098,29 @@ function reaction({ hero, enemy }) {
 function audioSettings() {
   dialog(
     "Sound",
-    `<p>Original ambient wind, footsteps, impacts and spell tones.</p><label>Master volume <input id="volume" type="range" min="0" max="1" step="0.05" value="${sound.volume}"></label><p id="audio-status">${sound.context?.state ?? "Waiting for a click"}</p>`,
+    `<p>Fantasy music follows your journey; footsteps, wind and combat sounds have their own volume.</p><div class="audio-sliders"><label>Master volume <input id="volume" type="range" min="0" max="1" step="0.05" value="${sound.volume}"></label><label>Music volume <input id="music-volume" type="range" min="0" max="1" step="0.05" value="${sound.music.volume}"></label><label>Effects volume <input id="effects-volume" type="range" min="0" max="1" step="0.05" value="${sound.effectsVolume}"></label></div><label><input id="music-muted" type="checkbox" ${sound.music.muted ? "checked" : ""}> Mute music</label><p id="music-playing"></p><p id="audio-status">${sound.context?.state ?? "Waiting for a click"}</p><details class="music-credits"><summary>Music credits</summary>${MUSIC_TRACKS.map((t) => `<p><strong>${esc(t.title)}</strong> · ${esc(t.creator)}<br><a href="${t.source}" target="_blank" rel="noreferrer">Original track</a> · <a href="${t.licenseUrl}" target="_blank" rel="noreferrer">${esc(t.license)}</a></p>`).join("")}</details>`,
     '<button id="mute-sound">Toggle mute</button><button id="test-sound" class="primary">Play test sound</button>',
   );
+  const musicStatus = () => {
+    const el = modal.querySelector("#music-playing"),
+      status = sound.music.status();
+    if (el)
+      el.textContent =
+        status.error ??
+        (status.title
+          ? `Now playing: ${status.title}${status.muted ? " · music muted" : ""}`
+          : status.loading
+            ? "Preparing music…"
+            : "Music starts after your first interaction.");
+  };
+  sound.music.onChange = musicStatus;
+  musicStatus();
+  modal.querySelector("#music-volume").oninput = (e) =>
+    sound.music.setVolume(e.target.value);
+  modal.querySelector("#effects-volume").oninput = (e) =>
+    sound.setEffectsVolume(e.target.value);
+  modal.querySelector("#music-muted").onchange = (e) =>
+    sound.music.setMuted(e.target.checked);
   modal.querySelector("#volume").oninput = (e) =>
     sound.setVolume(e.target.value);
   modal.querySelector("#mute-sound").onclick = () => {

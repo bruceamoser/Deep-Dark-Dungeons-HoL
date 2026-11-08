@@ -1,3 +1,4 @@
+import { verifyMusic } from "./music-check.mjs";
 import { verifyTownNavigation } from "./town-check.mjs";
 import { verifyProvisions } from "./provisions-check.mjs";
 import { verifyDungeonCamp } from "./camp-check.mjs";
@@ -94,6 +95,7 @@ try {
   const runCheck = async (fn) => {
     if (!selectedChecks || selectedChecks.includes(fn.name)) await fn(w);
   };
+  await runCheck(verifyMusic);
   await runCheck(verifyTownNavigation);
   await runCheck(verifyRespec);
   await runCheck(verifyForgeUI);
