@@ -1,3 +1,4 @@
+import { bulkCatalog, encumbranceFor } from "./bulk.mjs";
 import {
   FORGE_VERSION,
   FORGE_LEVEL_CAP,
@@ -284,6 +285,7 @@ export const FORGE_KITS = {
   },
 };
 export function forgeCharacter(draft, C) {
+  C = bulkCatalog(C);
   const errors = [],
     error = (code, text) => errors.push({ code, text });
   if (!draft?.forge) {
@@ -423,7 +425,7 @@ export function forgeCharacter(draft, C) {
         (i) => i.carried && !(i.worn && i.catalogId === "item-travel-clothes"),
       )
       .reduce((n, i) => n + i.bulk, 0),
-    encumbrance = Math.max(0, bulk - capacity);
+    encumbrance = encumbranceFor(bulk, capacity);
   const maximumHp =
       14 +
       (ancestry?.hp ?? 0) +

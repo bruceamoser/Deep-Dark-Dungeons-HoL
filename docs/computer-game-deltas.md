@@ -209,3 +209,7 @@ presentation time and grants no healing, Grit, XP or recovery. Services retain
 their existing costs, time and source-rule behavior. Trips pause under modals,
 can be cancelled/redirected, and reset on floor/run loading. No new save schema
 is required; town presentation restarts at the central street on load.
+
+## November 8 carrying-weight playtest
+
+Bruce requested fractional Bulk to make useful expedition supplies practical. Capacity remains 10 + 3 × Brawn plus earned bonuses. Food, ammunition, lighting, water and material bundles weigh 0.5 Bulk; small bottles, dressings, charms, writing gear and other pocket supplies weigh 0.25. Weapons, armor and large tools retain their existing weights. The game-owned table is `src/core/bulk.mjs`; source-book records remain unchanged. Combined bundles retain their total weight and remaining supply dice. Loading rebuilds item weights and cached ordinary merchant stock without refilling supplies. Any excess over capacity rounds up to a whole movement penalty so fractional weight never produces fractional tactical movement.

@@ -1,3 +1,4 @@
+import { gameBulk, encumbranceFor } from "./bulk.mjs";
 import { traitsOf } from "./ancestry-game.mjs";
 import { Random } from "./dungeon.mjs";
 import { distance, lineOfSight } from "./dungeon.mjs";
@@ -388,8 +389,9 @@ export function magicItem(seed, depth = 1, options = {}) {
   };
 }
 export function ordinaryItem(C, catalogId, instanceId) {
-  const definition = C.inventory.equipment.find((i) => i.id === catalogId);
-  if (!definition) throw new Error("Unknown ordinary equipment.");
+  const source = C.inventory.equipment.find((i) => i.id === catalogId);
+  if (!source) throw new Error("Unknown ordinary equipment.");
+  const definition = { ...source, bulk: gameBulk(source) };
   return {
     kind: "ordinary",
     catalogId,
@@ -539,9 +541,9 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
     )
     .reduce((n, i) => n + i.bulk, 0);
   p.inventory.capacity += 3 * (p.attributes.brawn - draft.attributes.brawn);
-  p.inventory.encumbrance = Math.max(
-    0,
-    p.inventory.bulk - p.inventory.capacity,
+  p.inventory.encumbrance = encumbranceFor(
+    p.inventory.bulk,
+    p.inventory.capacity,
   );
   p.summary.speed = Math.max(
     0,

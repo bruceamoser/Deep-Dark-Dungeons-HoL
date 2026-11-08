@@ -1,3 +1,4 @@
+import { bulkCatalog } from "./bulk.mjs";
 import { addForgePowers } from "./forge-powers.mjs";
 import { RECIPE_ITEMS } from "./recipes.mjs";
 import { addStarterPowers } from "./starter-powers.mjs";
@@ -813,6 +814,7 @@ export const GAME_POWER_RECORDS = definitions.map((p) => ({
   },
 }));
 export function gameCatalog(source) {
+  source = bulkCatalog(source);
   if (source.gamePowers) return source;
   const c = structuredClone(source);
   c.gamePowers = true;
@@ -857,7 +859,8 @@ export function gameCatalog(source) {
       );
     }
   }
-  return c;
+  delete c.gameBulk;
+  return bulkCatalog(c);
 }
 const legacyGeneralPowers = {
   "ability-a-name-worth-knowing": "power-rally",

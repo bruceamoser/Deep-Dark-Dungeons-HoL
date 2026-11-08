@@ -1,3 +1,4 @@
+import { gameBulk } from "./bulk.mjs";
 import { magicItem, ordinaryItem, recallScroll } from "./treasure.mjs";
 export const MERCHANTS = [
   {
@@ -98,6 +99,17 @@ export const marketMethods = {
     const epoch = this.campaign.expeditions,
       depth = this.campaign.deepest ?? this.campaign.depth;
     if (this.campaign.market?.epoch === epoch) {
+      for (const entries of Object.values(this.campaign.market.stock))
+        for (const { item } of entries)
+          if (item.kind === "ordinary") {
+            const d = this.C.inventory.equipment.find(
+              (d) => d.id === item.catalogId,
+            );
+            if (d) {
+              item.definition.bulk = gameBulk(d);
+              item.bulk = item.definition.bulk * (item.quantity ?? 1);
+            }
+          }
       const stock = this.campaign.market.stock.general;
       for (const id of MERCHANTS.find((m) => m.id === "general").goods)
         if (!stock.some((e) => e.item.catalogId === id))
