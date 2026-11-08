@@ -16,6 +16,17 @@ export async function verifyWeaponVisuals(page) {
         h.preview.inventory.items
           .filter((i) => i.held)
           .forEach((i) => g.equip(0, i.instanceId, "stow"));
+        if (
+          !h.treasure.some((i) => i.instanceId === "visual-test-ordinary-bow")
+        )
+          h.treasure.push({
+            kind: "ordinary",
+            instanceId: "visual-test-ordinary-bow",
+            catalogId: "item-ordinary-ranged-weapon",
+            hands: 2,
+            carried: true,
+            held: false,
+          });
         h.treasure = h.treasure.filter((i) => i.instanceId !== item.instanceId);
         h.treasure.push({ ...item, held: true });
         g.refreshHero(h);

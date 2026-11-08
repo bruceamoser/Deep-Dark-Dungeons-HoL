@@ -335,6 +335,29 @@ export function heroPreview(canvas, assets, hero) {
     drag = null,
     last = performance.now(),
     zoom = 1;
+  let activeHighlight = null;
+  const highlight = (channel) => {
+    activeHighlight = channel;
+    current?.traverse((o) => {
+      if (!o.isMesh) return;
+      for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+        if (!m.emissive) continue;
+        m.userData.previewEmissive ??= {
+          colour: m.emissive.clone(),
+          intensity: m.emissiveIntensity,
+        };
+        const selected =
+          channel !== null &&
+          Number(m.name.match(/^MasonChannel(\d+)/)?.[1]) === channel + 1;
+        m.emissive.copy(
+          selected ? new T.Color("#5fd8d0") : m.userData.previewEmissive.colour,
+        );
+        m.emissiveIntensity = selected
+          ? 1.5
+          : m.userData.previewEmissive.intensity;
+      }
+    });
+  };
   const update = (h) => {
     if (current) {
       current.userData.dispose?.();
@@ -355,6 +378,11 @@ export function heroPreview(canvas, assets, hero) {
     canvas.dataset.armor = current.userData.equipment.armor;
     canvas.dataset.weapon = current.userData.equipment.weapon;
     canvas.dataset.appearance = JSON.stringify(current.userData.appearance);
+    canvas.dataset.previewWeapon = current.userData.weaponVisual?.model ?? "";
+    canvas.dataset.previewBackpack = String(
+      current.userData.equipment.backpack ?? false,
+    );
+    highlight(activeHighlight);
   };
   update(hero);
   const down = (e) => {
@@ -401,6 +429,8 @@ export function heroPreview(canvas, assets, hero) {
   frame = requestAnimationFrame(tick);
   return {
     update,
+    highlight,
+    paletteAreas: () => current.userData.paletteAreas ?? [],
     dispose() {
       cancelAnimationFrame(frame);
       resize.disconnect();

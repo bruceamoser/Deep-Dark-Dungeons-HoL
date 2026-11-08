@@ -2,6 +2,7 @@ import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { normalizeAppearance } from "../core/identity.mjs";
+import { MASON_PALETTE_REGIONS } from "../core/mason-palette-regions.mjs";
 import {
   MASON_CLASS_HATS,
   MASON_OPTIONS,
@@ -69,6 +70,7 @@ export function masonAppearance(asset, hero, assets) {
   ]);
   if (hat === "none") selected.add(choice.hair);
   const partNames = new Set(Object.values(MASON_OPTIONS).flat());
+  const areas = new Map();
   model.traverse((o) => {
     if (partNames.has(o.name)) o.visible = selected.has(o.name);
     if (!o.isMesh) return;
@@ -79,6 +81,30 @@ export function masonAppearance(asset, hero, assets) {
       const m = source.clone();
       const channel = Number(source.name.match(/^MasonChannel(\d+)/)?.[1]);
       const hairPart = /^(Hair|Eyebrow|AC10_|AC11_)/.test(part?.name ?? "");
+      if (
+        selected.has(part?.name) &&
+        channel >= 1 &&
+        channel <= 8 &&
+        !hairPart
+      ) {
+        const category = /^Body/.test(part.name)
+          ? "Outfit"
+          : /^(Hat|HeadArmor|Crown)/.test(part.name)
+            ? "Headwear"
+            : /^Cloak/.test(part.name)
+              ? "Cloak"
+              : "Equipment & details";
+        const area = areas.get(channel) ?? {
+          index: channel - 1,
+          parts: [],
+          original: MASON_PALETTE_REGIONS[part.name]?.[channel] ?? "#888888",
+        };
+        if (!area.parts.includes(category)) area.parts.push(category);
+        if (category === "Outfit")
+          area.original =
+            MASON_PALETTE_REGIONS[part.name]?.[channel] ?? area.original;
+        areas.set(channel, area);
+      }
       const tint =
         channel === 9
           ? a.skin
@@ -124,6 +150,9 @@ export function masonAppearance(asset, hero, assets) {
   model.userData.avatar = "DungeonMason";
   model.userData.weaponVisual = visual;
   model.userData.appearance = { ...a, ancestry: draft.ancestryId };
+  model.userData.paletteAreas = [...areas.values()].sort(
+    (a, b) => a.index - b.index,
+  );
   model.userData.equipment = {
     armor: tier,
     weapon: ranged ? "bow" : melee ? "melee" : "unarmed",

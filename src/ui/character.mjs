@@ -1,3 +1,4 @@
+import { appearancePreviewHero } from "../core/appearance-preview.mjs";
 import { FORGE_NODES } from "../core/forge-catalog.mjs";
 import { appearanceControls } from "./appearance.mjs";
 import { buildPanel } from "./builds.mjs";
@@ -518,12 +519,22 @@ export function characterSheet({
     } else if (tab === "appearance") {
       appearanceControls(content, {
         appearance: h.draft.appearance,
+        hero: h,
+        paletteAreas: () => view.paletteAreas(),
+        onHighlight: (channel) => view.highlight(channel),
+        onPreview: (key) => {
+          const out = appearancePreviewHero(h, key);
+          view.update(out.hero);
+          root.querySelector(".stage-caption").textContent = out.caption;
+        },
         masonAvailable: scene.assets.has("DungeonMason"),
         ancestry: h.draft.ancestryId,
         name: h.name,
-        onChange: (value) => {
+        onChange: (value, key) => {
           game.setAppearance(index, value);
-          view.update(h);
+          const out = appearancePreviewHero(h, key);
+          view.update(out.hero);
+          root.querySelector(".stage-caption").textContent = out.caption;
         },
       });
     } else {

@@ -6,6 +6,8 @@ Class outfits use the supplied body library. The creator exposes heads, facial p
 
 Ordinary melee and ranged styles can be edited at any time, including in the dungeon. Magic weapons instead use their item's form and a stable variant derived from its generation seed: existing enchanted Swords remain swords and Longbows remain bows. Their appearance follows the item across equipment changes, transfers and saves rather than the owner's ordinary-weapon preferences.
 
+Appearance choices are grouped by face/hair, fantasy headwear/details, owned equipment and colours. Equipment controls appear only for carried items that support customization. Selecting a stowed item temporarily displays it in the portrait without equipping it; **Show equipped gear** restores the real kit. Hair/headwear previews can hide conflicting headgear without removing it from inventory. Novelty/sci-fi faces, goggles, antenna/bunny ears, Santa/heart hats and ornaments are excluded and legacy selections normalize to supported defaults. Colour controls show only regions used by the preview, name their original colour and affected parts, and highlight matching areas on hover/focus. Original colour facts are reproducible with `python3 scripts/mason-palette-facts.py` after staging the licensed GLB; no geometry or textures are included in those facts.
+
 ## Purchased files and licence
 
 Source: https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/rpg-tiny-hero-wave-polyart-231024

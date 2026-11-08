@@ -1,3 +1,4 @@
+import { appearancePreviewHero } from "../core/appearance-preview.mjs";
 import {
   newForgeDraft,
   forgeCharacter,
@@ -228,13 +229,28 @@ export function creationScreen({
     } else if (step === 3) {
       appearanceControls(host, {
         appearance: draft.appearance,
+        hero: { draft, preview: p },
+        paletteAreas: () => view.paletteAreas(),
+        onHighlight: (channel) => view.highlight(channel),
+        onPreview: (key) =>
+          view.update(
+            appearancePreviewHero(
+              { model, draft, name: draft.name, preview: p },
+              key,
+            ).hero,
+          ),
         masonAvailable: scene.assets.has("DungeonMason"),
         ancestry: draft.ancestryId,
         name: draft.name,
-        onChange: (value) => {
+        onChange: (value, key) => {
           draft.appearance = value;
           save();
-          view.update({ model, draft, name: draft.name, preview: p });
+          view.update(
+            appearancePreviewHero(
+              { model, draft, name: draft.name, preview: p },
+              key,
+            ).hero,
+          );
         },
       });
     } else if (step === 2) {
