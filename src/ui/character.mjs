@@ -469,7 +469,6 @@ export function characterSheet({
         masonAvailable: scene.assets.has("DungeonMason"),
         ancestry: h.draft.ancestryId,
         name: h.name,
-        disabled: game.mode !== "town",
         onChange: (value) => {
           game.setAppearance(index, value);
           view.update(h);

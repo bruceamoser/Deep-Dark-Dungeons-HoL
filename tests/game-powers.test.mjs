@@ -379,6 +379,35 @@ test("all appearance choices, recipes, charges and surfaces survive save/load", 
       assert.ok(ANCESTRY_LOOKS[ancestry].skins.includes(a.skin));
     }
 });
+test("appearance can change during exploration and combat without spending resources", () => {
+  const g = fresh(),
+    h = g.active;
+  for (const mode of ["exploration", "combat"]) {
+    g.mode = mode;
+    const before = structuredClone({
+      survival: h.survival,
+      inventory: h.preview.inventory,
+      budget: g.budget,
+      xp: h.xp,
+    });
+    g.setAppearance(0, {
+      skin: "#559966",
+      mason: { oneHandType: "hammer", headpiece: "none" },
+    });
+    assert.equal(h.draft.appearance.mason.oneHandType, "hammer");
+    assert.equal(h.draft.appearance.skin, "#559966");
+    assert.equal(g.mode, mode);
+    assert.deepEqual(
+      {
+        survival: h.survival,
+        inventory: h.preview.inventory,
+        budget: g.budget,
+        xp: h.xp,
+      },
+      before,
+    );
+  }
+});
 test("rest charges require eight hours sleep, not a breath or one-hour wait", () => {
   const g = fresh(),
     h = g.active;
