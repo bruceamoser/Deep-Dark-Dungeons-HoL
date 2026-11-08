@@ -7,6 +7,7 @@ export async function verifyCreatureVisuals(page) {
     await page.evaluate(
       (ids) => {
         const { game: g, scene: s, C } = window.__ddd;
+        g.pause();
         g.mode = "exploration";
         g.busy = false;
         g.encounter = null;
@@ -41,17 +42,54 @@ export async function verifyCreatureVisuals(page) {
       ids.slice(offset, offset + 8),
     );
     await page.waitForTimeout(200);
-    expect(
-      await page.evaluate(() =>
-        [...window.__ddd.scene.entities.values()]
-          .filter((e) => e.isEnemy)
-          .every(
-            (e) =>
-              (e.model.children.length > 0 && e.clips.length > 0) ||
-              e.model.userData.animate !== undefined,
-          ),
-      ),
-    ).toBe(true);
+    const rendered = await page.evaluate(() =>
+      [...window.__ddd.scene.entities.values()]
+        .filter((e) => e.isEnemy)
+        .map((e) => {
+          e.mixer.update(0.3);
+          e.model.updateMatrixWorld(true);
+          let low = Infinity,
+            high = -Infinity,
+            meshes = 0,
+            coloured = 0;
+          e.model.traverse((o) => {
+            if (!o.isMesh) return;
+            let p = o;
+            while (p && p.visible) p = p.parent;
+            if (p) return;
+            meshes++;
+            if (o.frustumCulled)
+              throw Error("Animated creature may be incorrectly culled");
+            o.skeleton?.update();
+            if (o.isSkinnedMesh) o.computeBoundingBox();
+            else o.geometry.computeBoundingBox();
+            const box = (
+              o.isSkinnedMesh ? o.boundingBox : o.geometry.boundingBox
+            )
+              .clone()
+              .applyMatrix4(o.matrixWorld);
+            low = Math.min(low, box.min.y);
+            high = Math.max(high, box.max.y);
+            for (const m of Array.isArray(o.material)
+              ? o.material
+              : [o.material])
+              if (
+                m.map ||
+                Math.min(m.color?.r ?? 1, m.color?.g ?? 1, m.color?.b ?? 1) <
+                  0.95
+              )
+                coloured++;
+          });
+          return { type: e.data.type, low, high, meshes, coloured };
+        }),
+    );
+    for (const actor of rendered) {
+      expect(actor.meshes, actor.type).toBeGreaterThan(0);
+      expect(actor.high - actor.low, actor.type).toBeGreaterThan(0.25);
+      expect(actor.high, actor.type).toBeLessThan(5);
+      expect(actor.low, actor.type).toBeGreaterThan(-1.5);
+      expect(actor.coloured, actor.type).toBeGreaterThan(0);
+    }
     if ([0, 24, 32, 48].includes(offset))
       await page.screenshot({
         path: `test-results/book-creatures-${offset}.png`,

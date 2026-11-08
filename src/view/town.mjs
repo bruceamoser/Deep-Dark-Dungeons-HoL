@@ -92,6 +92,27 @@ export class TownView {
     this.canvas.addEventListener("pointermove", (e) =>
       this.hover(this.serviceAt(e)),
     );
+    let rotationDrag = null;
+    this.canvas.addEventListener("pointerdown", (e) => {
+      if (e.button === 1) {
+        e.preventDefault();
+        rotationDrag = { x: e.clientX, angle: this.angle };
+        this.canvas.setPointerCapture(e.pointerId);
+      }
+    });
+    this.canvas.addEventListener("pointermove", (e) => {
+      if (rotationDrag && e.buttons & 4) {
+        this.angle = rotationDrag.angle - (e.clientX - rotationDrag.x) * 0.008;
+        this.resize();
+      }
+    });
+    this.canvas.addEventListener("pointerup", (e) => {
+      if (e.button === 1) rotationDrag = null;
+    });
+    this.canvas.addEventListener("pointercancel", () => (rotationDrag = null));
+    this.canvas.addEventListener("auxclick", (e) => {
+      if (e.button === 1) e.preventDefault();
+    });
     this.canvas.addEventListener("pointerleave", () => this.hover(null));
     this.canvas.addEventListener("click", (e) => {
       const id = this.serviceAt(e);

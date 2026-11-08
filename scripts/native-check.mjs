@@ -1,3 +1,4 @@
+import { verifyWeaponRoll } from "./weapon-roll-check.mjs";
 import { verifyAppearanceUX } from "./appearance-ux-check.mjs";
 import { verifyCombinedSupplies } from "./combined-supplies-check.mjs";
 import { verifyWeaponVisuals } from "./weapon-visual-check.mjs";
@@ -93,6 +94,7 @@ try {
   await runCheck(verifyRespec);
   await runCheck(verifyForgeUI);
   await runCheck(verifyBuildForge);
+  await runCheck(verifyWeaponRoll);
   await runCheck(verifyAppearanceUX);
   await runCheck(verifyGameplayIdentity);
   await runCheck(verifyExpeditionUI);
