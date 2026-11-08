@@ -5,7 +5,7 @@ import { normalizeAppearance } from "../core/identity.mjs";
 import {
   MASON_CLASS_HATS,
   MASON_OPTIONS,
-  MELEE_VARIANTS,
+  masonWeaponVisual,
   masonBody,
 } from "../core/mason-appearance.mjs";
 export const MASON_URL = "/assets/licensed/dungeon-mason/hero.glb";
@@ -39,16 +39,9 @@ export function masonAppearance(asset, hero, assets) {
     : choice.headpiece === "class"
       ? (MASON_CLASS_HATS[draft.classId] ?? "Hat03")
       : choice.headpiece;
-  const handed = melee?.hands === 2 ? "two" : "one",
-    type = handed === "two" ? choice.twoHandType : choice.oneHandType;
-  const variants = MELEE_VARIANTS[handed][type],
-    preferred =
-      handed === "two" ? choice.twoHandVariant : choice.oneHandVariant;
-  const weapon = melee
-    ? variants.includes(preferred)
-      ? preferred
-      : variants[0]
-    : null;
+  const visual = masonWeaponVisual(melee ?? ranged, choice);
+  const weapon = melee ? visual.model : null;
+  const bow = ranged ? visual.model : null;
   const selected = new Set([
     body,
     choice.head === "auto"
@@ -70,8 +63,8 @@ export function masonAppearance(asset, hero, assets) {
     hat,
     backpack ? choice.backpack : null,
     shield ? choice.shield : null,
-    ranged ? choice.bow : null,
-    ranged ? choice.arrow : null,
+    bow,
+    ranged ? visual.arrow : null,
     weapon,
   ]);
   if (hat === "none") selected.add(choice.hair);
@@ -115,7 +108,7 @@ export function masonAppearance(asset, hero, assets) {
   // Stable semantic anchors keep combat effects independent of model filenames.
   for (const [partName, alias] of [
     [weapon, "Readied melee weapon"],
-    [ranged ? choice.bow : null, "Readied bow"],
+    [bow, "Readied bow"],
     [shield ? choice.shield : null, "Readied shield"],
   ]) {
     const part = partName && model.getObjectByName(partName);
@@ -129,6 +122,7 @@ export function masonAppearance(asset, hero, assets) {
   model.scale.setScalar(1.15);
   model.userData.height = 1.8;
   model.userData.avatar = "DungeonMason";
+  model.userData.weaponVisual = visual;
   model.userData.appearance = { ...a, ancestry: draft.ancestryId };
   model.userData.equipment = {
     armor: tier,

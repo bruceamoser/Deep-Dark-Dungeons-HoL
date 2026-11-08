@@ -19,6 +19,7 @@ export const EQUIPMENT_SLOTS = [
 export const ITEM_BASES = {
   blade: {
     name: "Sword",
+    weaponType: "sword",
     slot: "main",
     catalogId: "item-ordinary-melee-weapon",
     hands: 1,
@@ -26,6 +27,7 @@ export const ITEM_BASES = {
   },
   bow: {
     name: "Longbow",
+    weaponType: "bow",
     slot: "main",
     catalogId: "item-ordinary-ranged-weapon",
     hands: 2,
@@ -353,6 +355,7 @@ export function magicItem(seed, depth = 1, options = {}) {
     instanceId: `relic-${seed >>> 0}-${base}`,
     catalogId: def.catalogId ?? `relic-${base}`,
     base,
+    weaponType: def.weaponType,
     slot: def.slot,
     icon: def.icon,
     seed: seed >>> 0,
