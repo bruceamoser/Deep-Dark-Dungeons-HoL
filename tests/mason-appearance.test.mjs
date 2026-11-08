@@ -5,7 +5,9 @@ import { normalizeAppearance } from "../src/core/identity.mjs";
 import {
   normalizeMason,
   MASON_OPTIONS,
+  masonWeaponVisual,
 } from "../src/core/mason-appearance.mjs";
+import { magicItem } from "../src/core/treasure.mjs";
 import { masonAppearance } from "../src/view/mason-heroes.mjs";
 test("appearance migrates legacy saves and rejects invalid part identifiers and colours", () => {
   const a = normalizeAppearance({
@@ -103,4 +105,36 @@ test("class fixes the outfit and a two-handed item uses the selected two-handed 
   assert.equal(result.model.getObjectByName("OHS10_Axe").visible, false);
   assert.ok(result.model.getObjectByName("Readied melee weapon"));
   result.model.userData.dispose();
+});
+
+test("magic weapons keep their receipt form and variant while ordinary styles remain editable", () => {
+  const axe = normalizeMason({
+    oneHandType: "axe",
+    bow: "Bow05",
+    arrow: "Arrow05",
+  });
+  const hammer = normalizeMason({
+    oneHandType: "hammer",
+    bow: "Bow02",
+    arrow: "Arrow02",
+  });
+  for (const base of ["blade", "bow"]) {
+    const item = magicItem(123, 2, { base });
+    const visual = masonWeaponVisual(item, axe);
+    assert.equal(item.weaponType, base === "blade" ? "sword" : "bow");
+    assert.equal(visual.fixed, true);
+    assert.deepEqual(masonWeaponVisual(item, hammer), visual);
+    const restored = magicItem(
+      item.seed,
+      item.depth,
+      JSON.parse(JSON.stringify(item)),
+    );
+    assert.deepEqual(masonWeaponVisual(restored, hammer), visual);
+  }
+  const ordinary = { catalogId: "item-ordinary-melee-weapon", hands: 1 };
+  assert.equal(masonWeaponVisual(ordinary, axe).model, "OHS10_Axe");
+  assert.equal(masonWeaponVisual(ordinary, hammer).model, "OHS11_Hammer");
+  const bow = { catalogId: "item-ordinary-ranged-weapon", hands: 2 };
+  assert.equal(masonWeaponVisual(bow, axe).model, "Bow05");
+  assert.equal(masonWeaponVisual(bow, hammer).model, "Bow02");
 });

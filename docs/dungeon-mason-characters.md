@@ -4,6 +4,8 @@ Bruce approved Dungeon Mason RPG Tiny Hero Wave Polyart as the player-character 
 
 Class outfits use the supplied body library. The creator exposes heads, facial parts, hair, facial hair, ears, horns, crowns, eyewear, masks, ornaments, cloaks, backpack styles, shields, bows/arrows and one-/two-handed sword/axe/hammer variants. Two-handed axes/hammers are adaptations of the supplied axe/hammer geometry with longer handles, not claimed as original pack items. Colour channels use the author's three RGB masks: channels 1–8 are optional palette overrides, channel 9 is skin. Original colours remain when an override is unset. Cosmetic parts never grant inventory items or mechanical benefits.
 
+Ordinary melee and ranged styles can be edited at any time, including in the dungeon. Magic weapons instead use their item's form and a stable variant derived from its generation seed: existing enchanted Swords remain swords and Longbows remain bows. Their appearance follows the item across equipment changes, transfers and saves rather than the owner's ordinary-weapon preferences.
+
 ## Purchased files and licence
 
 Source: https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/rpg-tiny-hero-wave-polyart-231024

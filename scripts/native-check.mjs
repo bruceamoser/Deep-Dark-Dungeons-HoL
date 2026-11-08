@@ -1,3 +1,4 @@
+import { verifyWeaponVisuals } from "./weapon-visual-check.mjs";
 import { verifyRespec } from "./respec-check.mjs";
 import { verifyForgeUI } from "./forge-ui-check.mjs";
 import { verifyBuildForge } from "./build-forge-check.mjs";
@@ -93,6 +94,7 @@ try {
   await runCheck(verifyGameplayIdentity);
   await runCheck(verifyExpeditionUI);
   await runCheck(verifyTorchModels);
+  await runCheck(verifyWeaponVisuals);
   await runCheck(verifyCharacter);
   await runCheck(verifyRoster);
   await w.getByRole("button", { name: "Enter the depths" }).click();

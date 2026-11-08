@@ -194,3 +194,40 @@ export const MELEE_VARIANTS = {
     hammer: ["THH01_Hammer", "THH02_Hammer"],
   },
 };
+
+// Enchanted forms come from the item's generation receipt. Ordinary weapon
+// preferences remain cosmetic and can be edited without changing equipment.
+export function masonWeaponVisual(item, choice) {
+  if (!item) return null;
+  const ranged = item.catalogId === "item-ordinary-ranged-weapon";
+  const fixed = !!item.base && Number.isSafeInteger(item.seed);
+  const handed = item.hands === 2 ? "two" : "one";
+  const type = fixed
+    ? (item.weaponType ?? (ranged ? "bow" : "sword"))
+    : ranged
+      ? "bow"
+      : handed === "two"
+        ? choice.twoHandType
+        : choice.oneHandType;
+  if (ranged) {
+    const index = (item.seed >>> 0) % MASON_OPTIONS.bow.length;
+    return {
+      type: "bow",
+      fixed,
+      model: fixed ? MASON_OPTIONS.bow[index] : choice.bow,
+      arrow: fixed ? MASON_OPTIONS.arrow[index] : choice.arrow,
+    };
+  }
+  const variants = MELEE_VARIANTS[handed][type] ?? MELEE_VARIANTS[handed].sword;
+  const preferred =
+    handed === "two" ? choice.twoHandVariant : choice.oneHandVariant;
+  return {
+    type,
+    fixed,
+    model: fixed
+      ? variants[(item.seed >>> 0) % variants.length]
+      : variants.includes(preferred)
+        ? preferred
+        : variants[0],
+  };
+}
