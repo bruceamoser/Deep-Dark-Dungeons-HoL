@@ -1,3 +1,5 @@
+import { provisionMethods, prepareProvisions } from "./provisions.mjs";
+import { migrateCombinedSupplies } from "./supply-dice.mjs";
 import { campMedicalMethods } from "./camp-medical.mjs";
 import { campMethods } from "./camp.mjs";
 import { bulkCatalog } from "./bulk.mjs";
@@ -188,6 +190,7 @@ export class Game {
       party: drafts.map((d, i) => this.hero(d, i)),
     };
     prepareExpedition(this.campaign);
+    prepareProvisions(this.campaign);
     this.mode = "town";
     this.newFloor();
     this.note("Four names in the register. One road beneath the earth.");
@@ -195,6 +198,8 @@ export class Game {
   }
   load(c, { resume = true } = {}) {
     validateGameState(c);
+    prepareProvisions(c);
+    migrateCombinedSupplies(c, this.C);
     this.pause();
     prepareRoster(c);
     c.woundNotices ??= [];
@@ -1780,6 +1785,7 @@ export class Game {
         }
         if (this.canAct(hero)) Object.assign(hero, end);
       }
+      this.movementSupplies(Math.max(...steps.map((s) => s.points.length)));
       this.syncTorches();
       this.emit("move", {
         steps: steps.map(({ hero, points }) => ({ heroId: hero.id, points })),
@@ -1795,15 +1801,17 @@ export class Game {
       this.checkInteractionArrival();
     }
   }
-  detect() {
-    const visible = this.enemies.filter(
-      (e) =>
-        e.hp > 0 &&
-        this.canSee(e) &&
-        this.party.some(
-          (h) => h.survival.status === "active" && distance(h, e) <= 7,
-        ),
-    );
+  detect(forcedEnemies = null) {
+    const visible =
+      forcedEnemies ??
+      this.enemies.filter(
+        (e) =>
+          e.hp > 0 &&
+          this.canSee(e) &&
+          this.party.some(
+            (h) => h.survival.status === "active" && distance(h, e) <= 7,
+          ),
+      );
     if (!visible.length) return false;
     const groups = new Set(visible.map((e) => e.group)),
       opposition = this.enemies.filter((e) => e.hp > 0 && groups.has(e.group));
@@ -2263,6 +2271,7 @@ Object.assign(
   Game.prototype,
   marketMethods,
   expeditionMethods,
+  provisionMethods,
   craftingMethods,
   opportunityMethods,
 );

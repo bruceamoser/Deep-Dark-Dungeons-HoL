@@ -1,3 +1,4 @@
+import { combineSupplyDice, collapseSupplyDice } from "./supply-dice.mjs";
 import { gameBulk, encumbranceFor } from "./bulk.mjs";
 import { traitsOf } from "./ancestry-game.mjs";
 import { Random } from "./dungeon.mjs";
@@ -403,7 +404,8 @@ export function ordinaryItem(C, catalogId, instanceId) {
     carried: true,
     held: false,
     worn: false,
-    inventoryDie: definition.inventoryDie,
+    inventoryDie:
+      definition.inventoryDie ?? (catalogId === "item-water-flask" ? 6 : null),
   };
 }
 export function recallScroll(seed, instanceId = `recall-${seed >>> 0}`) {
@@ -452,6 +454,8 @@ export function activeItemEffects(hero, item) {
 export function gearPreview(R, C, hero, draft = hero.draft) {
   const p = R.workshopCharacter(draft, C);
   if (!p.valid) return p;
+  for (const i of p.inventory.items)
+    if (i.catalogId === "item-water-flask") i.inventoryDie = 6;
   const treasure = (hero.treasure ?? []).map((saved) => {
     // Rebuild mechanics from the generation receipt; never trust persisted effect values.
     const item =
@@ -478,6 +482,7 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       quantity: saved.quantity ?? item.quantity,
       bulk: item.definition.bulk * (saved.quantity ?? item.quantity),
       materialType: saved.materialType,
+      combinedSupply: !!saved.combinedSupply,
       ...(saved.reserveDice ? { reserveDice: [...saved.reserveDice] } : {}),
       definition: saved.materialType
         ? {
@@ -654,12 +659,20 @@ export const treasureMethods = {
       return "Combine matching carried consumables of the same type.";
     if (!this.supplyValue(h, a) || !this.supplyValue(h, b))
       return "Both bundles need remaining supplies.";
+    if (Math.max(this.supplyValue(h, a), this.supplyValue(h, b)) === 20)
+      return "This supply is already at the d20 maximum. Keep the other bundle separate.";
     if (
       (a.quantity ?? 1) + (b.quantity ?? 1) > 99 ||
       (a.reserveDice?.length ?? 0) + (b.reserveDice?.length ?? 0) + 1 > 98
     )
       return "A combined bundle can contain at most 99 original bundles.";
     return "";
+  },
+  combinedSupplyDie(index, targetId, sourceId) {
+    const h = this.party[index],
+      a = h.preview.inventory.items.find((i) => i.instanceId === targetId),
+      b = h.preview.inventory.items.find((i) => i.instanceId === sourceId);
+    return combineSupplyDice(this.supplyValue(h, a), this.supplyValue(h, b));
   },
   combineSupplies(index, targetId, sourceId) {
     const reason = this.combineSupplyReason(index, targetId, sourceId);
@@ -672,24 +685,25 @@ export const treasureMethods = {
       instanceId: `combined-${crypto.randomUUID()}`,
       quantity: (a.quantity ?? 1) + (b.quantity ?? 1),
       bulk: a.bulk + b.bulk,
-      reserveDice: [
-        ...(a.reserveDice ?? []),
-        b.supplyRemaining,
-        ...(b.reserveDice ?? []),
-      ],
+      combinedSupply: true,
+      supplyRemaining: combineSupplyDice(
+        collapseSupplyDice([a.supplyRemaining, ...(a.reserveDice ?? [])]),
+        collapseSupplyDice([b.supplyRemaining, ...(b.reserveDice ?? [])]),
+      ),
     };
     this.removePortableItem(h, targetId);
     this.removePortableItem(h, sourceId);
     delete h.supplies[targetId];
     delete h.supplies[sourceId];
     (h.treasure ??= []).push(combined);
-    h.supplies[combined.instanceId] = a.supplyRemaining;
+    delete combined.reserveDice;
+    h.supplies[combined.instanceId] = combined.supplyRemaining;
     if ([targetId, sourceId].includes(h.torch.supplyId))
       h.torch.supplyId = combined.instanceId;
     this.refreshHero(h);
     this.syncTorches();
     this.note(
-      `${h.name} combines ${a.definition.name}: remaining dice d${[a.supplyRemaining, ...combined.reserveDice].join(" + d")}; bulk unchanged.`,
+      `${h.name} combines ${a.definition.name}: d${a.supplyRemaining} + d${b.supplyRemaining} → d${combined.supplyRemaining}; bulk unchanged.`,
     );
     this.emit("party");
     this.emit("change");

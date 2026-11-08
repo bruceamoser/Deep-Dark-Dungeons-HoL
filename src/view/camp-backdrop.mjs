@@ -179,7 +179,7 @@ export function campBackdrop(canvas, assets, heroes) {
     frame = requestAnimationFrame(draw);
   }
   frame = requestAnimationFrame(draw);
-  return () => {
+  const dispose = () => {
     disposed = true;
     cancelAnimationFrame(frame);
     mixers.forEach((m) => m.stopAllAction());
@@ -193,4 +193,10 @@ export function campBackdrop(canvas, assets, heroes) {
     renderer.dispose();
     renderer.forceContextLoss();
   };
+  dispose.setFire = (lit) => {
+    fireLight.visible = lit;
+    flames.forEach((f) => (f.visible = lit));
+    sparks.forEach((s) => (s.visible = lit));
+  };
+  return dispose;
 }

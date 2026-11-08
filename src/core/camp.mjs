@@ -339,6 +339,9 @@ export const campMethods = {
       seed:
         (this.campaign.seed + serial * 7919 + this.campaign.depth * 173) >>> 0,
       sleepHours: {},
+      fireLit: this.party.some(
+        (h) => h.lantern || this.supplyItem(h, "item-lighting-bundle"),
+      ),
       status: "paused",
       events: [],
     };
@@ -352,7 +355,12 @@ export const campMethods = {
     this.map.lights ??= [];
     this.map.lights = this.map.lights.filter((l) => l.id !== "camp-fire");
     const c = this.campaign.camp;
-    this.map.lights.push({ id: "camp-fire", x: c.x, z: c.z, radius: 8 });
+    this.map.lights.push({
+      id: "camp-fire",
+      x: c.x,
+      z: c.z,
+      radius: c.fireLit === false ? 1 : 8,
+    });
     for (const h of this.party) h.torch.lit = false;
   },
   breakCamp() {
@@ -438,8 +446,12 @@ export const campMethods = {
       if (enemies.length) {
         const roll = period.worker
           ? this.heroRoll(period.worker, "reason", "attribute", {
-              sources:
-                period.duty === "guard" ? [{ kind: "boon", amount: 1 }] : [],
+              sources: [
+                ...(period.duty === "guard"
+                  ? [{ kind: "boon", amount: 1 }]
+                  : []),
+                ...(c.fireLit === false ? [{ kind: "bane", amount: 1 }] : []),
+              ],
             })
           : null;
         const reverie = period.sleepers.some((h) =>
@@ -453,7 +465,7 @@ export const campMethods = {
         );
         this.campOpening = detected ? "players" : "opposition";
         this.emit("party");
-        this.detect();
+        this.detect(enemies);
         return {
           interrupted: true,
           detected: !!detected,

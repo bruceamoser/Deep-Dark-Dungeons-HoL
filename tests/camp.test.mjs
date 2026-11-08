@@ -227,9 +227,15 @@ test("severe wound care reserves one restoration supply and carries timed treatm
   (healer.treasure ??= []).push(draught);
   healer.preview.inventory.items.push(draught);
   const target = { heroId: patient.heroId, woundId: wound.id };
+  healer.supplies[draught.instanceId] = 20;
+  let checks = 0;
+  g.supplyDie = () => {
+    checks++;
+    return 1;
+  };
   g.startCamp(plan(g));
   g.campMedicalDuty(healer, "treat", target);
-  assert.equal(healer.supplies[draught.instanceId], 0);
+  assert.equal(healer.supplies[draught.instanceId], 12);
   assert.equal(wound.treatment?.completed, undefined);
   assert.ok(wound.campCare.minutes < wound.campCare.required);
   g.breakCamp();
@@ -238,5 +244,6 @@ test("severe wound care reserves one restoration supply and carries timed treatm
     g.campMedicalDuty(healer, "treat", target);
   assert.equal(wound.treatment.completed, true);
   assert.equal(patient.wounds.length, 1);
-  assert.equal(healer.supplies[draught.instanceId], 0);
+  assert.equal(checks, 1);
+  assert.equal(healer.supplies[draught.instanceId], 12);
 });

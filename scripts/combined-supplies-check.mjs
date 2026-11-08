@@ -37,14 +37,17 @@ export async function verifyCombinedSupplies(page) {
     await page.locator(`[data-item="${fixture.id}"]`).click();
     await expect(page.locator(".item-facts")).toContainText("0.5");
     await page.locator("#combine-with").selectOption("combine-ui-food");
+    await expect(page.locator("#combine-reason")).toContainText("Result: d8");
     await page
       .getByRole("button", { name: "Combine supplies", exact: true })
       .click();
-    await expect(page.locator(".item-inspector")).toContainText("d4 + d6");
+    await expect(page.locator(".item-inspector")).toContainText(
+      "Combined supply: d8",
+    );
     await expect(page.locator(".item-facts")).toContainText("Bulk1");
     const id = await page.evaluate(
       () =>
-        window.__ddd.game.party[0].treasure.find((i) => i.reserveDice)
+        window.__ddd.game.party[0].treasure.find((i) => i.combinedSupply)
           ?.instanceId,
     );
     expect(id).toBeTruthy();
@@ -62,15 +65,15 @@ export async function verifyCombinedSupplies(page) {
       await page.evaluate(
         (id) => ({
           die: window.__ddd.game.party[0].supplies[id],
-          reserve: window.__ddd.game.party[0].treasure.find(
+          combined: window.__ddd.game.party[0].treasure.find(
             (i) => i.instanceId === id,
-          ).reserveDice,
+          ).combinedSupply,
         }),
         id,
       ),
-    ).toEqual({ die: 4, reserve: [6] });
+    ).toEqual({ die: 8, combined: true });
     console.log(
-      "Dungeon supply-combining controls, unchanged bulk and saved active/reserve dice passed.",
+      "Dungeon supply-combining controls, unchanged bulk and grown supply dice saved passed.",
     );
   } finally {
     await page.evaluate((saved) => {

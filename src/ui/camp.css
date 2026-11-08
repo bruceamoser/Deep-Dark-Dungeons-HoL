@@ -367,3 +367,8 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+.camp-stocks article .camp-next-check {
+  font-size: 9px;
+  color: #b2ac86;
+  line-height: 1.4;
+}
