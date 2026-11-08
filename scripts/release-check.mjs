@@ -5,6 +5,7 @@ import path from "node:path";
 import os from "node:os";
 import { spawn } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
+import { verifyMusic } from "./music-check.mjs";
 import { verifyDungeonCamp } from "./camp-check.mjs";
 import { verifyTownNavigation } from "./town-check.mjs";
 import { verifyTorchModels } from "./torch-model-check.mjs";
@@ -76,6 +77,7 @@ try {
     await verifyCombinedSupplies(page);
     await verifyTownNavigation(page);
     await verifyDungeonCamp(page);
+    await verifyMusic(page);
   }
   await page.getByRole("button", { name: "Save", exact: true }).click();
   const saved = await page.evaluate(() => window.desktop.load());

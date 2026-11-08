@@ -42,3 +42,12 @@ The source-only installer workflow validates pull requests and manual developmen
 Run **Verify and publish staged release** with that draft's tag. It downloads and checks the finished release assets, installs and launches them on Linux and Windows, verifies the reported version, save IPC, sandboxing and loaded Dungeon Mason character art, and publishes only after both platforms pass. The Windows runner wraps the complete staged portable application in the NSIS installer, tests the installed executable, and uploads its installer and updater metadata to the draft. The publish job then updates checksums and makes the release public. Public source-only CI packages must never overwrite the staged licensed installers.
 
 Use `npm run package:windows:dir` to build the complete Windows portable application locally without requiring Wine/NSIS. Zip the contents of `release/win-unpacked` at the archive root. Required-Mason release checks also exercise upright torches, dungeon appearance editing, fixed magic-weapon forms and combined-supply persistence on each installed platform.
+
+## Superseded Blender prototype — November 8, 2026
+
+Bruce explicitly confirmed that purchasing and accepting Dungeon Mason closed the
+custom hill-dwarf layering experiment (#43). Do not resume the earlier
+culture-clothes/background-kit/class-headwear Blender modeling plan. Class outfits,
+customizable headpieces/colours and inventory-driven equipment use Dungeon Mason.
+The unmerged prototype files remain historical reference, not accepted assets or
+unfinished production work. Issue #43 is closed as superseded, not completed.

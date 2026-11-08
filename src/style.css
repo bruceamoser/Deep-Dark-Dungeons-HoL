@@ -5159,3 +5159,26 @@ p {
     min-height: 260px;
   }
 }
+
+.audio-sliders {
+  display: grid;
+  gap: 16px;
+  margin: 20px 0;
+}
+.audio-sliders label {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  gap: 18px;
+}
+.audio-sliders input {
+  width: 100%;
+}
+.music-credits {
+  border-top: 1px solid #4b574a;
+  padding-top: 14px;
+  margin-top: 18px;
+}
+.music-credits a {
+  color: #c8d8b0;
+}

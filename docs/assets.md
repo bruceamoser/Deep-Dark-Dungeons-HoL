@@ -162,3 +162,11 @@ motion preferences.
 ## Dungeon Mason player characters
 
 Player customization now supports the purchased RPG Tiny Hero Wave Polyart family. See [conversion, licence, private staging and verification](dungeon-mason-characters.md). Purchased source and generated standalone models are excluded from public Git; local finished application builds embed staged runtime exports.
+
+## Approved fantasy soundtrack — November 8, 2026
+
+Four original MP3 recordings by Alexander Nakarada and Kevin MacLeod ship under
+CC BY 4.0, selected by Bruce. Source links, hashes and exact files are recorded in
+[the music manifest](music-provenance.json); attribution is bundled and
+visible in Sound. See [soundtrack decisions and licensing](music.md). Procedural
+wind/foley/combat sounds remain game-authored on their own effects bus.
