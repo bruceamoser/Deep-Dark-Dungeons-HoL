@@ -201,7 +201,7 @@ export async function verifyDungeonLoop(page) {
     }),
   ).toEqual({ depth: 5, hp: 1, items: 0, opened: true, mode: "exploration" });
   console.log(
-    "Dungeon loop: six merchants, book bestiary, gated loot, ten gear slots, damage/healing text, condition VFX, and persistent two-way recall passed.",
+    "Dungeon loop: six merchants, book bestiary, gated loot, eleven gear slots, damage/healing text, condition VFX, and persistent two-way recall passed.",
   );
 }
 if (import.meta.url === new URL(process.argv[1], "file:").href) {

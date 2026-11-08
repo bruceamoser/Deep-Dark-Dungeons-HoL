@@ -123,8 +123,17 @@ export async function verifyEffects(page) {
     const flight = await page.evaluate(() => {
       const s = window.__ddd.scene,
         e = s.effects[0];
+      const arrow = e.projectile.getObjectByName(
+        "Flying arrow · shaft, head and fletching",
+      );
+      e.root.updateMatrixWorld(true);
+      const shaftDirection = arrow
+        .localToWorld(e.projectile.position.clone().set(0, 0, 1))
+        .sub(arrow.localToWorld(e.projectile.position.clone().set(0, 0, 0)))
+        .normalize();
       return {
         position: e.projectile.position.toArray(),
+        shaftDirection: shaftDirection.toArray(),
         impacted: e.impacted,
         visible: s.entities.get("effects-enemy").group.visible,
         action: s.entities.get("effects-enemy").action.getClip().name,
@@ -135,11 +144,19 @@ export async function verifyEffects(page) {
     expect(flight.action).not.toContain("Hit");
     await page.screenshot({ path: "test-results/arrow-flight.png" });
     await step(0.16);
-    expect(
-      await page.evaluate(() =>
-        window.__ddd.scene.effects[0].projectile.position.toArray(),
-      ),
-    ).not.toEqual(flight.position);
+    const nextPosition = await page.evaluate(() =>
+      window.__ddd.scene.effects[0].projectile.position.toArray(),
+    );
+    expect(nextPosition).not.toEqual(flight.position);
+    const travel = nextPosition.map((value, i) => value - flight.position[i]);
+    const distance = Math.hypot(...travel);
+    // Check the rendered shaft, including both nested transforms, against
+    // observed travel. Wrapper rotation alone missed a sideways arrow model.
+    const alignment = travel.reduce(
+      (dot, value, i) => dot + (value / distance) * flight.shaftDirection[i],
+      0,
+    );
+    expect(alignment).toBeGreaterThan(0.99);
     await step(0.3);
     expect(
       await page.evaluate(() => window.__ddd.scene.effects[0].impacted),
