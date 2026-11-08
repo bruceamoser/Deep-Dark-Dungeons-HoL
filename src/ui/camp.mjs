@@ -1,3 +1,4 @@
+import { SUPPLY_CADENCE } from "../core/provisions.mjs";
 import { CAMP_SUPPLIES } from "../core/camp-medical.mjs";
 import { CAMP_DUTIES, campPeriod } from "../core/camp.mjs";
 import { campBackdrop } from "../view/camp-backdrop.mjs";
@@ -40,7 +41,7 @@ function townCampScreen({ root, game, close, attempt }) {
       })
       .join(
         "",
-      )}</div><div class="camp-rest"><div><h3>${sleeping ? `Sleeping · ${hours}/8 hours` : "Rest until ready"}</h3><p>Eight hours of sleep clears fatigue. Food and water are used automatically each day. Sleep restores 2 HP per hour without restoring Grit or removing wounds.</p>${reason ? `<p class="cost-note">${esc(reason)}</p>` : ""}</div><button id="sleep" class="primary" ${!sleeping && reason ? "disabled" : ""}>${sleeping ? "Wake the company" : "Sleep for 8 hours"}</button></div><footer>Torches occupy a hand. One supply check per 30 minutes burning. Automatic dousing preserves the remaining burn time. Fatigue begins after 16 hours awake.</footer></section></div>`;
+      )}</div><div class="camp-rest"><div><h3>${sleeping ? `Sleeping · ${hours}/8 hours` : "Rest until ready"}</h3><p>Eight hours of sleep clears fatigue. Food and water are used automatically each day. Sleep restores 2 HP per hour without restoring Grit or removing wounds.</p>${reason ? `<p class="cost-note">${esc(reason)}</p>` : ""}</div><button id="sleep" class="primary" ${!sleeping && reason ? "disabled" : ""}>${sleeping ? "Wake the company" : "Sleep for 8 hours"}</button></div><footer>Torches occupy a hand. One lighting check per 25 burning party steps; campfire fuel is checked hourly. Automatic dousing preserves the remaining burn time. Fatigue begins after 16 hours awake.</footer></section></div>`;
     root.querySelector(".close").onclick = close;
     root.querySelectorAll("[data-torch]").forEach(
       (b) =>
@@ -151,6 +152,13 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
     const elapsed =
       camp?.elapsed ?? (last?.status === "complete" ? last.elapsed : 0);
     const period = campPeriod(game.party, assignments, elapsed);
+    const countdown = game.provisionCountdown();
+    const fireLit = camp
+      ? camp.fireLit !== false
+      : game.party.some(
+          (h) => h.lantern || game.supplyItem(h, "item-lighting-bundle"),
+        );
+    disposeBackdrop.setFire?.(fireLit);
     const reason = game.sleepReason();
     const forecast = !reason
       ? game.campForecast(assignments, total, targets)
@@ -197,7 +205,15 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
         const now = diceSummary(game.party, id),
           low = forecast ? diceSummary(forecast.low, id) : "—",
           high = forecast ? diceSummary(forecast.high, id) : "—";
-        return `<article><small>${name}</small><b>${now}</b><span>→ ${low === high ? low : `${low} to ${high}`}</span></article>`;
+        const next =
+          name === "Food"
+            ? `${countdown.food} steps / ${Math.ceil(countdown.foodHours)}h rest`
+            : name === "Water"
+              ? `${countdown.water} steps / ${Math.ceil(countdown.waterHours)}h rest`
+              : name === "Light"
+                ? `${SUPPLY_CADENCE.lightSteps} lit steps / 1h camp`
+                : "";
+        return `<article><small>${name}</small><b>${now}</b><span>→ ${low === high ? low : `${low} to ${high}`}</span>${next ? `<small class="camp-next-check">Next: ${next}</small>` : ""}</article>`;
       },
     ).join("")}</div></section>`;
     host.innerHTML = `<div class="camp-plan-top"><div><span class="eyebrow">${last?.status === "complete" && !camp ? "CAMP COMPLETE" : camp?.status === "interrupted" ? "WATCH INTERRUPTED" : "REST & RECOVERY"}</span><h3>${camp ? `Hour ${elapsed} of ${camp.total}` : "Plan the watch"}</h3><p><b>2 HP per sleeping hour</b> · six hours sleep per eight-hour rota · Guard: +1 Boon · no Grit recovery</p></div><label>Camp length<select id="camp-length" ${camp ? "disabled" : ""}>${Array.from(

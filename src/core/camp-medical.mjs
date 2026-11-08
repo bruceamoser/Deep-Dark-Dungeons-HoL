@@ -115,7 +115,7 @@ export const campMedicalMethods = {
     if (!wound.record.recoveryValue) {
       if (!wound.campCare) {
         const supply = this.campMedicalSupply("item-restoration-draught");
-        supply.hero.supplies[supply.item.instanceId] = 0;
+        this.checkSupply(supply.hero, supply.item, "restoration care dose");
         wound.campCare = {
           minutes: 0,
           required: this.careQuote(this.party.indexOf(patient), wound.id)

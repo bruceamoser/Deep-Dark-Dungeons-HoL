@@ -51,8 +51,9 @@ test("loading old weights recalculates combined stacks and cached merchant stock
     (i) => i.instanceId === item.instanceId,
   );
   assert.equal(restored.bulk, 1.5);
-  assert.equal(loaded.party[0].supplies[item.instanceId], 4);
-  assert.deepEqual(restored.reserveDice, [4, 6]);
+  assert.equal(loaded.party[0].supplies[item.instanceId], 8);
+  assert.equal(restored.reserveDice, undefined);
+  assert.equal(restored.combinedSupply, true);
   assert.equal(
     loaded
       .market()

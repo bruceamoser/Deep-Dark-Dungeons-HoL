@@ -1,3 +1,4 @@
+import { verifyProvisions } from "./provisions-check.mjs";
 import { verifyDungeonCamp } from "./camp-check.mjs";
 import { verifyWeaponRoll } from "./weapon-roll-check.mjs";
 import { verifyAppearanceUX } from "./appearance-ux-check.mjs";
@@ -103,8 +104,11 @@ try {
   await runCheck(verifyTorchModels);
   await runCheck(verifyWeaponVisuals);
   await runCheck(verifyCombinedSupplies);
+  await runCheck(verifyProvisions);
   await runCheck(verifyCharacter);
   await runCheck(verifyRoster);
+  // Snapshot-based UI fixtures intentionally leave the simulation paused.
+  await w.evaluate(() => window.__ddd.game.resume());
   await w.getByRole("button", { name: "Enter the depths" }).click();
   await w.waitForFunction(
     () => window.__ddd.game.mode === "exploration",

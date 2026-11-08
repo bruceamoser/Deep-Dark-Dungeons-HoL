@@ -71,23 +71,28 @@ test("torch needs a hand, reveals nearby darkness, douses in light and preserves
   const supply = h.torch.supplyId;
   h.supplies[supply] = 6;
   g.supplyDie = () => 1;
-  g.advanceTime(1799);
+  for (const i of h.preview.inventory.items.filter(
+    (i) => i.catalogId === "item-lighting-bundle" && i.instanceId !== supply,
+  ))
+    h.supplies[i.instanceId] = 0;
+  g.movementSupplies(24);
   assert.equal(h.supplies[supply], 6);
   g.map.lights = [{ x: 3, z: 3, radius: 3 }];
   g.syncTorches();
   assert.equal(h.torch.lit, false);
   g.advanceTime(3600);
-  assert.equal(h.torch.seconds, 1799);
+  g.movementSupplies(30);
+  assert.equal(h.torch.steps, 24);
   assert.equal(h.supplies[supply], 6);
   const copy = new Game(R, C);
   copy.load(deserialize(serialize(g.snapshot())), { resume: false });
-  assert.equal(copy.party[0].torch.seconds, 1799);
+  assert.equal(copy.party[0].torch.steps, 24);
   copy.map.lights = [];
   copy.syncTorches();
   copy.supplyDie = () => 1;
-  copy.advanceTime(1);
+  copy.movementSupplies(1);
   assert.equal(copy.party[0].supplies[supply], 4);
-  copy.advanceTime(1800);
+  copy.movementSupplies(25);
   assert.equal(copy.party[0].supplies[supply], 0);
   assert.equal(copy.party[0].torch.lit, false);
   assert.match(copy.campaign.supplyNotices.at(-1).message, /exhausted/);

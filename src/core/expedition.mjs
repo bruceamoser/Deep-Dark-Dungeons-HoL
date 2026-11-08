@@ -16,7 +16,6 @@ export const EXPEDITION_TIME = Object.freeze({
   awakeLimit: 16 * 3600,
   fatigueStep: 4 * 3600,
   sleep: 8 * 3600,
-  torchCheck: 30 * 60,
 });
 export const SUPPLY_DICE = Object.freeze({
   "item-food-bundle": 8,
@@ -76,7 +75,19 @@ export function prepareExpedition(campaign) {
       if (!Number.isSafeInteger(h.needs[field]) || h.needs[field] < 0)
         throw new Error("Invalid saved daily needs.");
     h.needs.warned ??= [];
-    h.torch ??= { held: false, lit: false, seconds: 0, supplyId: null };
+    h.torch ??= {
+      held: false,
+      lit: false,
+      seconds: 0,
+      steps: 0,
+      supplyId: null,
+    };
+    if (h.torch.steps === undefined) {
+      h.torch.steps = Math.floor((Math.min(1799, h.torch.seconds) * 25) / 1800);
+      h.torch.seconds = 0;
+    }
+    if (!Number.isSafeInteger(h.torch.steps) || h.torch.steps < 0)
+      throw new Error("Invalid saved torch movement.");
     if (
       !Number.isSafeInteger(h.torch.seconds) ||
       h.torch.seconds < 0 ||
@@ -236,8 +247,8 @@ export const expeditionMethods = {
               3,
               1 + Math.floor((awake - limit) / EXPEDITION_TIME.fatigueStep),
             ),
-      hungry: now - n.ateAt >= EXPEDITION_TIME.dailyNeeds,
-      thirsty: now - n.drankAt >= EXPEDITION_TIME.dailyNeeds,
+      hungry: !!n.foodDue || now - n.ateAt >= EXPEDITION_TIME.dailyNeeds,
+      thirsty: !!n.waterDue || now - n.drankAt >= EXPEDITION_TIME.dailyNeeds,
     };
   },
   fatigueSources(h) {
@@ -323,11 +334,15 @@ export const expeditionMethods = {
         ["ateAt", "item-food-bundle", "eats a daily meal"],
         ["drankAt", "item-water-flask", "drinks a daily water ration"],
       ]) {
-        if (this.clock().seconds - h.needs[field] < EXPEDITION_TIME.dailyNeeds)
+        if (
+          !h.needs[field === "ateAt" ? "foodDue" : "waterDue"] &&
+          this.clock().seconds - h.needs[field] < EXPEDITION_TIME.dailyNeeds
+        )
           continue;
         const item = this.supplyItem(h, catalogId);
         if (item) {
           h.needs[field] = this.clock().seconds;
+          h.needs[field === "ateAt" ? "foodDue" : "waterDue"] = false;
           h.needs.warned = h.needs.warned.filter((k) => k !== field);
           this.checkSupply(h, item, verb);
         } else if (!h.needs.warned.includes(field)) {
@@ -366,28 +381,6 @@ export const expeditionMethods = {
           h.needs.warned = h.needs.warned.filter((k) => k !== "fatigue");
         }
       }
-      if (h.torch.lit && !asleep) {
-        h.torch.seconds += seconds;
-        while (h.torch.seconds >= EXPEDITION_TIME.torchCheck) {
-          h.torch.seconds -= EXPEDITION_TIME.torchCheck;
-          const item = h.preview.inventory.items.find(
-            (i) => i.instanceId === h.torch.supplyId,
-          );
-          if (!item || !this.supplyValue(h, item)) {
-            h.torch.lit = false;
-            break;
-          }
-          const check = this.checkSupply(
-            h,
-            item,
-            "torch burned for 30 minutes",
-          );
-          if (check.exhausted) {
-            h.torch.lit = false;
-            break;
-          }
-        }
-      }
       if (this.needs(h).fatigue && !h.needs.warned.includes("fatigue")) {
         h.needs.warned.push("fatigue");
         this.supplyNotice(
@@ -397,6 +390,8 @@ export const expeditionMethods = {
         );
       }
     }
+    if (provisions && seconds >= 60)
+      this.stationarySupplies(seconds, { camping: !!sleepingHeroes });
     if (provisions) this.autoProvisions();
     if (!sleeping && !sleepingHeroes)
       for (const h of this.party) h.needs.sleepProgress = 0;
@@ -409,7 +404,8 @@ export const expeditionMethods = {
         (i) => i.carried && i.catalogId === "item-water-flask",
       );
     if (!flasks.length) throw new Error("This hero needs a water flask.");
-    for (const item of flasks) h.supplies[item.instanceId] = 6;
+    for (const item of flasks)
+      h.supplies[item.instanceId] = Math.max(6, this.supplyValue(h, item));
     this.note(
       `${h.name} refills ${flasks.length} water flask${flasks.length === 1 ? "" : "s"} at the well.`,
     );

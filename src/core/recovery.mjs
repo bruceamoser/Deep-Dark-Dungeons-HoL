@@ -411,7 +411,7 @@ export const recoveryMethods = {
     if (!this.canAct(h)) throw new Error("The giver cannot handle a potion.");
     if (!target || !item || !this.R.HEALING_POTION_IDS.includes(item.catalogId))
       throw new Error("Choose an owned healing potion and companion.");
-    if ((h.supplies[instanceId] ?? item.inventoryDie) !== 4)
+    if (!this.supplyValue(h, item))
       throw new Error("This bottle is exhausted.");
     if (target.survival.hp >= this.healingMaximum(target))
       throw new Error("This companion is already at full health.");
@@ -501,9 +501,9 @@ export const recoveryMethods = {
       )
         return;
     }
-    const result = this.R.resolveHealingPotionInventory(plan, {
-      retained: this.supplyDie(4),
-    });
+    const result = plan;
+    if (result.status !== "ready")
+      throw new Error("Potion healing has not reached its supply check.");
     if (combat) {
       this.budgets[h.id] = plan.giverTurn;
       if (target !== h) this.budgets[target.id] = plan.recipientTurn;
@@ -512,15 +512,9 @@ export const recoveryMethods = {
       ...result.recipientSurvival,
       maxHp: target.survival.maxHp,
     };
-    h.supplies[instanceId] = result.inventory.after;
-    if (result.inventory.exhausted)
-      this.supplyNotice(
-        h,
-        item,
-        `${item.definition.name} is exhausted after this use.`,
-      );
+    const inventory = this.checkSupply(h, item, "healing potion");
     this.note(
-      `${h.name} gives ${target.name} ${item.definition.name}: ${result.healing.restored} HP restored${result.inventory.exhausted ? "; bottle exhausted" : ""}.`,
+      `${h.name} gives ${target.name} ${item.definition.name}: ${result.healing.restored} HP restored${inventory.exhausted ? "; bottle exhausted" : ""}.`,
     );
     this.emit("change");
   },

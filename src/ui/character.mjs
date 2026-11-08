@@ -252,7 +252,7 @@ export function characterSheet({
                           selectedSlot,
                         )
                       : null;
-                    return `<div class="inventory-card"><button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.reserveDice ? "COMBINED" : i.quantity > 1 ? "×" + i.quantity : "BACKPACK"}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>${operation ? `<button class="quick-equip" data-quick-gear="${esc(i.instanceId)}" data-operation="${operation}" aria-label="${label} ${esc(i.definition.name)}" title="${esc(reason || (plan.stow.length ? "Returns replaced gear to your backpack." : ""))}" ${reason ? "disabled" : ""}>${icon(equipped ? "pack" : "hand")}${label}${game.mode === "combat" ? `<small>${plan.cost} M</small>` : ""}</button>` : '<span class="supply-label">Select to use or inspect</span>'}${reason ? `<small class="quick-gear-reason">${esc(reason)}</small>` : ""}</div>`;
+                    return `<div class="inventory-card"><button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.combinedSupply || i.reserveDice ? "COMBINED" : i.quantity > 1 ? "×" + i.quantity : "BACKPACK"}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>${operation ? `<button class="quick-equip" data-quick-gear="${esc(i.instanceId)}" data-operation="${operation}" aria-label="${label} ${esc(i.definition.name)}" title="${esc(reason || (plan.stow.length ? "Returns replaced gear to your backpack." : ""))}" ${reason ? "disabled" : ""}>${icon(equipped ? "pack" : "hand")}${label}${game.mode === "combat" ? `<small>${plan.cost} M</small>` : ""}</button>` : '<span class="supply-label">Select to use or inspect</span>'}${reason ? `<small class="quick-gear-reason">${esc(reason)}</small>` : ""}</div>`;
                   })
                   .join("")
               );
@@ -312,10 +312,10 @@ export function characterSheet({
             game.supplyValue(h, i),
             ...(i.reserveDice ?? []),
           ].filter(Boolean);
-          if (i.reserveDice)
+          if (i.combinedSupply || i.reserveDice)
             host.insertAdjacentHTML(
               "beforeend",
-              `<p class="cost-note">Combined supply: ${remaining.length ? remaining.map((d) => `d${d}`).join(" + ") : "Empty"}. Uses each remaining bundle in turn; bulk is preserved.</p>`,
+              `<p class="cost-note">Combined supply: ${remaining.length ? remaining.map((d) => `d${d}`).join(" + ") : "Empty"}. Maximum d20; carried bulk is preserved.</p>`,
             );
           const matches = items.filter(
             (other) =>
@@ -343,7 +343,7 @@ export function characterSheet({
               button.disabled = !!reason;
               host.querySelector("#combine-reason").textContent =
                 reason ||
-                "Preserves all remaining supplies and bulk. No supply die is refilled.";
+                `Result: d${game.combinedSupplyDie(index, i.instanceId, select.value)} · one size above the larger die · bulk unchanged.`;
             };
             select.onchange = update;
             update();
@@ -423,7 +423,7 @@ export function characterSheet({
           const free = game.freeHands(h);
           host.insertAdjacentHTML(
             "beforeend",
-            `<label class="creator-field"><span>Give to</span><select id="potion-recipient">${game.party.map((p) => `<option value="${p.id}" ${p === h ? "selected" : ""}>${esc(p.name)} · ${p.survival.hp}/${p.survival.maxHp} HP</option>`).join("")}</select></label><button id="drink-potion" class="primary equip-button" ${free < 1 || h.supplies[i.instanceId] === 0 ? "disabled" : ""}>${icon("potion")} Use potion</button><p class="cost-note">${free < 1 ? "Stow equipment to free one hand." : game.mode === "combat" ? "Maneuver · An active ally also spends a Reaction." : "Restores its printed HP. Check d4 after use."}</p>`,
+            `<label class="creator-field"><span>Give to</span><select id="potion-recipient">${game.party.map((p) => `<option value="${p.id}" ${p === h ? "selected" : ""}>${esc(p.name)} · ${p.survival.hp}/${p.survival.maxHp} HP</option>`).join("")}</select></label><button id="drink-potion" class="primary equip-button" ${free < 1 || h.supplies[i.instanceId] === 0 ? "disabled" : ""}>${icon("potion")} Use potion</button><p class="cost-note">${free < 1 ? "Stow equipment to free one hand." : game.mode === "combat" ? "Maneuver · An active ally also spends a Reaction." : `Restores its printed HP. Check d${game.supplyValue(h, i)} after use.`}</p>`,
           );
           host.querySelector("#drink-potion").onclick = () =>
             attempt(() => {

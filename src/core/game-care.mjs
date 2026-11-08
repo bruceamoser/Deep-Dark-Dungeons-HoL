@@ -81,12 +81,7 @@ export const gameCareMethods = {
     if (method === "town") this.campaign.bank -= q.cost;
     else {
       const item = this.supplyItem(q.healer, q.itemId);
-      q.healer.supplies[item.instanceId] = 0;
-      this.supplyNotice(
-        q.healer,
-        item,
-        `${item.definition.name} was used for wound treatment.`,
-      );
+      this.checkSupply(q.healer, item, "wound treatment dose");
     }
     this.completeWound(
       q.patient,
