@@ -212,8 +212,6 @@ export function randomAppearance(ancestry, rng = Math.random) {
 }
 export const identityMethods = {
   setAppearance(index, appearance) {
-    if (this.mode !== "town")
-      throw new Error("Change your appearance in Greyhaven.");
     const h = this.party[index];
     h.draft.appearance = normalizeAppearance(
       appearance,

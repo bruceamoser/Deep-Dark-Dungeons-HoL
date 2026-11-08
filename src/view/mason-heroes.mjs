@@ -163,6 +163,22 @@ export function masonAppearance(asset, hero, assets) {
         }
       });
       hand.add(torch);
+      // KayKit's flame points along +Y. Dungeon Mason's weapon bones use
+      // different axes: calibrate the grip in the actual ready pose, then
+      // restore the model before its gameplay mixer takes ownership.
+      const idleName = melee ? "SingleIdle" : "UnarmedIdle";
+      const idle = asset.animations.find((clip) => clip.name === idleName);
+      if (idle) {
+        const pose = new T.AnimationMixer(model);
+        pose.clipAction(idle).play();
+        pose.update(0);
+        model.updateMatrixWorld(true);
+        torch.quaternion.copy(
+          hand.getWorldQuaternion(new T.Quaternion()).invert(),
+        );
+        pose.stopAllAction();
+        pose.uncacheRoot(model);
+      }
       model.userData.setTorchLit = (v) => {
         lit.visible = !!v;
         unlit.visible = !v;

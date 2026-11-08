@@ -60,8 +60,46 @@ export async function verifyTorchModels(page) {
       expect(max).toBeLessThanOrEqual(0.38);
     }
     await page.screenshot({ path: "test-results/live-authored-torch.png" });
+    for (const melee of [false, true]) {
+      await page.evaluate((melee) => {
+        const { game: g, scene: s } = window.__ddd;
+        const h = g.party[0];
+        h.preview.inventory.items.forEach((i) => {
+          i.held = melee && i.catalogId === "item-ordinary-melee-weapon";
+        });
+        s.resetEntities(g.party, []);
+      }, melee);
+      await page.waitForTimeout(250);
+      const upward = await page.evaluate(() => {
+        const m = window.__ddd.scene.entities.get("hero-0").model;
+        const torch = m.getObjectByName("Readied torch");
+        m.updateMatrixWorld(true);
+        const p = m.position.clone();
+        const tip = torch.localToWorld(p.clone().set(0, 0.65, 0));
+        const grip = torch.localToWorld(p.clone().set(0, 0, 0));
+        return tip.sub(grip).normalize().y;
+      });
+      expect(
+        upward,
+        `Torch points upward in ${melee ? "left" : "right"} hand`,
+      ).toBeGreaterThan(0.8);
+    }
+    await page.locator('[data-action="sheet"]').click();
+    await page.locator('[data-tab="appearance"]').click();
+    await expect(page.getByLabel("Headpiece", { exact: true })).toBeEnabled();
+    await page.getByLabel("Headpiece", { exact: true }).selectOption("none");
+    await page.getByLabel("Skin colour", { exact: true }).fill("#559966");
+    expect(
+      await page.evaluate(
+        () => window.__ddd.game.party[0].draft.appearance.skin,
+      ),
+    ).toBe("#559966");
+    await page.screenshot({
+      path: "test-results/dungeon-appearance-torch.png",
+    });
+    await page.keyboard.press("Escape");
     console.log(
-      "Authored torch lit/unlit transitions, same hero model and concealment of both variants passed.",
+      "Torch lit/unlit transitions, concealment, upright grips in both hands and dungeon appearance editing passed.",
     );
   } finally {
     await page.evaluate((saved) => {

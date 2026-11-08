@@ -49,6 +49,8 @@ is in [implementation status](implementation-status.md).
   Reaction restoration requires an actually spent and retained Reaction.
 - Cosmetic sex, ancestry mesh features, colors and body style have no bonuses.
   Appearance and equipped visual gear use one pipeline across creation/play.
+  Cosmetic appearance can be changed at any time, including dungeon exploration
+  and combat, without spending actions, time or other character resources.
 - Tactical squares reflect game coordinates. Range overlays use actual weighted
   route costs and cannot end on allies. Deleting a named save removes only that
   run, including its own reserves/fallen history, after explicit confirmation.
