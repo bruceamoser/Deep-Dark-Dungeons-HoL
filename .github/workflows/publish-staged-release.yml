@@ -1,0 +1,93 @@
+name: Verify and publish staged release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing draft release tag containing finished licensed installers
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+      DDD_REQUIRE_MASON: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate tag and download finished installers
+        shell: bash
+        run: |
+          node -e 'if (!/^v\d+\.\d+\.\d+$/.test(process.env.RELEASE_TAG) || "v" + require("./package.json").version !== process.env.RELEASE_TAG) process.exit(1)'
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>{if(s.trim()!=="true")process.exit(1)})'
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --dir release
+          cd release
+          sha256sum --check SHA256SUMS
+      - name: Install Linux sandbox prerequisite
+        if: runner.os == 'Linux'
+        run: |
+          curl --fail --location --retry 3 https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o "$RUNNER_TEMP/chrome.deb"
+          sudo apt-get update -qq
+          sudo apt-get install -y "$RUNNER_TEMP/chrome.deb"
+      - name: Exercise finished Linux installers
+        if: runner.os == 'Linux'
+        run: |
+          chmod +x release/*.AppImage
+          xvfb-run -a node scripts/release-check.mjs release/*.AppImage
+          sudo apt-get install -y ./release/*.deb
+          xvfb-run -a node scripts/release-check.mjs /usr/bin/deep-dark-dungeons-hol
+      - name: Package and exercise finished Windows application
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $portable = (Get-ChildItem release/*-win-x64.zip).FullName
+          Expand-Archive $portable -DestinationPath release/windows-portable
+          npx electron-builder --win nsis --x64 --prepackaged release/windows-portable --publish never
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $installer = (Get-ChildItem release/*Setup*.exe).FullName
+          $destination = Join-Path $env:RUNNER_TEMP 'ddd-installed'
+          $process = Start-Process $installer -ArgumentList @('/S', "/D=$destination") -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Installer failed: $($process.ExitCode)" }
+          node scripts/release-check.mjs "$destination/Deep Dark Dungeons - HoL.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $blockmap = (Get-ChildItem release/*.exe.blockmap).FullName
+          gh release upload $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY $installer release/latest.yml $blockmap --clobber
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staged-release-smoke-${{ runner.os }}
+          path: test-results/release-*.png
+  publish:
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Publish verified installers
+        run: |
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --dir release
+          cd release
+          sha256sum --check SHA256SUMS
+          sha256sum *.AppImage *.deb *.exe *.zip *.blockmap *.yml *.sh *.png *.tar.gz > SHA256SUMS
+          gh release upload "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" SHA256SUMS --clobber
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest

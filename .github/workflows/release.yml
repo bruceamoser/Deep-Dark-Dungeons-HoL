@@ -1,7 +1,5 @@
 name: Build and verify installers
 on:
-  push:
-    tags: ["v*"]
   pull_request:
     paths:
       [
@@ -80,29 +78,3 @@ jobs:
         with:
           name: smoke-${{ runner.os }}
           path: test-results/release-*.png
-  publish:
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: package
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: installers-*
-          merge-multiple: true
-          path: release
-      - name: Publish the complete, verified release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          cp scripts/install-linux.sh public/art/greyhaven-seal.png release/
-          cd release
-          sha256sum *.AppImage *.deb *.exe *.blockmap *.yml *.sh *.png > SHA256SUMS
-          tar -czf "Deep-Dark-Dungeons-HoL-${GITHUB_REF_NAME#v}-linux-x64.tar.gz" ./*.AppImage install-linux.sh greyhaven-seal.png SHA256SUMS
-          sha256sum *.tar.gz >> SHA256SUMS
-          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --title "Deep Dark Dungeons - HoL $GITHUB_REF_NAME" --notes-file ../docs/release-notes.md
-          gh release upload "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" ./*
-          gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest

@@ -1,24 +1,20 @@
-**v0.7.0 — Greyhaven, Reimagined**
+**v0.8.0 — Heroes of Your Own**
 
-A cohesive KayKit art pass brings a new look to the company, the dungeon and the town above it.
+Dungeon Mason player characters join KayKit's Greyhaven, dungeon scenery and creatures.
 
-- **Visit a real Greyhaven town map.** Select a house or shop and the four-hero company walks to its entrance before the existing service opens. Hotkeys follow the same routes: R inn/company, M market, T guildhall, W workshop, P provisions, V infirmary, H fallen shrine, D dungeon gate. Choose another destination to redirect; Escape cancels travel.
-- **Dead-straight packed-dirt paths** connect the town's blue-roofed buildings, shrine, trees and gate.
-- **Explore dressed dungeon rooms.** Authored stone half-walls, crypts, archives, shrines and storerooms use curated KayKit props on existing blocked cells. Walled stairs and larger wooden/gold coffers replace the basic landmarks; coffer lids open when looted. Dropped supplies and recovery caches use crates.
-- **Readable atmospheric lighting** keeps nearby heroes and terrain clear, with warm torchlight and dark unexplored space.
-- **Choose among 15 fantasy hero looks** with original authored colors and three builds. Creator, sheet, town and dungeon share the same appearance. KayKit bows, swords, shields, torches and rigged helmets replace handmade equipment; the bow flexes during attacks and torch models follow changing light. Authored boots/belts replace overlapping primitive shells. Fantasy enemy casting replaces inappropriate sci-fi models.
-- **A new Greyhaven identity** brings a lantern-and-gate crest, loading screen, header, town marks and application icon, with cleaner compact layouts.
+- **Class outfits and customizable headwear.** Each class has a dressed outfit and signature headpiece. Keep the default hat or choose another. Ancestry, background, culture and class come before Appearance in creation.
+- **Make each hero your own.** Choose skin and hair colours, face, hairstyle, facial hair, eyes, brows, ears, horns, crowns, eyewear, masks, ornaments and cloaks. Eight authored colour regions allow outfit and accessory recolouring. Ancestry suggests a skin colour; you can change it freely.
+- **Equipment appears when equipped.** Backpacks now use a Back slot. Equipped weapons, shields, bows, arrows and headgear appear on the hero. One- and two-handed melee each offer sword, axe and hammer variants; wand and spear looks are also available. These choices preserve the item's rules.
+- **Battle-ready presentation.** Armed heroes hold weapons forward with a slight upward tilt. Arrows fly tip-first along their path. Bows retain authored draw deformation and combat effects retain their hit timing.
 
-**Your v0.6 journeys continue.** This release preserves their saves, equipment, progression and injuries. Town travel does not heal the party or alter suspended dungeon positions. Earlier-edition saves from before v0.6 remain preserved and require their original edition.
-
-Appearance customization now exposes actual model/build choices. Faces, hairstyles and colors belong to the chosen model; arbitrary face/hair morphs and culture-specific recoloring are not available. Old appearance fields remain in saved data. Generic waist/feet items retain the outfit's authored details rather than having a distinct mesh for every item.
+**Existing v0.6 and v0.7 journeys continue.** Saves, inventory, progression and injuries are preserved. Appearance fields migrate into the new customization format. Outfits are cosmetic; equipped armour determines protection. Clothing silhouettes are shared across head styles, and unusual accessory combinations may overlap. Two-handed axes and hammers adapt supplied one-handed designs.
 
 ### Install or update
 
-- **Debian/Ubuntu x64:** download `Deep-Dark-Dungeons-HoL-0.7.0-amd64.deb`, then run `sudo apt install ./Deep-Dark-Dungeons-HoL-0.7.0-amd64.deb`.
-- **Other Linux x64:** download the AppImage or `linux-x64.tar.gz` bundle. Extract the bundle and run `bash install-linux.sh`. Restricted Ubuntu AppImage installations require a system Chrome/Chromium sandbox helper.
-- **Windows x64:** run `Deep-Dark-Dungeons-HoL-Setup-0.7.0-x64.exe` (currently unsigned).
+- **Debian/Ubuntu x64:** download `Deep-Dark-Dungeons-HoL-0.8.0-amd64.deb`, then run `sudo apt install ./Deep-Dark-Dungeons-HoL-0.8.0-amd64.deb`.
+- **Other Linux x64:** download the AppImage or Linux bundle. Extract the bundle and run `bash install-linux.sh`. Restricted Ubuntu AppImage installations require a system Chrome/Chromium sandbox helper.
+- **Windows x64:** run `Deep-Dark-Dungeons-HoL-Setup-0.8.0-x64.exe` (unsigned).
 
-Installed releases check for updates. Use **Updates → Save & restart to install**; Debian upgrades may request administrator authorization. The source-checkout launcher uses its rebuilt local copy.
+Installed releases can use **Updates → Save & restart to install**. Debian upgrades may request administrator authorization.
 
-KayKit assets retain their CC0 provenance. The source book, Foundry repository and vendored HoL rules are unchanged. Balance and art continue to evolve.
+These finished installers embed the purchased Dungeon Mason runtime art. Public source-only builds use the KayKit fallback unless licensed exports are staged locally. Purchased source and standalone model exports are not distributed. KayKit retains its CC0 provenance. The source book, Foundry repository and vendored HoL rules are unchanged.
