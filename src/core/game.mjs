@@ -1,3 +1,4 @@
+import { bulkCatalog } from "./bulk.mjs";
 import { forgeCharacter } from "./forge.mjs";
 import { forgeGameMethods } from "./forge-game.mjs";
 import { validateGameState } from "./game-state.mjs";
@@ -63,7 +64,7 @@ export class Game {
     this.R = catalogs.forge
       ? { ...rules, workshopCharacter: forgeCharacter }
       : rules;
-    this.C = catalogs;
+    this.C = bulkCatalog(catalogs);
     this.notify = notify;
     this.listeners = [];
     this.log = [];

@@ -14,7 +14,7 @@ export function marketScreen({ root, game, close, attempt }) {
         ? stock
             .map(
               (e) =>
-                `<article class="stock-card ${e.item.rarity ?? ""}"><div class="stock-title">${icon(itemIcon(e.item))}<div><h4>${esc(e.item.definition.name)}</h4><small>${e.item.quantity} Bulk · ${e.quantity} in stock</small></div></div>${enchantmentDetails(h, e.item)}${e.item.kind === "scroll" ? "<p>A two-way passage to town. Read outside combat with a free hand; return to the same preserved floor.</p>" : ""}<button data-buy="${esc(e.id)}" ${!e.quantity || game.campaign.bank < game.buyPrice(h, e.item) ? "disabled" : ""}>${icon("coins")} ${game.buyPrice(h, e.item)} · Buy</button></article>`,
+                `<article class="stock-card ${e.item.rarity ?? ""}"><div class="stock-title">${icon(itemIcon(e.item))}<div><h4>${esc(e.item.definition.name)}</h4><small>${e.item.bulk} Bulk · ${e.quantity} in stock</small></div></div>${enchantmentDetails(h, e.item)}${e.item.kind === "scroll" ? "<p>A two-way passage to town. Read outside combat with a free hand; return to the same preserved floor.</p>" : ""}<button data-buy="${esc(e.id)}" ${!e.quantity || game.campaign.bank < game.buyPrice(h, e.item) ? "disabled" : ""}>${icon("coins")} ${game.buyPrice(h, e.item)} · Buy</button></article>`,
             )
             .join("")
         : h.preview.inventory.items
