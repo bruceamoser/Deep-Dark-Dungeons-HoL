@@ -5,6 +5,8 @@ import path from "node:path";
 import os from "node:os";
 import { spawn } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
+import { verifyDungeonCamp } from "./camp-check.mjs";
+import { verifyTownNavigation } from "./town-check.mjs";
 import { verifyTorchModels } from "./torch-model-check.mjs";
 import { verifyWeaponVisuals } from "./weapon-visual-check.mjs";
 import { verifyCombinedSupplies } from "./combined-supplies-check.mjs";
@@ -72,6 +74,8 @@ try {
     await verifyTorchModels(page);
     await verifyWeaponVisuals(page);
     await verifyCombinedSupplies(page);
+    await verifyTownNavigation(page);
+    await verifyDungeonCamp(page);
   }
   await page.getByRole("button", { name: "Save", exact: true }).click();
   const saved = await page.evaluate(() => window.desktop.load());
