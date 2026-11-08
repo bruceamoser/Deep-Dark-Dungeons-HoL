@@ -5,6 +5,9 @@ import path from "node:path";
 import os from "node:os";
 import { spawn } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
+import { verifyTorchModels } from "./torch-model-check.mjs";
+import { verifyWeaponVisuals } from "./weapon-visual-check.mjs";
+import { verifyCombinedSupplies } from "./combined-supplies-check.mjs";
 const executable = path.resolve(process.argv[2]);
 const { version } = JSON.parse(
   await fs.readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -58,6 +61,9 @@ try {
       path: `test-results/release-character-${process.platform}.png`,
     });
     await page.keyboard.press("Escape");
+    await verifyTorchModels(page);
+    await verifyWeaponVisuals(page);
+    await verifyCombinedSupplies(page);
   }
   await page.getByRole("button", { name: "Save", exact: true }).click();
   const saved = await page.evaluate(() => window.desktop.load());
