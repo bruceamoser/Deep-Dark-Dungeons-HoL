@@ -86,17 +86,17 @@ mat.node_tree.links.new(tex.outputs['Color'],bsdf.inputs['Base Color'])
 for ob in bpy.context.scene.objects:
  if ob.type=='MESH':ob.data.materials.clear();ob.data.materials.append(mat)
 animations={
- 'TwoHandIdle':'TwoHandSword/Idle_Normal_THS.fbx',
- 'TwoHandWalk':'TwoHandSword/InPlace/MoveFWD_Normal_InPlace_THS.fbx',
+ 'TwoHandIdle':'TwoHandSword/Idle_Battle_THS.fbx',
+ 'TwoHandWalk':'TwoHandSword/InPlace/MoveFWD_Battle_InPlace_THS.fbx',
  'TwoHandAttack':'TwoHandSword/Attack01_THS.fbx',
- 'SingleIdle':'SingleSword/Idle_Normal_SingleSword.fbx',
+ 'SingleIdle':'SingleSword/Idle_Battle_SingleSword.fbx',
  'SingleAttack':'SingleSword/Attack01_SingleSword.fbx',
  'UnarmedIdle':'NoWeapon/Idle_Normal_NoWeapon.fbx',
  'UnarmedAttack':'NoWeapon/Attack01_NoWeapon.fbx',
- 'BowIdle':'BowAndArrow/Idle_Normal_BowAndArrow.fbx',
- 'BowWalk':'BowAndArrow/InPlace/MoveFWD_Normal_InPlace_BowAndArrow.fbx',
- 'Idle':'SwordAndShield/Idle_Normal_SwordAndShield.fbx',
- 'Walking_A':'SwordAndShield/InPlace/MoveFWD_Normal_InPlace_SwordAndShield.fbx',
+ 'BowIdle':'BowAndArrow/Idle_Battle_BowAndArrow.fbx',
+ 'BowWalk':'BowAndArrow/InPlace/MoveFWD_Battle_InPlace_BowAndArrow.fbx',
+ 'Idle':'SwordAndShield/Idle_Battle_SwordAndShiled.fbx',
+ 'Walking_A':'SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx',
  'Running_A':'SwordAndShield/InPlace/SprintFWD_Battle_InPlace_SwordAndShield.fbx',
  '1H_Melee_Attack_Slice_Diagonal':'SwordAndShield/Attack01_SwordAndShiled.fbx',
  'Hit_A':'SwordAndShield/GetHit01_SwordAndShield.fbx',
@@ -146,7 +146,7 @@ for name,path in animations.items():
  rig.animation_data.action=None
  for ob in added:bpy.data.objects.remove(ob,do_unlink=True)
 # Align held weapons in the authored idle pose, rather than guessing from the
-# T-pose axes. Their tips must point upward and inward across the body.
+# T-pose axes. Ready weapons point toward the viewer with a slight upward tilt.
 for track in rig.animation_data.nla_tracks:track.mute=True
 alignment={}
 for profile in ['Idle','TwoHandIdle']:
@@ -156,7 +156,7 @@ for profile in ['Idle','TwoHandIdle']:
  rest=rig.matrix_world@rig.data.bones['weapon_r'].matrix_local
  posed=rig.matrix_world@rig.pose.bones['weapon_r'].matrix
  delta=(posed@rest.inverted()).to_3x3()
- desired=Vector((.55,0,1)).normalized()
+ desired=Vector((.2,-1,.35)).normalized()
  target=(delta.inverted()@desired).normalized()
  rotation=Vector((0,0,1)).rotation_difference(target).to_matrix().to_4x4()
  pivot=rest.translation

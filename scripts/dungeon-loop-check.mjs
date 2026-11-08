@@ -99,7 +99,7 @@ export async function verifyDungeonLoop(page) {
   await page.locator(`[data-take="${items[3].instanceId}"]`).click();
   await page.locator("[data-finish]").click();
   await page.locator('[data-action="sheet"]').click();
-  await expect(page.locator(".gear-slot")).toHaveCount(10);
+  await expect(page.locator(".gear-slot")).toHaveCount(11);
   await page.locator('[data-filter="relics"]').click();
   await page.locator(`[data-item="${items[0].instanceId}"]`).click();
   await expect(page.locator(".item-inspector")).toContainText("DORMANT");

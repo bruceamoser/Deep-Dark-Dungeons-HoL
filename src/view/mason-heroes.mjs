@@ -208,7 +208,7 @@ export function masonAppearance(asset, hero, assets) {
     model.userData.concealed = !!value;
     if (value === concealed) return;
     concealed = value;
-    for (const m of owned) {
+    for (const m of owned.filter((resource) => resource.isMaterial)) {
       m.transparent = !!value;
       m.opacity = value ? 0.38 : 1;
       m.needsUpdate = true;

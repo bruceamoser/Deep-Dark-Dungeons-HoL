@@ -10,6 +10,8 @@ Source: https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/rp
 
 Bruce purchased the Unity Asset Store edition. It uses the Standard Unity Asset Store EULA. Keep the purchased archive, extracted source and generated standalone exports out of public Git. Finished builds may embed the assets; do not distribute them as a reusable asset library. Review the purchased licence before sharing with collaborators. No source files are uploaded for AI training.
 
+Purchased archive SHA-256: `5d12db3fd09358a7bdd0eca8306d83688697b6e6ec6b6b7710221271fa8d2d68`.
+
 Local source is in the separate `DDD-Asset-Workshop/PurchasedSource/Assets/RPGTinyHeroWavePolyart` directory. Reproduce exports with Blender 5.2:
 
 ```sh
@@ -19,7 +21,7 @@ blender --factory-startup -noaudio -b --python-exit-code 1 \
   --python scripts/blender/export_dungeon_mason.py
 ```
 
-`--factory-startup` avoids loading the interactive Blender MCP addon in background processes. The generated `hero.glb`, `catalog.json` and `tint-coverage.json` are ignored. Export selected character animation clips into one shared skeleton. Bows use the authored draw deformation baked as a Draw morph target for the existing shot-timing effects; arrow variants attach to the weapon hand. The selected character clips cover idle, locomotion, melee stances, spell/ranged attacks, hit, death and interaction. The complete 598-file animation library is retained privately, not all clips are loaded into gameplay. Unusual accessory combinations can overlap; hat selections hide hair. Existing KayKit heroes remain the fallback for source-only checkouts without licensed exports. The customization UI explicitly identifies that fallback.
+`--factory-startup` avoids loading the interactive Blender MCP addon in background processes. The generated `hero.glb`, `catalog.json`, `tint-coverage.json` and `weapon-alignment.json` are ignored. Export selected character animation clips into one shared skeleton. Armed characters use battle-ready idle and walking animations. Melee grips are calibrated in the ready pose toward the character's front with a slight upward tilt, as requested by Bruce, and checked for floor intersection. Bows use the authored draw deformation baked as a Draw morph target for the existing shot-timing effects; arrow variants attach to the weapon hand. The selected character clips cover idle, locomotion, melee stances, spell/ranged attacks, hit, death and interaction. The complete 598-file animation library is retained privately, not all clips are loaded into gameplay. Unusual accessory combinations can overlap; hat selections hide hair. Existing KayKit heroes remain the fallback for source-only checkouts without licensed exports. The customization UI explicitly identifies that fallback.
 
 ## Build and verification
 
