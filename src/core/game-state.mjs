@@ -33,6 +33,15 @@ export function validateGameState(campaign) {
   ];
   for (const item of items) {
     if (
+      item.reserveDice !== undefined &&
+      (item.kind !== "ordinary" ||
+        !Array.isArray(item.reserveDice) ||
+        item.reserveDice.length > 98 ||
+        item.reserveDice.length + 1 > (item.quantity ?? 1) ||
+        item.reserveDice.some((die) => ![4, 6, 8, 10, 12, 20].includes(die)))
+    )
+      throw new Error("Saved combined supplies are invalid.");
+    if (
       (item.quantity !== undefined &&
         (!nonnegative(item.quantity) || item.quantity < 1)) ||
       (item.supplyRemaining != null &&

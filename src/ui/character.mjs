@@ -251,7 +251,7 @@ export function characterSheet({
                           selectedSlot,
                         )
                       : null;
-                    return `<div class="inventory-card"><button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.quantity > 1 ? "×" + i.quantity : "BACKPACK"}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>${operation ? `<button class="quick-equip" data-quick-gear="${esc(i.instanceId)}" data-operation="${operation}" aria-label="${label} ${esc(i.definition.name)}" title="${esc(reason || (plan.stow.length ? "Returns replaced gear to your backpack." : ""))}" ${reason ? "disabled" : ""}>${icon(equipped ? "pack" : "hand")}${label}${game.mode === "combat" ? `<small>${plan.cost} M</small>` : ""}</button>` : '<span class="supply-label">Select to use or inspect</span>'}${reason ? `<small class="quick-gear-reason">${esc(reason)}</small>` : ""}</div>`;
+                    return `<div class="inventory-card"><button class="inventory-tile ${i.rarity ?? ""} ${selection === i.instanceId ? "selected" : ""} ${i.held || i.worn ? "equipped" : ""}" data-item="${esc(i.instanceId)}" aria-label="${esc(i.definition.name)}${i.held ? ", readied" : i.worn ? ", worn" : ""}"><span class="tile-state">${i.held ? "READIED" : i.worn ? "WORN" : i.reserveDice ? "COMBINED" : i.quantity > 1 ? "×" + i.quantity : "BACKPACK"}</span>${icon(itemIcon(i))}<span class="tile-name">${esc(i.definition.name.replace("Ordinary ", ""))}</span><small>${i.inventoryDie ? (h.supplies[i.instanceId] === 0 ? "EMPTY" : `d${h.supplies[i.instanceId] ?? i.inventoryDie}`) : i.hands ? `${i.hands} HAND${i.hands === 2 ? "S" : ""}` : `${i.bulk} BULK`}</small></button>${operation ? `<button class="quick-equip" data-quick-gear="${esc(i.instanceId)}" data-operation="${operation}" aria-label="${label} ${esc(i.definition.name)}" title="${esc(reason || (plan.stow.length ? "Returns replaced gear to your backpack." : ""))}" ${reason ? "disabled" : ""}>${icon(equipped ? "pack" : "hand")}${label}${game.mode === "combat" ? `<small>${plan.cost} M</small>` : ""}</button>` : '<span class="supply-label">Select to use or inspect</span>'}${reason ? `<small class="quick-gear-reason">${esc(reason)}</small>` : ""}</div>`;
                   })
                   .join("")
               );
@@ -306,6 +306,58 @@ export function characterSheet({
         const plan = game.gearPlan(index, i.instanceId, operation),
           replaces = items.filter((i) => plan.stow.includes(i.instanceId));
         host.innerHTML = `<div class="inspector-icon">${icon(itemIcon(i))}</div><span class="eyebrow">${i.held ? "IN HAND" : i.worn ? "EQUIPPED" : "IN YOUR PACK"}</span><h3>${esc(i.definition.name)}</h3>${i.weaponType ? `<p class="cost-note">Weapon form: ${esc(i.definition.name.includes("Longbow") ? "Longbow" : i.weaponType)} · fixed enchanted item.</p>` : ""}<div class="item-facts"><span>Bulk<b>${i.bulk}</b></span>${i.hands ? `<span>Hands<b>${i.hands}</b></span>` : ""}${i.inventoryDie ? `<span>Supply<b>${h.supplies[i.instanceId] === 0 ? "Empty" : "d" + (h.supplies[i.instanceId] ?? i.inventoryDie)}</b></span>` : ""}</div><p>${isArmor ? "Requires the matching armor training. Worn armor contributes its printed resistance." : i.hands === 2 ? "Two-handed equipment occupies both hands." : /shield/.test(i.catalogId) ? "Hold to use Shield Block when an enemy attacks." : /melee/.test(i.catalogId) ? "Ready for melee attacks and weapon techniques." : /ranged/.test(i.catalogId) ? "A ranged weapon needs usable ammunition." : "Carried equipment and supplies contribute to bulk."}</p>${replaces.length ? `<p class="swap-note">Stows: ${replaces.map((x) => esc(x.definition.name)).join(", ")}</p>` : ""}${canHandle ? `<button data-gear="${operation}" class="primary equip-button" ${reason ? "disabled" : ""}>${icon(operation === "ready" ? "hand" : itemIcon(i))}${{ ready: "Ready weapon / gear", stow: "Stow in pack", wear: isArmor ? "Wear armor" : "Equip item", remove: "Remove item" }[operation]}</button><p class="cost-note">${esc(reason || (game.mode === "combat" ? `Costs ${plan.cost} Maneuver${plan.cost === 1 ? "" : "s"}` : "No combat action required"))}</p>` : '<p class="cost-note">Supply checks occur after successful use.</p>'}`;
+        if (i.inventoryDie) {
+          const remaining = [
+            game.supplyValue(h, i),
+            ...(i.reserveDice ?? []),
+          ].filter(Boolean);
+          if (i.reserveDice)
+            host.insertAdjacentHTML(
+              "beforeend",
+              `<p class="cost-note">Combined supply: ${remaining.length ? remaining.map((d) => `d${d}`).join(" + ") : "Empty"}. Uses each remaining bundle in turn; bulk is preserved.</p>`,
+            );
+          const matches = items.filter(
+            (other) =>
+              other.instanceId !== i.instanceId &&
+              other.carried &&
+              other.inventoryDie &&
+              !other.base &&
+              other.catalogId === i.catalogId &&
+              other.materialType === i.materialType &&
+              game.supplyValue(h, other) > 0,
+          );
+          if (matches.length && game.supplyValue(h, i) > 0) {
+            host.insertAdjacentHTML(
+              "beforeend",
+              `<label class="creator-field"><span>Combine with matching bundle</span><select id="combine-with">${matches.map((other) => `<option value="${esc(other.instanceId)}">${esc(other.definition.name)} · ${[game.supplyValue(h, other), ...(other.reserveDice ?? [])].map((d) => `d${d}`).join(" + ")}</option>`).join("")}</select></label><button id="combine-supplies">Combine supplies</button><p id="combine-reason" class="cost-note"></p>`,
+            );
+            const select = host.querySelector("#combine-with"),
+              button = host.querySelector("#combine-supplies");
+            const update = () => {
+              const reason = game.combineSupplyReason(
+                index,
+                i.instanceId,
+                select.value,
+              );
+              button.disabled = !!reason;
+              host.querySelector("#combine-reason").textContent =
+                reason ||
+                "Preserves all remaining supplies and bulk. No supply die is refilled.";
+            };
+            select.onchange = update;
+            update();
+            button.onclick = () =>
+              attempt(() => {
+                selection = game.combineSupplies(
+                  index,
+                  i.instanceId,
+                  select.value,
+                );
+                view.update(h);
+                draw();
+              });
+          }
+        }
         if (i.effects?.length) {
           const facts = host.querySelector(".item-facts");
           facts.nextElementSibling?.remove();
