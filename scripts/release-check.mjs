@@ -14,6 +14,14 @@ const { version } = JSON.parse(
 );
 const userData = await fs.mkdtemp(path.join(os.tmpdir(), "ddd-release-"));
 const linux = process.platform === "linux";
+if (process.platform === "win32") {
+  const config = await fs.readFile(
+    path.join(path.dirname(executable), "resources/app-update.yml"),
+    "utf8",
+  );
+  expect(config).toMatch(/["']?provider["']?\s*:\s*["']?github/);
+  expect(config).toContain("Deep-Dark-Dungeons-HoL");
+}
 const command = linux ? "/usr/bin/aa-exec" : executable;
 const args = [
   ...(linux ? ["-p", "unconfined", "--", executable] : []),

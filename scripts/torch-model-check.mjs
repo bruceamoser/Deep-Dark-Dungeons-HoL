@@ -69,7 +69,20 @@ export async function verifyTorchModels(page) {
         });
         s.resetEntities(g.party, []);
       }, melee);
-      await page.waitForTimeout(250);
+      // The scene fades in its idle action over animation time. Software
+      // rendering can advance only a fraction of that time in 250ms wall time.
+      await page.waitForFunction(
+        () => {
+          const action = window.__ddd.scene.entities.get("hero-0").action;
+          return (
+            action?.getClip().name === "Idle" &&
+            action.time >= 0.2 &&
+            action.getEffectiveWeight() > 0.99
+          );
+        },
+        null,
+        { timeout: 30000 },
+      );
       const upward = await page.evaluate(() => {
         const m = window.__ddd.scene.entities.get("hero-0").model;
         const torch = m.getObjectByName("Readied torch");
