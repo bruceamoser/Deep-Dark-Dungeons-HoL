@@ -117,21 +117,55 @@ export class Scene {
     this.scene.add(this.pathGroup);
     this.follow = true;
     canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+    canvas.addEventListener("auxclick", (e) => {
+      if (e.button === 1) e.preventDefault();
+    });
     window.addEventListener("pointerup", (e) => {
       if (e.button === 2) this.endPan();
+      if (e.button === 1) {
+        this.rotationDrag = null;
+        canvas.style.cursor = "";
+      }
     });
-    canvas.addEventListener("pointercancel", () => this.endPan());
-    window.addEventListener("blur", () => this.endPan());
+    canvas.addEventListener("pointercancel", () => {
+      this.endPan();
+      this.rotationDrag = null;
+      canvas.style.cursor = "";
+    });
+    window.addEventListener("blur", () => {
+      this.endPan();
+      this.rotationDrag = null;
+      canvas.style.cursor = "";
+    });
     window.addEventListener(
       "pointermove",
       (e) => {
+        if (
+          this.rotationDrag &&
+          e.pointerId === this.rotationDrag.pointerId &&
+          e.buttons & 4
+        ) {
+          this.angle =
+            this.rotationDrag.angle - (e.clientX - this.rotationDrag.x) * 0.008;
+          this.camera.position
+            .copy(this.focus)
+            .add(
+              new T.Vector3(
+                Math.cos(this.angle) * 32,
+                27,
+                Math.sin(this.angle) * 32,
+              ),
+            );
+          this.camera.lookAt(this.focus);
+          this.camera.updateMatrixWorld();
+        }
         if (this.pan && e.pointerId === this.pan.pointerId && e.buttons & 2)
           this.panTo(e);
       },
       true,
     );
     canvas.addEventListener("pointermove", (e) => {
-      if (this.pan) return;
+      if (this.pan || this.rotationDrag) return;
       const hit = this.groundAt(e);
       if (hit) {
         this.hover = {
@@ -149,6 +183,19 @@ export class Scene {
       }
     });
     canvas.addEventListener("pointerdown", (e) => {
+      if (e.button === 1) {
+        e.preventDefault();
+        this.follow = false;
+        this.manualCamera = true;
+        this.targetFocus = this.focus.clone();
+        this.rotationDrag = {
+          pointerId: e.pointerId,
+          x: e.clientX,
+          angle: this.angle,
+        };
+        canvas.setPointerCapture(e.pointerId);
+        canvas.style.cursor = "grabbing";
+      }
       if (e.button === 2) {
         e.preventDefault();
         const anchor = this.groundAt(e);
@@ -628,6 +675,11 @@ export class Scene {
     const appearance = equipmentAppearance(this.assets, data, isEnemy);
     const group = new T.Group(),
       model = appearance.model;
+    // Fog/LOS is enforced on the entity group. Static bind-pose bounds are not
+    // reliable for animated skins and can cull the body while its ring remains.
+    model.traverse((o) => {
+      if (o.isMesh) o.frustumCulled = false;
+    });
     group.add(model);
     if (isEnemy) group.userData.creatureId = data.id;
     group.position.set(data.x * TILE, 0.04, data.z * TILE);

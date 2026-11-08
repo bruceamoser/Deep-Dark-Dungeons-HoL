@@ -6,6 +6,36 @@ export async function verifyControls(page) {
     party: window.__ddd.game.party.map((h) => [h.x, h.z]),
     zoom: window.__ddd.scene.zoom,
   }));
+  const cameraBefore = await page.evaluate(() =>
+    window.__ddd.scene.camera.quaternion.toArray(),
+  );
+  const angleBefore = await page.evaluate(() => window.__ddd.scene.angle);
+  await page.mouse.move(850, 400);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(990, 400, { steps: 8 });
+  await page.mouse.up({ button: "middle" });
+  expect(
+    Math.abs(
+      (await page.evaluate(() => window.__ddd.scene.angle)) - angleBefore,
+    ),
+  ).toBeGreaterThan(0.5);
+  expect(
+    await page.evaluate(() => window.__ddd.game.party.map((h) => [h.x, h.z])),
+  ).toEqual(before.party);
+  expect(
+    await page.evaluate(() => window.__ddd.scene.camera.quaternion.toArray()),
+  ).not.toEqual(cameraBefore);
+  await page.evaluate((angle) => {
+    const s = window.__ddd.scene;
+    s.angle = angle;
+    s.camera.position.set(
+      s.focus.x + Math.cos(angle) * 32,
+      s.focus.y + 27,
+      s.focus.z + Math.sin(angle) * 32,
+    );
+    s.camera.lookAt(s.focus);
+    s.camera.updateMatrixWorld();
+  }, angleBefore);
   const grab = async (start, end) => {
     await page.mouse.move(start.x, start.y);
     await page.mouse.down({ button: "right" });

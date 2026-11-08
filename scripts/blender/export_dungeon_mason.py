@@ -158,7 +158,7 @@ for profile in ['Idle','TwoHandIdle']:
  delta=(posed@rest.inverted()).to_3x3()
  desired=Vector((.2,-1,.35)).normalized()
  target=(delta.inverted()@desired).normalized()
- rotation=Vector((0,0,1)).rotation_difference(target).to_matrix().to_4x4()
+ rotation=Matrix.Rotation(math.pi/2,4,target)@Vector((0,0,1)).rotation_difference(target).to_matrix().to_4x4()
  pivot=rest.translation
  for rel,bone,name in parts:
   if bone!='weapon_r' or name.startswith('Arrow'):continue
@@ -180,3 +180,8 @@ bpy.ops.export_scene.gltf(filepath=str(out/'hero.glb'),export_format='GLB',use_a
 print('EXPORTED',str(out/'hero.glb'))
 
 (out/'catalog.json').write_text(json.dumps({'parts':[name for _,_,name in parts], 'bodies':[f'Body{i:02}' for i in range(1,21)], 'animations':list(animations)},indent=2))
+
+# Background exports have closed all output files; avoid audio-driver shutdown hangs.
+if bpy.app.background:
+ import sys
+ sys.stdout.flush();sys.stderr.flush();os._exit(0)

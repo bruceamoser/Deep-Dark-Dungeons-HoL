@@ -1,6 +1,7 @@
 import { masonAppearance } from "./mason-heroes.mjs";
 import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
+import { creatureLook } from "../core/creature-variation.mjs";
 import { creatureAppearance } from "./creatures.mjs";
 import { CREATURE_ROSTER, HUMANOID_MODELS } from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
@@ -89,6 +90,30 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     if (!enemy && o.isMesh && /_(Helmet|HelmetVisor|Hat|Hood)$/i.test(o.name))
       o.visible = !items.some((i) => i.carried && i.worn && i.slot === "head");
   });
+  if (enemy) {
+    const theme = creatureLook(look ?? {}).colors;
+    model.traverse((o) => {
+      if (!o.isMesh) return;
+      const paint = (old) => {
+        const m = old.clone();
+        owned.push(m);
+        if (
+          !m.map &&
+          m.color &&
+          Math.min(m.color.r, m.color.g, m.color.b) > 0.9
+        )
+          m.color.set(
+            /^.*(armor|helmet|metal).*$/i.test(o.name)
+              ? theme.metal
+              : (theme.skin ?? theme.cloth),
+          );
+        return m;
+      };
+      o.material = Array.isArray(o.material)
+        ? o.material.map(paint)
+        : paint(o.material);
+    });
+  }
   let right, left;
   model.traverse((o) => {
     const slot = o.name.toLowerCase().replace(/[._-]/g, "");
