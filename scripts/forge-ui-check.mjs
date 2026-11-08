@@ -75,9 +75,56 @@ export async function verifyForgeUI(page) {
     await expect(
       page.getByRole("dialog", { name: "Discipline forge" }),
     ).toBeVisible();
+    await expect(page.locator(".forge-svg")).toBeVisible();
+    await expect(page.locator(".forge-path-view")).toBeHidden();
     await expect(page.locator(".forge-node")).toHaveCount(377);
     await page.screenshot({ path: "test-results/forge-atlas.png" });
     await page.locator('[data-discipline="arms"]').click();
+    const verifyLabels = async () => {
+      const boxes = await page.locator(".forge-svg").evaluate((svg) => {
+        const visible = (n) =>
+          getComputedStyle(n).visibility === "visible" &&
+          Number(getComputedStyle(n).opacity) > 0 &&
+          getComputedStyle(n).display !== "none";
+        const rect = (n) => {
+          const b = n.getBoundingClientRect();
+          return { x: b.x, y: b.y, w: b.width, h: b.height };
+        };
+        return {
+          labels: [...svg.querySelectorAll(".forge-node-label")]
+            .filter(visible)
+            .map(rect),
+          circles: [
+            ...svg.querySelectorAll(".node-body,.forge-contact circle"),
+          ].map(rect),
+        };
+      });
+      expect(boxes.labels.length).toBeGreaterThan(9);
+      const overlaps = (a, b) =>
+        a.x < b.x + b.w - 1 &&
+        a.x + a.w > b.x + 1 &&
+        a.y < b.y + b.h - 1 &&
+        a.y + a.h > b.y + 1;
+      for (let i = 0; i < boxes.labels.length; i++) {
+        for (let j = i + 1; j < boxes.labels.length; j++)
+          expect(overlaps(boxes.labels[i], boxes.labels[j])).toBe(false);
+        for (const circle of boxes.circles)
+          expect(overlaps(boxes.labels[i], circle)).toBe(false);
+      }
+    };
+    await verifyLabels();
+    await page.screenshot({ path: "test-results/forge-connected-tree.png" });
+    await page.setViewportSize({ width: 1100, height: 720 });
+    await page.locator('[data-discipline="arms"]').click();
+    await verifyLabels();
+    await page.screenshot({ path: "test-results/forge-connected-compact.png" });
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    await page.locator('[data-discipline="arms"]').click();
+    await page.locator('[data-view="columns"]').click();
+    await expect(page.locator(".forge-path-column")).toHaveCount(4);
+    await page.screenshot({ path: "test-results/forge-optional-columns.png" });
+    await page.locator('[data-view="columns"]').click();
+    await expect(page.locator(".forge-svg")).toBeVisible();
     const world = page.locator(".forge-world"),
       before = await world.getAttribute("transform"),
       box = await page.locator(".forge-svg").boundingBox();

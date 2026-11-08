@@ -387,3 +387,17 @@ transitions through the real automatic-torch rules, asserts an unchanged model
 UUID, and checks that both variants retain concealment opacity. It is included
 in future full native runs. Focused browser and packaged sandboxed Linux native
 checks, actor-lighting/gear tests and the production package passed.
+
+## Readable connected Forge with optional columns — #62
+
+The connected 377-node abilities atlas remains the default. Presentation spacing
+separates circles without changing the source graph, costs or prerequisites.
+Focused labels use collision-aware placement; selected connections and the
+inspector show prerequisites and what an ability leads to. Column view is an
+optional way to browse the same discipline paths, ranks and confluences.
+
+Pure layout checks preserve the catalog and verify circle separation. Packaged
+Linux checks cover both views, label/circle and label/label bounds at desktop and
+compact sizes, panning/zoom, searching, purchases, cascade refunds, level training,
+confluence gating, creator/respec and save persistence. Screenshots are inspected;
+author review only. Windows validation is deferred to the finished patch package.
