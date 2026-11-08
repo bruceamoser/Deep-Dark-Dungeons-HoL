@@ -6,7 +6,8 @@ import { createActorEnvironment, lightActor } from "./actor-lighting.mjs";
 import {
   TOWN_SERVICES,
   TOWN_NODES,
-  TOWN_EDGES,
+  TOWN_STREETS,
+  closestTownStreet,
   TownNavigator,
 } from "../core/town-navigation.mjs";
 
@@ -283,45 +284,46 @@ export class TownView {
     return obj;
   }
   buildStreets() {
-    const step = 0.25,
-      halfWidth = 1;
-    const edges = TOWN_EDGES.map(([a, b]) => [TOWN_NODES[a], TOWN_NODES[b]]);
-    const inside = (x, z) =>
-      edges.some(([a, b]) =>
-        a.x === b.x
-          ? Math.abs(x - a.x) < halfWidth &&
-            z > Math.min(a.z, b.z) - halfWidth &&
-            z < Math.max(a.z, b.z) + halfWidth
-          : Math.abs(z - a.z) < halfWidth &&
-            x > Math.min(a.x, b.x) - halfWidth &&
-            x < Math.max(a.x, b.x) + halfWidth,
-      );
-    const positions = [],
+    const step = 0.14,
+      extent = 62,
+      positions = [],
       colors = [],
-      indices = [],
-      vertices = new Map();
-    const earth = new T.Color(0xa98159);
-    const vertex = (x, z) => {
-      const key = `${x},${z}`;
-      if (vertices.has(key)) return vertices.get(key);
-      const index = positions.length / 3;
-      vertices.set(key, index);
-      positions.push(x * step, 0.02, z * step);
-      const shade =
-        0.94 +
-        Math.sin(x * 1.13 + z * 0.71) * 0.035 +
-        Math.cos(x * 0.29 - z * 0.63) * 0.025;
-      colors.push(earth.r * shade, earth.g * shade, earth.b * shade);
-      return index;
-    };
-    // One welded surface: straight edges and no paving seams or overlapping strips.
-    for (let x = -28; x < 28; x++)
-      for (let z = -28; z < 28; z++) {
-        if (!inside((x + 0.5) * step, (z + 0.5) * step)) continue;
-        const a = vertex(x, z),
-          b = vertex(x + 1, z),
-          c = vertex(x, z + 1),
-          d = vertex(x + 1, z + 1);
+      uvs = [],
+      indices = [];
+    const earth = new T.Color(0xb59a70);
+    // A continuous distance field rounds junctions and feathers irregular edges
+    // into the grass. The small grid controls smoothness, never the outline.
+    for (let z = -extent; z <= extent; z++)
+      for (let x = -extent; x <= extent; x++) {
+        const px = x * step,
+          pz = z * step,
+          distance = closestTownStreet({ x: px, z: pz }).distance;
+        const edge =
+          Math.sin(px * 2.1 + pz * 0.9) * 0.055 +
+          Math.sin(px * 5.7 - pz * 3.2) * 0.025;
+        const fade = T.MathUtils.smoothstep(distance, 0.81 + edge, 1.16 + edge);
+        const shade =
+          0.94 +
+          Math.sin(px * 1.9 + pz * 0.7) * 0.035 +
+          Math.cos(pz * 3 - px) * 0.025 +
+          Math.min(distance, 0.8) * 0.04;
+        positions.push(px, 0.02, pz);
+        colors.push(
+          earth.r * shade,
+          earth.g * shade,
+          earth.b * shade,
+          1 - fade,
+        );
+        uvs.push(px / 2, pz / 2);
+      }
+    const width = extent * 2 + 1;
+    for (let z = 0; z < width - 1; z++)
+      for (let x = 0; x < width - 1; x++) {
+        const a = z * width + x,
+          b = a + 1,
+          c = a + width,
+          d = c + 1;
+        if ([a, b, c, d].every((i) => colors[i * 4 + 3] === 0)) continue;
         indices.push(a, c, b, b, c, d);
       }
     const geometry = new T.BufferGeometry();
@@ -329,24 +331,51 @@ export class TownView {
       "position",
       new T.Float32BufferAttribute(positions, 3),
     );
-    geometry.setAttribute("color", new T.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute("color", new T.Float32BufferAttribute(colors, 4));
+    geometry.setAttribute("uv", new T.Float32BufferAttribute(uvs, 2));
     geometry.setIndex(indices);
     geometry.computeVertexNormals();
+    const grain = new Uint8Array(128 * 128 * 4);
+    let seed = 6143;
+    for (let i = 0; i < grain.length; i += 4) {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      const value = 238 + (seed >>> 28);
+      grain.set([value, value, value, 255], i);
+    }
+    const texture = new T.DataTexture(grain, 128, 128, T.RGBAFormat);
+    texture.wrapS = texture.wrapT = T.RepeatWrapping;
+    texture.magFilter = T.LinearFilter;
+    texture.needsUpdate = true;
     const mesh = new T.Mesh(
       geometry,
-      new T.MeshStandardMaterial({ vertexColors: true, roughness: 1 }),
+      new T.MeshStandardMaterial({
+        vertexColors: true,
+        map: texture,
+        roughness: 1,
+        transparent: true,
+        depthWrite: false,
+      }),
     );
-    mesh.name = "Straight dirt streets";
+    mesh.name = "Winding dirt paths";
     mesh.receiveShadow = true;
+    mesh.renderOrder = -1;
     this.scene.add(mesh);
-    for (const [a, b] of edges)
-      for (const [t, side] of [
-        [0.3, 0.84],
-        [0.7, -0.84],
+    for (const street of TOWN_STREETS)
+      for (const [index, side] of [
+        [6, 1.05],
+        [15, -1.05],
       ]) {
-        const x = a.x + (b.x - a.x) * t + (a.x === b.x ? side : 0);
-        const z = a.z + (b.z - a.z) * t + (a.z === b.z ? side : 0);
-        const rock = this.place("rock_single_A", x, z, 0.14);
+        const a = street.points[index],
+          b = street.points[index + 1],
+          length = Math.hypot(b.x - a.x, b.z - a.z);
+        const x = a.x - ((b.z - a.z) / length) * side,
+          z = a.z + ((b.x - a.x) / length) * side;
+        const rock = this.place(
+          "rock_single_A",
+          x,
+          z,
+          0.1 + (index % 3) * 0.025,
+        );
         rock.rotation.y = x + z;
       }
   }

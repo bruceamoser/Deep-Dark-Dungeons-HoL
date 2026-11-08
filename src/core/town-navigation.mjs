@@ -98,15 +98,15 @@ export const TOWN_SERVICES = [
   },
 ];
 export const TOWN_NODES = {
-  center: { x: 0, z: 0 },
-  n: { x: 0, z: -6 },
-  nw: { x: -6, z: -6 },
-  w: { x: -6, z: 0 },
-  sw: { x: -6, z: 6 },
-  s: { x: 0, z: 6 },
-  se: { x: 6, z: 6 },
-  e: { x: 6, z: 0 },
-  ne: { x: 6, z: -6 },
+  center: { x: -0.4, z: 0.25 },
+  n: { x: 0.3, z: -6.1 },
+  nw: { x: -6.1, z: -5.1 },
+  w: { x: -6.7, z: 0.4 },
+  sw: { x: -5.2, z: 6.2 },
+  s: { x: 0.8, z: 6.7 },
+  se: { x: 5.7, z: 5.3 },
+  e: { x: 6.3, z: -0.5 },
+  ne: { x: 5.2, z: -6.3 },
 };
 export const TOWN_EDGES = [
   ["n", "nw"],
@@ -123,40 +123,115 @@ export const TOWN_EDGES = [
   ["center", "e"],
 ];
 const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
+const routeLength = (points) =>
+  points.slice(1).reduce((sum, p, i) => sum + distance(points[i], p), 0);
+// One sampled centreline drives the visible dirt, route preview and walking.
+export const TOWN_STREETS = TOWN_EDGES.map(([from, to], index) => {
+  const a = TOWN_NODES[from],
+    b = TOWN_NODES[to],
+    dx = b.x - a.x,
+    dz = b.z - a.z,
+    length = distance(a, b),
+    bend = (index % 2 ? -1 : 1) * (index < 8 ? 1.4 : 1.1);
+  const c = {
+    x: a.x + dx * 0.28 - (dz / length) * bend,
+    z: a.z + dz * 0.28 + (dx / length) * bend,
+  };
+  const d = {
+    x: a.x + dx * 0.72 - (dz / length) * bend * 0.8,
+    z: a.z + dz * 0.72 + (dx / length) * bend * 0.8,
+  };
+  const points = Array.from({ length: 21 }, (_, i) => {
+    const t = i / 20,
+      u = 1 - t;
+    return {
+      x:
+        u * u * u * a.x +
+        3 * u * u * t * c.x +
+        3 * u * t * t * d.x +
+        t * t * t * b.x,
+      z:
+        u * u * u * a.z +
+        3 * u * u * t * c.z +
+        3 * u * t * t * d.z +
+        t * t * t * b.z,
+    };
+  });
+  return { from, to, points, length: routeLength(points) };
+});
+export function closestTownStreet(position) {
+  let best = { distance: Infinity };
+  for (const street of TOWN_STREETS)
+    for (let index = 0; index < street.points.length - 1; index++) {
+      const a = street.points[index],
+        b = street.points[index + 1],
+        dx = b.x - a.x,
+        dz = b.z - a.z;
+      const t = Math.max(
+        0,
+        Math.min(
+          1,
+          ((position.x - a.x) * dx + (position.z - a.z) * dz) /
+            (dx * dx + dz * dz),
+        ),
+      );
+      const point = { x: a.x + dx * t, z: a.z + dz * t },
+        gap = distance(position, point);
+      if (gap < best.distance) best = { street, index, point, distance: gap };
+    }
+  return best;
+}
+function shortestRoute(start, target) {
+  const queue = [{ node: start, cost: 0, points: [] }],
+    seen = new Set();
+  while (queue.length) {
+    queue.sort((a, b) => a.cost - b.cost);
+    const current = queue.shift();
+    if (seen.has(current.node)) continue;
+    if (current.node === target) return current;
+    seen.add(current.node);
+    for (const street of TOWN_STREETS)
+      if (street.from === current.node || street.to === current.node) {
+        const forward = street.from === current.node;
+        const points = forward ? street.points : [...street.points].reverse();
+        queue.push({
+          node: forward ? street.to : street.from,
+          cost: current.cost + street.length,
+          points: [...current.points, ...points.slice(1)],
+        });
+      }
+  }
+  throw new Error("Disconnected Greyhaven street.");
+}
 export class TownNavigator {
   constructor() {
-    this.position = { x: 0, z: 3 };
+    this.position = {
+      ...TOWN_STREETS.find((s) => s.from === "center" && s.to === "s")
+        .points[10],
+    };
     this.path = [];
     this.destination = null;
   }
   navigate(id) {
     const service = TOWN_SERVICES.find((s) => s.id === id);
     if (!service) throw new Error("Unknown Greyhaven destination.");
-    const start = Object.keys(TOWN_NODES).sort(
-      (a, b) =>
-        distance(this.position, TOWN_NODES[a]) -
-        distance(this.position, TOWN_NODES[b]),
-    )[0];
-    const queue = [[start]],
-      seen = new Set([start]);
-    let route;
-    while (queue.length) {
-      const path = queue.shift(),
-        last = path.at(-1);
-      if (last === service.node) {
-        route = path;
-        break;
-      }
-      for (const edge of TOWN_EDGES)
-        if (edge.includes(last)) {
-          const next = edge.find((n) => n !== last);
-          if (!seen.has(next)) {
-            seen.add(next);
-            queue.push([...path, next]);
-          }
-        }
-    }
-    this.path = route.map((n) => ({ ...TOWN_NODES[n] }));
+    const { street, index, point } = closestTownStreet(this.position);
+    const options = [
+      {
+        node: street.from,
+        prefix: [point, ...street.points.slice(0, index + 1).reverse()],
+      },
+      { node: street.to, prefix: [point, ...street.points.slice(index + 1)] },
+    ]
+      .map(({ node, prefix }) => {
+        const rest = shortestRoute(node, service.node);
+        return {
+          cost: routeLength(prefix) + rest.cost,
+          points: [...prefix, ...rest.points],
+        };
+      })
+      .sort((a, b) => a.cost - b.cost);
+    this.path = options[0].points.map((p) => ({ ...p }));
     this.destination = service;
     return this.path;
   }
