@@ -401,3 +401,17 @@ Linux checks cover both views, label/circle and label/label bounds at desktop an
 compact sizes, panning/zoom, searching, purchases, cascade refunds, level training,
 confluence gating, creator/respec and save persistence. Screenshots are inspected;
 author review only. Windows validation is deferred to the finished patch package.
+
+## Winding Greyhaven lanes — #67
+
+Bruce superseded the earlier straight-road direction with winding dirt paths.
+Curved, unevenly spaced street centrelines now drive the ground surface, route
+preview and walking. A continuous packed-earth field feathers into the grass and
+rounds junctions without paving blocks or overlapping strips.
+
+Route checks cover all services, exact endpoints, curves, repeated redirection
+and cancellation without teleporting or cutting corners. Browser and packaged
+Linux checks exercise actual market/building arrival, hotkeys, infirmary/respec,
+save/reload, pausing, gate entry and middle-mouse camera rotation, with desktop
+and compact screenshots. Dungeon coordinates and hero resources stay unchanged
+by town travel. Screenshots inspected; author review only.

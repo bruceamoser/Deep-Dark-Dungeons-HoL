@@ -96,3 +96,12 @@ Bruce also requested a polished Greyhaven logo and related game presentation.
 icon and matching interface/location marks. Existing vector source is
 `art/source/greyhaven-seal.svg`; extend that source consistently and verify the
 mark at the small sizes actually used by the game.
+
+## Winding dirt paths — November 8, 2026
+
+Bruce revised the earlier dead-straight street direction. Greyhaven keeps its
+authored KayKit buildings and service destinations, now joined by curved dirt
+lanes with soft, uneven boundaries and rounded junctions. The game generates
+the packed-earth surface and subtle grain; no new third-party art is used.
+The party and route preview share those lane curves, including redirection and
+hotkey travel. This is presentation state, separate from dungeon movement/time.
