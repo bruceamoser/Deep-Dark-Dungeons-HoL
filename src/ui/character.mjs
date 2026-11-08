@@ -466,6 +466,7 @@ export function characterSheet({
     } else if (tab === "appearance") {
       appearanceControls(content, {
         appearance: h.draft.appearance,
+        masonAvailable: scene.assets.has("DungeonMason"),
         ancestry: h.draft.ancestryId,
         name: h.name,
         disabled: game.mode !== "town",

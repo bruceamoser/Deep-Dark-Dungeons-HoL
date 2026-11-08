@@ -17,3 +17,6 @@ shot_q.mjs
 # Blender's automatic working-file backups
 *.blend1
 *.blend2
+
+# Purchased Dungeon Mason exports are staged locally; never redistribute source assets.
+public/assets/licensed/

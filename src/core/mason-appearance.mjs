@@ -1,0 +1,196 @@
+// Identifiers only. Purchased geometry/textures are never included in Git.
+const numbered = (prefix, n) =>
+  Array.from(
+    { length: n },
+    (_, i) => `${prefix}${String(i + 1).padStart(2, "0")}`,
+  );
+export const MASON_OPTIONS = {
+  oneHandType: ["sword", "axe", "hammer", "wand"],
+  twoHandType: ["sword", "axe", "hammer", "spear"],
+  oneHandVariant: [
+    "auto",
+    "OHS03_Sword",
+    "OHS04_Sword",
+    "OHS05_Sword",
+    "OHS06_Sword",
+    "OHS07_Sword",
+    "OHS08_Sword",
+    "OHS09_Sword",
+    "OHS12_Sword",
+    "OHS15_Sword",
+    "OHS16_Sword",
+    "OHS10_Axe",
+    "OHS13_Axe",
+    "OHS11_Hammer",
+    "OHS14_Hammer",
+    ...numbered("Wand", 7),
+  ],
+  twoHandVariant: [
+    "auto",
+    ...numbered("THS", 7).map((n) => `${n}_Sword`),
+    "THA01_Axe",
+    "THA02_Axe",
+    "THH01_Hammer",
+    "THH02_Hammer",
+    ...numbered("Spear", 5),
+  ],
+  body: ["auto", ...numbered("Body", 20)],
+  head: [
+    "auto",
+    "Head01_Male",
+    "Head02_Female",
+    ...["03", "04"].flatMap((n) =>
+      ["Blue", "Brown", "Grey", "Purple", "Red", "Yellow"].map(
+        (c) => `Head${n}_${c}`,
+      ),
+    ),
+    "Head05_Santa",
+  ],
+  hair: ["none", ...numbered("Hair", 13)],
+  eyes: numbered("Eye", 12),
+  mouth: numbered("Mouth", 12),
+  brows: ["none", ...numbered("Eyebrow", 2)],
+  headpiece: [
+    "class",
+    "none",
+    ...numbered("Hat", 14),
+    ...numbered("HeadArmor", 5),
+  ],
+  facialHair: [
+    "none",
+    ...["AC10", "AC11"].flatMap((p) => numbered(`${p}_Mustache`, 6)),
+  ],
+  ears: [
+    "none",
+    "AC04_AngelEars",
+    "AC04_AnthenaEars",
+    "AC04_BunnyEars",
+    "AC04_ShortEars",
+  ],
+  horns: ["none", ...numbered("AC05_Horn", 4)],
+  crown: ["none", ...numbered("AC06_Crown", 3)],
+  eyewear: [
+    "none",
+    "AC03_BlackGlass",
+    "AC03_HeavyMetalGlass",
+    "AC03_NerdGlass",
+    "AC03_NightVision",
+  ],
+  mask: ["none", ...numbered("AC08_NinjaMask", 8)],
+  ornament: [
+    "none",
+    "AC01_Heart",
+    "AC02_Leaf",
+    "AC07_PiratePatch",
+    "AC09_Ribbon",
+  ],
+  cloak: ["none", ...numbered("Cloak", 3)],
+  bow: numbered("Bow", 5),
+  arrow: numbered("Arrow", 5),
+  backpack: numbered("BackPack", 3),
+  shield: numbered("Shield", 20),
+  weapon: [
+    "OHS01_Stick",
+    "OHS02_Niddle",
+    ...["03", "04", "05", "06", "07", "08", "09", "12", "15", "16"].map(
+      (n) => `OHS${n}_Sword`,
+    ),
+    "OHS10_Axe",
+    "OHS11_Hammer",
+    "OHS13_Axe",
+    "OHS14_Hammer",
+    ...numbered("THS", 7).map((n) => `${n}_Sword`),
+    ...numbered("Spear", 5),
+    ...numbered("Wand", 7),
+  ],
+};
+export const MASON_CLASS_HATS = {
+  "class-arcanist": "Hat08",
+  "class-blade": "Hat06",
+  "class-intellect": "Hat03",
+  "class-leader": "Hat10",
+  "class-odd": "Hat01",
+  "class-protector": "Hat14",
+  "class-shadow": "Hat04",
+  "class-shepherd": "Hat05",
+  "class-unbalanced": "Hat02",
+};
+export function normalizeMason(input = {}) {
+  if (!input || typeof input !== "object") input = {};
+  const defaults = {
+    oneHandType: "sword",
+    twoHandType: "sword",
+    oneHandVariant: "auto",
+    twoHandVariant: "auto",
+    body: "auto",
+    head: "auto",
+    hair: "Hair04",
+    eyes: "Eye01",
+    mouth: "Mouth01",
+    brows: "Eyebrow01",
+    headpiece: "class",
+    facialHair: "none",
+    ears: "none",
+    horns: "none",
+    crown: "none",
+    eyewear: "none",
+    mask: "none",
+    ornament: "none",
+    cloak: "none",
+    bow: "Bow01",
+    arrow: "Arrow01",
+    backpack: "BackPack01",
+    shield: "Shield04",
+    weapon: "OHS03_Sword",
+  };
+  return Object.fromEntries(
+    Object.entries(MASON_OPTIONS).map(([key, choices]) => [
+      key,
+      key === "body"
+        ? "auto"
+        : choices.includes(input[key])
+          ? input[key]
+          : defaults[key],
+    ]),
+  );
+}
+export const MASON_CLASS_BODIES = {
+  "class-arcanist": "Body12",
+  "class-blade": "Body08",
+  "class-intellect": "Body09",
+  "class-leader": "Body17",
+  "class-odd": "Body10",
+  "class-protector": "Body13",
+  "class-shadow": "Body14",
+  "class-shepherd": "Body11",
+  "class-unbalanced": "Body07",
+};
+export function masonBody(classId) {
+  return MASON_CLASS_BODIES[classId] ?? "Body05";
+}
+
+export const MELEE_VARIANTS = {
+  one: {
+    wand: numbered("Wand", 7),
+    sword: [
+      "OHS03_Sword",
+      "OHS04_Sword",
+      "OHS05_Sword",
+      "OHS06_Sword",
+      "OHS07_Sword",
+      "OHS08_Sword",
+      "OHS09_Sword",
+      "OHS12_Sword",
+      "OHS15_Sword",
+      "OHS16_Sword",
+    ],
+    axe: ["OHS10_Axe", "OHS13_Axe"],
+    hammer: ["OHS11_Hammer", "OHS14_Hammer"],
+  },
+  two: {
+    spear: numbered("Spear", 5),
+    sword: Array.from({ length: 7 }, (_, i) => `THS0${i + 1}_Sword`),
+    axe: ["THA01_Axe", "THA02_Axe"],
+    hammer: ["THH01_Hammer", "THH02_Hammer"],
+  },
+};

@@ -158,3 +158,7 @@ icons. `python3 scripts/artcraft-seal.py` regenerates both runtime copies throug
 the locally installed `vectorcraft-cli` found on PATH. No external artwork,
 font or AI-generated raster was introduced. The loading accent respects reduced
 motion preferences.
+
+## Dungeon Mason player characters
+
+Player customization now supports the purchased RPG Tiny Hero Wave Polyart family. See [conversion, licence, private staging and verification](dungeon-mason-characters.md). Purchased source and generated standalone models are excluded from public Git; local finished application builds embed staged runtime exports.

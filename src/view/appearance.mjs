@@ -1,3 +1,4 @@
+import { masonAppearance } from "./mason-heroes.mjs";
 import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
 import { creatureAppearance } from "./creatures.mjs";
@@ -8,6 +9,8 @@ import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 export function equipmentAppearance(assets, hero, enemy = false) {
+  if (!enemy && assets.has("DungeonMason"))
+    return masonAppearance(assets.get("DungeonMason"), hero, assets);
   const look = enemy ? CREATURE_ROSTER[hero.type] : null;
   // KayKit character models are complete rigged humanoids and take this path; the
   // Quaternius animals and constructs go to the procedural creature path.

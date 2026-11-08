@@ -17,7 +17,9 @@
     "test:native": "node scripts/native-check.mjs",
     "test:controls": "node scripts/control-check.mjs",
     "coverage:abilities": "node scripts/ability-coverage.mjs",
-    "package:dir": "npm run build && electron-builder --linux dir --publish never"
+    "package:dir": "npm run build && electron-builder --linux dir --publish never",
+    "assets:characters": "node scripts/stage-dungeon-mason.mjs",
+    "assets:verify": "node scripts/verify-dungeon-mason.mjs"
   },
   "build": {
     "appId": "com.bruceamoser.deepdarkdungeons",

@@ -46,13 +46,12 @@ export async function verifyCharacter(page) {
   await page.locator("#resume-recruit").click();
   await expect(page.locator("#hero-name")).toHaveValue("Mara of the Gate");
   await fillForgeHero(page);
-  await page.locator('[data-step="2"]').click();
-  await page.getByLabel("Hero model", { exact: true }).selectOption("Cleric");
-  await page.getByLabel("Build", { exact: true }).selectOption("broad");
-  await expect(page.locator("canvas[data-avatar=Cleric]")).toBeVisible();
+  await page.locator('[data-step="3"]').click();
+  await page.getByLabel("Headpiece", { exact: true }).selectOption("Hat02");
+  await page.getByLabel("Skin colour", { exact: true }).fill("#55aa66");
   await expect(page.locator("#recruit-preview")).toHaveAttribute(
     "data-appearance",
-    /Cleric/,
+    /Hat02/,
   );
   await page.locator('[data-step="5"]').click();
   await page.locator("#creation-shop-search").fill("ammunition");

@@ -6,15 +6,17 @@ export async function verifyGameplayIdentity(page) {
   try {
     await page.locator('[data-hero="0"]').click();
     await page.locator('[data-tab="appearance"]').click();
-    await page.getByLabel("Hero model", { exact: true }).selectOption("Cleric");
-    await page.getByLabel("Build", { exact: true }).selectOption("broad");
-    await expect(page.locator("canvas[data-avatar=Cleric]")).toBeVisible();
+    await page.getByLabel("Headpiece", { exact: true }).selectOption("Hat02");
+    await page.getByLabel("Skin colour", { exact: true }).fill("#55aa66");
+    await page
+      .getByLabel("One-handed melee type", { exact: true })
+      .selectOption("axe");
     const appearance = JSON.parse(
       await page.locator("#hero-preview").getAttribute("data-appearance"),
     );
     expect(appearance).toMatchObject({
-      avatar: "Cleric",
-      build: "broad",
+      skin: "#55aa66",
+      mason: { headpiece: "Hat02", oneHandType: "axe" },
       ancestry: "ancestry-dwarf",
     });
     const model = await page.evaluate(
@@ -29,9 +31,9 @@ export async function verifyGameplayIdentity(page) {
     await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
     expect(
       await page.evaluate(
-        () => window.__ddd.game.active.draft.appearance.avatar,
+        () => window.__ddd.game.active.draft.appearance.mason.headpiece,
       ),
-    ).toBe("Cleric");
+    ).toBe("Hat02");
     await page.evaluate(() => {
       const { game: g, scene: s } = window.__ddd;
       g.pause();
