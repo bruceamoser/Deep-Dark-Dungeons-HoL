@@ -476,6 +476,7 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       quantity: saved.quantity ?? item.quantity,
       bulk: item.definition.bulk * (saved.quantity ?? item.quantity),
       materialType: saved.materialType,
+      ...(saved.reserveDice ? { reserveDice: [...saved.reserveDice] } : {}),
       definition: saved.materialType
         ? {
             ...item.definition,
@@ -628,6 +629,69 @@ export const treasureMethods = {
   refreshHero(h, draft = h.draft) {
     h.preview = gearPreview(this.R, this.C, h, draft);
     return h.preview;
+  },
+  combineSupplyReason(index, targetId, sourceId) {
+    const h = this.party[index];
+    if (!["town", "exploration"].includes(this.mode) || this.busy)
+      return "Combine supplies outside combat when no action is resolving.";
+    if (!h || !this.canAct(h)) return "Choose a capable companion.";
+    const items = h.preview.inventory.items;
+    const a = items.find((i) => i.instanceId === targetId),
+      b = items.find((i) => i.instanceId === sourceId);
+    if (!a || !b || a === b) return "Choose two different supply bundles.";
+    if (
+      !a.carried ||
+      !b.carried ||
+      !a.inventoryDie ||
+      !b.inventoryDie ||
+      a.base ||
+      b.base ||
+      a.catalogId !== b.catalogId ||
+      a.materialType !== b.materialType
+    )
+      return "Combine matching carried consumables of the same type.";
+    if (!this.supplyValue(h, a) || !this.supplyValue(h, b))
+      return "Both bundles need remaining supplies.";
+    if (
+      (a.quantity ?? 1) + (b.quantity ?? 1) > 99 ||
+      (a.reserveDice?.length ?? 0) + (b.reserveDice?.length ?? 0) + 1 > 98
+    )
+      return "A combined bundle can contain at most 99 original bundles.";
+    return "";
+  },
+  combineSupplies(index, targetId, sourceId) {
+    const reason = this.combineSupplyReason(index, targetId, sourceId);
+    if (reason) throw new Error(reason);
+    const h = this.party[index];
+    const a = this.portableItem(h, targetId),
+      b = this.portableItem(h, sourceId);
+    const combined = {
+      ...a,
+      instanceId: `combined-${crypto.randomUUID()}`,
+      quantity: (a.quantity ?? 1) + (b.quantity ?? 1),
+      bulk: a.bulk + b.bulk,
+      reserveDice: [
+        ...(a.reserveDice ?? []),
+        b.supplyRemaining,
+        ...(b.reserveDice ?? []),
+      ],
+    };
+    this.removePortableItem(h, targetId);
+    this.removePortableItem(h, sourceId);
+    delete h.supplies[targetId];
+    delete h.supplies[sourceId];
+    (h.treasure ??= []).push(combined);
+    h.supplies[combined.instanceId] = a.supplyRemaining;
+    if ([targetId, sourceId].includes(h.torch.supplyId))
+      h.torch.supplyId = combined.instanceId;
+    this.refreshHero(h);
+    this.syncTorches();
+    this.note(
+      `${h.name} combines ${a.definition.name}: remaining dice d${[a.supplyRemaining, ...combined.reserveDice].join(" + d")}; bulk unchanged.`,
+    );
+    this.emit("party");
+    this.emit("change");
+    return combined.instanceId;
   },
   transferTreasure(index, id, to) {
     const h = this.party[index],

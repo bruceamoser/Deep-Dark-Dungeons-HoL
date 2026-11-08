@@ -1,3 +1,4 @@
+import { verifyCombinedSupplies } from "./combined-supplies-check.mjs";
 import { verifyWeaponVisuals } from "./weapon-visual-check.mjs";
 import { verifyRespec } from "./respec-check.mjs";
 import { verifyForgeUI } from "./forge-ui-check.mjs";
@@ -95,6 +96,7 @@ try {
   await runCheck(verifyExpeditionUI);
   await runCheck(verifyTorchModels);
   await runCheck(verifyWeaponVisuals);
+  await runCheck(verifyCombinedSupplies);
   await runCheck(verifyCharacter);
   await runCheck(verifyRoster);
   await w.getByRole("button", { name: "Enter the depths" }).click();

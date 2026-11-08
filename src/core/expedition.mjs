@@ -288,6 +288,18 @@ export const expeditionMethods = {
           : this.supplyDie(die)),
     });
     h.supplies[item.instanceId] = result.after;
+    const owned = h.treasure?.find((i) => i.instanceId === item.instanceId);
+    if (result.exhausted && owned?.reserveDice?.length) {
+      const next = owned.reserveDice.shift();
+      h.supplies[item.instanceId] = next;
+      owned.supplyRemaining = next;
+      item.reserveDice = [...owned.reserveDice];
+      this.note(
+        `${h.name} · ${purpose}: ${item.definition.name} d${die}, rolled ${result.retained}; next combined supply d${next}.`,
+      );
+      return { ...result, after: next, exhausted: false, continued: true };
+    }
+    if (owned?.reserveDice) owned.supplyRemaining = result.after;
     this.note(
       `${h.name} · ${purpose}: ${item.definition.name} d${die}, rolled ${result.retained}${result.exhausted ? " · exhausted after use" : result.after !== die ? ` → d${result.after}` : " · retained"}.`,
     );
