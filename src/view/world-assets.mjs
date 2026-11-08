@@ -1,6 +1,7 @@
 export const STAIR_VISUAL_OFFSET = 1.75;
 const dungeon = (name) => `/assets/world/dungeon/${name}.gltf`;
 export const WORLD_MODELS = {
+  well: "/assets/town/building_well_blue.gltf",
   floor: dungeon("floor_tile_large"),
   pillar: dungeon("pillar_decorated"),
   wall: dungeon("wall"),

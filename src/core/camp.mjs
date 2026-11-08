@@ -1,0 +1,474 @@
+import { Random, distance, key, lineOfSight } from "./dungeon.mjs";
+import { ordinaryItem } from "./treasure.mjs";
+import { CREATURE_ROSTER } from "./creature-roster.mjs";
+
+export const CAMP_DUTIES = Object.freeze([
+  {
+    id: "heal",
+    name: "Healing care",
+    detail:
+      "+4 HP per learned healing skill for one companion; one dressing check/hour.",
+  },
+  {
+    id: "treat",
+    name: "Treat a wound",
+    detail:
+      "One recovery roll per wound per day. Severe injuries need restoration care.",
+  },
+  { id: "guard", name: "Stand guard", detail: "+1 Boon to detect an ambush." },
+  {
+    id: "arrows",
+    name: "Fletch arrows",
+    detail: "Craft tools + one arrow-material batch; refill or make d8 arrows.",
+  },
+  {
+    id: "cook",
+    name: "Prepare food",
+    detail: "One edible-ingredient batch; refill or make d8 food.",
+  },
+  {
+    id: "water",
+    name: "Gather water",
+    detail: "A nearby water source and carried flasks; fill to d6.",
+  },
+  {
+    id: "torches",
+    name: "Bind torches",
+    detail:
+      "Craft tools + one torch-material batch; refill or make d6 lighting.",
+  },
+  {
+    id: "forage-food",
+    name: "Forage ingredients",
+    detail:
+      "Knowledge check for one food batch. Three successful finds per floor.",
+  },
+  {
+    id: "forage-arrows",
+    name: "Forage fletching",
+    detail:
+      "Knowledge check for one arrow-material batch. Shares the floor's three finds.",
+  },
+  {
+    id: "forage-torches",
+    name: "Forage fuel",
+    detail:
+      "Knowledge check for one torch-material batch. Shares the floor's three finds.",
+  },
+]);
+const dutyIds = new Set(CAMP_DUTIES.map((d) => d.id));
+const recipes = {
+  arrows: "recipe-fletched-ammunition",
+  cook: "recipe-travel-food",
+  torches: "recipe-bound-torches",
+};
+const products = {
+  arrows: ["item-ammunition-bundle", 8],
+  cook: ["item-food-bundle", 8],
+  torches: ["item-lighting-bundle", 6],
+};
+export function campPeriod(party, assignments, period) {
+  // Each of four party slots works once in each half of the eight-hour rota.
+  const slot = period % 4,
+    hero = party[slot];
+  const worker = hero?.survival.status === "active" ? hero : null;
+  return {
+    worker,
+    duty: worker
+      ? (assignments[worker.heroId]?.[Math.floor(period / 4) % 2] ?? "guard")
+      : null,
+    sleepers: party.filter(
+      (h) => h !== worker && h.survival.status === "active",
+    ),
+  };
+}
+export function validateCamp(campaign) {
+  const c = campaign.camp;
+  if (!c) return;
+  const whole = (n) => Number.isSafeInteger(n) && n >= 0;
+  if (
+    !c ||
+    !whole(c.elapsed) ||
+    !whole(c.total) ||
+    c.total < 8 ||
+    c.total > 96 ||
+    c.elapsed > c.total ||
+    !whole(c.seed) ||
+    !whole(c.depth) ||
+    !Number.isFinite(c.x) ||
+    !Number.isFinite(c.z) ||
+    !["paused", "interrupted", "complete", "abandoned"].includes(c.status) ||
+    !Array.isArray(c.partyIds) ||
+    c.partyIds.length > 4 ||
+    new Set(c.partyIds).size !== c.partyIds.length ||
+    c.partyIds.some((id) => typeof id !== "string" || id.length > 80) ||
+    !c.assignments ||
+    c.partyIds.some((id) => !Array.isArray(c.assignments[id])) ||
+    Object.values(c.assignments).some(
+      (ds) =>
+        !Array.isArray(ds) ||
+        ds.length !== 2 ||
+        ds.some((d) => !dutyIds.has(d)),
+    ) ||
+    (c.targets &&
+      (typeof c.targets !== "object" ||
+        Object.values(c.targets).some(
+          (ts) =>
+            !Array.isArray(ts) ||
+            ts.length !== 2 ||
+            ts.some(
+              (t) =>
+                t !== null &&
+                (typeof t !== "object" ||
+                  !c.partyIds.includes(t.heroId) ||
+                  (t.woundId !== undefined && typeof t.woundId !== "string")),
+            ),
+        ))) ||
+    !c.sleepHours ||
+    Object.values(c.sleepHours).some((n) => !whole(n) || n > c.elapsed) ||
+    !Array.isArray(c.events) ||
+    c.events.length > 100 ||
+    c.events.some((e) => typeof e !== "string")
+  )
+    throw new Error("Invalid saved camp schedule.");
+}
+export const campMethods = {
+  campCanResume() {
+    const c = this.campaign.camp;
+    return (
+      c &&
+      ["paused", "interrupted"].includes(c.status) &&
+      c.elapsed < c.total &&
+      c.depth === this.campaign.depth &&
+      distance(c, this.active) < 2 &&
+      c.partyIds.join() === this.party.map((h) => h.heroId).join()
+    );
+  },
+  campRecoveryHours(assignments) {
+    const need = new Map(
+      this.party
+        .filter((h) => h.survival.status === "active")
+        .map((h) => [
+          h.heroId,
+          Math.ceil(Math.max(0, this.healingMaximum(h) - h.survival.hp) / 2),
+        ]),
+    );
+    for (let hour = 0; hour < 96; hour++) {
+      for (const h of campPeriod(this.party, assignments, hour).sleepers)
+        need.set(h.heroId, Math.max(0, need.get(h.heroId) - 1));
+      if (hour >= 7 && [...need.values()].every((n) => n === 0))
+        return hour + 1;
+    }
+    return 96;
+  },
+  campWaterSource() {
+    return (
+      this.map.waterSources?.some(
+        (p) =>
+          distance(p, this.active) <= 3 &&
+          lineOfSight(this.map, p, this.active),
+      ) ||
+      (this.map.tiles &&
+        Object.values(this.map.tiles).some(
+          (p) =>
+            /water|well|spring/.test(p.type ?? "") &&
+            distance(p, this.active) <= 3 &&
+            lineOfSight(this.map, p, this.active),
+        ))
+    );
+  },
+  campMaterial(recipe) {
+    for (const h of this.party.filter((h) => h.survival.status === "active")) {
+      if ((h.recipeMaterials?.[recipe] ?? 0) > 0)
+        return { hero: h, batch: true };
+      const item = h.preview.inventory.items.find(
+        (i) =>
+          i.carried && i.materialType === recipe && this.supplyValue(h, i) > 0,
+      );
+      if (item) return { hero: h, item };
+    }
+    return null;
+  },
+  campDutyReason(h, duty, target) {
+    if (["heal", "treat"].includes(duty))
+      return this.campMedicalReason(h, duty, target);
+    if (duty.startsWith("forage-"))
+      return (this.map.campFinds ?? 0) >= 3
+        ? "This floor's useful materials have been gathered."
+        : "";
+    if (duty === "water")
+      return !this.campWaterSource()
+        ? "No water source within three squares."
+        : !this.party.some((p) =>
+              p.preview.inventory.items.some(
+                (i) => i.carried && i.catalogId === "item-water-flask",
+              ),
+            )
+          ? "The company needs a water flask."
+          : "";
+    const recipe = recipes[duty];
+    if (!recipe) return "";
+    if (
+      duty !== "cook" &&
+      !this.traits(h).some((t) => t.improvise) &&
+      !this.party.some(
+        (p) =>
+          p.survival.status === "active" &&
+          p.preview.inventory.items.some(
+            (i) => i.carried && i.catalogId === "item-craft-tools",
+          ),
+      )
+    )
+      return "The company needs craft tools.";
+    return this.campMaterial(recipe)
+      ? ""
+      : "No compatible material batch carried by the company.";
+  },
+  campEvent(text) {
+    this.campaign.camp.events.push(text);
+    this.campaign.camp.events = this.campaign.camp.events.slice(-100);
+    this.note(text);
+  },
+  campDuty(h, duty, rng, medicalTarget) {
+    if (["heal", "treat"].includes(duty))
+      return this.campMedicalDuty(h, duty, medicalTarget);
+    const reason = this.campDutyReason(h, duty);
+    if (reason) {
+      this.campEvent(`${h.name}: ${reason}`);
+      return;
+    }
+    if (duty === "guard") {
+      this.campEvent(`${h.name} keeps a dedicated watch.`);
+      return;
+    }
+    if (duty.startsWith("forage-")) {
+      const recipe =
+        recipes[
+          { food: "cook", arrows: "arrows", torches: "torches" }[duty.slice(7)]
+        ];
+      const roll = this.heroRoll(h, "knowledge");
+      if (roll.tier === "weak")
+        this.campEvent(`${h.name} finds no usable materials (${roll.tier}).`);
+      else {
+        h.recipeMaterials ??= {};
+        h.recipeMaterials[recipe] = (h.recipeMaterials[recipe] ?? 0) + 1;
+        this.map.campFinds = (this.map.campFinds ?? 0) + 1;
+        this.campEvent(
+          `${h.name} forages one ${duty.slice(7)} batch (${roll.tier}); ${3 - this.map.campFinds} finds remain on this floor.`,
+        );
+      }
+      return;
+    }
+    if (duty === "water") {
+      for (const p of this.party)
+        for (const i of p.preview.inventory.items.filter(
+          (i) => i.carried && i.catalogId === "item-water-flask",
+        ))
+          p.supplies[i.instanceId] = Math.max(6, this.supplyValue(p, i));
+      this.campEvent(`${h.name} fills the company's water flasks.`);
+      return;
+    }
+    const recipe = recipes[duty],
+      material = this.campMaterial(recipe),
+      [catalogId, die] = products[duty];
+    let target;
+    for (const p of this.party) {
+      const item = p.preview.inventory.items.find(
+        (i) =>
+          i.carried &&
+          i.catalogId === catalogId &&
+          this.supplyValue(p, i) < die,
+      );
+      if (item) {
+        target = { hero: p, item };
+        break;
+      }
+    }
+    if (!target) {
+      const item = ordinaryItem(
+        this.C,
+        catalogId,
+        `camp-made-${crypto.randomUUID()}`,
+      );
+      (h.treasure ??= []).push(item);
+      target = { hero: h, item };
+    }
+    target.hero.supplies[target.item.instanceId] = die;
+    if (material.batch) material.hero.recipeMaterials[recipe]--;
+    else
+      this.checkSupply(
+        material.hero,
+        material.item,
+        "crafting materials",
+        rng.int(1, this.supplyValue(material.hero, material.item)),
+      );
+    this.refreshHero(target.hero);
+    this.campEvent(
+      `${h.name} prepares ${target.item.definition.name} · d${die}, using compatible materials.`,
+    );
+  },
+  startCamp(assignments, total = 8, targets = {}) {
+    const reason = this.sleepReason();
+    if (this.mode !== "exploration" || reason)
+      throw new Error(reason || "Make camp in the dungeon.");
+    if (!Number.isSafeInteger(total) || total < 8 || total > 96)
+      throw new Error("Choose 8–96 camp hours.");
+    const plan = {};
+    for (const h of this.party) {
+      const duties = assignments[h.heroId];
+      if (
+        !Array.isArray(duties) ||
+        duties.length !== 2 ||
+        duties.some((d) => !dutyIds.has(d))
+      )
+        throw new Error("Choose two camp duties for every hero.");
+      plan[h.heroId] = [...duties];
+    }
+    this.paths.clear();
+    const serial = (this.map.campSerial ?? 0) + 1;
+    this.map.campSerial = serial;
+    this.campaign.camp = {
+      depth: this.campaign.depth,
+      x: this.active.x,
+      z: this.active.z,
+      partyIds: this.party.map((h) => h.heroId),
+      assignments: plan,
+      targets: structuredClone(targets),
+      total,
+      elapsed: 0,
+      seed:
+        (this.campaign.seed + serial * 7919 + this.campaign.depth * 173) >>> 0,
+      sleepHours: {},
+      status: "paused",
+      events: [],
+    };
+    this.campLight();
+    this.campEvent(
+      `The company makes camp for at least ${total} hours. Sleep restores 2 HP/hour; Grit and injuries remain.`,
+    );
+    this.emit("change");
+  },
+  campLight() {
+    this.map.lights ??= [];
+    this.map.lights = this.map.lights.filter((l) => l.id !== "camp-fire");
+    const c = this.campaign.camp;
+    this.map.lights.push({ id: "camp-fire", x: c.x, z: c.z, radius: 8 });
+    for (const h of this.party) h.torch.lit = false;
+  },
+  breakCamp() {
+    const c = this.campaign.camp;
+    if (c && c.status !== "complete") c.status = "abandoned";
+    this.map.lights =
+      this.map.lights?.filter((l) => l.id !== "camp-fire") ?? [];
+    this.syncTorches();
+    this.emit("change");
+  },
+  campWanderers(rng) {
+    const c = this.campaign.camp;
+    const cells = Object.values(this.map.tiles).filter(
+      (p) =>
+        distance(p, c) >= 3 &&
+        distance(p, c) <= 5 &&
+        !this.map.obstacles[key(p.x, p.z)] &&
+        !this.occupied().has(key(p.x, p.z)) &&
+        lineOfSight(this.map, p, c),
+    );
+    const pool = this.C.creatures.creatures.filter(
+      (r) =>
+        CREATURE_ROSTER[r.id]?.depth <= this.campaign.depth &&
+        !r.id.includes("boss") &&
+        r.cv <= 30,
+    );
+    if (!cells.length || !pool.length) return [];
+    return cells.slice(0, Math.min(2, cells.length)).map((p, i) => {
+      const r = pool[rng.int(0, pool.length - 1)];
+      return {
+        ...p,
+        id: `camp-${this.map.campSerial}-${c.elapsed}-${i}`,
+        group: 10000 + this.map.campSerial,
+        type: r.id,
+        name: r.name,
+        hp: r.hp.max,
+        maxHp: r.hp.max,
+        cv: r.cv,
+        stability: r.defenses.stability,
+        conditions: [],
+        ammunition: 6,
+      };
+    });
+  },
+  campHour() {
+    if (!this.campCanResume())
+      throw new Error("No camp at this location to continue.");
+    const reason = this.sleepReason();
+    if (reason) throw new Error(reason);
+    const c = this.campaign.camp,
+      period = campPeriod(this.party, c.assignments, c.elapsed),
+      rng = new Random((c.seed + c.elapsed * 32452843) >>> 0);
+    c.status = "paused";
+    this.campLight();
+    this.advanceTime(3600, {
+      sleepingHeroes: period.sleepers.map((h) => h.heroId),
+      provisions: true,
+    });
+    for (const h of period.sleepers) {
+      const before = h.survival.hp;
+      h.survival = this.R.receiveHealing(h.survival, 2);
+      h.survival.hp = Math.max(
+        before,
+        Math.min(h.survival.hp, this.healingMaximum(h)),
+      );
+      c.sleepHours[h.heroId] = (c.sleepHours[h.heroId] ?? 0) + 1;
+    }
+    if (period.worker)
+      this.campDuty(
+        period.worker,
+        period.duty,
+        rng,
+        c.targets?.[period.worker.heroId]?.[Math.floor(c.elapsed / 4) % 2],
+      );
+    c.elapsed++;
+    const warning = this.party.some(
+      (h) =>
+        h.survival.status === "active" &&
+        this.traits(h).some((t) => t.campWarning),
+    );
+    if (rng.next() < (warning ? 0.05 : 0.1)) {
+      const enemies = this.campWanderers(rng);
+      if (enemies.length) {
+        const roll = period.worker
+          ? this.heroRoll(period.worker, "reason", "attribute", {
+              sources:
+                period.duty === "guard" ? [{ kind: "boon", amount: 1 }] : [],
+            })
+          : null;
+        const reverie = period.sleepers.some((h) =>
+          this.traits(h).some((t) => t.reverie),
+        );
+        const detected = reverie || (roll && roll.tier !== "weak");
+        this.enemies.push(...enemies);
+        c.status = "interrupted";
+        this.campEvent(
+          `${period.worker?.name ?? "Nobody"} is on watch${roll ? ` (${roll.tier})` : ""}${reverie ? "; wakeful reverie warns the camp" : ""}. ${detected ? "The approaching creatures are spotted; the company takes the opening." : "Ambush! The creatures take the opening."}`,
+        );
+        this.campOpening = detected ? "players" : "opposition";
+        this.emit("party");
+        this.detect();
+        return {
+          interrupted: true,
+          detected: !!detected,
+          watch: period.worker?.heroId,
+        };
+      }
+    }
+    if (c.elapsed >= c.total) {
+      c.status = "complete";
+      this.breakCamp();
+      this.campEvent(
+        "Camp complete. The company packs up; injuries and spent Grit remain.",
+      );
+    }
+    this.emit("change");
+    return { interrupted: false, complete: c.status === "complete" };
+  },
+};

@@ -1,4 +1,4 @@
-import { distance, key, lineOfSight, Random } from "./dungeon.mjs";
+import { distance, lineOfSight } from "./dungeon.mjs";
 import {
   partyCanSee,
   heroCanSee,
@@ -341,7 +341,10 @@ export const expeditionMethods = {
       }
     }
   },
-  advanceTime(seconds, { sleeping = false, provisions = false } = {}) {
+  advanceTime(
+    seconds,
+    { sleeping = false, sleepingHeroes = null, provisions = false } = {},
+  ) {
     if (!Number.isSafeInteger(seconds) || seconds < 0)
       throw new Error("Time must be whole nonnegative seconds.");
     prepareExpedition(this.campaign);
@@ -349,17 +352,21 @@ export const expeditionMethods = {
     this.expireBattlefield();
     this.campaign.hours = Math.floor(this.campaign.clockSeconds / 3600);
     for (const h of this.party.filter((h) => h.survival.status !== "dead")) {
-      if (sleeping && h.survival.status === "active") {
+      const asleep = sleeping || sleepingHeroes?.includes(h.heroId);
+      if (asleep && h.survival.status === "active") {
         h.needs.restedAt += seconds; // Sleep itself is not time spent awake.
         h.needs.sleepProgress += seconds;
-        if (h.needs.sleepProgress >= EXPEDITION_TIME.sleep) {
+        if (
+          h.needs.sleepProgress >=
+          (sleepingHeroes ? 6 * 3600 : EXPEDITION_TIME.sleep)
+        ) {
           h.needs.restedAt = this.clock().seconds;
           h.needs.sleepProgress = 0;
           h.restPowerUses = {};
           h.needs.warned = h.needs.warned.filter((k) => k !== "fatigue");
         }
       }
-      if (h.torch.lit && !sleeping) {
+      if (h.torch.lit && !asleep) {
         h.torch.seconds += seconds;
         while (h.torch.seconds >= EXPEDITION_TIME.torchCheck) {
           h.torch.seconds -= EXPEDITION_TIME.torchCheck;
@@ -391,7 +398,8 @@ export const expeditionMethods = {
       }
     }
     if (provisions) this.autoProvisions();
-    if (!sleeping) for (const h of this.party) h.needs.sleepProgress = 0;
+    if (!sleeping && !sleepingHeroes)
+      for (const h of this.party) h.needs.sleepProgress = 0;
     this.emit("time");
   },
   refillWater(index) {
@@ -409,6 +417,8 @@ export const expeditionMethods = {
     this.emit("change");
   },
   sleepReason() {
+    if (this.party.some((h) => h.wounds.some((w) => !w.applied)))
+      return "Resolve outstanding wounds before making camp.";
     if (!["town", "exploration"].includes(this.mode))
       return "Finish the encounter before sleeping.";
     if (
@@ -437,57 +447,20 @@ export const expeditionMethods = {
     return "";
   },
   sleepHour() {
+    if (this.mode !== "town")
+      throw new Error("Choose duties in the dungeon camp screen.");
     const reason = this.sleepReason();
     if (reason) throw new Error(reason);
     this.paths.clear();
     for (const h of this.party) h.torch.lit = false;
     this.advanceTime(3600, { sleeping: true, provisions: true });
-    if (this.mode !== "town") {
-      const rng = new Random(
-        (this.campaign.seed +
-          this.campaign.depth * 173 +
-          this.campaign.hours * 7919) >>>
-          0,
+    for (const h of this.party.filter((h) => h.survival.status === "active")) {
+      const before = h.survival.hp;
+      h.survival = this.R.receiveHealing(h.survival, 2);
+      h.survival.hp = Math.max(
+        before,
+        Math.min(h.survival.hp, this.healingMaximum(h)),
       );
-      const alive = this.enemies.filter((e) => e.hp > 0);
-      if (
-        alive.length &&
-        rng.next() <
-          (this.party.some(
-            (h) =>
-              h.survival.status === "active" &&
-              this.traits(h).some((t) => t.campWarning),
-          )
-            ? 0.075
-            : 0.15)
-      ) {
-        const enemy = alive.sort(
-          (a, b) => distance(a, this.active) - distance(b, this.active),
-        )[0];
-        const point = Object.values(this.map.tiles).find(
-          (p) =>
-            distance(p, this.active) >= 3 &&
-            distance(p, this.active) <= 5 &&
-            !this.map.obstacles[key(p.x, p.z)] &&
-            !this.occupied(enemy.id).has(key(p.x, p.z)) &&
-            lineOfSight(this.map, p, this.active),
-        );
-        if (point) {
-          Object.assign(enemy, { x: point.x, z: point.z });
-          this.note(
-            `${enemy.name} approaches the camp. Your sleep is interrupted!`,
-          );
-          this.syncTorches();
-          this.emit("party");
-          this.reverieOpening = this.party.some(
-            (h) =>
-              h.survival.status === "active" &&
-              this.traits(h).some((t) => t.reverie),
-          );
-          this.detect();
-          return { interrupted: true };
-        }
-      }
     }
     this.note("The company sleeps for one hour. Wounds and spent Grit remain.");
     return { interrupted: false };

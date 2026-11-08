@@ -1,3 +1,5 @@
+import { campMedicalMethods } from "./camp-medical.mjs";
+import { campMethods } from "./camp.mjs";
 import { bulkCatalog } from "./bulk.mjs";
 import { forgeCharacter } from "./forge.mjs";
 import { forgeGameMethods } from "./forge-game.mjs";
@@ -411,6 +413,23 @@ export class Game {
     this.pendingInteraction = null;
     this.map = saved?.map ?? generate(this.campaign.seed, this.campaign.depth);
     prepareLighting(this.map);
+    if (!this.map.waterSources) {
+      const room = this.map.rooms[1] ?? this.map.rooms[0] ?? this.map.start;
+      const tiles = Object.values(this.map.tiles).filter(
+        (p) =>
+          !this.map.obstacles[key(p.x, p.z)] &&
+          distance(p, this.map.start) > 3 &&
+          distance(p, this.map.exit) > 2,
+      );
+      tiles.sort(
+        (a, b) =>
+          distance(a, { x: room.cx ?? room.x, z: room.cz ?? room.z }) -
+          distance(b, { x: room.cx ?? room.x, z: room.cz ?? room.z }),
+      );
+      this.map.waterSources = tiles[0]
+        ? [{ x: tiles[0].x, z: tiles[0].z }]
+        : [];
+    }
     if (!saved)
       this.campaign.lootGeneration = (this.campaign.lootGeneration ?? 0) + 1;
     const treasureSeed =
@@ -1809,9 +1828,16 @@ export class Game {
           .map((h) => ({ id: h.id, side: "players" })),
         ...opposition.map((e) => ({ id: e.id, side: "opposition" })),
       ],
-      this.reverieOpening ? [6, 6, 6] : this.dice(),
+      this.campOpening === "players"
+        ? [6, 6, 6]
+        : this.campOpening === "opposition"
+          ? [1, 1, 1]
+          : this.reverieOpening
+            ? [6, 6, 6]
+            : this.dice(),
     );
     this.reverieOpening = false;
+    this.campOpening = null;
     this.note(
       `Encounter · opening ${this.encounter.opening.total}. ${this.encounter.startingSide === "players" ? "Your party" : "The creatures"} acts first.`,
     );
@@ -1898,7 +1924,7 @@ export class Game {
       this.mode = "exploration";
       this.encounter = null;
       this.note(
-        "The chamber falls silent. Take a safe breath when you are ready.",
+        "The chamber falls silent. Make camp when the company needs sleep and recovery.",
       );
       this.emit("change");
       return;
@@ -2154,40 +2180,9 @@ export class Game {
     this.emit("change");
   }
   rest() {
-    if (this.mode !== "exploration")
-      throw new Error("A safe breath needs a quiet place.");
-    if (
-      this.enemies.some(
-        (e) =>
-          e.hp > 0 &&
-          this.party.some(
-            (h) => distance(h, e) < 10 && lineOfSight(this.map, h, e),
-          ),
-      )
-    )
-      throw new Error("Enemies are too close.");
-    if (this.party.some((h) => h.wounds.some((w) => !w.applied)))
-      throw new Error("Resolve outstanding wounds before resting.");
-    if (
-      this.party.some((h) =>
-        h.conditions.some((c) =>
-          ["burning", "freezing", "bleeding"].includes(c.key),
-        ),
-      )
-    )
-      throw new Error("Resolve ongoing harm before a safe breath.");
-    if (
-      this.party.some((h) => ["dying", "lastWords"].includes(h.survival.status))
-    )
-      throw new Error("Resolve survival before taking a safe breath.");
-    this.party
-      .filter((h) => h.survival.status !== "dead")
-      .forEach((h) => {
-        h.survival = this.R.safeBreath(h.survival);
-        h.survival.hp = Math.min(h.survival.hp, this.healingMaximum(h));
-      });
-    this.note("A safe breath restores HP. Spent Grit does not return.");
-    this.emit("change");
+    throw new Error(
+      "Safe Breath has been removed. Make camp to recover HP through sleep.",
+    );
   }
   extract() {
     if (
@@ -2258,7 +2253,7 @@ export class Game {
   }
 }
 
-Object.assign(Game.prototype, recoveryMethods);
+Object.assign(Game.prototype, campMethods, campMedicalMethods, recoveryMethods);
 Object.assign(Game.prototype, interactionMethods);
 Object.assign(Game.prototype, rosterMethods, experienceMethods);
 

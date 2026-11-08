@@ -1,3 +1,4 @@
+import { validateCamp } from "./camp.mjs";
 import { RECIPES } from "./recipes.mjs";
 import { SURFACE_COLORS } from "./battlefield.mjs";
 import { validateBuild } from "./builds.mjs";
@@ -6,6 +7,7 @@ const recipeIds = new Set(RECIPES.map((r) => r.id));
 // Validate optional game-owned additions before a save replaces the live run.
 // Missing fields are legitimate in pre-0.4 saves.
 export function validateGameState(campaign) {
+  validateCamp(campaign);
   const heroes = [
     ...campaign.party,
     ...(campaign.reserve ?? []),
@@ -50,6 +52,17 @@ export function validateGameState(campaign) {
       throw new Error("Saved portable equipment is invalid.");
   }
   for (const h of heroes) {
+    for (const w of h.wounds ?? [])
+      if (
+        w.campCare &&
+        (!nonnegative(w.campCare.minutes) ||
+          !Number.isSafeInteger(w.campCare.required) ||
+          w.campCare.required < 1 ||
+          w.campCare.required > 240 ||
+          w.campCare.minutes > w.campCare.required ||
+          !/^day-\d+$/.test(w.campCare.dayKey))
+      )
+        throw new Error("Saved wound camp care is invalid.");
     validateBuild(h);
     if (h.respecGritSpent !== undefined && !nonnegative(h.respecGritSpent))
       throw new Error("Saved respec Grit accounting is invalid.");

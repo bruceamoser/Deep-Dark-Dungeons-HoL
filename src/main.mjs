@@ -210,7 +210,9 @@ async function init() {
   );
   await townView.load();
   game.listeners.push((type, data) => {
-    if (type === "feedback") scene.floatingText(data);
+    if (type === "camp-open") queueMicrotask(() => action("camp"));
+    if (type === "feedback" && !modal.querySelector(".dungeon-camp"))
+      scene.floatingText(data);
     if (["time", "light", "change", "battlefield"].includes(type) && scene.map)
       scene.updateVisibility(game.party, game.seen);
     if (type === "supply") queueMicrotask(showSupplyNotice);
@@ -501,7 +503,7 @@ function render() {
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
           "",
-        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Recipes", "workshop", "CRAFT & REPLENISH") + button("Safe breath", "rest", "RESTORE HP") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Formation sets marching order"}</div></div>`;
+        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Recipes", "workshop", "CRAFT & REPLENISH") + button("Make camp", "camp", "SLEEP & RECOVER") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Formation sets marching order"}</div></div>`;
     drawMap();
   }
   bind();
@@ -596,11 +598,13 @@ function action(a, arrived = false) {
       break;
     case "camp":
       closeModal();
+      scene.clearFloatingText();
       modalCleanup = campScreen({
         root: modal,
         game,
         close: closeModal,
         attempt,
+        assets: scene.assets,
       });
       break;
     case "shop":
@@ -627,9 +631,6 @@ function action(a, arrived = false) {
       break;
     case "convert":
       game.convert();
-      break;
-    case "rest":
-      game.rest();
       break;
     case "extract":
       game.extract();

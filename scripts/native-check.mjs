@@ -1,3 +1,4 @@
+import { verifyDungeonCamp } from "./camp-check.mjs";
 import { verifyWeaponRoll } from "./weapon-roll-check.mjs";
 import { verifyAppearanceUX } from "./appearance-ux-check.mjs";
 import { verifyCombinedSupplies } from "./combined-supplies-check.mjs";
@@ -97,6 +98,7 @@ try {
   await runCheck(verifyWeaponRoll);
   await runCheck(verifyAppearanceUX);
   await runCheck(verifyGameplayIdentity);
+  await runCheck(verifyDungeonCamp);
   await runCheck(verifyExpeditionUI);
   await runCheck(verifyTorchModels);
   await runCheck(verifyWeaponVisuals);

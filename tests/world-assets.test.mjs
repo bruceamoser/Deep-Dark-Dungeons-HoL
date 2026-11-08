@@ -10,11 +10,27 @@ import {
 } from "../src/view/world-assets.mjs";
 const root = path.resolve(import.meta.dirname, "../public");
 test("world models have all runtime dependencies and recorded source hashes", () => {
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(root, "assets/world/manifest.json")),
+  const manifests = new Map(
+    ["world", "town"].map((scope) => {
+      const directory = path.join(root, "assets", scope);
+      const manifest = JSON.parse(
+        fs.readFileSync(path.join(directory, "manifest.json")),
+      );
+      assert.equal(manifest.license, "CC0-1.0");
+      return [
+        scope,
+        {
+          directory,
+          recorded: new Map(manifest.files.map((f) => [f.file, f])),
+        },
+      ];
+    }),
   );
-  const recorded = new Map(manifest.files.map((f) => [f.file, f]));
   for (const url of Object.values(WORLD_MODELS)) {
+    const scope = url.split("/")[2],
+      provenance = manifests.get(scope);
+    assert.ok(provenance, `Unrecorded world asset scope: ${url}`);
+    const { directory, recorded } = provenance;
     const file = path.join(root, url),
       j = JSON.parse(fs.readFileSync(file));
     for (const entry of [
@@ -27,7 +43,7 @@ test("world models have all runtime dependencies and recorded source hashes", ()
     ]) {
       // Manifest keys are URL-style paths on every platform.
       const relative = path
-        .relative(path.join(root, "assets/world"), entry)
+        .relative(directory, entry)
         .split(path.sep)
         .join("/");
       assert.ok(recorded.has(relative), relative);
