@@ -65,23 +65,22 @@ test("camp saves resume the next period without repeating healing or rewards, re
   assert.throws(() => copy.load(bad, { resume: false }), /camp schedule/);
 });
 
-test("foraging has a finite floor yield; crafting requires and consumes compatible materials; water needs a nearby source", () => {
+test("general foraging finds one material per success; crafting consumes compatible materials; gathering water needs a nearby source", () => {
   const g = quiet(),
     h = g.party[0];
   g.startCamp(plan(g));
   g.dice = (n = 3) => Array(n).fill(6);
   const rng = new Random(123);
   assert.match(g.campDutyReason(h, "cook"), /material/);
-  for (let i = 0; i < 4; i++) g.campDuty(h, "forage-food", rng);
-  assert.equal(g.map.campFinds, 3);
-  assert.equal(h.recipeMaterials["recipe-travel-food"], 3);
+  for (let i = 0; i < 4; i++) g.campDuty(h, "forage", { int: () => 21 });
+  assert.equal(h.recipeMaterials["recipe-travel-food"], 4);
   const food = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-food-bundle",
   );
   h.supplies[food.instanceId] = 0;
   g.campDuty(h, "cook", rng);
   assert.equal(h.supplies[food.instanceId], 8);
-  assert.equal(h.recipeMaterials["recipe-travel-food"], 2);
+  assert.equal(h.recipeMaterials["recipe-travel-food"], 3);
   g.map.waterSources = [];
   assert.match(g.campDutyReason(h, "water"), /No water/);
   g.map.waterSources = [{ x: h.x, z: h.z }];

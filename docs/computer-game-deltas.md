@@ -237,3 +237,13 @@ Resource checks now follow actual dungeon movement plus stationary dungeon work/
 Camp forecasts now include these checks, show current and projected stock plus the next movement/rest thresholds, and dim the animated fire when fuel is unavailable. Wandering camp encounters begin even if darkness prevents ordinary visual detection. Ordinary water flasks expose their game-owned d6 supply to the same combine/use interface, and refilling never reduces an already larger supply.
 
 Wound and restoration supplies also use their current supply die after a successful dose. A reserved multi-hour restoration treatment checks the dose once at the start, then retains its receipt across later care hours and camps. Combining supplies therefore never makes one ordinary use discard an entire enlarged pool.
+
+## November 8 general d100 foraging
+
+Bruce replaced targeted foraging with one general Forage duty, usually yielding one resource or nothing. Baseline d100 bands are 1–8 water (8%), 9–20 wood/fuel (12%), 21–34 food ingredients (14%), 35–44 fletching materials (10%), 45–50 medicinal materials (6%), and 51–100 nothing (50%). Each successful material find adds one compatible recipe batch; water discovers a nearby gatherable source and can fill one depleted flask. There is no three-find floor cap. Time, provisions and wandering-creature risk provide the cost.
+
+Field Replenishment expands water/wood/food/fletching by 4/4/6/4 percentage points. Forager Remedies adds 12 medicinal and 3 food points. Field Artisan adds 5 wood and 5 fletching points; salvage adds 3 to each. Dressing-recipe knowledge adds 3 medicinal points when not already included in Forager Remedies. Each learned HP-healing skill adds 2 medicinal points, capped at 6. Bonuses take space from the empty band; if combined bonuses exceed 35 points, scale only bonuses proportionally, preserving at least 15% nothing. The UI lists each hero's actual bands and relevant training.
+
+Medicinal finds supply the field-dressing recipe. Make dressings is a camp duty requiring that recipe and one compatible batch; it makes/refills d4 dressings without advancing an extra hour. Old targeted forage choices migrate to the general task. Paused camp duties/patients can change for future periods while completed hours, healing and rewards remain intact.
+
+Forecasts run an empty/weak/depleting scenario and successful scenarios for each possible resource with favorable treatment/supply checks. HP and each supply category display their corresponding range; different category maxima need not occur together. Actual foraging still rolls once on the hero's d100 table and grants at most one find.

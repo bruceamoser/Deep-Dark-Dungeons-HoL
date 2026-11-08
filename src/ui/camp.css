@@ -372,3 +372,24 @@
   color: #b2ac86;
   line-height: 1.4;
 }
+.camp-forage-odds {
+  font-size: 11px;
+  color: #a8d3b5;
+}
+.camp-forage-odds summary {
+  cursor: pointer;
+}
+.camp-forage-odds table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  color: #d2d5b9;
+}
+.camp-forage-odds td {
+  padding: 4px 3px;
+  border-bottom: 1px solid #566149;
+  font-size: 10px;
+}
+.camp-forage-odds td:last-child {
+  text-align: right;
+}

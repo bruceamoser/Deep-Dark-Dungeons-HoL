@@ -1,3 +1,4 @@
+import { foragingMethods, migrateForagePlan } from "./foraging.mjs";
 import { provisionMethods, prepareProvisions } from "./provisions.mjs";
 import { migrateCombinedSupplies } from "./supply-dice.mjs";
 import { campMedicalMethods } from "./camp-medical.mjs";
@@ -198,6 +199,7 @@ export class Game {
   }
   load(c, { resume = true } = {}) {
     validateGameState(c);
+    migrateForagePlan(c);
     prepareProvisions(c);
     migrateCombinedSupplies(c, this.C);
     this.pause();
@@ -2261,7 +2263,13 @@ export class Game {
   }
 }
 
-Object.assign(Game.prototype, campMethods, campMedicalMethods, recoveryMethods);
+Object.assign(
+  Game.prototype,
+  campMethods,
+  campMedicalMethods,
+  foragingMethods,
+  recoveryMethods,
+);
 Object.assign(Game.prototype, interactionMethods);
 Object.assign(Game.prototype, rosterMethods, experienceMethods);
 

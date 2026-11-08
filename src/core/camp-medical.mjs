@@ -182,7 +182,7 @@ export const campMedicalMethods = {
     );
   },
   campForecast(assignments, total, targets = {}) {
-    const run = (favorable) => {
+    const run = (favorable, forageProjection) => {
       const copy = Object.assign(
         Object.create(Object.getPrototypeOf(this)),
         this,
@@ -197,6 +197,7 @@ export const campMedicalMethods = {
           note: () => {},
           emit: () => {},
           campWanderers: () => [],
+          forageProjection,
           supplyNotice: () => {},
           dice: (n = 3) => Array(n).fill(favorable ? 6 : 1),
           supplyDie: (die) => (favorable ? die : 1),
@@ -210,6 +211,49 @@ export const campMedicalMethods = {
       while (copy.campCanResume() && count++ < 96) copy.campHour();
       return copy.party;
     };
-    return { low: run(false), high: run(true) };
+    const low = run(false, "nothing");
+    const possible = ["water", "wood", "food", "fletching", "herbs"].map((id) =>
+      run(true, id),
+    );
+    const high = this.party.map(
+      (_, i) =>
+        possible
+          .map((p) => p[i])
+          .sort(
+            (a, b) =>
+              b.survival.hp - a.survival.hp ||
+              b.wounds.reduce((n, w) => n + (w.treatment?.progress ?? 0), 0) -
+                a.wounds.reduce((n, w) => n + (w.treatment?.progress ?? 0), 0),
+          )[0],
+    );
+    const supplyLow = {},
+      supplyHigh = {};
+    const expected = { 0: 0, 4: 4, 6: 10, 8: 18, 10: 28, 12: 40, 20: 60 };
+    for (const [, id] of CAMP_SUPPLIES) {
+      const ids = Array.isArray(id) ? id : [id],
+        key = ids.join(",");
+      const score = (heroes) =>
+        heroes.reduce(
+          (sum, h) =>
+            sum +
+            h.preview.inventory.items
+              .filter((i) => i.carried && ids.includes(i.catalogId))
+              .reduce(
+                (n, i) => n + (expected[this.supplyValue(h, i)] ?? 0),
+                0,
+              ) +
+            (id === "item-material-bundle"
+              ? Object.values(h.recipeMaterials ?? {}).reduce(
+                  (n, v) => n + v,
+                  0,
+                )
+              : 0),
+          0,
+        );
+      const sorted = [low, ...possible].sort((a, b) => score(a) - score(b));
+      supplyLow[key] = sorted[0];
+      supplyHigh[key] = sorted.at(-1);
+    }
+    return { low, high, supplyLow, supplyHigh };
   },
 };

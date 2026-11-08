@@ -114,9 +114,9 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
     total = 8;
   const defaults = [
     ["guard", "water"],
-    ["forage-arrows", "arrows"],
-    ["forage-food", "cook"],
-    ["forage-torches", "torches"],
+    ["forage", "arrows"],
+    ["forage", "cook"],
+    ["forage", "torches"],
   ];
   let assignments = Object.fromEntries(
     game.party.map((h, i) => [h.heroId, [...defaults[i]]]),
@@ -203,8 +203,20 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
     const supplyOverview = `<section class="camp-stocks" aria-label="Party supplies and projected levels"><div class="camp-forecast-heading"><span class="eyebrow">COMPANY STORES · NOW → PROJECTED END</span><small>Range assumes a completed camp. Supply and treatment rolls vary; foraging may fail.</small></div><div>${CAMP_SUPPLIES.map(
       ([name, id]) => {
         const now = diceSummary(game.party, id),
-          low = forecast ? diceSummary(forecast.low, id) : "—",
-          high = forecast ? diceSummary(forecast.high, id) : "—";
+          low = forecast
+            ? diceSummary(
+                forecast.supplyLow?.[Array.isArray(id) ? id.join(",") : id] ??
+                  forecast.low,
+                id,
+              )
+            : "—",
+          high = forecast
+            ? diceSummary(
+                forecast.supplyHigh?.[Array.isArray(id) ? id.join(",") : id] ??
+                  forecast.high,
+                id,
+              )
+            : "—";
         const next =
           name === "Food"
             ? `${countdown.food} steps / ${Math.ceil(countdown.foodHours)}h rest`
@@ -288,10 +300,14 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
                         name: `${p.name} · ${w.record.injury}`,
                       })),
                   );
-            const patientSelect = ["heal", "treat"].includes(duty)
-              ? `<select data-camp-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} patient ${slot + 1}" ${camp ? "disabled" : ""}><option value="">Choose ${duty === "heal" ? "companion" : "wound"}</option>${patientOptions.map((p) => `<option value="${p.value}" ${p.value === `${target?.heroId ?? ""}|${target?.woundId ?? ""}` ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>${duty === "heal" ? `<small>${game.campHealSkills(h).length} learned healing skills · +${4 * game.campHealSkills(h).length} HP/hour with dressings</small>` : ""}`
+            const forage = duty === "forage" ? game.campForageTable(h) : null;
+            const forageDetails = forage
+              ? `<details class="camp-forage-odds"><summary>${forage.findChance}% find chance · d100 bands</summary><table><tbody>${forage.bands.map((b) => `<tr><td>${b.start}–${b.end}</td><td>${b.name}</td><td>${b.chance}%${b.bonus ? ` (+${b.bonus})` : ""}</td></tr>`).join("")}</tbody></table>${forage.modifiers.length ? `<small>${forage.modifiers.map((m) => esc(m.name)).join(" · ")}</small>` : "<small>Baseline chances · one resource per find.</small>"}</details>`
               : "";
-            return `<label class="camp-duty"><span title="${esc(desc.detail)}">Hour ${i + 1 + slot * 4} · ⓘ</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${camp || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}<small class="camp-duty-description">${esc(desc.detail)}</small>${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
+            const patientSelect = ["heal", "treat"].includes(duty)
+              ? `<select data-camp-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} patient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Choose ${duty === "heal" ? "companion" : "wound"}</option>${patientOptions.map((p) => `<option value="${p.value}" ${p.value === `${target?.heroId ?? ""}|${target?.woundId ?? ""}` ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>${duty === "heal" ? `<small>${game.campHealSkills(h).length} learned healing skills · +${4 * game.campHealSkills(h).length} HP/hour with dressings</small>` : ""}`
+              : "";
+            return `<label class="camp-duty"><span title="${esc(desc.detail)}">Hour ${i + 1 + slot * 4} · ⓘ</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${forageDetails}<small class="camp-duty-description">${esc(desc.detail)}</small>${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
           })
           .join("")}</article>`;
       })
@@ -321,6 +337,10 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
       total = game.campRecoveryHours(assignments);
       draw();
     };
+    const revised = () => {
+      if (game.campCanResume()) game.updateCampDuties(assignments, targets);
+      draw();
+    };
     host.querySelectorAll("[data-camp-hero]").forEach(
       (s) =>
         (s.onchange = () => {
@@ -348,7 +368,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
                 }
               : null;
           }
-          draw();
+          revised();
         }),
     );
     host.querySelectorAll("[data-camp-target]").forEach(
@@ -358,7 +378,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
           targets[s.dataset.campTarget][+s.dataset.targetSlot] = heroId
             ? { heroId, ...(woundId ? { woundId } : {}) }
             : null;
-          draw();
+          revised();
         }),
     );
     const start = () => {
