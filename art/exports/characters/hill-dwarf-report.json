@@ -1,0 +1,10 @@
+{
+  "body_vertices": 7246,
+  "body_faces": 13376,
+  "head_vertices": 3218,
+  "beard_vertices": 96,
+  "bones": 20,
+  "unweighted": 0,
+  "blend": "art/source/characters/hill-dwarf-base.blend",
+  "glb": "art/exports/characters/hill-dwarf-base.glb"
+}

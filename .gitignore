@@ -13,3 +13,7 @@ preview.html
 preview-quaternius.html
 shot-preview.mjs
 shot_q.mjs
+
+# Blender's automatic working-file backups
+*.blend1
+*.blend2

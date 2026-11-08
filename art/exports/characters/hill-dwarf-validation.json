@@ -1,0 +1,12 @@
+{
+  "body_connected_components": 1,
+  "body_closed_manifold": true,
+  "body_vertices": 7246,
+  "normalized_skin_weights": true,
+  "elbow_pose_max_displacement_m": 0.0935,
+  "export_meshes": 3,
+  "export_skins": 1,
+  "rig_bones": 20,
+  "animation_retargeting": "not validated",
+  "glb_roundtrip_skinned_meshes": 3
+}
