@@ -355,7 +355,7 @@ export function magicItem(seed, depth = 1, options = {}) {
     instanceId: `relic-${seed >>> 0}-${base}`,
     catalogId: def.catalogId ?? `relic-${base}`,
     base,
-    weaponType: def.weaponType,
+    ...(def.weaponType ? { weaponType: def.weaponType } : {}),
     slot: def.slot,
     icon: def.icon,
     seed: seed >>> 0,
