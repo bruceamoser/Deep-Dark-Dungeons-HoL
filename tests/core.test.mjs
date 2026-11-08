@@ -89,17 +89,17 @@ test("net Boons cap at three; natural extremes override attribute total", () => 
   assert.equal(R.classifyRoll([1, 1, 1], 9).tier, "weak");
   assert.equal(R.classifyRoll([6, 6, 6], -9).tier, "strong");
 });
-test("safe breath restores HP but never Grit; unresolved wounds block approximation", () => {
+test("removed Safe Breath cannot heal or restore Grit", () => {
   const g = fresh();
   g.descend();
   g.enemies = [];
   g.party[0].survival.hp = 3;
   g.party[0].survival.gritAvailable = 0;
-  g.rest();
-  assert.equal(g.party[0].survival.hp, 25);
+  assert.throws(() => g.rest(), /removed/);
+  assert.equal(g.party[0].survival.hp, 3);
   assert.equal(g.party[0].survival.gritAvailable, 0);
   g.party[0].wounds.push({});
-  assert.throws(() => g.rest(), /wounds/);
+  assert.throws(() => g.rest(), /removed/);
 });
 test("combat movement rejects overspending and the second main action", () => {
   const g = fresh();
@@ -465,7 +465,7 @@ test("armor wear checks training and swaps resistance without granting HP or Gri
   h.preview = R.workshopCharacter(h.draft, C);
   assert.match(g.gearReason(0, "test-heavy", "wear"), /training/);
 });
-test("new wounds apply conditions and penalties; safe breath preserves scars and Grit", () => {
+test("new wounds apply conditions and penalties; sleeping preserves scars and Grit", () => {
   const g = fresh(),
     h = g.party[0];
   g.enemies = [];
@@ -484,8 +484,12 @@ test("new wounds apply conditions and penalties; safe breath preserves scars and
   g.mode = "exploration";
   g.enemies = [];
   h.conditions = [];
-  g.rest();
-  assert.equal(h.survival.hp, h.survival.maxHp);
+  g.campWanderers = () => [];
+  g.startCamp(
+    Object.fromEntries(g.party.map((p) => [p.heroId, ["guard", "guard"]])),
+  );
+  for (let i = 0; i < 8; i++) g.campHour();
+  assert.equal(h.survival.hp, Math.min(h.survival.maxHp, 13));
   assert.equal(h.survival.gritAvailable, 0);
   assert.equal(h.survival.wounds, 1);
   assert.equal(h.wounds.length, 1);

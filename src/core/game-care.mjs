@@ -24,6 +24,12 @@ export const gameCareMethods = {
     let reason = "";
     if (!w || w.treatment?.completed) reason = "Choose an untreated injury.";
     else if (
+      w.treatment?.attempts?.some((a) => a.dayKey === `day-${this.clock().day}`)
+    )
+      reason = "This wound has already had its treatment attempt today.";
+    else if (w.campCare && w.campCare.minutes < w.campCare.required)
+      reason = "Restoration care is in progress. Continue it in camp.";
+    else if (
       !["town", "exploration"].includes(this.mode) ||
       this.busy ||
       this.pendingDefense ||

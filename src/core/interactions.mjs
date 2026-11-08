@@ -5,6 +5,16 @@ import { XP_RULES } from "./experience.mjs";
 export const interactionMethods = {
   worldInteractions() {
     return [
+      ...(this.map.waterSources ?? []).map((p, i) => ({
+        ...p,
+        id: `spring:${i}`,
+        kind: "spring",
+        name: "Underground well",
+        description:
+          "Fresh groundwater. Make camp within three squares and assign Gather water to refill carried flasks.",
+        available: true,
+        action: "Make camp near the well",
+      })),
       ...this.map.chests.map((c) => ({
         ...c,
         id: `coffer:${c.id}`,
@@ -135,6 +145,7 @@ export const interactionMethods = {
     const reason = this.interactionReason(item);
     if (reason) throw new Error(reason);
     this.pendingInteraction = null;
+    if (item.kind === "spring") return this.emit("camp-open");
     if (item.kind === "entrance") return this.extract();
     if (item.kind === "descent") return this.deeper();
     if (item.kind === "coffer" && item.source.opened) return;

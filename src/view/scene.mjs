@@ -319,13 +319,16 @@ export class Scene {
       if (!entry) {
         const stairs = ["entrance", "descent"].includes(item.kind);
         const dropped = !!item.source?.dropped;
-        const modelName = stairs
-          ? "stairs"
-          : item.kind === "cache" || dropped
-            ? "cacheCrate"
-            : item.source?.guardBossId
-              ? "chestGold"
-              : "chest";
+        const modelName =
+          item.kind === "spring"
+            ? "well"
+            : stairs
+              ? "stairs"
+              : item.kind === "cache" || dropped
+                ? "cacheCrate"
+                : item.source?.guardBossId
+                  ? "chestGold"
+                  : "chest";
         const obj = this.fittedProp(
           modelName,
           item.x + (dropped ? 0.65 : 0),
