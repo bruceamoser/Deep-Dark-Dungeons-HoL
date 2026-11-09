@@ -1,16 +1,22 @@
-# 2026-11-09 — Plain camp outcomes
+# 2026-11-09 — Camp UX and held torch lighting
 
-- Branch: `codex/camp-plain-outcomes`; base `70021b4`.
-- User request: hide camp dice, roll tiers and probabilities; report useful outcomes.
-- Changes: foraging found/nothing text, replenished supplies, simple treatment and watch outcomes; no forage odds table or interruption percentage; qualitative camp stock labels. Rules, RNG and save format unchanged.
-- Verification: 271 unit tests and production build pass. Camp browser flow passed: planning, hourly work/healing, pause, save/reload and completion. No native packaged launch or installer release for this text-only follow-up.
-- v0.8.4 remains the published installer; source changes need a future build to reach installed copies. Existing saved historical event strings are retained as recorded.
-- Follow-up: simplified companion rows to two tasks and injured-only expected healing; removed hourly rota and numerical stock projections. Per-character stores use qualitative levels and recipient-aware possible-gain hints from forecast outcomes. Task requirements/patient selectors remain when needed.
-- Added a forecast regression check that gain hints follow the foraging hero and disappear when reassigned to guarding.
-- No new private assets or machine setup requirements.
+- Branch: `codex/camp-plain-outcomes`; base `70021b4`; PR #108.
+- Status: implemented and verified; local Linux launcher rebuilt. Latest published installer remains v0.8.4; this follow-up has no new public release.
 
-## Camp order and torch follow-up
+## Changes
 
-Company store cards include character portraits and earlier/later controls. Work order is explicit, validated, saved, and locked once camp begins to avoid repeating or skipping work mid-watch. Older saves fall back to party order. Combat formation is unchanged. Torch point lighting follows a flame anchor on the animated held torch for both licensed and fallback models, preserving world-scale falloff.
+Camp messages describe found resources, replenishment and care without dice, probability percentages or roll tiers. Two task choices per companion replace detailed condition projections and the bottom hourly rota. Expected HP recovery appears only for injured companions. Required patient selectors and missing-material warnings remain.
 
-Latest verification: 273 unit tests, production/package build, browser camp planning/save/reload/completion, portrait/order controls and torch model/light anchoring checks pass. Portraits now use an idle pose and head framing to avoid hidden mesh bounds shifting the camera. Full native Linux check is being repeated after updating its HUD assertion from the previous foraging wording; the first attempt stopped on that stale expectation, with actual plain outcomes rendered correctly. No new public release has been published.
+Company stores show current supplies per character, actual equipped portraits and possible-increase hints from forecast outcomes. No numerical end-state ranges or consumption counters. Earlier/later controls set explicit work order before camp starts. Order is validated, saved and locked during an active camp so work cannot be repeated or skipped by reordering. Combat formation is unchanged; older camp saves fall back to party order.
+
+Portraits use idle poses and head framing so hidden model bounds do not shift faces off-camera. Torch lighting follows the animated flame anchor for both licensed Dungeon Mason and fallback models, retaining world-scale falloff. Magical lantern light retains its separate fallback position.
+
+## Verification
+
+273 unit tests pass. Production and licensed Linux directory package builds pass. Browser checks cover camp planning, healing, work, pause/save/reload/completion, portraits, order controls, healthy characters without healing clutter, and torch transitions/anchoring in both hands. Desktop and compact screenshots inspected.
+
+The complete native Linux regression passes via the exact `launch-game.sh`, user systemd session and `aa-exec -p unconfined`, with sandboxing enabled, space-free runtime and isolated test saves. Final log: `/tmp/fld-camp-refine-native3.log`. Earlier attempts stopped on outdated QA expectations for the removed foraging wording and provision countdown; those assertions now check the requested interface. GitHub rules/build validation also passes; see PR for final head checks.
+
+## Remaining / transfer
+
+No assigned gameplay work remains. No new installer release was requested or published. Checkout launcher includes this development follow-up; installed releases stay at v0.8.4 until a later release. Existing historical saved journal strings retain their recorded wording. No new private assets or machine setup requirements; licensed exports and build outputs remain ignored and machine-local.

@@ -62,12 +62,11 @@ export async function verifyProvisions(page) {
       }),
     ).toBe(4);
     await settingsAction(page, "Camp & supplies");
-    await expect(page.locator(".camp-stocks article").nth(1)).toContainText(
-      "Next: 40 steps",
-    );
+    await expect(page.locator(".camp-stocks article")).toHaveCount(4);
     await expect(page.locator(".camp-stocks article").first()).toContainText(
-      "Next: 40 steps",
+      "WaterLow",
     );
+    await expect(page.locator(".camp-stocks")).not.toContainText("Next:");
     await page.screenshot({ path: "test-results/provisions-countdown.png" });
     await page.keyboard.press("Escape");
     await settingsAction(page, "Save");
@@ -84,7 +83,7 @@ export async function verifyProvisions(page) {
       ),
     ).toBe(0);
     console.log(
-      "Actual dungeon movement triggers provision checks once; visible countdown and saved progress passed.",
+      "Actual dungeon movement triggers provision checks once; character stores and saved progress passed.",
     );
   } finally {
     if (await page.locator(".dungeon-camp").count())
