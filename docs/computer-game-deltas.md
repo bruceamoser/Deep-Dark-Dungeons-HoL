@@ -272,3 +272,17 @@ location rating. Encounter rolls have their own seeded stream, independent of
 duty random draws, and resume at the saved next hour. The planner displays the
 cumulative remaining risk, including ancestry warnings. Guard still improves
 ambush detection rather than preventing encounters.
+
+### Action shortcuts and descriptions (#84)
+
+Every character sheet and the combat bar open a dedicated shortcut manager.
+Each hero has eight ordered shortcuts on 5, 6, 7, 8, 9, 0, minus and equals;
+1–4 continue to select heroes. Add/remove/reorder and companion switching cost
+no game time or actions, save immediately and reject unlearned/duplicate entries.
+Search and action-cost filters browse learned actions with expandable rules.
+
+Hovering or focusing an action-bar slot shows the effective power profile,
+range, cost, effects, equipment/supply needs, applicable damage bonuses and
+current availability. Disabled slots remain focusable for their explanation.
+Descriptions read current compiled powers and never consume attack buffs or
+mutate a target; target resistance and conditional bonuses are stated separately.

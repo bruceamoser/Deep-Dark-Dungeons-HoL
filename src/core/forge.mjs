@@ -574,7 +574,8 @@ export function forgePowerText(p) {
           move: `${e.mode} to empty ground.`,
           swap: "Swap with a companion.",
           guard: "Prepare adjacent interception using your Reaction.",
-          counter: "Prepare a melee counter using your Reaction.",
+          counter:
+            "Prepare one Basic Melee counter after an adjacent physical attack. Requires a readied melee weapon and an unspent Reaction. Remains through your next turn; Shield Block spends the same Reaction.",
           survey: "Reveal the floor layout and containers, not hidden enemies.",
           wound: "Treat one recoverable wound using a restoration draught.",
           stabilize: "Stabilize a dying companion.",
