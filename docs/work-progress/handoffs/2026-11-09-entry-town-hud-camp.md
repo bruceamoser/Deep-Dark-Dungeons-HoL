@@ -27,7 +27,7 @@ The native passes also cover the complete creator/reserves/Hall, combat/camera, 
 
 ## Finished gate timing
 
-The first staged run passed Windows and Linux AppImage verification. Linux timed out at the job-wide 15-minute budget while its installed Debian flow was still passing checks; no assertion failed. The follow-up increases the staged job budget to 30 minutes, retaining every assertion. A local complete software-rendered AppImage check also passed.
+The first staged run passed Windows and Linux AppImage verification. Linux timed out at the job-wide 15-minute budget while its installed Debian flow was still passing checks; no assertion failed. The follow-up gives each installer its own parallel job and a 30-minute budget, retaining every assertion. A local complete software-rendered AppImage check also passed.
 
 ## Next / sync
 

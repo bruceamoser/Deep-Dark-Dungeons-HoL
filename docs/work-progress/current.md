@@ -18,7 +18,7 @@ All eight welcome/HUD/camp touches are implemented and merged in [PR #103](https
 - Tab toggles the dungeon map; J toggles its journal.
 - Saved dungeon camp reports show actual healing, wound/material changes and full work history; town sleep has a recovery summary. Recall's return-depth badge remains visible.
 
-271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build AppImage/Debian/Windows installer CI passed. Finished licensed installers are undergoing staged verification in [release gate 42661021738](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42661021738); the Windows finished app passed, while Linux exceeded the 15-minute job budget during its second installer flow without an assertion failure. This handoff branch raises the budget to 30 minutes and will rerun the unchanged gate. Publication remains pending at this checkpoint.
+271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build AppImage/Debian/Windows installer CI passed. Finished licensed installers are undergoing staged verification in [release gate 42661021738](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42661021738); the Windows finished app passed, while Linux exceeded the 15-minute job budget during its second installer flow without an assertion failure. This handoff branch gives AppImage and Debian separate parallel jobs with 30-minute budgets and reruns the same assertions. Publication remains pending at this checkpoint.
 
 ## Recent local diagnosis
 
