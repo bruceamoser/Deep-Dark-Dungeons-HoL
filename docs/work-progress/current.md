@@ -10,9 +10,15 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Current task
 
-Implement Bruce's eight welcome/HUD/camp touches as v0.8.4 on `codex/entry-town-hud-camp-summary`. Entry waits for preload and explicit click/Enter/Space; Greyhaven gets the requested building directory and rendered hero portraits; clock is centered; top tools move under Settings; Tab/J toggle map/journal; completed camps retain actual result reports. Duplicate S shortcuts use S for Smithy and Shift+S for Shrine.
+All eight welcome/HUD/camp touches are implemented and merged in [PR #103](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/103), release commit `7bca1b6`, tag `v0.8.4`.
 
-Implementation and initial checks are complete. 271 automated tests and the dedicated browser/native HUD flow pass. Full native regression, compact layout checks and finished installer qualification are part of the release gate; consult the PR and latest dated handoff for final outcomes. Do not assume a working version is already the public latest release.
+- Persistent preloaded title screen: click, Enter or Space to enter.
+- Illustrated town directory and equipped hero portraits; centered day/time; utility controls under Settings.
+- I/M/G/S/L/H/Shift+S/D for town destinations (Shift+S resolves Shrine/Smithy's duplicate S).
+- Tab toggles the dungeon map; J toggles its journal.
+- Saved dungeon camp reports show actual healing, wound/material changes and full work history; town sleep has a recovery summary. Recall's return-depth badge remains visible.
+
+271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build AppImage/Debian/Windows installer CI passed. Finished licensed installers are undergoing staged verification in [release gate 42661021738](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42661021738); the Windows finished app passed, while Linux exceeded the 15-minute job budget during its second installer flow without an assertion failure. This handoff branch gives AppImage and Debian separate parallel jobs with 30-minute budgets and reruns the same assertions. Publication remains pending at this checkpoint.
 
 ## Recent local diagnosis
 
@@ -23,7 +29,7 @@ The installed executable passed the release smoke flow (rendering, Forge, isolat
 ## Next agent
 
 1. Follow `AGENTS.md` and the startup process in this folder.
-2. Check `codex/entry-town-hud-camp-summary`, its PR and the v0.8.4 release/workflow for delivery state.
+2. Check the v0.8.4 release gate and release link for final delivery state. PR #103 is merged.
 3. Read the latest handoff and current feature docs. No further gameplay task is assigned after these eight UI touches.
 4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
 
