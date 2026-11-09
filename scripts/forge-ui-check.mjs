@@ -80,6 +80,12 @@ export async function verifyForgeUI(page) {
     await expect(page.locator(".forge-path-view")).toBeHidden();
     await expect(page.locator(".forge-node")).toHaveCount(377);
     await page.screenshot({ path: "test-results/forge-atlas.png" });
+    await chooseNode(page, "wilderness:origin", { buy: false });
+    await expect(page.locator(".forge-inspector")).toContainText(
+      "Each rank slightly improves finding water, wood and food",
+    );
+    await expect(page.locator(".forge-inspector")).not.toContainText(/d100|%/);
+    await page.getByRole("searchbox", { name: "Search forge" }).fill("");
     await page.locator('[data-discipline="arms"]').click();
     const verifyLabels = async () => {
       const boxes = await page.locator(".forge-svg").evaluate((svg) => {

@@ -25,3 +25,7 @@ Bruce wants player-facing camp text to report what happened, without dice, proba
 Camp planning shows two tasks per companion and expected HP recovery only when injured. Stores show current supplies per character and a possible-gain hint from assigned work, without numerical end-state projections or hourly rota detail.
 
 Bruce explicitly changed camp supply pacing: no automatic food, water or lighting costs while resting, including no deferred consumption timer debt. Required crafting/medical inputs still apply. New/refilled water uses d8; existing depleted pools retain their amounts until refill. Forage probabilities remain unchanged and hidden from camp UI.
+
+## 2026-11-09 — Disciplines provide relevant basic competence
+
+Bruce wants small thematic discipline benefits as well as larger ability benefits. Applied first to foraging: each Wilderness rank adds one point to water/wood/food bands, each Craft rank adds one to wood/fletching, and each Medicine rank adds one to medicinal materials. Rank is taken from the acting hero’s effective Forge ranks, including origin grants. No party-wide sharing and no benefit from unrelated disciplines. Existing ability bonuses stack, retain larger contributions, and share the existing 85% overall find cap. Forge text explains benefits qualitatively; no odds table returns to camp.

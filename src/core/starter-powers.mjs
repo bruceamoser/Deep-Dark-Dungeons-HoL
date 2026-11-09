@@ -764,7 +764,7 @@ export function addStarterPowers({
     2,
     "forager-remedies",
     "Forager Remedies",
-    "Learn field dressing and healing potion recipes. Craft or replenish them from the recipe book; ingredients, tools and location requirements still apply.",
+    "Greatly improves finding medicinal materials and food when foraging. Learn field dressing and healing potion recipes. Craft or replenish them from the recipe book; ingredients, tools and location requirements still apply.",
     study(["recipe-field-dressing", "recipe-lesser-healing-bottle"]),
   );
   add(

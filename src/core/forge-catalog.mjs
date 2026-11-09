@@ -1,3 +1,4 @@
+import { DISCIPLINE_FORAGING } from "./discipline-benefits.mjs";
 // Game-owned progression. A discipline is a self-contained set of circular paths;
 // intersections require every named contact, never merely a nearby discipline.
 export const FORGE_VERSION = 1;
@@ -1237,6 +1238,9 @@ export const FORGE_NODES = [];
 export const FORGE_PATHS = [];
 for (const d of FORGE_DISCIPLINES) {
   const origin = `${d.id}:origin`;
+  const disciplineBenefit = DISCIPLINE_FORAGING[d.id]
+    ? ` ${DISCIPLINE_FORAGING[d.id].description}`
+    : "";
   FORGE_NODES.push({
     id: origin,
     discipline: d.id,
@@ -1245,7 +1249,7 @@ for (const d of FORGE_DISCIPLINES) {
     cost: 3,
     requires: [],
     rank: 1,
-    description: `Open the ${d.name} paths. Rank I activates matching enchantments. Learn additional disciplines from level 2.`,
+    description: `Open the ${d.name} paths. Rank I activates matching enchantments. Learn additional disciplines from level 2.${disciplineBenefit}`,
     local: { x: 0, y: 0 },
   });
   FORGE_NODES.push({
@@ -1258,7 +1262,7 @@ for (const d of FORGE_DISCIPLINES) {
     rank: 2,
     investment: 4,
     minimumLevel: 3,
-    description: `Rank II: unlock advanced ${d.name} nodes and rank-II enchantments. Requires four purchased nodes in this discipline.`,
+    description: `Rank II: unlock advanced ${d.name} nodes and rank-II enchantments. Requires four purchased nodes in this discipline.${disciplineBenefit}`,
     local: { x: -45, y: 60 },
   });
   FORGE_NODES.push({
@@ -1271,7 +1275,7 @@ for (const d of FORGE_DISCIPLINES) {
     rank: 3,
     investment: 9,
     minimumLevel: 7,
-    description: `Rank III: unlock the deepest ${d.name} paths and rank-III enchantments. Requires nine purchased nodes in this discipline.`,
+    description: `Rank III: unlock the deepest ${d.name} paths and rank-III enchantments. Requires nine purchased nodes in this discipline.${disciplineBenefit}`,
     local: { x: 45, y: 60 },
   });
   PATHS[d.id].forEach(([name, entries], p) => {
