@@ -1,3 +1,4 @@
+import { campEncounterRandom } from "../src/core/fierceness.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { fresh, C, R } from "./forge-fixture.mjs";
@@ -98,7 +99,8 @@ test("wandering creatures can interrupt a cleared floor; workers detect, Guard a
     g.traits = () => [];
     g.startCamp(plan(g));
     let seed = 0;
-    while (new Random(seed).next() >= 0.05) seed++;
+    while (campEncounterRandom(seed, 0).next() >= g.campDanger(1).hourly)
+      seed++;
     g.campaign.camp.seed = seed;
     let guardSources;
     g.heroRoll = (h, a, m, extra) => {

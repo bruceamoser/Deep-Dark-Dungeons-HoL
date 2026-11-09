@@ -1,3 +1,4 @@
+import { fiercenessIndicator } from "./fierceness.mjs";
 import { SUPPLY_CADENCE } from "../core/provisions.mjs";
 import { CAMP_SUPPLIES } from "../core/camp-medical.mjs";
 import { CAMP_DUTIES, campPeriod } from "../core/camp.mjs";
@@ -228,6 +229,10 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
         return `<article><small>${name}</small><b>${now}</b><span>→ ${low === high ? low : `${low} to ${high}`}</span>${next ? `<small class="camp-next-check">Next: ${next}</small>` : ""}</article>`;
       },
     ).join("")}</div></section>`;
+    const danger = game.campDanger(
+      camp ? camp.total - camp.elapsed : total,
+      camp ?? game.active,
+    );
     host.innerHTML = `<div class="camp-plan-top"><div><span class="eyebrow">${last?.status === "complete" && !camp ? "CAMP COMPLETE" : camp?.status === "interrupted" ? "WATCH INTERRUPTED" : "REST & RECOVERY"}</span><h3>${camp ? `Hour ${elapsed} of ${camp.total}` : "Plan the watch"}</h3><p><b>2 HP per sleeping hour</b> · six hours sleep per eight-hour rota · Guard: +1 Boon · no Grit recovery</p></div><label>Camp length<select id="camp-length" ${camp ? "disabled" : ""}>${Array.from(
       { length: 89 },
       (_, i) => i + 8,
@@ -238,7 +243,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
       )
       .join(
         "",
-      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div>${supplyOverview}<div class="camp-rota-heading"><span>COMPANION</span><span>CONDITION · PROJECTED END</span><span>FIRST DUTY</span><span>SECOND DUTY</span></div><div class="camp-rota">${game.party
+      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>${(danger.total * 100).toFixed(1)}% interruption chance</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-rota-heading"><span>COMPANION</span><span>CONDITION · PROJECTED END</span><span>FIRST DUTY</span><span>SECOND DUTY</span></div><div class="camp-rota">${game.party
       .map((h, i) => {
         const sleeps = Array.from({ length: total }, (_, p) =>
           campPeriod(game.party, assignments, p).sleepers.includes(h),
