@@ -1,10 +1,14 @@
-# Implementation status — v0.8.2
+# Four Lanterns Deep — implementation status v0.8.3
 
 Playable desktop dungeon RPG with game-owned powers over HoL's base mechanics.
 The production presentation target remains; the current modular art and balance
 are a playable iteration rather than final production assets.
 
 ## Playable
+
+- Four Lanterns Deep identity, approved illustrated logo and animated loading lanterns/embers with reduced-motion support. Canonical GitHub repo and new update feed use Four-Lanterns-Deep; old installed updater URLs redirect successfully. Installed identifiers and save paths remain compatible.
+- Two distinct moustaches, fitted short/long beards, one tintable Mask and curated fantasy accessories. Pose-specific sword/hammer/shield grips, prepared counter duration/Reaction guidance, audio-clock music overlaps, direct chest/stair approach and per-hero shortcut management with detailed nonblocking hover/focus help.
+- Persistent seven-tier location fierceness shows the local creature rating and controls base eight-hour camp risk from 2% to 50%, with consistent duration accumulation and independent saved encounter rolls.
 
 - A discipline atlas containing 18 independent origins, 72 circular paths, 377 nodes and 33 confluences. All touching prerequisite nodes are required for combined techniques. The connected tree stays primary with spaced clusters and collision-aware labels; optional columns browse the same paths. Search, grab pan, zoom, book icons, A/M/R/P marks, prerequisite/unlock lists, learned/available/locked states and refund previews are implemented.
 - One DP budget: 8 at level 1, 4 per subsequent trained level, level cap 30, unspent DP carried forward. Three origin grants through class/culture/background; overlapping grants refund 3 DP. Additional disciplines cost 3 DP from level 2. Rank II requires level 3/four invested nodes; rank III level 7/nine nodes.
@@ -30,7 +34,7 @@ are a playable iteration rather than final production assets.
 ## Ruleset and limits
 
 The v0.6 Forge edition broke compatibility with earlier progression. Save envelope
-v2 stores forge characters; v0.6–v0.8 journeys continue in v0.8.2. Older edition
+v2 stores forge characters; v0.6–v0.8 journeys continue in v0.8.3. Older edition
 files remain on disk, labeled separately and never rewritten or mixed in. Original
 source rules and imported content remain untouched. Historical engine adapters
 and their regression tests remain where shared combat systems still rely on them;
