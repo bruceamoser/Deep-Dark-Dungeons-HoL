@@ -263,7 +263,7 @@ test("completed camp reports retain actual foraging and healing through save/loa
   assert.equal(report.end[0].hp, 13);
   assert.equal(report.healed[g.party[0].heroId], 12);
   assert.equal(
-    report.events.filter((e) => e.includes("finds one batch")).length,
+    report.events.filter((e) => e.includes("found medicinal materials")).length,
     4,
   );
   const restored = new Game(R, C);

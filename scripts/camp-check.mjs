@@ -45,7 +45,7 @@ export async function verifyDungeonCamp(page) {
     );
     await expect(page.locator("[data-camp-slot]")).toHaveCount(8);
     await expect(page.locator(".camp-danger")).toContainText(
-      "% interruption chance",
+      "Enemies may interrupt the camp",
     );
     const firstRisk = await page.locator(".camp-danger p").innerText();
     await page.locator("#camp-length").selectOption("16");
@@ -56,12 +56,10 @@ export async function verifyDungeonCamp(page) {
     await expect(
       page.locator('select[data-camp-hero] option[value^="forage-"]'),
     ).toHaveCount(0);
-    const odds = page.locator(".camp-forage-odds").first();
-    await odds.locator("summary").click();
-    await expect(odds.locator("tr")).toHaveCount(6);
-    await expect(odds).toContainText("Nothing found");
-    await page.screenshot({ path: "test-results/camp-foraging-odds.png" });
-    await odds.locator("summary").click();
+    await expect(page.locator(".camp-forage-odds")).toHaveCount(0);
+    await expect(
+      page.getByRole("dialog", { name: "Dungeon camp", exact: true }),
+    ).not.toContainText(/d100|find chance|% interruption/);
     await page.evaluate(() => window.__ddd.scene.clearFloatingText());
     await page.screenshot({ path: "test-results/dungeon-camp-preview.png" });
     console.log(

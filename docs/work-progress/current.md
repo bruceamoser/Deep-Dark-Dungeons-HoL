@@ -10,6 +10,10 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Current task
 
+Camp presentation follow-up: plain-language outcomes replace foraging dice/percentages, crafting supply dice and treatment roll tiers. Camp planning no longer exposes forage bands or numerical interruption odds; supply stocks use qualitative labels. Mechanics and saves are unchanged. Branch `codex/camp-plain-outcomes`; see [handoff](handoffs/2026-11-09-camp-plain-outcomes.md). This source change is not yet a new installer release; v0.8.4 remains the latest published version.
+
+## Previous delivered task
+
 All eight welcome/HUD/camp touches are implemented and merged in [PR #103](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/103), release commit `7bca1b6`, tag `v0.8.4`.
 
 - Persistent preloaded title screen: click, Enter or Space to enter.
@@ -34,7 +38,7 @@ The installed executable passed the release smoke flow (rendering, Forge, isolat
 
 1. Follow `AGENTS.md` and the startup process in this folder.
 2. v0.8.4 is delivered. Read the latest handoff for verification and local setup notes; no UI qualification task remains.
-3. Read the latest handoff and current feature docs. No further gameplay task is assigned after these eight UI touches.
+3. Read the camp presentation handoff for the latest source follow-up.
 4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
 
 ## Transfer gaps

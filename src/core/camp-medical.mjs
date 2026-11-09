@@ -108,7 +108,7 @@ export const campMedicalMethods = {
       );
       this.checkSupply(supply.hero, supply.item, "camp healing dressings");
       this.campEvent(
-        `${h.name} tends ${patient.name}: +${patient.survival.hp - before} HP (${skills} healing skill${skills === 1 ? "" : "s"}); dressing checked.`,
+        `${h.name} tends ${patient.name}: +${patient.survival.hp - before} HP.`,
       );
       return;
     }
@@ -178,7 +178,7 @@ export const campMedicalMethods = {
         (c) => !(c.woundId === wound.id && c.persistence === "starred"),
       );
     this.campEvent(
-      `${h.name} treats ${patient.name}'s ${wound.record.injury}: ${roll.tier}, recovery ${wound.treatment.progress}/${wound.record.recoveryValue}${wound.treatment.completed ? " · penalties relieved; scar remains" : " · today's attempt used"}.`,
+      `${h.name} treats ${patient.name}'s ${wound.record.injury}: ${wound.treatment.completed ? "the wound has healed; a scar remains" : "the wound needs further care"}.`,
     );
   },
   campForecast(assignments, total, targets = {}) {

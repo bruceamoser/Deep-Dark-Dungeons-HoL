@@ -1,3 +1,11 @@
+const supplyLabel = (value) =>
+  value <= 0
+    ? "Empty"
+    : value <= 4
+      ? "Low"
+      : value <= 6
+        ? "Stocked"
+        : "Well stocked";
 import { campSnapshot } from "../core/camp-report.mjs";
 import { fiercenessIndicator } from "./fierceness.mjs";
 import { SUPPLY_CADENCE } from "../core/provisions.mjs";
@@ -68,14 +76,14 @@ function townCampScreen({ root, game, close, attempt }) {
             const items = h.preview.inventory.items.filter(
               (x) => x.carried && x.catalogId === id,
             );
-            return `<div><small>${name}</small><b>${items.length ? items.map((x) => (game.supplyValue(h, x) ? `d${game.supplyValue(h, x)}` : "Empty")).join(" · ") : "None"}</b></div>`;
+            return `<div><small>${name}</small><b>${items.length ? items.map((x) => (game.supplyValue(h, x) ? supplyLabel(game.supplyValue(h, x)) : "Empty")).join(" · ") : "None"}</b></div>`;
           })
           .join("");
         return `<article class="camp-hero"><h3>${esc(h.name)}</h3><p class="${n.fatigue || n.hungry || n.thirsty ? "needs-warning" : ""}">${Math.floor(n.awake / 3600)}h awake${n.fatigue ? ` · Fatigue ${n.fatigue}` : " · Rested"}${n.hungry ? " · Hungry" : ""}${n.thirsty ? " · Thirsty" : ""}</p><div class="supply-meter">${supplies}</div><p>${h.torch?.held ? (h.torch.lit ? "Torch burning" : "Torch ready · automatically doused in light") : "Torch stowed"} · ${game.freeHands(h)} free hands</p><button data-torch="${i}" ${reason || sleeping ? "disabled" : ""} title="${esc(reason)}">${h.torch?.held ? "Stow torch" : "Ready torch"}</button>${h.preview.state.abilities.includes("ability-lantern-in-the-palm") ? `<button data-lantern="${i}" ${game.lanternReason(i) || sleeping ? "disabled" : ""}>${h.lantern ? "End magical light" : "Lantern in the Palm"}</button>` : ""}${reason ? `<small class="cost-note">${esc(reason)}</small>` : ""}${game.mode === "town" ? `<button data-water="${i}" ${sleeping || !h.preview.inventory.items.some((x) => x.catalogId === "item-water-flask") ? "disabled" : ""}>Refill water at the well</button>` : ""}</article>`;
       })
       .join(
         "",
-      )}</div><div class="camp-rest"><div><h3>${sleeping ? `Sleeping · ${hours}/8 hours` : "Rest until ready"}</h3><p>Eight hours of sleep clears fatigue. Food and water are used automatically each day. Sleep restores 2 HP per hour without restoring Grit or removing wounds.</p>${reason ? `<p class="cost-note">${esc(reason)}</p>` : ""}</div><button id="sleep" class="primary" ${!sleeping && reason ? "disabled" : ""}>${sleeping ? "Wake the company" : "Sleep for 8 hours"}</button></div><footer>Torches occupy a hand. One lighting check per 25 burning party steps; campfire fuel is checked hourly. Automatic dousing preserves the remaining burn time. Fatigue begins after 16 hours awake.</footer></section></div>`;
+      )}</div><div class="camp-rest"><div><h3>${sleeping ? `Sleeping · ${hours}/8 hours` : "Rest until ready"}</h3><p>Eight hours of sleep clears fatigue. Food and water are used automatically each day. Sleep restores 2 HP per hour without restoring Grit or removing wounds.</p>${reason ? `<p class="cost-note">${esc(reason)}</p>` : ""}</div><button id="sleep" class="primary" ${!sleeping && reason ? "disabled" : ""}>${sleeping ? "Wake the company" : "Sleep for 8 hours"}</button></div><footer>Torches occupy a hand. Torches and campfires consume fuel while burning. Automatic dousing preserves the remaining burn time. Fatigue begins after 16 hours awake.</footer></section></div>`;
     root.querySelector(".close").onclick = close;
     root.querySelectorAll("[data-torch]").forEach(
       (b) =>
@@ -246,13 +254,13 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
       const diceText =
         [...counts]
           .sort((a, b) => b[0] - a[0])
-          .map(([d, n]) => `d${d}${n > 1 ? ` × ${n}` : ""}`)
+          .map(([d, n]) => `${supplyLabel(d)}${n > 1 ? ` × ${n}` : ""}`)
           .join(" + ") || "Empty";
       return batches
         ? `${batches} batches${diceText !== "Empty" ? ` + ${diceText}` : ""}`
         : diceText;
     };
-    const supplyOverview = `<section class="camp-stocks" aria-label="Party supplies and projected levels"><div class="camp-forecast-heading"><span class="eyebrow">COMPANY STORES · NOW → PROJECTED END</span><small>Range assumes a completed camp. Supply and treatment rolls vary; foraging may fail.</small></div><div>${CAMP_SUPPLIES.map(
+    const supplyOverview = `<section class="camp-stocks" aria-label="Party supplies and projected levels"><div class="camp-forecast-heading"><span class="eyebrow">COMPANY STORES · NOW → PROJECTED END</span><small>Range assumes a completed camp. Supplies and recovery may vary; foraging may find nothing.</small></div><div>${CAMP_SUPPLIES.map(
       ([name, id]) => {
         const now = diceSummary(game.party, id),
           low = forecast
@@ -294,7 +302,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
       )
       .join(
         "",
-      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>${(danger.total * 100).toFixed(1)}% interruption chance</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-rota-heading"><span>COMPANION</span><span>CONDITION · PROJECTED END</span><span>FIRST DUTY</span><span>SECOND DUTY</span></div><div class="camp-rota">${game.party
+      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>Enemies may interrupt the camp</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-rota-heading"><span>COMPANION</span><span>CONDITION · PROJECTED END</span><span>FIRST DUTY</span><span>SECOND DUTY</span></div><div class="camp-rota">${game.party
       .map((h, i) => {
         const sleeps = Array.from({ length: total }, (_, p) =>
           campPeriod(game.party, assignments, p).sleepers.includes(h),
@@ -356,14 +364,10 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
                         name: `${p.name} · ${w.record.injury}`,
                       })),
                   );
-            const forage = duty === "forage" ? game.campForageTable(h) : null;
-            const forageDetails = forage
-              ? `<details class="camp-forage-odds"><summary>${forage.findChance}% find chance · d100 bands</summary><table><tbody>${forage.bands.map((b) => `<tr><td>${b.start}–${b.end}</td><td>${b.name}</td><td>${b.chance}%${b.bonus ? ` (+${b.bonus})` : ""}</td></tr>`).join("")}</tbody></table>${forage.modifiers.length ? `<small>${forage.modifiers.map((m) => esc(m.name)).join(" · ")}</small>` : "<small>Baseline chances · one resource per find.</small>"}</details>`
-              : "";
             const patientSelect = ["heal", "treat"].includes(duty)
               ? `<select data-camp-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} patient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Choose ${duty === "heal" ? "companion" : "wound"}</option>${patientOptions.map((p) => `<option value="${p.value}" ${p.value === `${target?.heroId ?? ""}|${target?.woundId ?? ""}` ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>${duty === "heal" ? `<small>${game.campHealSkills(h).length} learned healing skills · +${4 * game.campHealSkills(h).length} HP/hour with dressings</small>` : ""}`
               : "";
-            return `<label class="camp-duty"><span title="${esc(desc.detail)}">Hour ${i + 1 + slot * 4} · ⓘ</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${forageDetails}<small class="camp-duty-description">${esc(desc.detail)}</small>${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
+            return `<label class="camp-duty"><span title="${esc(desc.detail)}">Hour ${i + 1 + slot * 4} · ⓘ</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}<small class="camp-duty-description">${esc(desc.detail)}</small>${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
           })
           .join("")}</article>`;
       })

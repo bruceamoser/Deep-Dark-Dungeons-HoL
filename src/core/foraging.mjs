@@ -98,9 +98,7 @@ export const foragingMethods = {
       ? table.bands.find((b) => b.id === this.forageProjection)
       : forageOutcome(table, roll);
     if (outcome.id === "nothing") {
-      this.campEvent(
-        `${h.name} forages · d100 ${roll}: nothing found (${table.findChance}% find chance).`,
-      );
+      this.campEvent(`${h.name} found nothing.`);
       return;
     }
     if (outcome.id === "water") {
@@ -136,7 +134,7 @@ export const foragingMethods = {
       }
       if (target) target.hero.supplies[target.item.instanceId] = 6;
       this.campEvent(
-        `${h.name} forages · d100 ${roll}: finds water${target ? `; fills one of ${target.hero.name}'s flasks` : this.campWaterSource() ? "; a nearby source is available for gathering" : "; no safe source could be reached"}.`,
+        `${h.name} found water${target ? ` and replenished ${target.hero.name}'s water flask` : this.campWaterSource() ? "; the company can gather more nearby" : " but could not reach a safe source"}.`,
       );
       this.emit("party");
       return;
@@ -144,8 +142,6 @@ export const foragingMethods = {
     h.recipeMaterials ??= {};
     h.recipeMaterials[outcome.recipe] =
       (h.recipeMaterials[outcome.recipe] ?? 0) + 1;
-    this.campEvent(
-      `${h.name} forages · d100 ${roll}: finds one batch of ${outcome.name.toLowerCase()} (${table.findChance}% find chance).`,
-    );
+    this.campEvent(`${h.name} found ${outcome.name.toLowerCase()}.`);
   },
 };
