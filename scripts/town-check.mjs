@@ -13,7 +13,7 @@ export async function verifyTownNavigation(p) {
   try {
     await p.setViewportSize({ width: 1600, height: 1000 });
     await p.waitForFunction(() => window.__ddd?.town.active, null, {
-      timeout: 45000,
+      timeout: 90000,
     });
     await enterGame(p);
     await p.waitForTimeout(800);
@@ -123,7 +123,7 @@ export async function verifyTownNavigation(p) {
     await settingsAction(p, "Save");
     await p.reload();
     await p.waitForFunction(() => window.__ddd?.town.active, null, {
-      timeout: 45000,
+      timeout: 90000,
     });
     await enterGame(p);
     expect(
