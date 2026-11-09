@@ -214,3 +214,14 @@ continuing. Escape cancels a trip, choosing another destination redirects, and
 modal/run-library screens pause walking. Floor/run loads clear pending travel.
 Town positions are deliberately not written into a suspended dungeon's hero
 coordinates. The town asset manifest records the curated runtime subset.
+
+### Posed Dungeon Mason grips (#80)
+
+Sword, hammer and shield presentation is fitted against the actual ready clip,
+including the distinct unarmed shield pose. Swords point upper-left from the
+grip, hammer heads roll 180 degrees about their shaft, and shield faces stay
+upright toward the front camera. The renderer clones only the selected prop's
+geometry and rotates it about the bind grip; shared licensed assets, skin
+weights and animation tracks remain intact. Owned geometry is disposed with
+the actor. Mathematical skinning checks and native ready/equipment/torch/effect
+checks cover the corrected poses and guard against shared-template mutation.
