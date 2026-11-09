@@ -86,6 +86,7 @@ jobs:
         if: always()
         with:
           name: staged-release-smoke-${{ runner.os }}-${{ matrix.package }}
+          overwrite: true
           path: test-results/release-*.png
   publish:
     needs: verify
