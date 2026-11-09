@@ -75,6 +75,11 @@ export function shortcutManager({
               b.dataset.shortcutAdd ?? b.dataset.shortcutRemove,
             );
             draw();
+            const added = b.dataset.shortcutAdd;
+            (added
+              ? root.querySelector(`[data-shortcut-remove="${added}"]`)
+              : root.querySelector("#shortcut-query")
+            )?.focus();
           })),
     );
     root.querySelectorAll("[data-shortcut-move]").forEach(
@@ -87,6 +92,7 @@ export function shortcutManager({
             [ids[from], ids[to]] = [ids[to], ids[from]];
             game.setShortcuts(index, ids);
             draw();
+            root.querySelector(`[data-shortcut-remove="${ids[to]}"]`)?.focus();
           })),
     );
     if (focus)
