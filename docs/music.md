@@ -1,4 +1,4 @@
-# DDD soundtrack
+# Four Lanterns Deep soundtrack
 
 Bruce auditioned the candidates on November 8, 2026 and approved:
 

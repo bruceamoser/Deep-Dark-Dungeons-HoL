@@ -181,9 +181,8 @@ CC BY 4.0.`
 Bruce expanded the direction to a clean, consistent visual overhaul of the entire
  game using the purchased KayKit collection. GitHub #21 tracks the whole effort;
 #20 is the first implementation issue. Follow issue → branch → PR → author review
-and applicable checks → merge → next issue. Local source is at
-`/home/bruce/Projects/Deep-Dark-Dungeons-HoL`; the installed game is v0.6.0 and is
-separate from development builds. The connected personal GitHub account works;
+and applicable checks → merge → next issue. The local checkout and installed release are separate builds. Use the current
+release documentation for installation and version details. The connected personal GitHub account works;
 the old `/home/bmoser` helper paths in AGENTS.md belong to another machine.
 
 The first continuation corrects unarmored heroes being replaced by Mage body

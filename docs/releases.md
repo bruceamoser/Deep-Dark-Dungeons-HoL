@@ -1,12 +1,12 @@
 # Releases and desktop updates
 
-Published downloads live at https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest. The public feed requires no client credentials. Never embed a GitHub token in a build.
+Published downloads live at https://github.com/bruceamoser/Four-Lanterns-Deep/releases/latest. The public feed requires no client credentials. Never embed a GitHub token in a build.
 
 Windows uses a per-user NSIS installer. Linux offers an amd64 Debian package with a configured root-owned sandbox helper and a space-free `/opt/deep-dark-dungeons-hol` installation, plus a static-runtime AppImage, with a small installer script that verifies the release checksums, copies it to a stable writable filename and creates a menu shortcut. Both keep Electron sandboxing enabled. Restricted Ubuntu AppImage installations need the root-owned mode-4755 sandbox helper supplied by a system Chrome/Chromium installation; the packaged launcher checks this before starting Electron. No global kernel settings are changed. Windows releases are currently unsigned.
 
 `electron-updater` reads the packaged GitHub provider configuration. Only stable newer versions are accepted; downgrade and prerelease updates are disabled. Checks run after the save bridge is ready, every four hours, and on demand. Downloads run in the background with SHA-512 validation against the release metadata. The main process accepts only fixed update commands from the trusted main frame. Release text is not executed or rendered as HTML. The renderer cannot choose a feed, file or executable.
 
-Installation is explicit. **Save & restart to install** sends the existing native-close save request. Only a successful disk-save acknowledgement invokes `quitAndInstall`; a save failure retains the downloaded update and reports the error. Automatic install-on-quit is disabled. The application displays Four Lanterns Deep. The app ID, executable filenames, save directory and update feed retain their original identifiers for upgrade compatibility. Local unpacked/development builds show a release-download link instead of claiming they can self-update. Source checkout launches remain useful for development; install the AppImage or Debian package to use release updates.
+Installation is explicit. **Save & restart to install** sends the existing native-close save request. Only a successful disk-save acknowledgement invokes `quitAndInstall`; a save failure retains the downloaded update and reports the error. Automatic install-on-quit is disabled. The application displays Four Lanterns Deep. The app ID, installed executable filenames and save directory retain their original identifiers for upgrade compatibility. The canonical update feed uses the renamed repository. Local unpacked/development builds show a release-download link instead of claiming they can self-update. Source checkout launches remain useful for development; install the AppImage or Debian package to use release updates.
 
 ## Publishing
 
@@ -22,9 +22,30 @@ Local commands: `npm run package:linux`, `npm run package:windows`; `npm run pac
 
 The v0.8.3 display name changes across loading screens, in-game branding,
 window titles, desktop entries and installer shortcuts. The illustrated four-lantern
-logo and matching icon replace the game mark; Greyhaven keeps its own town crest. The repository,
-app ID, package name, platform executable filenames, update feed and user-data
-directory retain their prior identifiers, so existing installs and saves continue.
+logo and matching icon replace the game mark; Greyhaven keeps its own town crest. The GitHub repository and new update provider use `Four-Lanterns-Deep`.
+The app ID, package name, installed executable filenames and user-data directory
+retain their prior identifiers, so existing installs and saves continue.
 Windows packaging explicitly pins the legacy executable filename independently
 of the new product name. Linux menu entries and the portable installer use the
 new friendly name. Historical release notes keep their original names.
+
+### Repository and update-feed migration (#96)
+
+The canonical repository is `bruceamoser/Four-Lanterns-Deep`. Existing history,
+issues, PRs, tags and releases move with the repository. New builds point to
+that GitHub release provider; the older repository URLs redirect to it, allowing
+already-installed clients to keep checking their original feed. Do not create
+another repository at the old name, because that would remove the redirects.
+GitHub documents this behavior in [Renaming a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository).
+
+New downloadable artifacts use the `Four-Lanterns-Deep` prefix. Compatibility
+identifiers intentionally retained below the visible name are:
+
+- Package/executable `deep-dark-dungeons-hol` and app ID `com.bruceamoser.deepdarkdungeons`.
+- Windows installed executable `Deep Dark Dungeons - HoL.exe`.
+- Existing user-data directory and installed AppImage path.
+- Developer/test environment variables, save schema and purchased-source paths.
+
+These identifiers are technical continuity points, not alternate product names.
+Historical release downloads keep their original filenames. Local checkout
+folder names need not change when their Git remote changes.

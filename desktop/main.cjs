@@ -121,7 +121,7 @@ app.whenReady().then(async () => {
   ipcMain.handle("updates:releases", (event) => {
     trusted(event);
     return shell.openExternal(
-      "https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest",
+      "https://github.com/bruceamoser/Four-Lanterns-Deep/releases/latest",
     );
   });
   ipcMain.handle("updates:install", (event) => {
