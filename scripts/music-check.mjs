@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect, chromium } from "@playwright/test";
 import { pathToFileURL } from "node:url";
 export async function verifyMusic(page) {
@@ -148,8 +148,7 @@ export async function verifyMusic(page) {
     }, saved);
     await settingsAction(page, "Save");
     await page.reload();
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     expect(
       await page.evaluate(() => ({
         music: window.__ddd.sound.music.volume,
@@ -189,8 +188,7 @@ if (
   try {
     const p = await b.newPage({ viewport: { width: 1600, height: 1000 } });
     await p.goto("http://127.0.0.1:5198");
-    await p.waitForFunction(() => window.__ddd);
-    await enterGame(p);
+    await waitForGame(p);
     await verifyMusic(p);
   } finally {
     await b.close();

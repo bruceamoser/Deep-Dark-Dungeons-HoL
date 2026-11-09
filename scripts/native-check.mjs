@@ -1,5 +1,5 @@
 import { verifyHud } from "./hud-check.mjs";
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { verifyShortcuts } from "./shortcuts-check.mjs";
 import { verifyReactiveCounters } from "./reactive-counter-check.mjs";
 import { verifyMusic } from "./music-check.mjs";
@@ -93,8 +93,7 @@ try {
   const w = context.pages()[0] ?? (await context.waitForEvent("page"));
   const errors = [];
   w.on("pageerror", (e) => errors.push(e.message));
-  await w.waitForFunction(() => window.__ddd, null, { timeout: 90000 });
-  await enterGame(w);
+  await waitForGame(w);
   await expect(w).toHaveTitle("Four Lanterns Deep");
   await expect(w.locator(".brand-title")).toContainText("Four Lanterns");
   await w.screenshot({ path: "test-results/native-town.png" });

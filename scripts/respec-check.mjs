@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { fillForgeHero } from "./forge-ui-check.mjs";
 export async function verifyRespec(page) {
@@ -96,8 +96,7 @@ export async function verifyRespec(page) {
     await page.keyboard.press("Escape");
     await settingsAction(page, "Save");
     await page.reload();
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     expect(
       await page.evaluate(() => window.__ddd.game.active.draft.forge.nodes),
     ).toEqual(after.nodes);

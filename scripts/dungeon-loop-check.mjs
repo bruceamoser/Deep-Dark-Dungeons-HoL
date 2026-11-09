@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { magicItem, recallScroll } from "../src/core/treasure.mjs";
 export async function verifyDungeonLoop(page) {
@@ -177,8 +177,7 @@ export async function verifyDungeonLoop(page) {
   await settingsAction(page, "Save");
   await expect(page.locator("#toast")).toContainText("saved");
   await page.reload();
-  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-  await enterGame(page);
+  await waitForGame(page);
   await expect(page.locator('[data-action="descend"]')).toContainText(
     "Return to depth 5",
   );
@@ -213,8 +212,7 @@ if (import.meta.url === new URL(process.argv[1], "file:").href) {
   page.on("pageerror", (e) => errors.push(e.message));
   try {
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-    await enterGame(page);
+    await waitForGame(page);
     await verifyDungeonLoop(page);
     expect(errors).toEqual([]);
   } catch (e) {

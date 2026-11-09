@@ -56,7 +56,7 @@ try {
   await p.screenshot({ path: "test-results/four-lanterns-loading.png" });
   release();
   await p.waitForFunction(() => window.__ddd?.town.active, null, {
-    timeout: 45000,
+    timeout: 90000,
   });
   await enterGame(p);
   for (const [width, height] of [

@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { fileURLToPath } from "node:url";
 export async function verifyControls(page) {
@@ -280,8 +280,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     await page.getByRole("button", { name: "The Depths" }).click();
     await page.waitForFunction(
       () => window.__ddd.game.mode === "exploration",

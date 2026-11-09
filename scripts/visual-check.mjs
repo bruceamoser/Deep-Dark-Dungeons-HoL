@@ -1,4 +1,4 @@
-import { enterGame } from "./ui-session.mjs";
+import { waitForGame } from "./ui-session.mjs";
 import { chromium } from "@playwright/test";
 import fs from "node:fs/promises";
 await fs.mkdir("test-results", { recursive: true });
@@ -17,8 +17,7 @@ page.on("console", (m) => {
   if (m.type() === "error") errors.push(m.text());
 });
 await page.goto("http://127.0.0.1:5198");
-await page.waitForFunction(() => window.__ddd, { timeout: 45000 });
-await enterGame(page);
+await waitForGame(page);
 await page.waitForTimeout(1800);
 await page.screenshot({ path: "test-results/town.png" });
 await page.getByRole("button", { name: "The Depths" }).click();

@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { learn, drafts } from "../tests/forge-fixture.mjs";
 export async function chooseNode(page, id, { buy = true } = {}) {
@@ -179,8 +179,7 @@ export async function verifyForgeUI(page) {
     await page.keyboard.press("Escape");
     await settingsAction(page, "Save");
     await page.reload();
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     expect(
       await page.evaluate(
         () => window.__ddd.game.party[0].preview.forge.profiles.ranged,

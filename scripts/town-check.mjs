@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { enterGame, settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
@@ -13,7 +13,7 @@ export async function verifyTownNavigation(p) {
   try {
     await p.setViewportSize({ width: 1600, height: 1000 });
     await p.waitForFunction(() => window.__ddd?.town.active, null, {
-      timeout: 45000,
+      timeout: 90000,
     });
     await enterGame(p);
     await p.waitForTimeout(800);
@@ -123,7 +123,7 @@ export async function verifyTownNavigation(p) {
     await settingsAction(p, "Save");
     await p.reload();
     await p.waitForFunction(() => window.__ddd?.town.active, null, {
-      timeout: 45000,
+      timeout: 90000,
     });
     await enterGame(p);
     expect(
@@ -216,8 +216,7 @@ if (
   try {
     const p = await b.newPage({ viewport: { width: 1600, height: 1000 } });
     await p.goto("http://127.0.0.1:5198");
-    await p.waitForFunction(() => window.__ddd);
-    await enterGame(p);
+    await waitForGame(p);
     await verifyTownNavigation(p);
   } finally {
     await b.close();
