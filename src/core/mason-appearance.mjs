@@ -4,6 +4,7 @@ const numbered = (prefix, n) =>
     { length: n },
     (_, i) => `${prefix}${String(i + 1).padStart(2, "0")}`,
   );
+export const MASON_RUNTIME_PARTS = ["BeardShort", "BeardLong"];
 export const MASON_OPTIONS = {
   oneHandType: ["sword", "axe", "hammer", "wand"],
   twoHandType: ["sword", "axe", "hammer", "spear"],
@@ -52,8 +53,7 @@ export const MASON_OPTIONS = {
     "none",
     "AC10_Mustache01",
     "AC11_Mustache01",
-    "BeardShort",
-    "BeardLong",
+    ...MASON_RUNTIME_PARTS,
   ],
   ears: ["none"],
   horns: ["none", ...numbered("AC05_Horn", 4)],

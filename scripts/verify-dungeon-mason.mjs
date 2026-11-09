@@ -3,6 +3,7 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import {
   MASON_OPTIONS,
+  MASON_RUNTIME_PARTS,
   MELEE_VARIANTS,
 } from "../src/core/mason-appearance.mjs";
 const folder = path.resolve(
@@ -27,7 +28,7 @@ for (const name of new Set([
   ...options,
   ...Object.values(MELEE_VARIANTS).flatMap((v) => Object.values(v).flat()),
 ]))
-  if (!["auto", "none", "class"].includes(name))
+  if (!["auto", "none", "class", ...MASON_RUNTIME_PARTS].includes(name))
     assert.ok(names.has(name), `Missing character part: ${name}`);
 for (const name of [
   "Idle",
