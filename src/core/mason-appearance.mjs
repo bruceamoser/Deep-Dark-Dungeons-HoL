@@ -4,6 +4,7 @@ const numbered = (prefix, n) =>
     { length: n },
     (_, i) => `${prefix}${String(i + 1).padStart(2, "0")}`,
   );
+export const MASON_RUNTIME_PARTS = ["BeardShort", "BeardLong"];
 export const MASON_OPTIONS = {
   oneHandType: ["sword", "axe", "hammer", "wand"],
   twoHandType: ["sword", "axe", "hammer", "spear"],
@@ -43,19 +44,23 @@ export const MASON_OPTIONS = {
   headpiece: [
     "class",
     "none",
-    ...numbered("Hat", 14).filter((id) => !["Hat03", "Hat09"].includes(id)),
+    ...numbered("Hat", 14).filter(
+      (id) => !["Hat03", "Hat09", "Hat10", "Hat11"].includes(id),
+    ),
     ...numbered("HeadArmor", 5),
   ],
   facialHair: [
     "none",
-    ...["AC10", "AC11"].flatMap((p) => numbered(`${p}_Mustache`, 6)),
+    "AC10_Mustache01",
+    "AC11_Mustache01",
+    ...MASON_RUNTIME_PARTS,
   ],
-  ears: ["none", "AC04_ShortEars"],
+  ears: ["none"],
   horns: ["none", ...numbered("AC05_Horn", 4)],
-  crown: ["none", ...numbered("AC06_Crown", 3)],
+  crown: ["none"],
   eyewear: ["none"],
-  mask: ["none", ...numbered("AC08_NinjaMask", 8)],
-  ornament: ["none", "AC02_Leaf", "AC07_PiratePatch"],
+  mask: ["none", "AC08_NinjaMask05"],
+  ornament: ["none", "AC07_PiratePatch"],
   cloak: ["none", ...numbered("Cloak", 3)],
   bow: numbered("Bow", 5),
   arrow: numbered("Arrow", 5),
@@ -80,7 +85,7 @@ export const MASON_CLASS_HATS = {
   "class-arcanist": "Hat08",
   "class-blade": "Hat06",
   "class-intellect": "Hat04",
-  "class-leader": "Hat10",
+  "class-leader": "Hat12",
   "class-odd": "Hat01",
   "class-protector": "Hat14",
   "class-shadow": "Hat04",
@@ -89,6 +94,14 @@ export const MASON_CLASS_HATS = {
 };
 export function normalizeMason(input = {}) {
   if (!input || typeof input !== "object") input = {};
+  // The numbered files in each family are palette copies of the same shape.
+  input = { ...input };
+  if (/^AC10_Mustache0[1-6]$/.test(input.facialHair))
+    input.facialHair = "AC10_Mustache01";
+  if (/^AC11_Mustache0[1-6]$/.test(input.facialHair))
+    input.facialHair = "AC11_Mustache01";
+  if (/^AC08_NinjaMask0[1-8]$/.test(input.mask))
+    input.mask = "AC08_NinjaMask05";
   const defaults = {
     oneHandType: "sword",
     twoHandType: "sword",

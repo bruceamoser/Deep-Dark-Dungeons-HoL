@@ -1,3 +1,4 @@
+import { MASON_PALETTE_REGIONS } from "./mason-palette-regions.mjs";
 import { normalizeMason } from "./mason-appearance.mjs";
 import { HERO_AVATARS } from "./hero-avatars.mjs";
 export const ANCESTRY_LOOKS = {
@@ -165,6 +166,20 @@ export function normalizeAppearance(
     base = {
       version: 3,
       family: "mason",
+      maskColor: (() => {
+        if (
+          typeof input.maskColor === "string" &&
+          /^#[0-9a-f]{6}$/i.test(input.maskColor)
+        )
+          return input.maskColor.toLowerCase();
+        const [channel, colour] = Object.entries(
+          MASON_PALETTE_REGIONS[input.mason?.mask] ?? {},
+        )[0] ?? [8, "#212121"];
+        const tint = input.outfitColors?.[Number(channel) - 1];
+        return typeof tint === "string" && /^#[0-9a-f]{6}$/i.test(tint)
+          ? tint.toLowerCase()
+          : colour;
+      })(),
       mason: normalizeMason(input.mason),
       outfitColors: Array.from({ length: 8 }, (_, i) =>
         typeof input.outfitColors?.[i] === "string" &&

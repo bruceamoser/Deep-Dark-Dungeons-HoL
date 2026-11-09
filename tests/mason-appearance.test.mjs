@@ -138,3 +138,69 @@ test("magic weapons keep their receipt form and variant while ordinary styles re
   assert.equal(masonWeaponVisual(bow, axe).model, "Bow05");
   assert.equal(masonWeaponVisual(bow, hammer).model, "Bow02");
 });
+
+test("palette-only accessory variants migrate to distinct shapes and removed styles stay removed", () => {
+  for (let n = 1; n <= 6; n++) {
+    const suffix = String(n).padStart(2, "0");
+    assert.equal(
+      normalizeMason({ facialHair: "AC10_Mustache" + suffix }).facialHair,
+      "AC10_Mustache01",
+    );
+    assert.equal(
+      normalizeMason({ facialHair: "AC11_Mustache" + suffix }).facialHair,
+      "AC11_Mustache01",
+    );
+  }
+  assert.deepEqual(MASON_OPTIONS.mask, ["none", "AC08_NinjaMask05"]);
+  const old = normalizeAppearance({
+    mason: {
+      mask: "AC08_NinjaMask03",
+      ears: "AC04_ShortEars",
+      crown: "AC06_Crown01",
+      ornament: "AC02_Leaf",
+    },
+  });
+  assert.equal(old.mason.mask, "AC08_NinjaMask05");
+  assert.equal(old.maskColor, "#bf0b0b");
+  assert.equal(old.mason.ears, "none");
+  assert.equal(old.mason.crown, "none");
+  assert.equal(old.mason.ornament, "none");
+  assert.deepEqual(normalizeAppearance(old), old);
+  const custom = normalizeAppearance({
+    mason: { mask: "AC08_NinjaMask03" },
+    outfitColors: ["#abcdef"],
+  });
+  assert.equal(custom.maskColor, "#abcdef");
+  assert.ok(!MASON_OPTIONS.headpiece.includes("Hat10"));
+  assert.ok(!MASON_OPTIONS.headpiece.includes("Hat11"));
+});
+test("moustache and mask use independent chosen colours rather than baked palette darkness", () => {
+  const asset = fixture();
+  asset.scene.traverse((o) => {
+    if (o.isMesh && /^(AC10|AC11)/.test(o.name))
+      o.material.name = "MasonChannel04";
+    if (o.isMesh && /^AC08/.test(o.name)) o.material.name = "MasonChannel08";
+  });
+  const hero = {
+    draft: {
+      appearance: normalizeAppearance({
+        hairColor: "#cc7744",
+        maskColor: "#3355aa",
+        mason: { facialHair: "AC11_Mustache01", mask: "AC08_NinjaMask05" },
+      }),
+    },
+    preview: { inventory: { items: [] } },
+  };
+  const { model } = masonAppearance(asset, hero, new Map());
+  for (const [name, colour] of [
+    ["AC11_Mustache01_primitive", "#cc7744"],
+    ["AC08_NinjaMask05_primitive", "#3355aa"],
+  ]) {
+    const mat = model.getObjectByName(name).material,
+      shader = { uniforms: {}, fragmentShader: "#include <map_fragment>" };
+    mat.onBeforeCompile(shader);
+    assert.equal("#" + shader.uniforms.masonTint.value.getHexString(), colour);
+    assert.ok(shader.fragmentShader.endsWith("diffuseColor.rgb = masonTint;"));
+  }
+  model.userData.dispose();
+});

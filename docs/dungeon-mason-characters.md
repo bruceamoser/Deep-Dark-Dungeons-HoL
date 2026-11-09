@@ -51,3 +51,22 @@ culture-clothes/background-kit/class-headwear Blender modeling plan. Class outfi
 customizable headpieces/colours and inventory-driven equipment use Dungeon Mason.
 The unmerged prototype files remain historical reference, not accepted assets or
 unfinished production work. Issue #43 is closed as superseded, not completed.
+
+## Curated facial hair and accessories — #79
+
+The pack's six AC10 files share one moustache shape, and six AC11 files share a
+second moustache shape; the old interface incorrectly called the second set
+beards. Offer Wide moustache and Neat moustache once each, controlled by Hair
+colour. Bruce approved fitted beard accessories: game-authored Short beard and
+Long beard meshes attach to the existing head bone and fit the chosen Mason
+head's surface. They use the hair colour, retain pose/concealment behavior and
+own their disposable geometry/materials. The approved body and rig are unchanged;
+this does not resume superseded custom-body prototype #43.
+
+Pointed ears, standalone crowns, crowned/circlet helmets and leaf ornament are
+removed from offered choices; the Leader's default uses the ornate helmet.
+The eight mask palette copies become one Mask with a dedicated colour control.
+Old mask colours (including explicit palette overrides) migrate to that control;
+old moustache IDs migrate to the corresponding shape. Removed accessories
+normalize away. Hair and mask tinting uses the selected colour directly, avoiding
+baked palette brightness making nominally identical choices look different.

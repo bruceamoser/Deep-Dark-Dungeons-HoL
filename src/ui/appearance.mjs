@@ -31,9 +31,12 @@ const names = {
   none: "None",
   Head01_Male: "Masculine face",
   Head02_Female: "Feminine face",
-  AC04_ShortEars: "Pointed ears",
-  AC02_Leaf: "Leaf ornament",
   AC07_PiratePatch: "Eye patch",
+  BeardShort: "Short beard",
+  BeardLong: "Long beard",
+  AC10_Mustache01: "Wide moustache",
+  AC11_Mustache01: "Neat moustache",
+  AC08_NinjaMask05: "Mask",
   Hat01: "Witch hat",
   Hat02: "Horned helmet",
   Hat04: "Leather hood",
@@ -51,7 +54,6 @@ const label = (id) =>
   names[id] ??
   id
     .replace(/^AC10_Mustache/, "Moustache ")
-    .replace(/^AC11_Mustache/, "Beard ")
     .replace(/^AC\d+_/, "")
     .replace(/^OHS/, "One-handed ")
     .replace(/^THS/, "Two-handed ")
@@ -161,6 +163,7 @@ export function appearanceControls(
     root.innerHTML = `<div class="appearance-editor"><div class="appearance-heading"><span class="eyebrow">MAKE THIS HERO YOUR OWN</span><h3>Appearance</h3><p>Changes appear immediately. Drag the hero to rotate; scroll to inspect.</p></div>${!masonAvailable ? '<p class="cost-note">Licensed character art is unavailable in this build.</p>' : ""}<div class="appearance-preview-tools"><p data-preview-note role="status"></p><button type="button" data-equipped-preview>Show equipped gear</button></div><fieldset ${disabled ? "disabled" : ""}><section class="appearance-section"><h4>Face & hair</h4><div class="appearance-selects"><label class="creator-field"><span>Head style</span><select data-look="sex" aria-label="Head style"><option value="male" ${value.sex === "male" ? "selected" : ""}>Masculine</option><option value="female" ${value.sex === "female" ? "selected" : ""}>Feminine</option></select></label>${["head", "hair", "facialHair", "eyes", "brows", "mouth", "ears"].map((k) => select(k)).join("")}</div><div class="appearance-colours">${[
       ["skin", "Skin colour"],
       ["hairColor", "Hair colour"],
+      ...(value.mason.mask !== "none" ? [["maskColor", "Mask colour"]] : []),
     ]
       .map(
         ([k, title]) =>
