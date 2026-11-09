@@ -49,3 +49,14 @@ identifiers intentionally retained below the visible name are:
 These identifiers are technical continuity points, not alternate product names.
 Historical release downloads keep their original filenames. Local checkout
 folder names need not change when their Git remote changes.
+
+### Qualification harness updates
+
+The staged workflow uses QA scripts from its reviewed workflow revision while the
+finished app files stay pinned to the draft release and checksums. The target tag
+is fetched and packaging configuration, dependencies, desktop code, after-pack
+hook and icon must match it before wrapping the Windows app. This permits test
+timing/diagnostic fixes without rebuilding or replacing game binaries. Both
+Linux installers run in independent jobs, and all assertions must pass before
+publishing. Entry clicks and readiness checks allow 90 seconds on software-rendered
+runners; the installed game is unchanged by these QA timeouts.

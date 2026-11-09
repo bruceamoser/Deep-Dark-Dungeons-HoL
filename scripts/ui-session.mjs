@@ -3,8 +3,8 @@ export async function enterGame(page) {
   const enter = page.locator("#enter-game");
   if (await enter.count()) {
     await expect(enter).toBeEnabled({ timeout: 90000 });
-    await enter.click();
-    await expect(page.locator("#entry-screen")).toHaveCount(0);
+    await enter.click({ timeout: 90000 });
+    await expect(page.locator("#entry-screen")).toHaveCount(0, { timeout: 90000 });
   }
 }
 export async function settingsAction(page, name) {
