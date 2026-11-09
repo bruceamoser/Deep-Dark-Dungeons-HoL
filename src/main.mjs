@@ -43,6 +43,13 @@ const esc = (s) =>
   );
 let toastTimer, modalCleanup, updateStatus;
 function closeModal() {
+  settingsOpen = false;
+  ui.querySelector('[data-action="settings"]')?.setAttribute(
+    "aria-expanded",
+    "false",
+  );
+  const settingsMenu = ui.querySelector("#settings-menu");
+  if (settingsMenu) settingsMenu.hidden = true;
   modalCleanup?.();
   modalCleanup = null;
   modal.replaceChildren();
@@ -464,7 +471,10 @@ async function init() {
       render();
       return;
     }
-    if (["Enter", "Space"].includes(e.code) && e.target.closest?.("button, a"))
+    if (
+      ["Enter", "Space"].includes(e.code) &&
+      e.target.closest?.("#settings-menu, .settings-gear")
+    )
       return;
     if (e.code === "Space") {
       e.preventDefault();
