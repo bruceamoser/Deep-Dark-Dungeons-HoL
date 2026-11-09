@@ -3,7 +3,8 @@
 - Work branch: `codex/entry-town-hud-camp-summary`.
 - Base: `fdcf0b2` (handoff process PR #102).
 - Version: 0.8.4; merged in PR #103 at `7bca1b6`.
-- Final release gate: https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42661021738 (pending at this checkpoint).
+- Status: published as v0.8.4; all requested touches delivered.
+- Final passing release gate: https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42668867227.
 
 ## Work
 
@@ -13,7 +14,7 @@ Camp reports record initial/final health, wounds, materials, supply state and al
 
 ## Verification and delivery
 
-271 automated tests pass. Dedicated HUD browser/native checks cover entry keyboard input, settings, icons/portraits, navigation, Tab/J across renders and reopening camp results. Branding checks cover 1600/1100 layouts and reduced motion. The complete combined native Linux run, source-build Linux/Windows installer CI and actual 0.8.3→0.8.4 update all passed. Finished licensed installers remain gated by the staged release workflow before publication.
+271 automated tests pass. Dedicated HUD browser/native checks cover entry keyboard input, settings, icons/portraits, navigation, Tab/J across renders and reopening camp results. Branding checks cover 1600/1100 layouts and reduced motion. The complete combined native Linux run, source-build Linux/Windows installer CI and actual 0.8.3→0.8.4 update all passed. Finished licensed AppImage, installed Debian and installed Windows NSIS apps all passed in the final staged run, and v0.8.4 is public.
 
 Audio's gain interpolation needs polling rather than an immediate full-gain assertion. Town camera tests must choose an actual uncovered canvas point rather than a location that may overlap a building pin. No real player saves are used.
 
@@ -31,4 +32,8 @@ The first staged run passed Windows and Linux AppImage verification. Linux timed
 
 ## Next / sync
 
-Finish the staged gate if still pending; otherwise await Bruce's next task. This checkpoint is pushed on its named branch; verify the remote/PR before treating it as synced. See `current.md` and repository history for the exact checkpoint.
+No release or UI work remains for these requests. Await Bruce's next task. This checkpoint is pushed on its named branch; verify the remote/PR before treating it as synced. See `current.md` and repository history for the exact checkpoint.
+
+## Final delivery
+
+Published v0.8.4 on November 9, 2026. All 271 tests, the complete native Linux suite, compact/desktop visuals, actual update round trip and all finished installer checks passed. The earlier timeout attempts remain in CI history; #104–#106 corrected QA budgets/startup waits without modifying the staged app bytes. The final combined qualification is green. Local `launch-game.sh` is rebuilt at 0.8.4 with licensed runtime art; installed copies can use their updater.
