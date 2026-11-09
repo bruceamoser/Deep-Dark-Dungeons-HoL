@@ -77,7 +77,7 @@ export const tacticMethods = {
         id,
         source: actor.id,
         effects: persistent,
-        expires: h.survival.ownTurn + (h === actor ? 0 : 1),
+        expires: h.survival.ownTurn + (h !== actor || effects.riposte ? 1 : 0),
       });
       if (effects.movement && this.encounter?.current === h.id) {
         this.budgets[h.id].bonusMovement = Math.max(
@@ -187,7 +187,13 @@ export const tacticMethods = {
   },
   riposte(h, e) {
     const effect = this.activeTactics(h).find((t) => t.effects.riposte);
-    if (!effect || e.hp <= 0 || !this.canOpportunity(h) || distance(h, e) > 1)
+    if (
+      !effect ||
+      e.hp <= 0 ||
+      !this.canOpportunity(h) ||
+      distance(h, e) > 1 ||
+      !lineOfSight(this.map, h, e)
+    )
       return;
     h.tactics = h.tactics.filter((t) => t !== effect);
     this.spendReaction(h, "riposte");

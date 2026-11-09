@@ -1,3 +1,4 @@
+import { verifyReactiveCounters } from "./reactive-counter-check.mjs";
 import { verifyMusic } from "./music-check.mjs";
 import { verifyTownNavigation } from "./town-check.mjs";
 import { verifyProvisions } from "./provisions-check.mjs";
@@ -100,6 +101,7 @@ try {
   await runCheck(verifyRespec);
   await runCheck(verifyForgeUI);
   await runCheck(verifyBuildForge);
+  await runCheck(verifyReactiveCounters);
   await runCheck(verifyWeaponRoll);
   await runCheck(verifyAppearanceUX);
   await runCheck(verifyGameplayIdentity);
