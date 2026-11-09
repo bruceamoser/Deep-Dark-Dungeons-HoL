@@ -37,3 +37,5 @@ No release or UI work remains for these requests. Await Bruce's next task. This 
 ## Final delivery
 
 Published v0.8.4 on November 9, 2026. All 271 tests, the complete native Linux suite, compact/desktop visuals, actual update round trip and all finished installer checks passed. The earlier timeout attempts remain in CI history; #104–#106 corrected QA budgets/startup waits without modifying the staged app bytes. The final combined qualification is green. Local `launch-game.sh` is rebuilt at 0.8.4 with licensed runtime art; installed copies can use their updater.
+
+Public release verification also passed: every downloaded asset matches SHA256SUMS; Linux/Windows updater files match installer sizes and SHA-512; unmodified 0.8.3 downloaded 0.8.4 from its live original feed. No real save files were used.

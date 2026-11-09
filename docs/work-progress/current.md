@@ -20,6 +20,8 @@ All eight welcome/HUD/camp touches are implemented and merged in [PR #103](https
 
 271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build installer CI and all three finished licensed installer jobs passed. **v0.8.4 is published**, with Debian, AppImage and Windows NSIS installers. Final qualification: [run 42668867227](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42668867227).
 
+Public installer checksums (SHA-256) and updater metadata sizes/SHA-512 were verified after downloading the release. An unmodified published 0.8.3 AppImage discovered and downloaded 0.8.4 from its original live feed, with isolated test data.
+
 Qualification follow-ups #104–#106 split Linux installer jobs, allowed software-rendered runtime budgets, and made startup/reload waits consistent. They changed QA tooling and documentation, not the reviewed game binaries. Current staged QA uses its reviewed workflow revision and checks packaging configuration against the immutable game tag.
 
 ## Recent local diagnosis
