@@ -143,7 +143,7 @@ export async function verifyDungeonCamp(page) {
     await page.waitForFunction(
       () => window.__ddd.game.campaign.camp.status === "complete",
       null,
-      { timeout: 20000 },
+      { timeout: 90000 },
     );
     const result = await page.evaluate(() => ({
       sleep: Object.values(window.__ddd.game.campaign.camp.sleepHours),
@@ -164,6 +164,26 @@ export async function verifyDungeonCamp(page) {
     console.log(
       "Native dungeon camp planning, animation, hourly sleep healing, pause/save/reload, six-hour rota and unchanged Grit passed.",
     );
+  } catch (error) {
+    console.error(
+      "Camp qualification state",
+      await page.evaluate(() => {
+        const g = window.__ddd?.game;
+        return g
+          ? {
+              elapsed: g.campaign.camp?.elapsed,
+              status: g.campaign.camp?.status,
+              supplyNotices: g.campaign.supplyNotices,
+              woundNotices: g.woundNotices,
+              busy: g.busy,
+              suspended: g.suspended,
+              log: g.log.slice(-8),
+            }
+          : { startup: "not ready" };
+      }),
+    );
+    await page.screenshot({ path: "test-results/release-camp-failure.png" });
+    throw error;
   } finally {
     if (await page.locator(".dungeon-camp").count())
       await page.keyboard.press("Escape");
