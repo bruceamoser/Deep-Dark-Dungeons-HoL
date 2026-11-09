@@ -28,7 +28,7 @@ export async function verifyProvisions(page) {
         Object.assign(h, { x: i < 2 ? 2 : 1, z: i % 2 ? 3 : 2 });
         for (const item of h.preview.inventory.items) {
           if (item.catalogId === "item-water-flask")
-            h.supplies[item.instanceId] = 6;
+            h.supplies[item.instanceId] = 8;
           if (item.catalogId === "item-food-bundle")
             h.supplies[item.instanceId] = 8;
         }
@@ -60,14 +60,13 @@ export async function verifyProvisions(page) {
           ),
         );
       }),
-    ).toBe(4);
+    ).toBe(6);
     await settingsAction(page, "Camp & supplies");
-    await expect(page.locator(".camp-stocks article").nth(1)).toContainText(
-      "Next: 40 steps",
-    );
+    await expect(page.locator(".camp-stocks article")).toHaveCount(4);
     await expect(page.locator(".camp-stocks article").first()).toContainText(
-      "Next: 40 steps",
+      "WaterStocked",
     );
+    await expect(page.locator(".camp-stocks")).not.toContainText("Next:");
     await page.screenshot({ path: "test-results/provisions-countdown.png" });
     await page.keyboard.press("Escape");
     await settingsAction(page, "Save");
@@ -84,7 +83,7 @@ export async function verifyProvisions(page) {
       ),
     ).toBe(0);
     console.log(
-      "Actual dungeon movement triggers provision checks once; visible countdown and saved progress passed.",
+      "Actual dungeon movement triggers provision checks once; character stores and saved progress passed.",
     );
   } finally {
     if (await page.locator(".dungeon-camp").count())

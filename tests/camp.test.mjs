@@ -89,7 +89,7 @@ test("general foraging finds one material per success; crafting consumes compati
   const flask = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-water-flask",
   );
-  assert.equal(g.supplyValue(h, flask), 6);
+  assert.equal(g.supplyValue(h, flask), 8);
 });
 
 test("wandering creatures can interrupt a cleared floor; workers detect, Guard adds a Boon, failed watch is an ambush", () => {
@@ -263,7 +263,7 @@ test("completed camp reports retain actual foraging and healing through save/loa
   assert.equal(report.end[0].hp, 13);
   assert.equal(report.healed[g.party[0].heroId], 12);
   assert.equal(
-    report.events.filter((e) => e.includes("finds one batch")).length,
+    report.events.filter((e) => e.includes("found medicinal materials")).length,
     4,
   );
   const restored = new Game(R, C);
@@ -281,4 +281,58 @@ test("ending camp early preserves the completed-hour report and rejects corrupt 
   const bad = g.snapshot();
   bad.camp.report.start[0].hp = "bad";
   assert.throws(() => new Game(R, C).load(bad), /camp results/);
+});
+
+test("camp store hints identify the recipient of possible gains and update with assignments", () => {
+  const g = quiet();
+  const duties = plan(g);
+  duties[g.party[1].heroId] = ["forage", "guard"];
+  const forecast = g.campForecast(duties, 8);
+  assert.deepEqual(forecast.supplyPotential["item-material-bundle"], [
+    false,
+    true,
+    false,
+    false,
+  ]);
+  duties[g.party[1].heroId] = ["guard", "guard"];
+  assert.deepEqual(
+    g.campForecast(duties, 8).supplyPotential["item-material-bundle"],
+    [false, false, false, false],
+  );
+});
+
+test("chosen camp order drives work, forecasts and save/load without reordering the party", () => {
+  const g = quiet(),
+    duties = plan(g);
+  const original = g.party.map((h) => h.heroId),
+    order = [...original].reverse();
+  g.party.forEach((h) => (h.survival.hp = 1));
+  const forecast = g.campForecast(duties, 8, {}, order);
+  g.startCamp(duties, 8, {}, order);
+  assert.equal(campPeriod(g.party, duties, 0, order).worker.heroId, order[0]);
+  g.campHour();
+  assert.equal(g.party[3].survival.hp, 1);
+  assert.equal(g.party[0].survival.hp, 3);
+  const copy = new Game(R, C);
+  copy.load(structuredClone(g.snapshot()), { resume: false });
+  assert.deepEqual(copy.campaign.camp.order, order);
+  assert.deepEqual(
+    copy.party.map((h) => h.heroId),
+    original,
+  );
+  for (let i = 1; i < 8; i++) g.campHour();
+  assert.deepEqual(
+    g.party.map((h) => h.survival.hp),
+    forecast.low.map((h) => h.survival.hp),
+  );
+  assert.throws(
+    () =>
+      g.startCamp(duties, 8, {}, [
+        original[0],
+        original[0],
+        original[2],
+        original[3],
+      ]),
+    /once/,
+  );
 });

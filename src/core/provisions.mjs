@@ -74,7 +74,7 @@ export const provisionMethods = {
     this.syncTorches();
   },
   stationarySupplies(seconds, { camping = false } = {}) {
-    if (this.mode !== "exploration" || !seconds) return;
+    if (camping || this.mode !== "exploration" || !seconds) return;
     prepareProvisions(this.campaign);
     const trail = this.campaign.provisionTrail,
       before = trail.seconds;
@@ -92,42 +92,18 @@ export const provisionMethods = {
           (h) => h.survival.status === "active",
         ))
           this.provisionCheck(h, id, `${name} after ${hours} hours at rest`);
-    if (camping) {
-      for (
-        let i = Math.floor(before / 3600);
-        i < Math.floor(trail.seconds / 3600);
-        i++
-      ) {
-        const owner = this.party.find(
-          (h) => this.canAct(h) && this.supplyItem(h, "item-lighting-bundle"),
-        );
-        const magic = this.party.some((h) => this.canAct(h) && h.lantern);
-        this.campaign.camp.fireLit = !!(owner || magic);
-        if (owner)
-          this.checkSupply(
-            owner,
-            this.supplyItem(owner, "item-lighting-bundle"),
-            "campfire fuel for one hour",
-          );
-        else if (!magic)
-          this.campEvent(
-            "No lighting supplies remain. The campfire goes dark.",
-          );
-        this.campLight();
-      }
-    } else
-      for (const h of this.party.filter((h) => h.torch?.lit)) {
-        h.torch.seconds += seconds;
-        while (h.torch.seconds >= 3600) {
-          h.torch.seconds -= 3600;
-          const item = this.supplyItem(h, "item-lighting-bundle");
-          if (!item) {
-            h.torch.lit = false;
-            break;
-          }
-          this.checkSupply(h, item, "torch during one hour of stationary work");
+    for (const h of this.party.filter((h) => h.torch?.lit)) {
+      h.torch.seconds += seconds;
+      while (h.torch.seconds >= 3600) {
+        h.torch.seconds -= 3600;
+        const item = this.supplyItem(h, "item-lighting-bundle");
+        if (!item) {
+          h.torch.lit = false;
+          break;
         }
+        this.checkSupply(h, item, "torch during one hour of stationary work");
       }
+    }
   },
   provisionCountdown() {
     prepareProvisions(this.campaign);

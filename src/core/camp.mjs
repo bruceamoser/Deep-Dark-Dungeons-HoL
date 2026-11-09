@@ -18,47 +18,49 @@ export const CAMP_DUTIES = Object.freeze([
     id: "dressings",
     name: "Make dressings",
     detail:
-      "Requires the field dressing recipe and one medicinal-material batch; makes or refills d4 dressings.",
+      "Requires the field dressing recipe and one medicinal-material batch; replenishes dressings.",
   },
   {
     id: "heal",
     name: "Healing care",
-    detail:
-      "+4 HP per learned healing skill for one companion; one dressing check/hour.",
+    detail: "Use dressings to restore a companion’s health.",
   },
   {
     id: "treat",
     name: "Treat a wound",
     detail:
-      "One recovery roll per wound per day. Severe injuries need restoration care.",
+      "Treat each wound once per day. Severe injuries need restoration care.",
   },
-  { id: "guard", name: "Stand guard", detail: "+1 Boon to detect an ambush." },
+  {
+    id: "guard",
+    name: "Stand guard",
+    detail: "Watch for approaching enemies.",
+  },
   {
     id: "arrows",
     name: "Fletch arrows",
-    detail: "Craft tools + one arrow-material batch; refill or make d8 arrows.",
+    detail: "Craft tools + one arrow-material batch; replenish arrows.",
   },
   {
     id: "cook",
     name: "Prepare food",
-    detail: "One edible-ingredient batch; refill or make d8 food.",
+    detail: "One edible-ingredient batch; replenish food.",
   },
   {
     id: "water",
     name: "Gather water",
-    detail: "A nearby water source and carried flasks; fill to d6.",
+    detail: "A nearby water source and carried flasks; replenish water.",
   },
   {
     id: "torches",
     name: "Bind torches",
-    detail:
-      "Craft tools + one torch-material batch; refill or make d6 lighting.",
+    detail: "Craft tools + one torch-material batch; replenish torches.",
   },
   {
     id: "forage",
     name: "Forage",
     detail:
-      "Search for any resource on this hero's d100 table; one find or nothing. Learned skills improve matching bands.",
+      "Search for water, wood, food ingredients, fletching materials or medicinal supplies. Training helps you find useful resources.",
   },
 ]);
 const dutyIds = new Set([
@@ -79,10 +81,15 @@ const products = {
   cook: ["item-food-bundle", 8],
   torches: ["item-lighting-bundle", 6],
 };
-export function campPeriod(party, assignments, period) {
+export function campPeriod(
+  party,
+  assignments,
+  period,
+  order = party.map((h) => h.heroId),
+) {
   // Each of four party slots works once in each half of the eight-hour rota.
   const slot = period % 4,
-    hero = party[slot];
+    hero = party.find((h) => h.heroId === order[slot]);
   const worker = hero?.survival.status === "active" ? hero : null;
   return {
     worker,
@@ -119,6 +126,11 @@ export function validateCamp(campaign) {
     c.partyIds.length > 4 ||
     new Set(c.partyIds).size !== c.partyIds.length ||
     c.partyIds.some((id) => typeof id !== "string" || id.length > 80) ||
+    (c.order !== undefined &&
+      (!Array.isArray(c.order) ||
+        c.order.length !== c.partyIds.length ||
+        new Set(c.order).size !== c.order.length ||
+        c.order.some((id) => !c.partyIds.includes(id)))) ||
     !c.assignments ||
     c.partyIds.some((id) => !Array.isArray(c.assignments[id])) ||
     Object.values(c.assignments).some(
@@ -177,7 +189,7 @@ export const campMethods = {
       c.partyIds.join() === this.party.map((h) => h.heroId).join()
     );
   },
-  campRecoveryHours(assignments) {
+  campRecoveryHours(assignments, order) {
     const need = new Map(
       this.party
         .filter((h) => h.survival.status === "active")
@@ -187,7 +199,7 @@ export const campMethods = {
         ]),
     );
     for (let hour = 0; hour < 96; hour++) {
-      for (const h of campPeriod(this.party, assignments, hour).sleepers)
+      for (const h of campPeriod(this.party, assignments, hour, order).sleepers)
         need.set(h.heroId, Math.max(0, need.get(h.heroId) - 1));
       if (hour >= 7 && [...need.values()].every((n) => n === 0))
         return hour + 1;
@@ -254,7 +266,7 @@ export const campMethods = {
       return "The company needs craft tools.";
     return this.campMaterial(recipe)
       ? ""
-      : "No compatible material batch carried by the company.";
+      : "The company lacks the materials for this task.";
   },
   campEvent(text) {
     this.campaign.camp.report?.events.push(text);
@@ -280,7 +292,7 @@ export const campMethods = {
         for (const i of p.preview.inventory.items.filter(
           (i) => i.carried && i.catalogId === "item-water-flask",
         ))
-          p.supplies[i.instanceId] = Math.max(6, this.supplyValue(p, i));
+          p.supplies[i.instanceId] = Math.max(8, this.supplyValue(p, i));
       this.campEvent(`${h.name} fills the company's water flasks.`);
       return;
     }
@@ -320,15 +332,27 @@ export const campMethods = {
       );
     this.refreshHero(target.hero);
     this.campEvent(
-      `${h.name} prepares ${target.item.definition.name} · d${die}, using compatible materials.`,
+      `${h.name} replenished ${target.item.definition.name.toLowerCase()}.`,
     );
   },
-  startCamp(assignments, total = 8, targets = {}) {
+  startCamp(
+    assignments,
+    total = 8,
+    targets = {},
+    order = this.party.map((h) => h.heroId),
+  ) {
     const reason = this.sleepReason();
     if (this.mode !== "exploration" || reason)
       throw new Error(reason || "Make camp in the dungeon.");
     if (!Number.isSafeInteger(total) || total < 8 || total > 96)
       throw new Error("Choose 8–96 camp hours.");
+    if (
+      !Array.isArray(order) ||
+      order.length !== this.party.length ||
+      new Set(order).size !== order.length ||
+      order.some((id) => !this.party.some((h) => h.heroId === id))
+    )
+      throw new Error("Choose each companion once in camp order.");
     const plan = {};
     for (const h of this.party) {
       const duties = assignments[h.heroId];
@@ -350,6 +374,7 @@ export const campMethods = {
       fierceness: this.locationFierceness().tier,
       partyIds: this.party.map((h) => h.heroId),
       assignments: plan,
+      order: [...order],
       targets: structuredClone(targets),
       total,
       elapsed: 0,
@@ -365,7 +390,7 @@ export const campMethods = {
     };
     this.campLight();
     this.campEvent(
-      `The company makes camp for at least ${total} hours. Sleep restores 2 HP/hour; Grit and injuries remain.`,
+      `The company makes camp for at least ${total} hours and settles in to rest.`,
     );
     this.emit("change");
   },
@@ -452,7 +477,7 @@ export const campMethods = {
     if (reason) throw new Error(reason);
     const before = campSnapshot(this);
     const c = this.campaign.camp,
-      period = campPeriod(this.party, c.assignments, c.elapsed),
+      period = campPeriod(this.party, c.assignments, c.elapsed, c.order),
       rng = new Random((c.seed + c.elapsed * 32452843) >>> 0);
     c.status = "paused";
     this.campLight();
@@ -504,7 +529,7 @@ export const campMethods = {
         this.enemies.push(...enemies);
         c.status = "interrupted";
         this.campEvent(
-          `${period.worker?.name ?? "Nobody"} is on watch${roll ? ` (${roll.tier})` : ""}${reverie ? "; wakeful reverie warns the camp" : ""}. ${detected ? "The approaching creatures are spotted; the company takes the opening." : "Ambush! The creatures take the opening."}`,
+          `${period.worker?.name ?? "Nobody"} is on watch${reverie ? "; wakeful reverie warns the camp" : ""}. ${detected ? "The approaching creatures are spotted; the company takes the opening." : "Ambush! The creatures take the opening."}`,
         );
         this.campOpening = detected ? "players" : "opposition";
         this.emit("party");
@@ -519,9 +544,7 @@ export const campMethods = {
     if (c.elapsed >= c.total) {
       c.status = "complete";
       this.breakCamp();
-      this.campEvent(
-        "Camp complete. The company packs up; injuries and spent Grit remain.",
-      );
+      this.campEvent("Camp complete. The company packs up.");
     }
     this.emit("change");
     return { interrupted: false, complete: c.status === "complete" };

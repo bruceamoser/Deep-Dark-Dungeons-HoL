@@ -718,6 +718,11 @@ export class Scene {
     };
     if (!isEnemy) {
       entity.torchLight = new T.PointLight(0xffa346, 0, 5.8 * TILE, 2);
+      const flame = model.getObjectByName("Torch flame light anchor");
+      if (flame) {
+        // Keep a world-sized light while following the animated hand/socket.
+        entity.torchFlame = flame;
+      }
       entity.torchLight.position.set(0, 1.65, 0);
       group.add(entity.torchLight);
     }
@@ -903,6 +908,11 @@ export class Scene {
     for (const e of this.entities.values()) {
       e.mixer.update(dt);
       if (e.torchLight) {
+        if (e.torchFlame && e.data.torch?.lit) {
+          e.model.updateWorldMatrix(true, true);
+          e.torchFlame.getWorldPosition(e.torchLight.position);
+          e.group.worldToLocal(e.torchLight.position);
+        } else e.torchLight.position.set(0, 1.65, 0);
         e.torchLight.intensity =
           e.data.torch?.lit || e.data.lantern
             ? 24 + Math.sin(t * 11) * 2 + Math.sin(t * 17)

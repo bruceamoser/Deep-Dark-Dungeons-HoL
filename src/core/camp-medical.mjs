@@ -108,7 +108,7 @@ export const campMedicalMethods = {
       );
       this.checkSupply(supply.hero, supply.item, "camp healing dressings");
       this.campEvent(
-        `${h.name} tends ${patient.name}: +${patient.survival.hp - before} HP (${skills} healing skill${skills === 1 ? "" : "s"}); dressing checked.`,
+        `${h.name} tends ${patient.name}: +${patient.survival.hp - before} HP.`,
       );
       return;
     }
@@ -178,10 +178,10 @@ export const campMedicalMethods = {
         (c) => !(c.woundId === wound.id && c.persistence === "starred"),
       );
     this.campEvent(
-      `${h.name} treats ${patient.name}'s ${wound.record.injury}: ${roll.tier}, recovery ${wound.treatment.progress}/${wound.record.recoveryValue}${wound.treatment.completed ? " · penalties relieved; scar remains" : " · today's attempt used"}.`,
+      `${h.name} treats ${patient.name}'s ${wound.record.injury}: ${wound.treatment.completed ? "the wound has healed; a scar remains" : "the wound needs further care"}.`,
     );
   },
-  campForecast(assignments, total, targets = {}) {
+  campForecast(assignments, total, targets = {}, order) {
     const run = (favorable, forageProjection) => {
       const copy = Object.assign(
         Object.create(Object.getPrototypeOf(this)),
@@ -205,7 +205,8 @@ export const campMedicalMethods = {
         },
       );
       copy.campaign.supplyNotices = [];
-      if (!this.campCanResume()) copy.startCamp(assignments, total, targets);
+      if (!this.campCanResume())
+        copy.startCamp(assignments, total, targets, order);
       // Forecasts bound all supply/treatment rolls, with no wandering interruption.
       let count = 0;
       while (copy.campCanResume() && count++ < 96) copy.campHour();
@@ -227,7 +228,8 @@ export const campMedicalMethods = {
           )[0],
     );
     const supplyLow = {},
-      supplyHigh = {};
+      supplyHigh = {},
+      supplyPotential = {};
     const expected = { 0: 0, 4: 4, 6: 10, 8: 18, 10: 28, 12: 40, 20: 60 };
     for (const [, id] of CAMP_SUPPLIES) {
       const ids = Array.isArray(id) ? id : [id],
@@ -251,9 +253,12 @@ export const campMedicalMethods = {
           0,
         );
       const sorted = [low, ...possible].sort((a, b) => score(a) - score(b));
+      supplyPotential[key] = this.party.map((hero, i) =>
+        [low, ...possible].some((heroes) => score([heroes[i]]) > score([hero])),
+      );
       supplyLow[key] = sorted[0];
       supplyHigh[key] = sorted.at(-1);
     }
-    return { low, high, supplyLow, supplyHigh };
+    return { low, high, supplyLow, supplyHigh, supplyPotential };
   },
 };

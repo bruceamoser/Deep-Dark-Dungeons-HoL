@@ -17,3 +17,11 @@ Bruce wants development to execute on each local computer. Use the repository to
 ## 2026-11-09 — Welcome and HUD shortcuts
 
 Keep the logo visible until preload finishes and the player enters explicitly. Place utility controls under one settings gear and center the clock beside the location. Town uses I/M/G/S/L/H/Shift+S/D: Shift+S resolves Bruce's duplicate S requests for Smithy/Shrine. Camp reports show actual completed-hour outcomes, persist across dungeon save/load, and require acknowledgement before returning to planning.
+
+## 2026-11-09 — Camp outcomes, not dice
+
+Bruce wants player-facing camp text to report what happened, without dice, probability percentages or roll tiers. Keep the rules internal. Camp supplies use qualitative stock labels; foraging reports found resources or nothing.
+
+Camp planning shows two tasks per companion and expected HP recovery only when injured. Stores show current supplies per character and a possible-gain hint from assigned work, without numerical end-state projections or hourly rota detail.
+
+Bruce explicitly changed camp supply pacing: no automatic food, water or lighting costs while resting, including no deferred consumption timer debt. Required crafting/medical inputs still apply. New/refilled water uses d8; existing depleted pools retain their amounts until refill. Forage probabilities remain unchanged and hidden from camp UI.

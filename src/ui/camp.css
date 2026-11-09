@@ -107,7 +107,7 @@
 }
 .camp-stocks > div:last-child {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 .camp-stocks article {
@@ -132,10 +132,7 @@
 .camp-rota-heading,
 .camp-member {
   display: grid;
-  grid-template-columns: minmax(140px, 1fr) minmax(170px, 1.1fr) repeat(
-      2,
-      minmax(200px, 1.45fr)
-    );
+  grid-template-columns: minmax(180px, 1fr) repeat(2, minmax(200px, 1.3fr));
   gap: 16px;
 }
 .camp-rota-heading {
@@ -327,10 +324,7 @@
 @media (max-width: 1000px) {
   .camp-rota-heading,
   .camp-member {
-    grid-template-columns: minmax(125px, 0.85fr) minmax(145px, 1fr) repeat(
-        2,
-        minmax(160px, 1.2fr)
-      );
+    grid-template-columns: minmax(150px, 1fr) repeat(2, minmax(160px, 1.2fr));
     gap: 10px;
   }
   .camp-stocks > div:last-child {
@@ -439,4 +433,79 @@
   .camp-results-party {
     grid-template-columns: 1fr;
   }
+}
+
+.camp-character-stores article {
+  padding: 12px;
+  border: 1px solid #435343;
+  background: #14262b90;
+}
+.camp-character-stores h4 {
+  color: #e3dcc1;
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+.camp-store-line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #43534355;
+  font-size: 11px;
+}
+.camp-store-line b {
+  font-weight: 400;
+  color: #eddfb2;
+}
+.camp-store-gain {
+  grid-column: 1 / -1;
+  color: #8bd2be;
+}
+.camp-member-title .camp-health {
+  color: #a9e1c7;
+  padding-top: 0;
+}
+@media (max-width: 800px) {
+  .camp-stocks > .camp-character-stores {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .camp-member-title {
+    grid-column: 1 / -1;
+  }
+}
+
+.camp-stocks .camp-store-hero {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid #435343;
+}
+.camp-store-hero img {
+  width: 56px;
+  height: 64px;
+  object-fit: cover;
+  background: #0b171c;
+  border: 1px solid #6a7254;
+}
+.camp-store-hero > div:first-of-type {
+  flex: 1;
+  min-width: 0;
+}
+.camp-store-hero h4 {
+  margin: 0 0 4px;
+}
+.camp-store-hero span {
+  color: #a8b9a6;
+  font-size: 10px;
+}
+.camp-order-controls {
+  display: grid;
+  gap: 4px;
+}
+.camp-order-controls button {
+  padding: 2px 8px;
+  min-width: 28px;
+  font-size: 14px;
 }

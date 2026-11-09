@@ -17,19 +17,19 @@ test("food/water checks follow party movement, count real path steps only, save 
     food = supply(h, "item-food-bundle"),
     water = supply(h, "item-water-flask");
   g.movementSupplies(39);
-  assert.equal(g.supplyValue(h, water), 6);
+  assert.equal(g.supplyValue(h, water), 8);
   g.movementSupplies(1);
-  assert.equal(g.supplyValue(h, water), 4);
+  assert.equal(g.supplyValue(h, water), 6);
   assert.equal(g.supplyValue(h, food), 8);
   const copy = new Game(R, C);
   copy.load(structuredClone(g.snapshot()), { resume: false });
   copy.supplyDie = () => 1;
   assert.equal(copy.provisionCountdown().water, 40);
   copy.movementSupplies(39);
-  assert.equal(copy.supplyValue(copy.party[0], water), 4);
+  assert.equal(copy.supplyValue(copy.party[0], water), 6);
   copy.movementSupplies(1);
   assert.equal(copy.supplyValue(copy.party[0], food), 6);
-  assert.equal(copy.supplyValue(copy.party[0], water), 0);
+  assert.equal(copy.supplyValue(copy.party[0], water), 4);
   g.mode = "town";
   const before = g.campaign.provisionTrail.steps;
   g.movementSupplies(100);
@@ -52,29 +52,27 @@ test("missing provisions cause immediate needs penalties; last use satisfies the
   g.autoProvisions();
   assert.equal(g.needs(h).thirsty, false);
 });
-test("camp hours consume food/water and shared fire fuel; depleted fuel darkens the camp and rolls do not restore Grit", () => {
+test("camp preserves provisions, daily timers and fire fuel without deferred consumption", () => {
   const g = quiet();
   g.campWanderers = () => [];
-  const h = g.party[0],
-    food = supply(h, "item-food-bundle"),
-    water = supply(h, "item-water-flask");
-  for (const hero of g.party)
-    for (const i of hero.preview.inventory.items.filter(
-      (i) => i.catalogId === "item-lighting-bundle",
-    ))
-      hero.supplies[i.instanceId] = 0;
-  h.survival.gritAvailable = 0;
+  const before = g.party.map((h) => ({
+    supplies: structuredClone(h.supplies),
+    foodAge: g.clock().seconds - h.needs.ateAt,
+    waterAge: g.clock().seconds - h.needs.drankAt,
+  }));
+  const trail = structuredClone(g.campaign.provisionTrail);
   g.startCamp(
     Object.fromEntries(g.party.map((h) => [h.heroId, ["guard", "guard"]])),
+    32,
   );
-  g.campHour();
-  assert.equal(g.supplyValue(h, water), 6);
-  assert.equal(g.campaign.camp.fireLit, false);
-  g.campHour();
-  assert.equal(g.supplyValue(h, water), 4);
-  g.campHour();
-  g.campHour();
-  assert.equal(g.supplyValue(h, food), 6);
-  assert.equal(h.survival.gritAvailable, 0);
-  assert.equal(g.map.lights.find((l) => l.id === "camp-fire").radius, 1);
+  for (let i = 0; i < 32; i++) g.campHour();
+  for (const [i, h] of g.party.entries()) {
+    assert.deepEqual(h.supplies, before[i].supplies);
+    assert.equal(g.clock().seconds - h.needs.ateAt, before[i].foodAge);
+    assert.equal(g.clock().seconds - h.needs.drankAt, before[i].waterAge);
+  }
+  assert.deepEqual(g.campaign.provisionTrail, trail);
+  assert.equal(g.campaign.camp.fireLit, true);
+  g.autoProvisions();
+  g.party.forEach((h, i) => assert.deepEqual(h.supplies, before[i].supplies));
 });

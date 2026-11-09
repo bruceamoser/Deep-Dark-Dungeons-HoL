@@ -44,8 +44,22 @@ export async function verifyDungeonCamp(page) {
         ) > 3,
     );
     await expect(page.locator("[data-camp-slot]")).toHaveCount(8);
+    await expect(page.locator(".camp-store-hero img")).toHaveCount(4);
+    await expect(page.locator(".camp-watchline")).toHaveCount(0);
+    const firstHero = await page
+      .locator("[data-store-hero]")
+      .first()
+      .getAttribute("data-store-hero");
+    await page.locator('[data-camp-order="1"][data-step="-1"]').click();
+    expect(
+      await page
+        .locator("[data-store-hero]")
+        .nth(1)
+        .getAttribute("data-store-hero"),
+    ).toBe(firstHero);
+    await page.locator('[data-camp-order="1"][data-step="-1"]').click();
     await expect(page.locator(".camp-danger")).toContainText(
-      "% interruption chance",
+      "Enemies may interrupt the camp",
     );
     const firstRisk = await page.locator(".camp-danger p").innerText();
     await page.locator("#camp-length").selectOption("16");
@@ -56,12 +70,10 @@ export async function verifyDungeonCamp(page) {
     await expect(
       page.locator('select[data-camp-hero] option[value^="forage-"]'),
     ).toHaveCount(0);
-    const odds = page.locator(".camp-forage-odds").first();
-    await odds.locator("summary").click();
-    await expect(odds.locator("tr")).toHaveCount(6);
-    await expect(odds).toContainText("Nothing found");
-    await page.screenshot({ path: "test-results/camp-foraging-odds.png" });
-    await odds.locator("summary").click();
+    await expect(page.locator(".camp-forage-odds")).toHaveCount(0);
+    await expect(
+      page.getByRole("dialog", { name: "Dungeon camp", exact: true }),
+    ).not.toContainText(/d100|find chance|% interruption/);
     await page.evaluate(() => window.__ddd.scene.clearFloatingText());
     await page.screenshot({ path: "test-results/dungeon-camp-preview.png" });
     console.log(
@@ -69,7 +81,7 @@ export async function verifyDungeonCamp(page) {
     );
     await expect(page.locator(".camp-stocks")).toContainText("Dressings");
     await expect(page.locator(".camp-health").first()).toContainText(
-      "HP now → end",
+      "Expected healing:",
     );
     const medic = await page.evaluate(() => window.__ddd.game.party[2].heroId);
     await page
@@ -79,7 +91,7 @@ export async function verifyDungeonCamp(page) {
       page.locator(`[data-camp-target="${medic}"][data-target-slot="0"]`),
     ).toBeVisible();
     await expect(page.locator(".camp-member").nth(2)).toContainText(
-      "+4 HP/hour",
+      "Expected healing:",
     );
     await page
       .locator(`[data-camp-hero="${medic}"][data-camp-slot="1"]`)
