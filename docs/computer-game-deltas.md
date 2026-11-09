@@ -298,3 +298,7 @@ Foraging odds remain the November 8 bands and training modifiers, internal to th
 ## November 9 discipline foraging competence
 
 Each effective rank I–III adds a small personal bonus: Wilderness +1 point each to water/wood/food; Craft +1 each to wood/fletching; Medicine +1 to medicinal materials. Starting origins count immediately. Relevant abilities retain their larger existing bonuses and stack with these benefits under the existing 85% total find cap. Unrelated disciplines grant no forage bonus. This supersedes the previous absence of discipline-only forage effects. Descriptions remain qualitative in player UI.
+
+## November 9 tactical creature decisions
+
+Identity-driven combat goals replace nearest-target-only behavior. All printed main entries are considered, including third attacks and printed nonconsecutive-turn limits. Creature maneuvers, weighted positioning, taunts, visible targets, legal reaction exemptions, ally support and cone friendly fire now affect decisions. Printed statistics and encounter CV are unchanged. Player-facing action messages are plain outcomes. Game-owned Main Action Break free and Clear caltrops provide counterplay to maintained wolf holds and persistent caltrops. See [creature AI](creature-ai.md) for exact coverage, perception constraints, NPC collateral adaptation and intentional omissions. This supersedes the old first-specialty/Study-or-Defend AI policy.

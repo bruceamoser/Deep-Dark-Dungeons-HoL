@@ -89,7 +89,7 @@ function wound(g, h, exceptional = false) {
 
 test("new training uses game designs while originals and legacy heroes remain valid", () => {
   const g = fresh();
-  assert.equal(Object.keys(POWERS).length, 263);
+  assert.equal(Object.keys(POWERS).length, 265);
   assert.equal(
     C.choices.some((c) => c.gamePower),
     false,
@@ -145,6 +145,12 @@ test("every active game power validates a target and executes its declared effec
         p.effects.find((e) => e.kind === "resource").resource
       ] = 0;
     }
+    if (p.effects.some((effect) => effect.kind === "breakHold"))
+      g.creatureHold(e, h, 1);
+    if (p.effects.some((effect) => effect.kind === "clearNpcTerrain")) {
+      g.createSurface("difficult", [{ x: h.x, z: h.z }], e, 10);
+      g.map.zones.at(-1).caltrops = true;
+    }
     let target =
       p.target === "self"
         ? h.id
@@ -155,6 +161,8 @@ test("every active game power validates a target and executes its declared effec
             : { x: 3, z: 5 };
     if (p.effects.some((e) => e.kind === "damage") && p.target === "ground")
       target = { x: e.x, z: e.z };
+    if (p.effects.some((effect) => effect.kind === "clearNpcTerrain"))
+      target = { x: h.x, z: h.z };
     if (p.shape === "wall") target = { x: 8, z: 5 };
     if (p.effects.some((e) => e.kind === "move")) target = { x: 5, z: 4 };
     const reason = g.actionReason(p.id);

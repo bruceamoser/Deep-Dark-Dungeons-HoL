@@ -30,6 +30,11 @@ export const opportunityMethods = {
     const threats = opponents.filter(
       (other) =>
         this.canOpportunity(other) &&
+        !(
+          points &&
+          !actor.survival &&
+          (actor.aiState?.evade === "all" || actor.aiState?.evade === other.id)
+        ) &&
         this.encounter.roster.some((r) => r.id === other.id && !r.withdrawn) &&
         (points
           ? [actor, ...points.slice(0, -1)].some(
@@ -122,6 +127,14 @@ export const opportunityMethods = {
       else if (o.kind === "lantern") this.toggleLantern(o.index);
       else if (o.kind === "enemy-move") {
         Object.assign(actor, o.points[0]);
+        this.emit("move", {
+          steps: [{ heroId: actor.id, points: [o.points[0]] }],
+        });
+        this.surfaceContact(actor, { entry: true });
+        if (actor.hp <= 0) {
+          this.finishEnemyTurn(actor);
+          return;
+        }
         this.continuingProvocation = false;
         this.enemyTravel(
           actor,

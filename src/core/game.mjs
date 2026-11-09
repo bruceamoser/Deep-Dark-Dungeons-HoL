@@ -1,3 +1,4 @@
+import { creatureAiMethods } from "./creature-ai.mjs";
 import { foragingMethods, migrateForagePlan } from "./foraging.mjs";
 import { provisionMethods, prepareProvisions } from "./provisions.mjs";
 import { migrateCombinedSupplies } from "./supply-dice.mjs";
@@ -79,6 +80,7 @@ export class Game {
     this.busy = false;
   }
   emit(type, data = {}) {
+    if (this.campaign) this.releaseCreatureHolds();
     this.recordFallen();
     if (this.campaign)
       for (const h of [...this.party, ...(this.enemies ?? [])])
@@ -892,6 +894,16 @@ export class Game {
       .map((p) => p.id);
   }
   defeatEnemy(e) {
+    if (e.hp <= 0) {
+      const zones = this.map.zones ?? [];
+      this.map.zones = zones.filter(
+        (z) => !(z.source === e.id && z.npcUntilTurn !== undefined),
+      );
+      if (zones.length !== this.map.zones.length) {
+        this.syncTorches();
+        this.emit("battlefield");
+      }
+    }
     if (
       this.encounter &&
       e.hp === 0 &&
@@ -907,6 +919,7 @@ export class Game {
   }
   enemySpeed(e) {
     const summary = this.R.conditionSummary(e.conditions ?? []);
+    if (summary.grappled.rating) return 0;
     return Math.max(
       0,
       (this.creature(e)?.speed.ordinary ?? 5) -
@@ -992,19 +1005,13 @@ export class Game {
   }
   resolveEnemyHit(e, h, opportunity = false) {
     const action = opportunity
-        ? {
-            name: "Opportunity · Basic Melee",
-            attribute: "agility",
-            type: "physical",
-            range: 1,
-            outcomes: {
-              weak: "5 damage",
-              standard: "3 damage",
-              strong: "2 damage",
-            },
-          }
+        ? { ...this.creatureAction(e, true), name: "Opportunity · Basic Melee" }
         : this.creatureAction(e),
       card = this.creature(e);
+    if (!opportunity) {
+      e.aiState ??= {};
+      (e.aiState.lastActions ??= {})[action.name] = e.powerTurn ?? 0;
+    }
     const sources = [
       ...this.R.conditionRollSources(h.conditions ?? [], {
         mode: "defense",
@@ -1050,8 +1057,11 @@ export class Game {
       components: [
         {
           type: action.type,
-          amount: Number(outcome.match(/^\d+/)[0]),
+          amount: Number(outcome.match(/^\d+/)?.[0] ?? 0),
         },
+        ...(!opportunity && e.aiState?.fireBonus
+          ? [{ type: "fire", amount: e.aiState.fireBonus }]
+          : []),
       ],
       resistances: this.powerResistances(
         h,
@@ -1063,9 +1073,11 @@ export class Game {
     });
     this.suffer(h, damage.total, action.type, e);
     for (const m of outcome.matchAll(
-      /(Burning|Freezing|Bleeding|Poisoned|Slowed|Dazed|Paralyzed|Frightened|Blinded|Deafened) (\d+)/gi,
+      /(Burning|Freezing|Bleeding|Poisoned|Slowed|Dazed|Paralyzed|Frightened|Blinded|Deafened|Grappled) (\d+)/gi,
     ))
-      this.addCreatureCondition(h, m[1].toLowerCase(), Number(m[2]), e);
+      if (m[1].toLowerCase() === "grappled" && action.hold)
+        this.creatureHold(e, h, Number(m[2]));
+      else this.addCreatureCondition(h, m[1].toLowerCase(), Number(m[2]), e);
     if (/Prone/i.test(outcome)) this.addCreatureCondition(h, "prone", 1, e);
     const push = Number(outcome.match(/(?:Push|Pull) (\d+)/i)?.[1] ?? 0),
       direction = /Pull/i.test(outcome) ? -1 : 1;
@@ -1088,9 +1100,10 @@ export class Game {
     }
     if (action.type === "physical") this.riposte(h, e);
     e.study = false;
+    if (!opportunity && e.aiState) e.aiState.fireBonus = 0;
     e.chilled = false;
     this.note(
-      `${e.name} · ${action.name}: ${h.name} defends (${defenseAttribute}, ${boons} Boon / ${banes} Bane): ${result.retained.join(" + ")} → ${result.total} ${result.tier}; suffers ${damage.total} damage.`,
+      `${e.name} uses ${action.name} on ${h.name}: ${damage.total} damage.`,
     );
     this.emit("attack", {
       attacker: e.id,
@@ -1844,6 +1857,14 @@ export class Game {
       h.powerPendingManeuver = false;
       h.powerTurn = 0;
     });
+    for (const e of opposition) {
+      if (e.aiState?.baseStability !== undefined)
+        e.stability = e.aiState.baseStability;
+      e.aiState = { anchor: { x: e.x, z: e.z } };
+      e.powerTurn = 0;
+      e.reactionUsed = false;
+      e.defending = false;
+    }
     this.mode = "combat";
     this.encounter = this.R.startEncounter(
       [
@@ -2059,31 +2080,15 @@ export class Game {
     const e = this.enemies.find((e) => e.id === next.id);
     e.powerTurn = (e.powerTurn ?? 0) + 1;
     this.surfaceContact(e);
-    const taunt = (e.powerEffects ?? []).find(
-      (t) =>
-        t.stats.taunt &&
-        t.expiresAt > this.clock().seconds &&
-        t.expiresTurn >= e.powerTurn,
-    );
-    const targets = this.party
-      .filter((h) =>
-        ["active", "lastWords", "dying"].includes(h.survival.status),
-      )
-      .filter((h) => this.powerTargetable(h, e))
-      .sort(
-        (a, b) =>
-          Number(b.id === taunt?.source) - Number(a.id === taunt?.source) ||
-          distance(e, a) - distance(e, b),
-      );
-    const h = targets[0];
     this.enemyManeuver(e);
+    const h = this.enemyTarget(e);
+    e.aiState ??= {};
+    if (h) {
+      e.aiState.target = h.id;
+      e.aiState.action = this.enemyChooseAction(e, h)?.name;
+    }
     if (h && this.enemyCapable(e) && e.retained.includes("main")) {
-      const points = this.moveCreatureIntoRange(
-        e,
-        h,
-        this.creatureAction(e).range,
-        true,
-      );
+      const points = this.enemyPlanMovement(e, h, this.creatureAction(e));
       if (
         e.conditions?.some((c) => c.key === "prone") &&
         this.provoke(e, {
@@ -2096,7 +2101,11 @@ export class Game {
         return;
       e.conditions = (e.conditions ?? []).filter((c) => c.key !== "prone");
       this.enemyTravel(e, h, points);
-    } else this.finishEnemyTurn(e);
+    } else {
+      if (!h && this.enemySearchBlood(e)) return;
+      this.enemyTacticalManeuver(e, h);
+      this.finishEnemyTurn(e);
+    }
   }
   enemyTravel(e, h, points) {
     for (let i = 0; i < points.length; i++) {
@@ -2105,7 +2114,7 @@ export class Game {
           e,
           {
             kind: "enemy-move",
-            target: h.id,
+            target: h?.id,
             points: points.slice(i),
             label: "leaving melee reach",
           },
@@ -2114,16 +2123,22 @@ export class Game {
       )
         return;
       Object.assign(e, points[i]);
+      this.emit("move", { steps: [{ heroId: e.id, points: [points[i]] }] });
       this.surfaceContact(e, { entry: true });
       if (e.hp <= 0) {
         this.finishEnemyTurn(e);
         return;
       }
     }
+    if (e.aiState?.movingManeuver) {
+      e.aiState.movingManeuver = false;
+      delete e.aiState.evade;
+    }
     this.enemyAttack(e, h);
   }
 
   enemyAttack(e, h) {
+    if (this.enemyTacticalManeuver(e, h)) return;
     const action = this.creatureAction(e);
     if (
       h &&
@@ -2139,6 +2154,11 @@ export class Game {
         this.provoke(e, { kind: "enemy", target: h.id, label: "casting" })
       )
         return;
+      if (action.area === "cone") {
+        this.enemyConeAttack(e, h, action);
+        this.finishEnemyTurn(e);
+        return;
+      }
       if (action.type === "physical" && this.canBlock(h)) {
         this.pendingDefense = { attacker: e.id, target: h.id };
         this.emit("reaction", { hero: h, enemy: e });
@@ -2287,7 +2307,12 @@ Object.assign(
 Object.assign(Game.prototype, interactionMethods);
 Object.assign(Game.prototype, rosterMethods, experienceMethods);
 
-Object.assign(Game.prototype, treasureMethods, bestiaryMethods);
+Object.assign(
+  Game.prototype,
+  treasureMethods,
+  bestiaryMethods,
+  creatureAiMethods,
+);
 
 Object.assign(
   Game.prototype,

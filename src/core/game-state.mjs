@@ -99,6 +99,41 @@ export function validateGameState(campaign) {
       throw new Error("Saved recipes or power charges are invalid.");
   }
   for (const actor of [...heroes, ...floors.flatMap((f) => f.enemies ?? [])]) {
+    const ai = actor.aiState;
+    if (
+      ai !== undefined &&
+      (!ai ||
+        typeof ai !== "object" ||
+        Array.isArray(ai) ||
+        (ai.anchor !== undefined &&
+          (!Number.isSafeInteger(ai.anchor?.x) ||
+            !Number.isSafeInteger(ai.anchor?.z))) ||
+        [ai.action, ai.target, ai.evade].some(
+          (s) => s != null && (typeof s !== "string" || s.length > 120),
+        ) ||
+        [ai.maneuverDone, ai.movingManeuver].some(
+          (b) => b !== undefined && typeof b !== "boolean",
+        ) ||
+        [ai.fireBonus, ai.nextAttackBane, ai.baseStability].some(
+          (n) => n !== undefined && (!nonnegative(n) || n > 3),
+        ) ||
+        (ai.sceneUsed !== undefined &&
+          (!Array.isArray(ai.sceneUsed) ||
+            ai.sceneUsed.length > 20 ||
+            ai.sceneUsed.some(
+              (s) => typeof s !== "string" || s.length > 120,
+            ))) ||
+        (ai.lastActions !== undefined &&
+          (!ai.lastActions ||
+            typeof ai.lastActions !== "object" ||
+            Array.isArray(ai.lastActions) ||
+            Object.entries(ai.lastActions).length > 20 ||
+            Object.entries(ai.lastActions).some(
+              ([name, turn]) => name.length > 120 || !nonnegative(turn),
+            ))))
+    )
+      throw new Error("Saved creature tactics are invalid.");
+
     if (
       (actor.powerTurn !== undefined && !nonnegative(actor.powerTurn)) ||
       (actor.powerEffects !== undefined &&
@@ -129,6 +164,8 @@ export function validateGameState(campaign) {
           (z) =>
             !z ||
             !Object.hasOwn(SURFACE_COLORS, z.kind) ||
+            (z.npcUntilTurn !== undefined && !nonnegative(z.npcUntilTurn)) ||
+            (z.caltrops !== undefined && typeof z.caltrops !== "boolean") ||
             typeof z.id !== "string" ||
             typeof z.source !== "string" ||
             !(

@@ -10,9 +10,11 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Current task
 
-Relevant disciplines now give small personal, rank-based foraging bonuses; dedicated abilities retain the larger bonuses. Wilderness improves water/wood/food, Craft wood/fletching, Medicine medicinal materials. Origins and rank II/III descriptions explain this without showing probabilities. Existing characters benefit automatically; save format unchanged. Branch `codex/discipline-foraging-benefits`, base `bd001cb`; see [handoff](handoffs/2026-11-09-discipline-foraging-benefits.md).
+Bruce explicitly requested progress docs, commit/push/merge and a new release while away at dinner. **v0.8.5 is the release candidate; v0.8.4 remains published until the finished-installer gate succeeds.** Follow [v0.8.5 release handoff](handoffs/2026-11-09-v085-release.md). The AI, camp/water/torch and discipline changes are included. Source branch `codex/creature-tactical-ai`; self-review/merge passing checks, build licensed Linux/Windows artifacts, stage a draft, run the staged verification/publish workflow, then verify public downloads and live updater. Never upload source-only installer artifacts as finished releases.
 
-Camp UX, d8 water, resource-free rest and torch lighting were merged in [PR #108](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/108) at `bd001cb`. See [camp handoff](handoffs/2026-11-09-camp-plain-outcomes.md). These changes and discipline bonuses are local development builds; latest published installer remains v0.8.4. Purchased assets stay private.
+Creature tactical AI overhaul, branch `codex/creature-tactical-ai`, base `4ef2d6d` (discipline foraging PR #109). Distinct goals now drive packs, duelists, guardians, hunters, skirmishers, supports, controllers and ranged creatures. All 120 printed main entries across 58 creatures are selectable; specialty cooldowns, support/control/terrain maneuvers, legal mobility and cone friendly fire are implemented. Wolf holds and caltrops have paid player counterplay. Saved tactical state is optional/validated. Statistics and encounter budgets are unchanged. See [AI design/coverage](../creature-ai.md) and [handoff](handoffs/2026-11-09-creature-tactical-ai.md) for verification and remaining limits.
+
+Prior source follow-ups: camp/water/torch [PR #108](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/108), discipline foraging [PR #109](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/109). These remain local development updates; latest published installer is v0.8.4. The checkout launcher is rebuilt deliberately; pulling alone does not rebuild it.
 
 ## Previous delivered task
 
@@ -40,7 +42,7 @@ The installed executable passed the release smoke flow (rendering, Forge, isolat
 
 1. Follow `AGENTS.md` and the startup process in this folder.
 2. v0.8.4 is delivered. Read the latest handoff for verification and local setup notes; no UI qualification task remains.
-3. Read the discipline foraging handoff for the latest source follow-up.
+3. Read the creature AI handoff and coverage doc for the latest source follow-up.
 4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
 
 ## Transfer gaps

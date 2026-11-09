@@ -730,6 +730,29 @@ for (const [cls, rows] of Object.entries(signatures))
   });
 definitions.push(
   {
+    id: "power-break-free",
+    name: "Break free",
+    description:
+      "Use your Main Action to escape one creature holding you. Ends that creature’s hold on both participants.",
+    gamePower: true,
+    universal: true,
+    category: "main",
+    target: "self",
+    effects: [{ kind: "breakHold" }],
+  },
+  {
+    id: "power-clear-caltrops",
+    name: "Clear caltrops",
+    description:
+      "Use your Main Action to clear a caltrop patch on your square or an adjacent square.",
+    gamePower: true,
+    universal: true,
+    category: "main",
+    target: "ground",
+    range: 1,
+    effects: [{ kind: "clearNpcTerrain" }],
+  },
+  {
     id: "power-use-smoke",
     name: "Throw smoke flask",
     description:
