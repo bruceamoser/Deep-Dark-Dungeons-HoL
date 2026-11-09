@@ -5,7 +5,7 @@ Updated: 2026-11-09 (America/New_York).
 ## Baseline
 
 - Product: **Four Lanterns Deep**; canonical repository `bruceamoser/Four-Lanterns-Deep`.
-- Latest released version at this checkpoint: **v0.8.3**. Release baseline: `7aa7091` (PR #101).
+- Latest released version: **[v0.8.4](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.4)**. Game release baseline: `7bca1b6` (PR #103).
 - Progression remains the v0.6 Discipline Forge. See [implementation status](../implementation-status.md), [adaptations](../computer-game-deltas.md) and [release process](../releases.md).
 
 ## Current task
@@ -18,7 +18,11 @@ All eight welcome/HUD/camp touches are implemented and merged in [PR #103](https
 - Tab toggles the dungeon map; J toggles its journal.
 - Saved dungeon camp reports show actual healing, wound/material changes and full work history; town sleep has a recovery summary. Recall's return-depth badge remains visible.
 
-271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build AppImage/Debian/Windows installer CI passed. Finished licensed installers are undergoing staged verification in [release gate 42661021738](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42661021738); the Windows finished app passed, while Linux exceeded the 15-minute job budget during its second installer flow without an assertion failure. This handoff branch gives AppImage and Debian separate parallel jobs with 30-minute budgets and reruns the same assertions. A subsequent Windows rerun hit the test-click 30-second default after a town save/reload, despite the same installer passing earlier. The qualification harness now allows 90 seconds for entry input, while checked packaging configuration stays pinned to v0.8.4. Both Linux installer jobs in [parallel gate 42664212733](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42664212733) passed; the Windows-only retry is pending. Publication remains pending at this checkpoint.
+271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build installer CI and all three finished licensed installer jobs passed. **v0.8.4 is published**, with Debian, AppImage and Windows NSIS installers. Final qualification: [run 42668867227](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42668867227).
+
+Public installer checksums (SHA-256) and updater metadata sizes/SHA-512 were verified after downloading the release. An unmodified published 0.8.3 AppImage discovered and downloaded 0.8.4 from its original live feed, with isolated test data.
+
+Qualification follow-ups #104–#106 split Linux installer jobs, allowed software-rendered runtime budgets, and made startup/reload waits consistent. They changed QA tooling and documentation, not the reviewed game binaries. Current staged QA uses its reviewed workflow revision and checks packaging configuration against the immutable game tag.
 
 ## Recent local diagnosis
 
@@ -29,7 +33,7 @@ The installed executable passed the release smoke flow (rendering, Forge, isolat
 ## Next agent
 
 1. Follow `AGENTS.md` and the startup process in this folder.
-2. Check the v0.8.4 release gate and release link for final delivery state. PR #103 is merged.
+2. v0.8.4 is delivered. Read the latest handoff for verification and local setup notes; no UI qualification task remains.
 3. Read the latest handoff and current feature docs. No further gameplay task is assigned after these eight UI touches.
 4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
 
