@@ -1818,6 +1818,7 @@ export class Game {
     const groups = new Set(visible.map((e) => e.group)),
       opposition = this.enemies.filter((e) => e.hp > 0 && groups.has(e.group));
     this.paths.clear();
+    this.pendingInteraction = null;
     this.budgets = {};
     this.party.forEach((h) => {
       h.buffs = {};

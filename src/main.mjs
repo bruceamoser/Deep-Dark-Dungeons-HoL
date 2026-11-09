@@ -176,7 +176,7 @@ async function init() {
         : null;
       hint.hidden = !item && !creature;
       if (item) {
-        hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO INTERACT</small>`;
+        hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO APPROACH · SHIFT-CLICK TO INSPECT</small>`;
         hint.style.left = `${Math.min(innerWidth - 250, event.clientX + 18)}px`;
         hint.style.top = `${Math.max(12, Math.min(innerHeight - 75, event.clientY - 65))}px`;
       } else if (creature && !modal.children.length) {
@@ -289,7 +289,18 @@ async function init() {
         `+${data.amount} XP each · ${data.reason}${ready.length ? " · LEVEL UP AVAILABLE — train in Greyhaven" : ""}`,
       );
     }
-    if (type === "interact-ready") worldMenu(data.id);
+    if (type === "interact-ready") {
+      if (data.loot) {
+        closeModal();
+        lootScreen({
+          root: modal,
+          game,
+          id: data.id,
+          close: closeModal,
+          attempt,
+        });
+      } else worldMenu(data.id);
+    }
     if (
       selectedAction &&
       ((game.mode !== "combat" && !POWERS[selectedAction.id]?.field) ||
@@ -413,7 +424,12 @@ async function init() {
     }
     if (e.key === "Escape") {
       if (selectedAction) cancelTargeting();
-      else attempt(openRuns);
+      else if (game.pendingInteraction) {
+        game.pendingInteraction = null;
+        game.paths.clear();
+        scene.showPath([]);
+        toast("Approach cancelled.");
+      } else attempt(openRuns);
     }
   });
   initialized = true;
@@ -729,8 +745,12 @@ function clickTile(p, interactionId, event) {
         );
       commitTarget(target.id);
     } else if (enemy) game.attack(enemy.id);
-    else if (interactionId) worldMenu(interactionId, event);
-    else game.move(p);
+    else if (interactionId) {
+      const item = game.worldInteractions().find((i) => i.id === interactionId);
+      if (game.mode === "exploration" && !event?.shiftKey && item?.available)
+        game.requestInteraction(interactionId);
+      else worldMenu(interactionId, event);
+    } else game.move(p);
   });
 }
 function worldMenu(id, event) {

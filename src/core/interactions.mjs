@@ -95,7 +95,24 @@ export const interactionMethods = {
         : "Move a companion beside it first.";
     return "";
   },
-  approachInteraction(id) {
+  requestInteraction(id) {
+    const item = this.worldInteractions().find((i) => i.id === id);
+    if (!item || this.mode !== "exploration" || this.busy)
+      throw new Error("Interact outside combat.");
+    if (this.interactionNear(item)) return this.completeInteraction(id);
+    this.approachInteraction(id, { useOnArrival: true });
+  },
+  completeInteraction(id) {
+    const item = this.worldInteractions().find((i) => i.id === id);
+    const reason = this.interactionReason(item);
+    if (reason) throw new Error(reason);
+    if (["entrance", "descent"].includes(item.kind))
+      return this.emit("interact-ready", { id });
+    this.interact(id);
+    if (item.kind === "coffer" && item.source.items?.length)
+      this.emit("interact-ready", { id, loot: true });
+  },
+  approachInteraction(id, { useOnArrival = false } = {}) {
     const item = this.worldInteractions().find((i) => i.id === id);
     if (!item || this.mode !== "exploration" || this.busy)
       throw new Error("Approach objects outside combat.");
@@ -118,7 +135,7 @@ export const interactionMethods = {
     if (!candidates.length)
       throw new Error("There is no clear route beside that object.");
     this.move(candidates[0].p);
-    this.pendingInteraction = id;
+    this.pendingInteraction = { id, useOnArrival };
     this.checkInteractionArrival();
   },
   checkInteractionArrival() {
@@ -127,18 +144,24 @@ export const interactionMethods = {
       this.pendingInteraction = null;
       return;
     }
-    const item = this.worldInteractions().find(
-      (i) => i.id === this.pendingInteraction,
-    );
+    const pending =
+      typeof this.pendingInteraction === "string"
+        ? { id: this.pendingInteraction }
+        : this.pendingInteraction;
+    const item = this.worldInteractions().find((i) => i.id === pending.id);
     if (!item) {
       this.pendingInteraction = null;
       return;
     }
     if ([...this.paths.values()].some((p) => p.length)) return;
     this.pendingInteraction = null;
-    if (this.interactionNear(item))
-      this.emit("interact-ready", { id: item.id });
-    else this.notify("The route is blocked. Move closer to interact.");
+    if (this.interactionNear(item)) {
+      if (pending.useOnArrival) {
+        const reason = this.interactionReason(item);
+        if (reason) this.notify(reason);
+        else this.completeInteraction(item.id);
+      } else this.emit("interact-ready", { id: item.id });
+    } else this.notify("The route is blocked. Move closer to interact.");
   },
   interact(id) {
     const item = this.worldInteractions().find((i) => i.id === id);

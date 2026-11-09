@@ -247,3 +247,12 @@ Field Replenishment expands water/wood/food/fletching by 4/4/6/4 percentage poin
 Medicinal finds supply the field-dressing recipe. Make dressings is a camp duty requiring that recipe and one compatible batch; it makes/refills d4 dressings without advancing an extra hour. Old targeted forage choices migrate to the general task. Paused camp duties/patients can change for future periods while completed hours, healing and rewards remain intact.
 
 Forecasts run an empty/weak/depleting scenario and successful scenarios for each possible resource with favorable treatment/supply checks. HP and each supply category display their corresponding range; different category maxima need not occur together. Actual foraging still rolls once on the hero's d100 table and grants at most one find.
+
+### Direct exploration interactions (#83)
+
+A normal chest/cache click approaches and opens or recovers it on arrival;
+remaining items open their distribution screen. Stair clicks approach with the
+company and show the travel confirmation without changing floors automatically.
+Shift-click retains Inspect and the explicit object menu. Escape or another
+movement order cancels the approach; combat detection clears it immediately.
+Arrival rechecks availability, range and guardian restrictions.
