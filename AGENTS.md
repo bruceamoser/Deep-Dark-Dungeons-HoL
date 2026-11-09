@@ -1,4 +1,4 @@
-# Deep Dark Dungeons - HoL
+# Four Lanterns Deep
 
 Bruce is the final design authority. Build a desktop single-player 3D isometric four-hero dungeon RPG, using fantasy Heroes of Legend. High-end presentation is a requirement, not optional polish.
 

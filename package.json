@@ -55,11 +55,11 @@
     },
     "icon": "public/art/four-lanterns-icon-v2.png",
     "afterPack": "scripts/after-pack.cjs",
-    "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}",
+    "artifactName": "Four-Lanterns-Deep-${version}-${arch}.${ext}",
     "publish": {
       "provider": "github",
       "owner": "bruceamoser",
-      "repo": "Deep-Dark-Dungeons-HoL",
+      "repo": "Four-Lanterns-Deep",
       "releaseType": "release"
     },
     "toolsets": {
@@ -74,7 +74,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "deleteAppDataOnUninstall": false,
-      "artifactName": "Deep-Dark-Dungeons-HoL-Setup-${version}-${arch}.${ext}",
+      "artifactName": "Four-Lanterns-Deep-Setup-${version}-${arch}.${ext}",
       "shortcutName": "Four Lanterns Deep"
     },
     "deb": {
@@ -93,7 +93,7 @@
         "libasound2 | libasound2t64",
         "pkexec"
       ],
-      "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}"
+      "artifactName": "Four-Lanterns-Deep-${version}-${arch}.${ext}"
     },
     "executableName": "Deep Dark Dungeons - HoL"
   },
@@ -111,6 +111,6 @@
   "author": "Bruce A. Moser",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL.git"
+    "url": "https://github.com/bruceamoser/Four-Lanterns-Deep.git"
   }
 }

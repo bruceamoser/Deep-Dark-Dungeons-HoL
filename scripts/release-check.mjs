@@ -23,7 +23,7 @@ if (process.platform === "win32") {
     "utf8",
   );
   expect(config).toMatch(/["']?provider["']?\s*:\s*["']?github/);
-  expect(config).toContain("Deep-Dark-Dungeons-HoL");
+  expect(config).toContain("Four-Lanterns-Deep");
 }
 const command = linux ? "/usr/bin/aa-exec" : executable;
 const args = [

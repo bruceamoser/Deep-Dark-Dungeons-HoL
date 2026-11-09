@@ -1,6 +1,6 @@
 # Four Lanterns Deep
 
-Formerly Deep Dark Dungeons. A four-hero expedition beneath Greyhaven.
+A four-hero expedition beneath Greyhaven, built on Heroes of Legend.
 
 A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, based on **Heroes of Legend**. Target: Linux and Windows, stylized dark fantasy, a persistent town, repeated descents and recoverable expedition losses.
 
@@ -8,7 +8,7 @@ A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, base
 
 ## Download and install
 
-Get the [latest release](https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Deep-Dark-Dungeons-HoL-0.8.3-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
+Get the [latest release](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Four-Lanterns-Deep-0.8.3-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
 
 The installed game checks for updates on startup and every four hours, downloads them in the background, and offers **Updates → Save & restart to install**. Your active journey is saved before installation. Updates preserve save files. v0.6 requires new journeys; earlier-edition runs remain on disk but cannot be loaded by this edition. Source-checkout/unpacked builds link to the release installer instead of self-updating. See [release details and publishing](docs/releases.md).
 
@@ -70,3 +70,7 @@ Named saves live under the desktop application's user-data `runs/` directory (`~
 [Production brief](docs/production-brief.md) · [Rules intake](docs/rules-intake.md) · [Computer-game proposals](docs/computer-game-deltas.md) · [Assets](docs/assets.md) · [Artcraft integration](docs/artcraft.md)
 
 The authoritative book and Foundry repositories are not modified. Source files are imported from a pinned Git revision with per-file hashes in `docs/hol-source-lock.json`. Ordinary rest never refreshes Grit; all five wound tables are retained. Numerical wound effects, conditions, treatment and survival are integrated; game-specific recovery and power rules are documented explicitly.
+
+The product and repository are **Four Lanterns Deep**. Some installed filenames
+and the save directory retain legacy identifiers so upgrades preserve existing
+installs; see [release and migration documentation](docs/releases.md).

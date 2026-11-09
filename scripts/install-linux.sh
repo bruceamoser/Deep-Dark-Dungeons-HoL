@@ -3,7 +3,7 @@ set -euo pipefail
 # Download this script, the AppImage, PNG and SHA256SUMS from the same release.
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 shopt -s nullglob
-images=(Deep-Dark-Dungeons-HoL-*.AppImage)
+images=(Four-Lanterns-Deep-*.AppImage)
 if [[ ${#images[@]} != 1 || ! -f SHA256SUMS || ! -f four-lanterns-icon-v2.png ]]; then
   printf '%s\n' 'Place install-linux.sh, one release AppImage, four-lanterns-icon-v2.png and SHA256SUMS in the same folder, then run: bash install-linux.sh' >&2
   exit 1
