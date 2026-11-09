@@ -5,48 +5,37 @@ Updated: 2026-11-09 (America/New_York).
 ## Baseline
 
 - Product: **Four Lanterns Deep**; canonical repository `bruceamoser/Four-Lanterns-Deep`.
-- Latest released version: **[v0.8.4](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.4)**. Game release baseline: `7bca1b6` (PR #103).
+- Latest published release: **[v0.8.5](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.5)**, published November 9. Immutable game source/tag: `23effe99ae9ae3d4ba82e12d4fadb999e125c8a3` / `v0.8.5` (PR #110).
 - Progression remains the v0.6 Discipline Forge. See [implementation status](../implementation-status.md), [adaptations](../computer-game-deltas.md) and [release process](../releases.md).
 
-## Current task
+## Latest completed work
 
-**v0.8.5 release in progress.** Bruce requested progress docs, commit/push/merge and a new release while away at dinner. The implementation and release preparation are merged in [PR #110](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/110), source commit `23effe99ae9ae3d4ba82e12d4fadb999e125c8a3`, tagged `v0.8.5`. **v0.8.4 remains the published latest until the finished-installer gate succeeds.**
+Bruce requested progress docs, commit/push/merge and a new release while away at dinner. Gameplay PR #110 and release checkpoints #111/#112 are merged; final delivery documentation is PR #113. **v0.8.5 is published as latest**, with licensed AppImage, Debian, Windows NSIS installer, portable Windows ZIP and Linux install bundle.
 
-298 unit tests, the complete native Linux regression on the actual 0.8.5 launcher, source-build AppImage/installed Debian/Windows installer CI, the finished licensed local AppImage, isolated Linux-bundle installation and the real 0.8.4→0.8.5 update round trip all pass. Private licensed character exports are verified in both finished app archives. Linux and Windows builds are complete; licensed release files and checksums are under ignored `release/staged-0.8.5/`.
+The release includes tactical creature personalities and ability use across all 58 creatures / 120 Main entries, camp task/supply UX with portraits/order controls and plain outcomes, d8 water, no automatic survival consumption during camp, discipline foraging bonuses, and light following the held torch. See [creature AI coverage](../creature-ai.md), [AI handoff](handoffs/2026-11-09-creature-tactical-ai.md) and [release delivery](handoffs/2026-11-09-v085-release.md). Creature statistics/CV and encounter budgets are unchanged; balance still needs player feedback.
 
-All eight initial assets are uploaded to draft v0.8.5. The first finished-installer gate [42716952200](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42716952200) was blocked; The first AppImage job timed out at the camp harness’s 20-second wait; finished Debian and Windows passed. QA-only [PR #112](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/112) merged at `40766f1`, using the established 90-second budget and waiting for an actual torch-light tick with the unchanged position tolerance. The full local SwiftShader licensed AppImage check passes. A fresh all-installer gate is running: [42719699495](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42719699495), pinned to that reviewed QA revision. App binaries/tag remain unchanged. Await this new gate and automatic publication, then verify public downloads and the live old-client updater. See [release handoff](handoffs/2026-11-09-v085-release.md). No manual publish around a failed gate. Final delivery docs are on `codex/v085-release-delivery` until merged.
+## Verification
 
-Coverage: [creature AI](../creature-ai.md), [AI handoff](handoffs/2026-11-09-creature-tactical-ai.md). Prior camp/water/torch and discipline improvements from #108/#109 are included. Source statistics and encounter budgets are unchanged; play balance remains subject to player feedback.
+- 298 unit tests; complete native Linux regression through the actual rebuilt `launch-game.sh`, sandbox enabled and normal terminal AppArmor context; source-build installer CI; finished licensed local AppImage; isolated Linux bundle installation.
+- All three final licensed installer checks pass: AppImage, installed Debian and installed Windows NSIS, [run 42719699495](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42719699495). Reviewed QA revision `40766f1`; immutable app source/tag `23effe9`. Earlier renderer timing issues and the QA-only fix are recorded in the release handoff.
+- Public release assets downloaded after publication: all ten SHA-256 entries pass; Linux/Windows updater sizes and SHA-512 match. Unmodified published 0.8.4 discovered and downloaded 0.8.5 from its original live GitHub feed using isolated data.
+- Actual 0.8.4→0.8.5 replacement/restart, save/vault preservation, corrupt-checksum rejection and failed-save install protection pass. No real player saves used or changed.
 
-## Previous delivered task
+## Local machine
 
-All eight welcome/HUD/camp touches are implemented and merged in [PR #103](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/103), release commit `7bca1b6`, tag `v0.8.4`.
+The checkout launcher is rebuilt as 0.8.5 with verified private licensed runtime exports. Installed system copies are separate: use Settings → Updates or the new installers. This release task did not root-install or replace Bruce's live system package.
 
-- Persistent preloaded title screen: click, Enter or Space to enter.
-- Illustrated town directory and equipped hero portraits; centered day/time; utility controls under Settings.
-- I/M/G/S/L/H/Shift+S/D for town destinations (Shift+S resolves Shrine/Smithy's duplicate S).
-- Tab toggles the dungeon map; J toggles its journal.
-- Saved dungeon camp reports show actual healing, wound/material changes and full work history; town sleep has a recovery summary. Recall's return-depth badge remains visible.
+Earlier menu diagnosis: a user desktop entry shadowed the installed system entry and launched an old 0.6.0 checkout. It was replaced with the installed Four Lanterns Deep entry and KDE cache refreshed. The historical desktop executable/package name remains `deep-dark-dungeons-hol`; product/menu title is Four Lanterns Deep.
 
-271 automated tests, 1600/1100 layout checks, the complete native Linux regression and a real 0.8.3→0.8.4 update round trip passed. Source-build installer CI and all three finished licensed installer jobs passed. **v0.8.4 is published**, with Debian, AppImage and Windows NSIS installers. Final qualification: [run 42668867227](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42668867227).
-
-Public installer checksums (SHA-256) and updater metadata sizes/SHA-512 were verified after downloading the release. An unmodified published 0.8.3 AppImage discovered and downloaded 0.8.4 from its original live feed, with isolated test data.
-
-Qualification follow-ups #104–#106 split Linux installer jobs, allowed software-rendered runtime budgets, and made startup/reload waits consistent. They changed QA tooling and documentation, not the reviewed game binaries. Current staged QA uses its reviewed workflow revision and checks packaging configuration against the immutable game tag.
-
-## Recent local diagnosis
-
-On Bruce's Linux desktop, Debian package `deep-dark-dungeons-hol` was already 0.8.3, but a user-level desktop entry shadowed the system entry and launched a stale 0.6.0 checkout runtime. The user entry was replaced with the installed Four Lanterns Deep entry; KDE's menu cache was rebuilt. The ignored checkout runtime was refreshed from the installed 0.8.3 package; previous runtime and shortcut were backed up locally. Git origin now uses the renamed repository.
-
-The installed executable passed the release smoke flow (rendering, Forge, isolated disk save and update controls) through the user's systemd session. The checkout launch reached the expected 0.8.3 interface; its release smoke assertion for supported updates failed because unpacked copies intentionally report updates unsupported. The agent process's `NoNewPrivs=1` also prevents a direct SUID sandbox test from that process; do not disable sandboxing to bypass it. No real player saves were used or modified by these checks.
+Native checks run from the user systemd session then `aa-exec -p unconfined`: the agent's `NoNewPrivs=1` cannot qualify the SUID sandbox directly. Keep sandboxing enabled and the launcher’s space-free runtime staging.
 
 ## Next agent
 
-1. Follow `AGENTS.md` and the startup process in this folder.
-2. v0.8.4 is delivered. Read the latest handoff for verification and local setup notes; no UI qualification task remains.
-3. Read the creature AI handoff and coverage doc for the latest source follow-up.
-4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
+1. Follow `AGENTS.md` and this folder's startup process; pull before resuming and inspect local changes.
+2. Release delivery is complete; no pending publication task. Read the latest release/AI handoffs before new changes.
+3. Evaluate creature balance against the new behaviors using player feedback. Coverage and deliberate limitations are explicit in the AI doc.
+4. Private licensed exports are verified (251 nodes, 20 animations, 39 weapon grips) and ignored. Preserve finished-release staging rules; source-only CI installers are not public release candidates.
 
 ## Transfer gaps
 
-Purchased Dungeon Mason exports, build outputs, saves, local tools and MCP configuration are not transferred by Git. Use [machine setup](machines.md). This repository process preserves explicit project knowledge, not a guarantee that every chat is available on every device.
+Purchased Dungeon Mason exports, build outputs, saves, local tools and MCP configuration are not transferred by Git. Use [machine setup](machines.md). This repository process preserves explicit project knowledge, not every chat on every device.
