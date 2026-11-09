@@ -9,9 +9,55 @@ export async function verifyAppearanceUX(page) {
     await expect(
       page.getByLabel("Equipped bow style", { exact: true }),
     ).toHaveCount(0);
+    await expect(page.getByLabel("Ears", { exact: true })).toHaveCount(0);
+    await expect(page.getByLabel("Crown", { exact: true })).toHaveCount(0);
     await expect(
-      page.getByLabel("Ears", { exact: true }).locator("option"),
-    ).toHaveCount(2);
+      page.getByLabel("Face covering", { exact: true }).locator("option"),
+    ).toHaveText(["None", "Mask"]);
+    await expect(
+      page.getByLabel("Extra accessory", { exact: true }).locator("option"),
+    ).toHaveText(["None", "Eye patch"]);
+    await page
+      .getByLabel("Face covering", { exact: true })
+      .selectOption("AC08_NinjaMask05");
+    await page.getByLabel("Mask colour", { exact: true }).fill("#663344");
+    await expect(page.locator("#hero-preview")).toHaveAttribute(
+      "data-appearance",
+      /663344/,
+    );
+    await expect(
+      page.getByLabel("Facial hair", { exact: true }).locator("option"),
+    ).toHaveText([
+      "None",
+      "Wide moustache",
+      "Neat moustache",
+      "Short beard",
+      "Long beard",
+    ]);
+    await page
+      .getByLabel("Face covering", { exact: true })
+      .selectOption("none");
+    for (const style of ["BeardShort", "BeardLong"]) {
+      await page.getByLabel("Facial hair", { exact: true }).selectOption(style);
+      const result = await page.evaluate((style) => {
+        const { game: g, scene: s } = window.__ddd,
+          m = s.entities.get(g.party[0].id).model,
+          b = m.getObjectByName(style);
+        return {
+          present: !!b,
+          visible: b?.visible,
+          parent: b?.parent.name,
+          colour: b?.material.color.getHexString(),
+          vertices: b?.geometry.attributes.position.count,
+        };
+      }, style);
+      expect(result.present).toBe(true);
+      expect(result.visible).toBe(true);
+      expect(result.parent).toBe("head");
+      expect(result.vertices).toBeGreaterThan(30);
+    }
+    await page.getByLabel("Head style", { exact: true }).selectOption("female");
+    await page.screenshot({ path: "test-results/facial-hair-fitted.png" });
     expect(await page.locator(".appearance-editor").innerText()).not.toContain(
       "Palette 1",
     );

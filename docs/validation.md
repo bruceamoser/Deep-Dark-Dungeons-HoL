@@ -429,3 +429,12 @@ Packaged Linux and finished-platform checks exercise the same playback paths.
 Bruce also explicitly confirmed the Dungeon Mason decision superseded #43. It is
 closed as not planned with the decision recorded in its body and character docs;
 custom Blender prototype assets remain historical, unmerged reference work.
+
+## Facial-hair and accessory curation — #79
+
+Geometry inspection identified the two moustache shapes and palette-only copies.
+Canonical IDs, removed styles, saved mask-colour migration, tint shader behavior
+and beard physical fit/pose/disposal have focused tests. Actual front/side beard
+previews were inspected on the approved body, and the packaged appearance check
+covers both beard choices, the feminine face, filtered controls and live mask
+colour. Existing carried-gear previews and identity/save checks remain required.

@@ -1,3 +1,4 @@
+import { addMasonBeard } from "./mason-beards.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
@@ -68,6 +69,8 @@ export function masonAppearance(asset, hero, assets) {
     ranged ? visual.arrow : null,
     weapon,
   ]);
+  if (choice.facialHair === "BeardShort") selected.add("AC11_Mustache01");
+  if (choice.facialHair === "BeardLong") selected.add("AC10_Mustache01");
   if (hat === "none") selected.add(choice.hair);
   const partNames = new Set(Object.values(MASON_OPTIONS).flat());
   const areas = new Map();
@@ -81,11 +84,13 @@ export function masonAppearance(asset, hero, assets) {
       const m = source.clone();
       const channel = Number(source.name.match(/^MasonChannel(\d+)/)?.[1]);
       const hairPart = /^(Hair|Eyebrow|AC10_|AC11_)/.test(part?.name ?? "");
+      const maskPart = part?.name === "AC08_NinjaMask05";
       if (
         selected.has(part?.name) &&
         channel >= 1 &&
         channel <= 8 &&
-        !hairPart
+        !hairPart &&
+        !maskPart
       ) {
         const category = /^Body/.test(part.name)
           ? "Outfit"
@@ -108,9 +113,11 @@ export function masonAppearance(asset, hero, assets) {
       const tint =
         channel === 9
           ? a.skin
-          : hairPart
-            ? a.hairColor
-            : a.outfitColors[channel - 1];
+          : maskPart
+            ? a.maskColor
+            : hairPart
+              ? a.hairColor
+              : a.outfitColors[channel - 1];
       if (tint) {
         const color = new T.Color(tint);
         m.onBeforeCompile = (shader) => {
@@ -119,10 +126,14 @@ export function masonAppearance(asset, hero, assets) {
             "uniform vec3 masonTint;\n" + shader.fragmentShader;
           shader.fragmentShader = shader.fragmentShader.replace(
             "#include <map_fragment>",
-            "#include <map_fragment>\ndiffuseColor.rgb = masonTint * max(0.25, max(max(diffuseColor.r, diffuseColor.g), diffuseColor.b));",
+            "#include <map_fragment>\ndiffuseColor.rgb = masonTint" +
+              (hairPart || maskPart
+                ? ";"
+                : " * max(0.25, max(max(diffuseColor.r, diffuseColor.g), diffuseColor.b));"),
           );
         };
-        m.customProgramCacheKey = () => `mason-tint-${channel}`;
+        m.customProgramCacheKey = () =>
+          `mason-tint-${channel}-${hairPart || maskPart ? "solid" : "shaded"}`;
       }
       owned.push(m);
       return m;
@@ -131,6 +142,15 @@ export function masonAppearance(asset, hero, assets) {
       ? o.material.map(paint)
       : paint(o.material);
   });
+  if (choice.facialHair === "BeardShort" || choice.facialHair === "BeardLong") {
+    const headName =
+      choice.head === "auto"
+        ? a.sex === "female"
+          ? "Head02_Female"
+          : "Head01_Male"
+        : choice.head;
+    addMasonBeard(model, headName, choice.facialHair, a.hairColor, owned);
+  }
   // Stable semantic anchors keep combat effects independent of model filenames.
   for (const [partName, alias] of [
     [weapon, "Readied melee weapon"],
