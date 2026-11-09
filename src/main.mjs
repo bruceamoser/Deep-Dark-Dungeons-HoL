@@ -464,6 +464,8 @@ async function init() {
       render();
       return;
     }
+    if (["Enter", "Space"].includes(e.code) && e.target.closest?.("button, a"))
+      return;
     if (e.code === "Space") {
       e.preventDefault();
       attempt(() => game.endTurn());

@@ -14,8 +14,13 @@ try {
     await gate;
     await route.continue();
   });
-  await p.goto(process.env.DDD_TEST_URL ?? "http://127.0.0.1:5198", { waitUntil: "domcontentloaded" });
+  await p.goto(process.env.DDD_TEST_URL ?? "http://127.0.0.1:5198", {
+    waitUntil: "domcontentloaded",
+  });
   await expect(p.locator(".loading-seal")).toBeVisible();
+  await expect(p.locator("#enter-game")).toBeDisabled();
+  await p.keyboard.press("Enter");
+  await expect(p.locator("#entry-screen")).toBeVisible();
   await expect(p).toHaveTitle("Four Lanterns Deep");
   await expect(p.locator(".loading-seal")).toHaveAttribute(
     "src",
