@@ -91,7 +91,7 @@ export async function verifyHud(page) {
     page.getByRole("region", { name: "Camp results" }),
   ).toBeVisible();
   await expect(page.locator(".camp-results-log")).toContainText(
-    "finds one batch",
+    "found medicinal materials",
   );
   await expect(page.locator(".camp-results-party")).toContainText("healed");
 

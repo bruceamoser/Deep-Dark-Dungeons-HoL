@@ -46,6 +46,20 @@ export async function verifyTorchModels(page) {
         { lit, uuid },
         { timeout: 10000 },
       );
+      if (lit) {
+        const error = await page.evaluate(() => {
+          const e = window.__ddd.scene.entities.get("hero-0");
+          e.group.updateMatrixWorld(true);
+          return e.torchFlame
+            .getWorldPosition(e.group.position.clone())
+            .distanceTo(
+              e.torchLight.getWorldPosition(e.group.position.clone()),
+            );
+        });
+        expect(error, "Light follows the animated torch flame").toBeLessThan(
+          0.001,
+        );
+      }
       const max = await page.evaluate(() => {
         const m = window.__ddd.scene.entities.get("hero-0").model,
           opacities = [];

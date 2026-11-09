@@ -28,11 +28,24 @@ export class HudArt {
     const extent = Math.max(size.x, size.y, size.z, 0.1);
     const camera = new T.PerspectiveCamera(32, 1, 0.01, 500);
     if (portrait) {
-      center.y = box.min.y + size.y * 0.74;
+      const height = model.userData.height ?? size.y;
+      let head;
+      model.traverse((o) => {
+        if (!head && o.isBone && /^head$/i.test(o.name)) head = o;
+      });
+      if (head) {
+        head.getWorldPosition(center);
+        center.y -= height * 0.12;
+      } else
+        center.set(
+          model.position.x,
+          model.position.y + height * 0.74,
+          model.position.z,
+        );
       camera.position.set(
-        center.x + size.y * 0.12,
-        center.y + size.y * 0.03,
-        center.z + size.y * 1.05,
+        center.x + height * 0.12,
+        center.y + height * 0.03,
+        center.z + height * 0.95,
       );
     } else
       camera.position
@@ -68,9 +81,17 @@ export class HudArt {
     ]);
     if (!this.cache.has(key)) {
       const out = equipmentAppearance(this.assets, hero);
+      const mixer = new T.AnimationMixer(out.model);
+      const idle = out.clips.find((clip) => clip.name === "Idle");
+      if (idle) {
+        mixer.clipAction(idle).play();
+        mixer.update(0.1);
+      }
       try {
         this.cache.set(key, this.capture(out.model, true));
       } finally {
+        mixer.stopAllAction();
+        mixer.uncacheRoot(out.model);
         out.model.userData.dispose?.();
         out.model.traverse((o) => {
           if (o.isSkinnedMesh) o.skeleton.dispose();

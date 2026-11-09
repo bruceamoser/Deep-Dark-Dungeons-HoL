@@ -746,6 +746,7 @@ function action(a, arrived = false) {
         close: closeModal,
         attempt,
         assets: scene.assets,
+        portrait: (hero) => hudArt.portrait(hero),
       });
       break;
     case "shop":

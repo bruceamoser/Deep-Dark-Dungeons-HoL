@@ -209,6 +209,10 @@ export function masonAppearance(asset, hero, assets) {
       unlit.name = "Authored unlit torch";
       lit.name = "Authored lit torch";
       torch.add(unlit, lit);
+      const flameAnchor = new T.Object3D();
+      flameAnchor.name = "Torch flame light anchor";
+      flameAnchor.position.set(0, 0.65, 0);
+      torch.add(flameAnchor);
       torch.traverse((o) => {
         if (o.isMesh) {
           const copy = (m) => {

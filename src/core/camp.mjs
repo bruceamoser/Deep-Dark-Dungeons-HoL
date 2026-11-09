@@ -81,10 +81,15 @@ const products = {
   cook: ["item-food-bundle", 8],
   torches: ["item-lighting-bundle", 6],
 };
-export function campPeriod(party, assignments, period) {
+export function campPeriod(
+  party,
+  assignments,
+  period,
+  order = party.map((h) => h.heroId),
+) {
   // Each of four party slots works once in each half of the eight-hour rota.
   const slot = period % 4,
-    hero = party[slot];
+    hero = party.find((h) => h.heroId === order[slot]);
   const worker = hero?.survival.status === "active" ? hero : null;
   return {
     worker,
@@ -121,6 +126,11 @@ export function validateCamp(campaign) {
     c.partyIds.length > 4 ||
     new Set(c.partyIds).size !== c.partyIds.length ||
     c.partyIds.some((id) => typeof id !== "string" || id.length > 80) ||
+    (c.order !== undefined &&
+      (!Array.isArray(c.order) ||
+        c.order.length !== c.partyIds.length ||
+        new Set(c.order).size !== c.order.length ||
+        c.order.some((id) => !c.partyIds.includes(id)))) ||
     !c.assignments ||
     c.partyIds.some((id) => !Array.isArray(c.assignments[id])) ||
     Object.values(c.assignments).some(
@@ -179,7 +189,7 @@ export const campMethods = {
       c.partyIds.join() === this.party.map((h) => h.heroId).join()
     );
   },
-  campRecoveryHours(assignments) {
+  campRecoveryHours(assignments, order) {
     const need = new Map(
       this.party
         .filter((h) => h.survival.status === "active")
@@ -189,7 +199,7 @@ export const campMethods = {
         ]),
     );
     for (let hour = 0; hour < 96; hour++) {
-      for (const h of campPeriod(this.party, assignments, hour).sleepers)
+      for (const h of campPeriod(this.party, assignments, hour, order).sleepers)
         need.set(h.heroId, Math.max(0, need.get(h.heroId) - 1));
       if (hour >= 7 && [...need.values()].every((n) => n === 0))
         return hour + 1;
@@ -325,12 +335,24 @@ export const campMethods = {
       `${h.name} replenished ${target.item.definition.name.toLowerCase()}.`,
     );
   },
-  startCamp(assignments, total = 8, targets = {}) {
+  startCamp(
+    assignments,
+    total = 8,
+    targets = {},
+    order = this.party.map((h) => h.heroId),
+  ) {
     const reason = this.sleepReason();
     if (this.mode !== "exploration" || reason)
       throw new Error(reason || "Make camp in the dungeon.");
     if (!Number.isSafeInteger(total) || total < 8 || total > 96)
       throw new Error("Choose 8–96 camp hours.");
+    if (
+      !Array.isArray(order) ||
+      order.length !== this.party.length ||
+      new Set(order).size !== order.length ||
+      order.some((id) => !this.party.some((h) => h.heroId === id))
+    )
+      throw new Error("Choose each companion once in camp order.");
     const plan = {};
     for (const h of this.party) {
       const duties = assignments[h.heroId];
@@ -352,6 +374,7 @@ export const campMethods = {
       fierceness: this.locationFierceness().tier,
       partyIds: this.party.map((h) => h.heroId),
       assignments: plan,
+      order: [...order],
       targets: structuredClone(targets),
       total,
       elapsed: 0,
@@ -454,7 +477,7 @@ export const campMethods = {
     if (reason) throw new Error(reason);
     const before = campSnapshot(this);
     const c = this.campaign.camp,
-      period = campPeriod(this.party, c.assignments, c.elapsed),
+      period = campPeriod(this.party, c.assignments, c.elapsed, c.order),
       rng = new Random((c.seed + c.elapsed * 32452843) >>> 0);
     c.status = "paused";
     this.campLight();

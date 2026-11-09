@@ -21,3 +21,5 @@ Keep the logo visible until preload finishes and the player enters explicitly. P
 ## 2026-11-09 — Camp outcomes, not dice
 
 Bruce wants player-facing camp text to report what happened, without dice, probability percentages or roll tiers. Keep the rules internal. Camp supplies use qualitative stock labels; foraging reports found resources or nothing.
+
+Camp planning shows two tasks per companion and expected HP recovery only when injured. Stores show current supplies per character and a possible-gain hint from assigned work, without numerical end-state projections or hourly rota detail.
