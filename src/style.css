@@ -1526,7 +1526,7 @@ p {
   flex-direction: column;
   gap: 7px;
 }
-.creation-steps > button {
+.creation-step-list > button {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1537,11 +1537,11 @@ p {
   padding: 12px 8px;
   color: #91a5a4;
 }
-.creation-steps > button > span {
+.creation-step-list > button > span {
   font: 10px Arial;
   color: #8d7b54;
 }
-.creation-steps > button.chosen {
+.creation-step-list > button.chosen {
   border-color: #ad8f5055;
   background: #b8994b18;
   color: #e5cfa3;
@@ -1994,7 +1994,7 @@ p {
   .creation-content {
     padding: 20px;
   }
-  .creation-steps > button {
+  .creation-step-list > button {
     font-size: 10px;
     gap: 8px;
   }
@@ -5566,5 +5566,50 @@ p {
   .logo-ember {
     animation: none;
     display: none;
+  }
+}
+
+/* Keep creator navigation and reset controls inside the body above its footer. */
+.creator-body {
+  overflow: hidden;
+}
+.creation-steps {
+  min-height: 0;
+  overflow: hidden;
+}
+.creation-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+.creation-step-list > button,
+.creation-steps > .subtle-button {
+  flex-shrink: 0;
+}
+.creation-steps > .subtle-button {
+  margin-top: 5px;
+}
+.creation-summary {
+  overflow: auto;
+}
+.creator-footer {
+  flex-shrink: 0;
+}
+@media (max-height: 800px) {
+  .creation-steps {
+    padding: 16px 12px;
+  }
+  .creation-note {
+    font-size: 10px;
+    line-height: 1.6;
+    padding-top: 10px;
+    margin-top: 8px;
+  }
+  .creation-step-list {
+    gap: 5px;
   }
 }

@@ -51,6 +51,10 @@ export async function verifyRespec(page) {
     await page.locator("#begin-respec").click();
     await page.locator("#resume-recruit").click();
     await expect(page.locator('[data-attribute="brawn"]')).toHaveValue("1");
+    const reset = await page.locator("#blank-hero").boundingBox(),
+      footer = await page.locator(".creator-footer").boundingBox();
+    expect(reset.y + reset.height).toBeLessThanOrEqual(footer.y);
+    await page.screenshot({ path: "test-results/creator-footer-after.png" });
     await page.locator("#blank-hero").click();
     await fillForgeHero(page, { name: before.draft.name });
     await page.locator('[data-step="5"]').click();
@@ -99,7 +103,8 @@ export async function verifyRespec(page) {
       "Full forge respec, cancel/resume draft, inventory/supply/HP/Grit/XP preservation and reload passed.",
     );
   } finally {
-    if(await page.locator("#modal-root > *").count())await page.keyboard.press("Escape");
+    if (await page.locator("#modal-root > *").count())
+      await page.keyboard.press("Escape");
     await page.evaluate((s) => {
       window.__ddd.game.load(s);
       window.__ddd.game.emit("change");
