@@ -56,31 +56,27 @@ export async function verifyInteractions(page) {
         y: ((1 - p.y) * innerHeight) / 2,
       };
     }, id);
-  const clickObject = async (id) => {
+  const clickObject = async (id, inspect = false) => {
     const p = await point(id);
     await page.mouse.move(p.x, p.y);
     await expect(page.locator("#world-hint")).toBeVisible();
     expect(
       await page.evaluate(() => window.__ddd.scene.highlightedInteraction),
     ).toBe(id);
-    await page.mouse.click(p.x, p.y);
-    await expect(page.locator(".world-menu")).toBeVisible();
+    await page.mouse.click(p.x, p.y, { modifiers: inspect ? ["Shift"] : [] });
+    if (inspect) await expect(page.locator(".world-menu")).toBeVisible();
   };
-  await clickObject("coffer:interaction-test");
+  await clickObject("coffer:interaction-test", true);
   await expect(page.locator('[data-world-option="use"]')).toBeDisabled();
   await page.locator('[data-world-option="inspect"]').click();
   await expect(page.locator(".world-description")).toContainText("31 coins");
-  await page.screenshot({ path: "test-results/world-interaction-menu.png" });
-  await page.locator('[data-world-option="approach"]').click();
-  await expect(page.locator('[data-world-option="use"]')).toBeEnabled({
-    timeout: 10000,
-  });
-  expect(
-    await page.evaluate(
-      () => window.__ddd.game.campaign.haul - window.interactionHaul,
-    ),
-  ).toBe(0);
-  await page.locator('[data-world-option="use"]').click();
+  await page.keyboard.press("Escape");
+  await clickObject("coffer:interaction-test");
+  await page.waitForFunction(
+    () => window.__ddd.game.map.chests[0].opened,
+    null,
+    { timeout: 10000 },
+  );
   await expect(page.locator(".world-menu")).toHaveCount(0);
   expect(
     await page.evaluate(
@@ -93,13 +89,11 @@ export async function verifyInteractions(page) {
   await page.keyboard.press("Escape");
   await expect(page.locator(".world-menu")).toHaveCount(0);
   await clickObject("cache:0");
-  if (await page.locator('[data-world-option="approach"]').count()) {
-    await page.locator('[data-world-option="approach"]').click();
-    await expect(page.locator('[data-world-option="use"]')).toBeEnabled({
-      timeout: 10000,
-    });
-  }
-  await page.locator('[data-world-option="use"]').click();
+  await page.waitForFunction(
+    () => window.__ddd.game.campaign.caches[0].recovered,
+    null,
+    { timeout: 10000 },
+  );
   expect(
     await page.evaluate(
       () => window.__ddd.game.campaign.haul - window.interactionHaul,
@@ -109,12 +103,11 @@ export async function verifyInteractions(page) {
     await page.evaluate(() => window.__ddd.scene.interactables.has("cache:0")),
   ).toBe(false);
   await clickObject("stairs:entrance");
-  if (await page.locator('[data-world-option="approach"]').count()) {
-    await page.locator('[data-world-option="approach"]').click();
-    await expect(page.locator('[data-world-option="use"]')).toBeEnabled({
-      timeout: 10000,
-    });
-  }
+  await expect(page.locator('[data-world-option="use"]')).toBeEnabled({
+    timeout: 10000,
+  });
+  expect(await page.evaluate(() => window.__ddd.game.mode)).toBe("exploration");
+  await page.screenshot({ path: "test-results/stair-arrival-dialog.png" });
   await page.locator('[data-world-option="use"]').click();
   await expect(
     page.getByRole("button", { name: "Enter the depths" }),
@@ -126,7 +119,7 @@ export async function verifyInteractions(page) {
     { timeout: 15000 },
   );
   console.log(
-    "Object hover highlight, Inspect/Approach/Collect/Leave menus, empty coffers, lost cache recovery and stairs travel passed.",
+    "Direct chest/cache clicks walk and collect; Shift-click Inspect, empty coffers and stair arrival confirmation passed.",
   );
 }
 if (process.argv[1]?.endsWith("interaction-check.mjs")) {
