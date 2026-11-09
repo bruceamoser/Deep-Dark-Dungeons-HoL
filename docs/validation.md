@@ -438,3 +438,31 @@ and beard physical fit/pose/disposal have focused tests. Actual front/side beard
 previews were inspected on the approved body, and the packaged appearance check
 covers both beard choices, the feminine face, filtered controls and live mask
 colour. Existing carried-gear previews and identity/save checks remain required.
+
+## Four Lanterns Deep playtest patch — v0.8.3
+
+All 33 test files pass. New focused regressions cover fitted beard geometry and
+Mason material/appearance migration, bone-space prop orientation and geometry
+ownership, prepared counter expiry and Reaction budgets, equal-power scheduled
+music overlaps, direct chest/stair interaction and cancellation, shortcut
+validation/persistence/read-only descriptions, and calibrated location camp risk.
+Camp probability checks sample 20,000 seeds at quiet, medium and fierce tiers.
+
+Native checks exercise each affected system through the actual sandboxed Linux
+launcher, including 58 creature adapters and 17 condition layers, gear, supplies,
+healing/wounds, Forge/respec, party management, targeting and independent saves.
+The combined run exposed and repaired a creator-footer obstruction and tooltip
+pointer interception; older native loot expectations now match direct opening.
+The final versioned build repeats the complete native suite before publication.
+
+The illustrated logo was approved by Bruce; generated alpha, four flame glows,
+reduced-motion behavior and 1600px/1100px layouts are checked. Source prompts
+and provenance accompany the workspace assets. Linux and Windows source-build
+installer checks pass after the repository migration.
+
+Repository rename retained its numeric ID, issues, history and released assets.
+Original Atom and Linux update metadata URLs resolve through redirects, and an
+unmodified published v0.8.2 AppImage successfully checks its original live feed.
+Release gates also cover the actual old-to-new installation/save round trip,
+finished licensed Linux/Windows apps, public checksums, live old-client
+discovery/download of v0.8.3, and installed Debian package verification.
