@@ -15,8 +15,39 @@ try {
   });
   await p.goto("http://127.0.0.1:5198", { waitUntil: "domcontentloaded" });
   await expect(p.locator(".loading-seal")).toBeVisible();
+  await expect(p).toHaveTitle("Four Lanterns Deep");
+  await expect(p.locator(".loading-seal")).toHaveAttribute(
+    "src",
+    "/art/four-lanterns-logo-v2.png",
+  );
   await p.evaluate(() => document.fonts.ready);
-  await p.screenshot({ path: "test-results/greyhaven-loading.png" });
+  await p.waitForFunction(
+    () => document.querySelector(".loading-seal").naturalWidth > 0,
+  );
+  await expect(p.locator(".logo-flame-glow")).toHaveCount(4);
+  const opacity = () =>
+    p
+      .locator(".logo-flame-glow")
+      .evaluateAll((es) => es.map((e) => getComputedStyle(e).opacity));
+  const before = await opacity();
+  await p.waitForTimeout(450);
+  expect(await opacity()).not.toEqual(before);
+  await p.emulateMedia({ reducedMotion: "reduce" });
+  expect(
+    await p
+      .locator(".logo-flame-glow")
+      .first()
+      .evaluate((e) => getComputedStyle(e).animationName),
+  ).toBe("none");
+  expect(
+    await p
+      .locator(".logo-ember")
+      .first()
+      .evaluate((e) => getComputedStyle(e).display),
+  ).toBe("none");
+  await p.emulateMedia({ reducedMotion: "no-preference" });
+
+  await p.screenshot({ path: "test-results/four-lanterns-loading.png" });
   release();
   await p.waitForFunction(() => window.__ddd?.town.active, null, {
     timeout: 45000,
@@ -56,7 +87,7 @@ try {
   }
   expect(errors).toEqual([]);
   console.log(
-    "Loading crest, shared vector marks and nonoverlapping 1600/1100 branding layouts passed.",
+    "Generated title logo, four animated flame glows, reduced-motion fallback and nonoverlapping 1600/1100 branding layouts passed.",
   );
 } finally {
   await b.close();

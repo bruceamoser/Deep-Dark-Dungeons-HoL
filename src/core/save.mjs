@@ -30,7 +30,7 @@ export function deserialize(text) {
     !Array.isArray(c.floor.enemies) ||
     !Array.isArray(c.floor.map.rooms)
   )
-    throw new Error("This is not a supported Deep Dark Dungeons save.");
+    throw new Error("This is not a supported Four Lanterns Deep save.");
   for (const h of c.party)
     if (
       typeof h.id !== "string" ||

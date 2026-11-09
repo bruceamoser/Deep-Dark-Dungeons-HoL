@@ -63,8 +63,13 @@ const attempt = (fn) => {
     toast(e.message);
   }
 };
-ui.innerHTML =
-  '<div class="loading-screen"><img class="loading-seal" src="/art/greyhaven-seal.svg" alt="Greyhaven lantern and gate"><div class="eyebrow">HEROES OF LEGEND</div><h1>Deep Dark<br>Dungeons</h1><div class="loading-rule" aria-hidden="true"></div><p role="status">Lighting the way beneath Greyhaven…</p></div>';
+const logoLights = [
+  [33.7, 35.2, 7.2, 2.8],
+  [45.6, 27.9, 4.3, 3.4],
+  [53.9, 33.0, 2.5, 2.6],
+  [59.5, 37.6, 1.5, 3.8],
+];
+ui.innerHTML = `<div class="loading-screen"><div class="loading-logo"><img class="loading-seal" src="/art/four-lanterns-logo-v2.png" alt="Four Lanterns Deep" width="1536" height="1024"><div class="logo-light-effects" aria-hidden="true">${logoLights.map(([x, y, size, duration], i) => `<i class="logo-flame-glow" style="left:${x}%;top:${y}%;--glow-size:${size}%;--flicker-time:${duration}s;--flicker-delay:-${i * 0.73}s"></i>${Array.from({ length: 3 }, (_, j) => `<i class="logo-ember" style="left:${x}%;top:${y}%;--ember-delay:-${i + j * 1.2}s;--ember-time:${3.5 + j * 0.8}s;--ember-drift:${(j - 1) * 16 + 5}px;--ember-rise:${35 + i * 5}px"></i>`).join("")}`).join("")}</div></div><h1 class="loading-accessible-title">Four Lanterns Deep</h1><div class="eyebrow">HEROES OF LEGEND</div><div class="loading-rule" aria-hidden="true"></div><p role="status">Lighting the way beneath Greyhaven…</p></div>`;
 let game,
   scene,
   townView,
@@ -498,7 +503,7 @@ function render() {
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/greyhaven-seal.svg" alt="Greyhaven seal"><span class="brand-title">Deep Dark<br>Dungeons</span><small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2>${town ? "" : fiercenessIndicator(game.locationFierceness())}</div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/four-lanterns-icon-v2.png" alt="Four Lanterns Deep seal"><span class="brand-title">Four Lanterns<br>Deep</span><small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2>${town ? "" : fiercenessIndicator(game.locationFierceness())}</div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
   townView.setActive(town, game.party);
   townView.party.visible = game.mode === "town";
   scene.renderEnabled = !town;
@@ -809,7 +814,7 @@ function worldMenu(id, event) {
 }
 function dialog(title, content, footer = "") {
   closeModal();
-  modal.innerHTML = `<div class="veil"><section class="dialog" role="dialog" aria-modal="true"><header><div class="eyebrow">DEEP DARK DUNGEONS</div><button class="close" aria-label="Close">×</button></header><h2>${title}</h2>${content}<footer>${footer}</footer></section></div>`;
+  modal.innerHTML = `<div class="veil"><section class="dialog" role="dialog" aria-modal="true"><header><div class="eyebrow">FOUR LANTERNS DEEP</div><button class="close" aria-label="Close">×</button></header><h2>${title}</h2>${content}<footer>${footer}</footer></section></div>`;
   modal.querySelector(".close").onclick = () => closeModal();
 }
 function help() {
@@ -1226,7 +1231,7 @@ function drawUpdateStatus() {
       "The update could not finish. You can keep playing and try again later.",
   };
   modal.querySelector("#update-panel").innerHTML =
-    `<div class="update-version"><img src="/art/greyhaven-seal.png" alt=""><div><span class="eyebrow">DEEP DARK DUNGEONS · RELEASES</span><h3>Version ${esc(s.current ?? "—")}</h3>${s.next ? `<small>New release · ${esc(s.next)}</small>` : ""}</div></div><p role="status">${descriptions[s.phase] ?? descriptions.idle}</p>${s.phase === "downloading" ? `<progress max="100" value="${s.percent ?? 0}" aria-label="Update download progress"></progress><p>${Math.floor(s.percent ?? 0)}% downloaded</p>` : ""}${s.error ? `<p class="update-error">${esc(s.error)}</p>` : ""}<p class="update-note">Updates download automatically from our GitHub releases. Installation waits for you; saved journeys and heroes stay on this computer.</p><footer>${s.phase === "unsupported" ? "" : `<button id="check-update" ${busy || s.phase === "downloaded" ? "disabled" : ""}>Check for updates</button>`}${s.phase === "downloaded" ? '<button id="install-update" class="primary">Save & restart to install</button>' : ""}<button id="release-page">View releases</button></footer>`;
+    `<div class="update-version"><img src="/art/four-lanterns-icon-v2.png" alt=""><div><span class="eyebrow">FOUR LANTERNS DEEP · RELEASES</span><h3>Version ${esc(s.current ?? "—")}</h3>${s.next ? `<small>New release · ${esc(s.next)}</small>` : ""}</div></div><p role="status">${descriptions[s.phase] ?? descriptions.idle}</p>${s.phase === "downloading" ? `<progress max="100" value="${s.percent ?? 0}" aria-label="Update download progress"></progress><p>${Math.floor(s.percent ?? 0)}% downloaded</p>` : ""}${s.error ? `<p class="update-error">${esc(s.error)}</p>` : ""}<p class="update-note">Updates download automatically from our GitHub releases. Installation waits for you; saved journeys and heroes stay on this computer.</p><footer>${s.phase === "unsupported" ? "" : `<button id="check-update" ${busy || s.phase === "downloaded" ? "disabled" : ""}>Check for updates</button>`}${s.phase === "downloaded" ? '<button id="install-update" class="primary">Save & restart to install</button>' : ""}<button id="release-page">View releases</button></footer>`;
   const check = modal.querySelector("#check-update");
   if (check)
     check.onclick = () => attempt(() => window.desktop.updates.check());

@@ -170,3 +170,17 @@ CC BY 4.0, selected by Bruce. Source links, hashes and exact files are recorded 
 [the music manifest](music-provenance.json); attribution is bundled and
 visible in Sound. See [soundtrack decisions and licensing](music.md). Procedural
 wind/foley/combat sounds remain game-authored on their own effects bus.
+
+### Four Lanterns Deep illustrated identity (#78)
+
+Bruce approved the generated title artwork on November 8, 2026. The full logo
+is `public/art/four-lanterns-logo-v2.png`; its matching desktop/header emblem is
+`public/art/four-lanterns-icon-v2.png`. Both retain their generated transparency.
+The built-in image generator produced the artwork and derived icon; exact
+prompts and provenance are recorded in `art/source/four-lanterns-logo-provenance.json`.
+Greyhaven retains its separate town crest.
+
+The loading screen animates independent warm glows over all four painted flames
+and a few drifting embers with CSS opacity/transform animations. Lettering stays
+still and readable; reduced-motion preferences disable the motion and embers.
+No runtime image-generation service or network request is needed.

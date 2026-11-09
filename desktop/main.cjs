@@ -17,8 +17,12 @@ const { createUpdates } = require("./updates.cjs");
 const path = require("node:path");
 const { createSaveStorage } = require("./save-storage.cjs");
 const { pathToFileURL } = require("node:url");
-if (process.env.DDD_TEST_USER_DATA)
-  app.setPath("userData", process.env.DDD_TEST_USER_DATA);
+// Keep existing saves across the display-name change.
+app.setPath(
+  "userData",
+  process.env.DDD_TEST_USER_DATA ||
+    path.join(app.getPath("appData"), "deep-dark-dungeons-hol"),
+);
 protocol.registerSchemesAsPrivileged([
   {
     scheme: "dungeon",
@@ -75,8 +79,8 @@ app.whenReady().then(async () => {
     minWidth: 1100,
     minHeight: 720,
     backgroundColor: "#080e13",
-    title: "Deep Dark Dungeons — HoL",
-    icon: path.join(root, "art/greyhaven-seal.png"),
+    title: "Four Lanterns Deep",
+    icon: path.join(root, "art/four-lanterns-icon-v2.png"),
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
