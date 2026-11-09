@@ -5182,3 +5182,61 @@ p {
 .music-credits a {
   color: #c8d8b0;
 }
+
+.area-fierceness {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 16px;
+  color: #c9d2ce;
+}
+.area-fierceness b {
+  color: var(--danger-color);
+}
+.fierceness-scale {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+.fierceness-scale i {
+  display: block;
+  width: 9px;
+  height: 4px;
+  opacity: 0.35;
+  border-radius: 2px;
+}
+.fierceness-scale i.selected {
+  height: 7px;
+  opacity: 1;
+  box-shadow: 0 0 0 1px #e8ead3;
+}
+.camp-danger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 10px;
+  background: #0a151dcc;
+  border: 1px solid #879d7c33;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.camp-danger p {
+  font-size: 11px;
+  margin: 0;
+  color: #bdc8c3;
+}
+@media (max-width: 1000px) {
+  .camp-danger {
+    flex-wrap: wrap;
+  }
+  .area-fierceness {
+    font-size: 10px;
+    gap: 4px;
+  }
+  .fierceness-scale i {
+    width: 6px;
+  }
+}

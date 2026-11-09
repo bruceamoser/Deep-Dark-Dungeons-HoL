@@ -1,3 +1,8 @@
+import {
+  locationFierceness,
+  campProbability,
+  campEncounterRandom,
+} from "./fierceness.mjs";
 import { Random, distance, key, lineOfSight } from "./dungeon.mjs";
 import { ordinaryItem } from "./treasure.mjs";
 import { CREATURE_ROSTER } from "./creature-roster.mjs";
@@ -95,6 +100,10 @@ export function validateCamp(campaign) {
     c.total > 96 ||
     c.elapsed > c.total ||
     !whole(c.seed) ||
+    (c.fierceness !== undefined &&
+      (!Number.isInteger(c.fierceness) ||
+        c.fierceness < 0 ||
+        c.fierceness > 6)) ||
     !whole(c.depth) ||
     !Number.isFinite(c.x) ||
     !Number.isFinite(c.z) ||
@@ -134,6 +143,22 @@ export function validateCamp(campaign) {
     throw new Error("Invalid saved camp schedule.");
 }
 export const campMethods = {
+  locationFierceness(point = this.active) {
+    return locationFierceness(this.map, point);
+  },
+  campDanger(hours = 8, point = this.active) {
+    const danger = this.locationFierceness(point);
+    const warning = this.party.some(
+      (h) =>
+        h.survival.status === "active" &&
+        this.traits(h).some((t) => t.campWarning),
+    );
+    return {
+      ...danger,
+      ...campProbability(danger.tier, hours, warning),
+      warning,
+    };
+  },
   campCanResume() {
     const c = this.campaign.camp;
     return (
@@ -314,6 +339,7 @@ export const campMethods = {
       depth: this.campaign.depth,
       x: this.active.x,
       z: this.active.z,
+      fierceness: this.locationFierceness().tier,
       partyIds: this.party.map((h) => h.heroId),
       assignments: plan,
       targets: structuredClone(targets),
@@ -440,13 +466,9 @@ export const campMethods = {
         c.targets?.[period.worker.heroId]?.[Math.floor(c.elapsed / 4) % 2],
       );
     c.elapsed++;
-    const warning = this.party.some(
-      (h) =>
-        h.survival.status === "active" &&
-        this.traits(h).some((t) => t.campWarning),
-    );
-    if (rng.next() < (warning ? 0.05 : 0.1)) {
-      const enemies = this.campWanderers(rng);
+    const encounterRng = campEncounterRandom(c.seed, c.elapsed - 1);
+    if (encounterRng.next() < this.campDanger(1, c).hourly) {
+      const enemies = this.campWanderers(encounterRng);
       if (enemies.length) {
         const roll = period.worker
           ? this.heroRoll(period.worker, "reason", "attribute", {

@@ -28,6 +28,9 @@ export async function verifyDungeonCamp(page) {
       g.emit("party");
       g.emit("change");
     });
+    await expect(
+      page.locator('.topbar [aria-label="Creatures in the area"]'),
+    ).toBeVisible();
     await expect(page.locator('[data-action="rest"]')).toHaveCount(0);
     await page.locator('[data-action="camp"]').first().click();
     await expect(
@@ -40,6 +43,15 @@ export async function verifyDungeonCamp(page) {
         ) > 3,
     );
     await expect(page.locator("[data-camp-slot]")).toHaveCount(8);
+    await expect(page.locator(".camp-danger")).toContainText(
+      "% interruption chance",
+    );
+    const firstRisk = await page.locator(".camp-danger p").innerText();
+    await page.locator("#camp-length").selectOption("16");
+    expect(await page.locator(".camp-danger p").innerText()).not.toBe(
+      firstRisk,
+    );
+    await page.locator("#camp-length").selectOption("8");
     await expect(
       page.locator('select[data-camp-hero] option[value^="forage-"]'),
     ).toHaveCount(0);

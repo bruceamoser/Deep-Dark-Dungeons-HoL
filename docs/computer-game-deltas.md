@@ -159,7 +159,7 @@ Tactical buffs of the same category use the strongest benefit and strongest pena
 
 Ancestry daily Boons must be prepared on the sheet and consume only on eligible rolls. Human borrowed traits use the same implementation. Oath rerolls replace the result, cost HP and cap all healing/recovery until the next 06:00 dawn. Earth sensing is limited to grounded creatures on connected stone, with a clear attack path still required. Lighting has bright, dim (1 Bane), very dim (2) and barely lit (3) bands. Low-light ratings reduce only lighting Banes. No creature is revealed by the one-square navigation silhouette. Rubble/low passages cost two movement; appropriate ancestry traits remove the terrain surcharge, not a prone occupant surcharge.
 
-Exploration advances ten seconds per committed party step, combat six seconds per completed round, crafting/treatment their listed time. After 16 hours awake, fatigue adds one Bane, increasing every four hours to three (Tallfolk endurance starts at 20). Hunger/thirst each add a Bane; the combined needs penalty caps at three. Once per 24 hours each living active hero automatically uses/checks carried food and water while travelling or after downtime. Water flasks gain a d6 in this adaptation; town refills are free. A final exhausted use still feeds/hydrates the hero. Eight hours of sleep clears fatigue only; partial sleep persists until interrupted by waking activity. Dungeon sleep has a seeded 15% hourly ambush chance from remaining creatures, halved by Nature's Whispers; Reverie gives the company the opening initiative. Sleep never heals wounds or restores Grit.
+Exploration advances ten seconds per committed party step, combat six seconds per completed round, crafting/treatment their listed time. After 16 hours awake, fatigue adds one Bane, increasing every four hours to three (Tallfolk endurance starts at 20). Hunger/thirst each add a Bane; the combined needs penalty caps at three. Once per 24 hours each living active hero automatically uses/checks carried food and water while travelling or after downtime. Water flasks gain a d6 in this adaptation; town refills are free. A final exhausted use still feeds/hydrates the hero. Eight hours of sleep clears fatigue only; partial sleep persists until interrupted by waking activity. The legacy dungeon sleep command is replaced by the duty-based camp planner below; its old flat hourly ambush rule is retired. Sleep never heals wounds or restores Grit.
 
 Torches use lighting-bundle d6 supplies and occupy a free hand. One supply roll occurs per 30 minutes actually burning, preserving partial burn time while automatically doused in lit areas. Lantern in the Palm requires a free hand to cast, then leaves hands free; it expires on changing floors. Holding a torch is included in weapon/gear/potion free-hand checks. Exhausted supplies produce persistent queued notices.
 
@@ -218,7 +218,7 @@ Bruce requested fractional Bulk to make useful expedition supplies practical. Ca
 
 Safe Breath's immediate full-HP recovery is removed from the computer game. Dungeon camp uses at least eight one-hour periods, up to 96 hours. Each of four party slots works twice per repeating eight-hour rota, leaving six hours asleep. Sleep restores 2 HP/hour up to available maximum HP, clears fatigue after six hours asleep, and never restores Grit or removes injuries. Town sleep retains its eight-hour fatigue requirement and also heals 2 HP/hour.
 
-Workers keep watch. Dedicated Guard adds one Boon to a Reason detection check. Each camp hour has a 10% wandering-creature chance, including cleared floors; Leaf Listener halves it, and a sleeping hero's wakeful Reverie retains its warning benefit. A detected approach gives the party the opening; an ambush gives opposition the opening. Completed hours and partial recovery persist through interruption and save/reload. Empty/dead party slots leave their periods unguarded.
+Workers keep watch. Dedicated Guard adds one Boon to a Reason detection check. Location fierceness sets the wandering-creature chance, including cleared floors; Leaf Listener halves the hourly hazard, and a sleeping hero's wakeful Reverie retains its warning benefit. A detected approach gives the party the opening; an ambush gives opposition the opening. Completed hours and partial recovery persist through interruption and save/reload. Empty/dead party slots leave their periods unguarded.
 
 Foraging makes at most three successful material finds per floor, with Knowledge determining success. Arrow/torch work uses shared craft tools and compatible ingredient batches; cooking uses edible ingredients. Water gathering fills carried flasks only within three squares and line of sight of an underground well. Material requirements, output caps and failed duties are shown before the camp starts. Camp duties consume the hour already scheduled; they do not advance the clock twice.
 
@@ -256,3 +256,19 @@ company and show the travel confirmation without changing floors automatically.
 Shift-click retains Inspect and the explicit object menu. Escape or another
 movement order cancels the approach; combat detection clears it immediately.
 Arrival rechecks availability, range and guardian restrictions.
+
+### Location fierceness (#85)
+
+Seven persistent room ratings show **Creatures in the area** from Very low
+through Very high on a green-to-red scale. Base eight-hour interruption chances
+are 2%, 5%, 10%, 18%, 28%, 38%, and 50%. Corridors inherit the nearest room's
+rating with a Low minimum. Entrance rooms start Very low; other room ratings
+are derived from a separate seeded stream and saved without changing floor
+layout. Existing saves receive the same deterministic ratings on first use.
+
+Hourly hazard is `1 - (1 - eightHourRisk)^(1/8)`; longer camps accumulate that
+hazard rather than repeating a full-camp chance each hour. A camp stores its
+location rating. Encounter rolls have their own seeded stream, independent of
+duty random draws, and resume at the saved next hour. The planner displays the
+cumulative remaining risk, including ancestry warnings. Guard still improves
+ambush detection rather than preventing encounters.
