@@ -3,32 +3,39 @@ import { createHash } from "node:crypto";
 import { MUSIC_TRACKS } from "../src/view/music-library.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
-import { GameMusic, musicScene } from "../src/view/music.mjs";
+import { GameMusic, musicScene, crossfadeCurve } from "../src/view/music.mjs";
 const tracks = ["town", "exploration", "battle", "camp"].map((scene) => ({
   scene,
   title: scene,
   url: `/${scene}.mp3`,
 }));
+const settle = () => new Promise((r) => setImmediate(r));
 function fixture({ deferred = false } = {}) {
   const values = new Map(),
-    audios = [];
+    sources = [],
+    loads = [];
   const param = () => ({
     value: 0,
+    events: [],
     setTargetAtTime(v) {
       this.value = v;
     },
-    setValueAtTime(v) {
+    setValueAtTime(v, t) {
+      this.events.push([v, t]);
       this.value = v;
     },
-    linearRampToValueAtTime(v) {
-      this.value = v;
+    linearRampToValueAtTime(v, t) {
+      this.events.push([v, t]);
+    },
+    setValueCurveAtTime(v, t, d) {
+      this.events.push([v, t, d]);
     },
     cancelAndHoldAtTime() {},
   });
   const node = () => ({
     gain: param(),
-    connect(next) {
-      return next;
+    connect(n) {
+      return n;
     },
     disconnect() {
       this.disconnected = true;
@@ -38,104 +45,105 @@ function fixture({ deferred = false } = {}) {
     state: "running",
     currentTime: 2,
     createGain: node,
-    createMediaElementSource: node,
+    createBufferSource() {
+      const n = {
+        ...node(),
+        start(...args) {
+          this.started = args;
+        },
+        stop() {
+          this.stopped = true;
+        },
+      };
+      sources.push(n);
+      return n;
+    },
   };
-  const createAudio = () => {
-    const audio = {
-      currentTime: 0,
-      duration: 60,
-      pause() {
-        this.paused = true;
-      },
-      removeAttribute() {},
-      load() {},
-      play() {
-        this.paused = false;
-        return deferred
-          ? new Promise((resolve, reject) => {
-              this.resolve = resolve;
-              this.reject = reject;
-            })
-          : Promise.resolve();
-      },
-    };
-    audios.push(audio);
-    return audio;
+  const loadBuffer = (url) => {
+    const l = { url };
+    loads.push(l);
+    return deferred
+      ? new Promise((resolve, reject) => Object.assign(l, { resolve, reject }))
+      : Promise.resolve({ duration: 60 });
   };
   const music = new GameMusic({
     tracks,
+    loadBuffer,
     storage: {
       getItem: (k) => values.get(k) ?? null,
       setItem: (k, v) => values.set(k, v),
     },
-    createAudio,
   });
-  return { music, context, audios, values };
+  return { music, context, sources, loads, values };
 }
-const settle = () => new Promise((r) => setImmediate(r));
-test("combat overrides camping; town/defeat return to Greyhaven", () => {
+test("combat overrides camp and town/defeat return to town", () => {
   assert.equal(musicScene("combat", true), "battle");
   assert.equal(musicScene("town", true), "town");
   assert.equal(musicScene("defeat"), "town");
   assert.equal(musicScene("exploration", true), "camp");
-  assert.equal(musicScene("exploration", false), "exploration");
+  assert.equal(musicScene("exploration"), "exploration");
 });
-test("music waits for unlocked context, does not restart on renders, and repeats with a faded second source", async () => {
-  const { music, context, audios } = fixture();
+test("equal-power loop curves preserve energy over the whole overlap", () => {
+  const a = crossfadeCurve(true),
+    b = crossfadeCurve(false);
+  for (let i = 0; i < a.length; i++)
+    assert.ok(Math.abs(a[i] ** 2 + b[i] ** 2 - 1) < 1e-6);
+  assert.equal(a[0], 0);
+  assert.equal(a.at(-1), 1);
+  assert.equal(b[0], 1);
+  assert.ok(b.at(-1) < 1e-6);
+});
+test("loops are scheduled before playback, reuse decoded data and release their nodes", async () => {
+  const { music, context, sources, loads } = fixture();
   music.setScene("town");
-  assert.equal(audios.length, 0);
+  assert.equal(loads.length, 0);
   music.attach(context, {});
   music.sync();
   await settle();
-  assert.equal(music.current.track.scene, "town");
-  for (let i = 0; i < 20; i++) music.setScene("town");
-  assert.equal(audios.length, 1);
   const first = music.current;
-  first.audio.currentTime = 59;
-  first.audio.ontimeupdate();
-  await settle();
-  assert.equal(audios.length, 2);
-  assert.notEqual(music.current, first);
-  assert.equal(music.retiring.size, 1);
+  assert.equal(sources.length, 2);
+  assert.equal(loads.length, 1);
+  assert.equal(sources[1].started[0], sources[0].started[0] + 60 - 1.5);
+  for (let i = 0; i < 20; i++) music.setScene("town");
+  assert.equal(loads.length, 1);
+  context.currentTime = sources[0].started[0] + 60;
+  sources[0].onended();
+  assert.equal(sources.length, 3);
+  assert.equal(first.loops, 1);
+  assert.equal(first.voices.size, 2);
+  assert.equal(sources[2].started[0], sources[1].started[0] + 60 - 1.5);
+  assert.equal(loads.length, 1);
   music.dispose();
-  assert.ok(audios.every((a) => a.paused));
+  assert.ok(sources.slice(1).every((s) => s.stopped));
 });
-test("rapid context changes cannot let a late download replace the newer scene", async () => {
-  const { music, context, audios } = fixture({ deferred: true });
-  music.attach(context, {});
-  music.setScene("town");
-  music.setScene("battle");
-  audios[1].resolve();
-  await settle();
-  audios[0].resolve();
-  await settle();
-  assert.equal(music.current.track.scene, "battle");
-  assert.equal(audios[0].paused, true);
-  music.dispose();
-});
-test("music volume/mute persist independently and a failed track leaves the game usable", async () => {
-  const { music, context, audios, values } = fixture({ deferred: true });
+test("late downloads cannot replace newer scenes; failures allow retry and volume persists", async () => {
+  const { music, context, loads, values } = fixture({ deferred: true });
   music.attach(context, {});
   music.setVolume(0.3);
   music.setMuted(true);
   assert.equal(music.bus.gain.value, 0);
   assert.equal(values.get("ddd.music.volume"), "0.3");
-  assert.equal(values.get("ddd.music.muted"), "true");
   music.setMuted(false);
   assert.equal(music.bus.gain.value, 0.3);
+  music.setScene("town");
   music.setScene("battle");
-  audios[0].reject(new Error("missing file"));
+  loads[1].resolve({ duration: 60 });
+  await settle();
+  loads[0].resolve({ duration: 60 });
+  await settle();
+  assert.equal(music.current.track.scene, "battle");
+  music.setScene("camp");
+  loads[2].reject(new Error("missing"));
   await settle();
   assert.ok(music.status().error);
   assert.equal(music.pending, null);
   music.sync();
-  audios[1].resolve();
+  loads[3].resolve({ duration: 60 });
   await settle();
   assert.equal(music.status().error, null);
-  assert.equal(music.current.track.scene, "battle");
+  assert.equal(music.current.track.scene, "camp");
   music.dispose();
 });
-
 test("every approved context bundles the exact credited original recording", () => {
   const manifest = JSON.parse(
     fs.readFileSync(new URL("../docs/music-provenance.json", import.meta.url)),

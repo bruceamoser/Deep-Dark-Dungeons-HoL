@@ -37,3 +37,13 @@ gameplay available and can retry through the sound controls.
 Master volume/mute control the whole mix. Music volume/mute and effects volume
 persist independently. Original wind, footsteps, impacts and spell synthesis are
 retained on the effects bus. No online streaming service is required at runtime.
+
+### Continuous loops (#82)
+
+Recordings decode before playback. Two sources overlap for 1.5 seconds using
+equal-power curves scheduled on the Web Audio clock. The next source is already
+scheduled before its predecessor starts; native audio-element looping and late
+timeupdate handoffs are no longer used. Scene changes fade on a separate track
+gain and cancelled downloads cannot replace the current scene. The original
+credited MP3 files are unchanged. Native verification measures output across
+the actual Battle Loop ending and beginning, with sound effects muted.

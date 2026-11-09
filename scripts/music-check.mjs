@@ -21,8 +21,8 @@ export async function verifyMusic(page) {
         return (
           m.current?.track.scene === scene &&
           !m.pending &&
-          m.current.audio.readyState >= 2 &&
-          m.current.audio.currentTime > 0.2
+          m.current.voices.size >= 2 &&
+          m.position() > 0.2
         );
       },
       scene,
@@ -48,16 +48,14 @@ export async function verifyMusic(page) {
     });
     await waitTrack("town");
     await expect.poll(energy, { timeout: 10000 }).toBeGreaterThan(0.0001);
-    const timeBefore = await page.evaluate(
-      () => window.__ddd.sound.music.current.audio.currentTime,
+    const timeBefore = await page.evaluate(() =>
+      window.__ddd.sound.music.position(),
     );
     await page.evaluate(() => {
       for (let i = 0; i < 8; i++) window.__ddd.game.emit("change");
     });
     expect(
-      await page.evaluate(
-        () => window.__ddd.sound.music.current.audio.currentTime,
-      ),
+      await page.evaluate(() => window.__ddd.sound.music.position()),
     ).toBeGreaterThanOrEqual(timeBefore);
     await page.locator("#music-muted").check();
     await page.waitForTimeout(600);
@@ -109,21 +107,36 @@ export async function verifyMusic(page) {
       g.detect(g.enemies);
     });
     await waitTrack("battle");
-    // Exercise a real end-of-track handoff without waiting a full song.
-    const original = await page.evaluate(() => {
-      const m = window.__ddd.sound.music;
-      m.current.audio.currentTime = m.current.audio.duration - 1;
-      return m.sequence;
+    // Play the actual last three seconds and measure through the scheduled seam.
+    await page.evaluate(async () => {
+      const s = window.__ddd.sound;
+      s.setEffectsVolume(0);
+      const m = s.music;
+      await m.start(m.current.track, {
+        offset: m.current.duration - 3,
+        fade: 0.1,
+      });
     });
-    await expect
-      .poll(() => page.evaluate(() => window.__ddd.sound.music.sequence), {
-        timeout: 10000,
-      })
-      .toBeGreaterThan(original);
-    await page.waitForTimeout(2200);
+    await page.waitForTimeout(1700);
+    const levels = [];
+    for (let i = 0; i < 35; i++) {
+      levels.push(await energy());
+      await page.waitForTimeout(50);
+    }
+    expect(Math.max(...levels)).toBeGreaterThan(0.001);
+    // No sustained silence while the outgoing recording meets the incoming one.
+    let silent = 0;
+    for (const level of levels) {
+      silent = level < 0.0001 ? silent + 1 : 0;
+      expect(silent).toBeLessThan(3);
+    }
+    expect(
+      await page.evaluate(() => window.__ddd.sound.music.current.loops),
+    ).toBeGreaterThan(0);
     expect(
       await page.evaluate(() => window.__ddd.sound.music.retiring.size),
     ).toBe(0);
+    await page.evaluate(() => window.__ddd.sound.setEffectsVolume(1));
     if (await page.locator(".dungeon-camp").count())
       await page.keyboard.press("Escape");
     await page.evaluate((saved) => {
