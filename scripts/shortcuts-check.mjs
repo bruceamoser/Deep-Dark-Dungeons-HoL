@@ -66,6 +66,7 @@ export async function verifyShortcuts(page) {
     const slot = page.locator(".action-hotspot").first();
     await slot.hover();
     await expect(slot.getByRole("tooltip")).toContainText("physical damage");
+    await expect(slot.getByRole("tooltip")).toHaveCSS("pointer-events", "none");
     await expect(slot.getByRole("tooltip")).toContainText(
       "Requires a readied melee weapon",
     );

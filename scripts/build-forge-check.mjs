@@ -88,8 +88,9 @@ export async function verifyBuildForge(page) {
       };
     }, pile);
     await page.mouse.click(point.x, point.y);
-    await expect(page.locator(".world-menu")).toContainText("Ground cache");
-    await page.locator('[data-world-option="use"]').click();
+    await expect(
+      page.getByRole("dialog", { name: "Recovered treasures" }),
+    ).toBeVisible();
     await page.locator(`[data-take="${moved}"]`).click();
     await page.locator("[data-finish]").click();
     expect(
