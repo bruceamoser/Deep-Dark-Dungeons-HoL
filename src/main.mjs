@@ -176,7 +176,7 @@ async function init() {
         : null;
       hint.hidden = !item && !creature;
       if (item) {
-        hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO INTERACT</small>`;
+        hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO APPROACH · SHIFT-CLICK TO INSPECT</small>`;
         hint.style.left = `${Math.min(innerWidth - 250, event.clientX + 18)}px`;
         hint.style.top = `${Math.max(12, Math.min(innerHeight - 75, event.clientY - 65))}px`;
       } else if (creature && !modal.children.length) {

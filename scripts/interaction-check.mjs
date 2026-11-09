@@ -63,7 +63,9 @@ export async function verifyInteractions(page) {
     expect(
       await page.evaluate(() => window.__ddd.scene.highlightedInteraction),
     ).toBe(id);
-    await page.mouse.click(p.x, p.y, { modifiers: inspect ? ["Shift"] : [] });
+    if (inspect) await page.keyboard.down("Shift");
+    await page.mouse.click(p.x, p.y);
+    if (inspect) await page.keyboard.up("Shift");
     if (inspect) await expect(page.locator(".world-menu")).toBeVisible();
   };
   await clickObject("coffer:interaction-test", true);
