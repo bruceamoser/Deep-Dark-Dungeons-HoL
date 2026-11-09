@@ -1,3 +1,4 @@
+import { fitMasonGrips } from "./mason-grips.mjs";
 import { addMasonBeard } from "./mason-beards.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
@@ -44,6 +45,15 @@ export function masonAppearance(asset, hero, assets) {
   const visual = masonWeaponVisual(melee ?? ranged, choice);
   const weapon = melee ? visual.model : null;
   const bow = ranged ? visual.model : null;
+  const profile = ranged
+    ? "Bow"
+    : melee?.hands === 2
+      ? "TwoHand"
+      : melee && !shield
+        ? "Single"
+        : !melee
+          ? "Unarmed"
+          : "";
   const selected = new Set([
     body,
     choice.head === "auto"
@@ -141,6 +151,12 @@ export function masonAppearance(asset, hero, assets) {
     o.material = Array.isArray(o.material)
       ? o.material.map(paint)
       : paint(o.material);
+  });
+  fitMasonGrips(asset, model, {
+    weapon,
+    shield: shield ? choice.shield : null,
+    profile,
+    owned,
   });
   if (choice.facialHair === "BeardShort" || choice.facialHair === "BeardLong") {
     const headName =
@@ -275,15 +291,6 @@ export function masonAppearance(asset, hero, assets) {
   };
   model.userData.setConcealed(!!hero.concealed);
   model.userData.dispose = () => owned.forEach((m) => m.dispose());
-  const profile = ranged
-    ? "Bow"
-    : melee?.hands === 2
-      ? "TwoHand"
-      : melee && !shield
-        ? "Single"
-        : !melee
-          ? "Unarmed"
-          : "";
   const aliases = {
     Idle: `${profile}Idle`,
     Walking_A: `${profile}Walk`,
