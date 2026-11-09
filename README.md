@@ -4,7 +4,7 @@ A four-hero expedition beneath Greyhaven, built on Heroes of Legend.
 
 A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, based on **Heroes of Legend**. Target: Linux and Windows, stylized dark fantasy, a persistent town, repeated descents and recoverable expedition losses.
 
-**v0.6 — The Discipline Forge.** A playable dungeon RPG with game-owned character progression over HoL combat and survival mechanics. Eighteen discipline origins, 72 circular paths and 33 combined techniques share one persistent DP budget. See [implementation coverage and limitations](docs/implementation-status.md). The high-end presentation target remains an acceptance requirement.
+**v0.8.4 — Welcome, Greyhaven HUD and camp results.** A playable dungeon RPG with game-owned character progression over HoL combat and survival mechanics. Eighteen discipline origins, 72 circular paths and 33 combined techniques share one persistent DP budget. See [implementation coverage and limitations](docs/implementation-status.md). The high-end presentation target remains an acceptance requirement.
 
 ## Working across local computers
 
@@ -12,9 +12,9 @@ Shared Codex instructions live in [AGENTS.md](AGENTS.md). Say **“Pull the repo
 
 ## Download and install
 
-Get the [latest release](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Four-Lanterns-Deep-0.8.3-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
+Get the [latest release](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Four-Lanterns-Deep-0.8.4-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
 
-The installed game checks for updates on startup and every four hours, downloads them in the background, and offers **Updates → Save & restart to install**. Your active journey is saved before installation. Updates preserve save files. v0.6 requires new journeys; earlier-edition runs remain on disk but cannot be loaded by this edition. Source-checkout/unpacked builds link to the release installer instead of self-updating. See [release details and publishing](docs/releases.md).
+The installed game checks for updates on startup and every four hours, downloads them in the background, and offers **Settings → Updates → Save & restart to install**. Your active journey is saved before installation. Updates preserve save files. v0.6–v0.8.4 Forge journeys continue; pre-v0.6 runs remain preserved separately and require an older edition. Source-checkout/unpacked builds link to the release installer instead of self-updating. See [release details and publishing](docs/releases.md).
 
 ## Run from source
 
