@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifyRoster(page) {
   const before = await page.evaluate(() => {
@@ -64,8 +64,7 @@ export async function verifyRoster(page) {
   await page.keyboard.press("Escape");
   await settingsAction(page, "Save");
   await page.reload();
-  await page.waitForFunction(() => window.__ddd);
-  await enterGame(page);
+  await waitForGame(page);
   expect(
     await page.evaluate(() => window.__ddd.game.livingRoster().length),
   ).toBe(before.living + 1);
@@ -111,8 +110,7 @@ export async function verifyRoster(page) {
   await page.keyboard.press("Escape");
   await settingsAction(page, "Save");
   await page.reload();
-  await page.waitForFunction(() => window.__ddd);
-  await enterGame(page);
+  await waitForGame(page);
   expect(
     await page.evaluate(() => window.__ddd.game.campaign.fallenHeroes.length),
   ).toBe(1);
@@ -135,8 +133,7 @@ if (process.argv[1]?.endsWith("roster-check.mjs")) {
   page.on("pageerror", (e) => errors.push(e.message));
   try {
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     await verifyRoster(page);
     expect(errors).toEqual([]);
   } catch (e) {

@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { fileURLToPath } from "node:url";
 import { chromium, expect } from "@playwright/test";
 export async function verifyExpeditionUI(page) {
@@ -204,8 +204,7 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
       (e) => (errors.push(e.message), console.error("PAGE ERROR", e.message)),
     );
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     await verifyExpeditionUI(page);
     expect(errors).toEqual([]);
   } finally {

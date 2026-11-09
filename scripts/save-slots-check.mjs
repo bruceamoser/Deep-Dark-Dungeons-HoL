@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifySaveSlots(page) {
   await page.evaluate(() => {
@@ -49,8 +49,7 @@ export async function verifySaveSlots(page) {
   expect(await page.evaluate(() => window.__ddd.game.suspended)).toBe(true);
   // A restart after exit opens the library, rather than entering a run.
   await page.reload();
-  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-  await enterGame(page);
+  await waitForGame(page);
   await expect(page.locator(".runs-window")).toBeVisible();
   await page.locator(`[data-run="${checkpoint}"]`).click();
   await page.locator("#load-run").click();
@@ -163,8 +162,7 @@ export async function verifySaveSlots(page) {
   await expect(page.locator("[data-run]")).toHaveCount(2);
   expect(await page.evaluate(() => window.__ddd.library.active)).toBe(null);
   await page.reload();
-  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-  await enterGame(page);
+  await waitForGame(page);
   await expect(page.locator(".runs-window")).toBeVisible();
   await expect(page.locator(`[data-run="${battle}"]`)).toHaveCount(0);
   await page.locator(`[data-run="${original}"]`).click();
@@ -186,8 +184,7 @@ if (process.argv[1]?.endsWith("save-slots-check.mjs")) {
   page.on("pageerror", (e) => errors.push(e.message));
   try {
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-    await enterGame(page);
+    await waitForGame(page);
     await verifySaveSlots(page);
     expect(errors).toEqual([]);
   } catch (e) {

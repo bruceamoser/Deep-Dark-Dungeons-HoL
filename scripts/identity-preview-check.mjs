@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifyGameplayIdentity(page) {
   const saved = await page.evaluate(() =>
@@ -29,8 +29,7 @@ export async function verifyGameplayIdentity(page) {
     await settingsAction(page, "Save");
     await expect(page.locator("#toast")).toContainText("saved");
     await page.reload();
-    await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-    await enterGame(page);
+    await waitForGame(page);
     expect(
       await page.evaluate(
         () => window.__ddd.game.active.draft.appearance.mason.headpiece,
@@ -191,8 +190,7 @@ if (process.argv[1]?.endsWith("identity-preview-check.mjs")) {
   page.on("pageerror", (e) => errors.push(e.message));
   try {
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-    await enterGame(page);
+    await waitForGame(page);
     await verifyGameplayIdentity(page);
     expect(errors).toEqual([]);
   } catch (e) {

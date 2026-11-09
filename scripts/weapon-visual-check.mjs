@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { magicItem } from "../src/core/treasure.mjs";
 export async function verifyWeaponVisuals(page) {
@@ -56,8 +56,7 @@ export async function verifyWeaponVisuals(page) {
       await page.keyboard.press("Escape");
       await settingsAction(page, "Save");
       await page.reload();
-      await page.waitForFunction(() => window.__ddd);
-      await enterGame(page);
+      await waitForGame(page);
       expect(await visual()).toEqual(before);
     }
     console.log(

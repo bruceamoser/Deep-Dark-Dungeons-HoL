@@ -1,4 +1,4 @@
-import { enterGame } from "./ui-session.mjs";
+import { waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 
 export async function verifyInteractions(page) {
@@ -135,8 +135,7 @@ if (process.argv[1]?.endsWith("interaction-check.mjs")) {
   page.on("pageerror", (e) => errors.push(e.message));
   try {
     await page.goto("http://127.0.0.1:5198");
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     await page.getByRole("button", { name: "The Depths" }).click();
     await page.waitForFunction(
       () => window.__ddd.game.mode === "exploration",

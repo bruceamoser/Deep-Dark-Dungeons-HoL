@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 export async function verifyShortcuts(page) {
   const saved = await page.evaluate(() =>
@@ -93,8 +93,7 @@ export async function verifyShortcuts(page) {
     });
     await settingsAction(page, "Save");
     await page.reload();
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     expect(
       await page.evaluate(() => window.__ddd.game.party[0].favorites),
     ).toEqual(["power-forge-strike", "ability-defend"]);

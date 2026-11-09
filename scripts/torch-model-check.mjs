@@ -1,4 +1,4 @@
-import { enterGame } from "./ui-session.mjs";
+import { waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { fileURLToPath } from "node:url";
 export async function verifyTorchModels(page) {
@@ -134,8 +134,7 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
       errors = [];
     p.on("pageerror", (e) => errors.push(e.message));
     await p.goto("http://127.0.0.1:5198");
-    await p.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-    await enterGame(p);
+    await waitForGame(p);
     await verifyTorchModels(p);
     expect(errors).toEqual([]);
   } finally {

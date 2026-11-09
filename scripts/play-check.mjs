@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { verifyForgeUI } from "./forge-ui-check.mjs";
 import { verifyCharacter } from "./character-check.mjs";
@@ -15,8 +15,7 @@ try {
   page.setDefaultTimeout(30000);
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(process.env.DDD_TEST_URL ?? "http://127.0.0.1:5198");
-  await page.waitForFunction(() => window.__ddd);
-  await enterGame(page);
+  await waitForGame(page);
   await verifyForgeUI(page);
   await verifyCharacter(page);
   await page.getByRole("button", { name: "The Depths" }).click();

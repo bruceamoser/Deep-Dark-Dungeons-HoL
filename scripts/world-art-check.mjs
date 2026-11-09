@@ -1,4 +1,4 @@
-import { enterGame } from "./ui-session.mjs";
+import { waitForGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 await fs.mkdir("test-results", { recursive: true });
@@ -13,8 +13,7 @@ try {
     errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("http://127.0.0.1:5198");
-  await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-  await enterGame(page);
+  await waitForGame(page);
   await page.keyboard.press("d");
   await page.waitForFunction(
     () => window.__ddd.game.mode === "exploration",

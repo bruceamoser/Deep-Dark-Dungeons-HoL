@@ -1,4 +1,4 @@
-import { enterGame } from "./ui-session.mjs";
+import { waitForGame } from "./ui-session.mjs";
 // Exercise an unmodified published app's original GitHub feed after repo rename.
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -34,8 +34,7 @@ try {
     log.match(/DevTools listening on (ws:\/\/\S+)/)[1],
   );
   const page = browser.contexts()[0].pages()[0];
-  await page.waitForFunction(() => window.__ddd, null, { timeout: 60000 });
-  await enterGame(page);
+  await waitForGame(page);
   await page.evaluate(() => window.desktop.updates.check());
   const status = await page.evaluate(() => window.desktop.updates.status());
   expect(["current", "downloaded"]).toContain(status.phase);

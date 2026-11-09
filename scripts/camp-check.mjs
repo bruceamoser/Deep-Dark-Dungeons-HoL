@@ -1,4 +1,4 @@
-import { enterGame, settingsAction } from "./ui-session.mjs";
+import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 export async function verifyDungeonCamp(page) {
   const saved = await page.evaluate(() =>
@@ -113,8 +113,7 @@ export async function verifyDungeonCamp(page) {
     await page.keyboard.press("Escape");
     await settingsAction(page, "Save");
     await page.reload();
-    await page.waitForFunction(() => window.__ddd);
-    await enterGame(page);
+    await waitForGame(page);
     expect(
       await page.evaluate(() => window.__ddd.game.campaign.camp.elapsed),
     ).toBe(1);
