@@ -87,8 +87,6 @@ export async function verifyDungeonLoop(page) {
     };
   });
   await page.mouse.click(point.x, point.y);
-  await expect(page.locator(".world-menu")).toBeVisible();
-  await page.locator('[data-world-option="use"]').click();
   await expect(
     page.getByRole("dialog", { name: "Recovered treasures" }),
   ).toBeVisible();

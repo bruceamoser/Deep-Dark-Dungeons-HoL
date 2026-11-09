@@ -5613,3 +5613,11 @@ p {
     gap: 5px;
   }
 }
+
+/* Hover help describes actions without becoming a surface that blocks play. */
+.action-tooltip {
+  pointer-events: none;
+}
+.action-tooltip .action-detail-note {
+  margin: 3px 0;
+}
