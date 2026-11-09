@@ -32,7 +32,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }}
+          # QA fixes may qualify immutable installers without rebuilding them.
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -42,6 +43,8 @@ jobs:
         shell: bash
         run: |
           node -e 'if (!/^v\d+\.\d+\.\d+$/.test(process.env.RELEASE_TAG) || "v" + require("./package.json").version !== process.env.RELEASE_TAG) process.exit(1)'
+          git fetch --depth=1 origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+          git diff --exit-code "$RELEASE_TAG" -- package.json package-lock.json desktop scripts/after-pack.cjs public/art/four-lanterns-icon-v2.png
           gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>{if(s.trim()!=="true")process.exit(1)})'
           gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --dir release
           cd release
@@ -83,6 +86,7 @@ jobs:
         if: always()
         with:
           name: staged-release-smoke-${{ runner.os }}-${{ matrix.package }}
+          overwrite: true
           path: test-results/release-*.png
   publish:
     needs: verify
