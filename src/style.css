@@ -5240,3 +5240,219 @@ p {
     width: 6px;
   }
 }
+.action-hotspot {
+  position: relative;
+  display: flex;
+  outline: none;
+}
+.action-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 35;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  max-width: 75vw;
+  max-height: 55vh;
+  overflow: auto;
+  padding: 15px 17px;
+  border: 1px solid #c6a268;
+  background: #101d24fa;
+  box-shadow: 0 10px 36px #000b;
+  color: #d4dfd7;
+  font: 12px/1.5 Arial;
+}
+.action-hotspot:hover .action-tooltip,
+.action-hotspot:focus-within .action-tooltip {
+  display: block;
+}
+.action-tooltip:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  height: 8px;
+  left: 0;
+  right: 0;
+}
+.action-tooltip strong {
+  display: block;
+  color: #e5c58c;
+  font: 16px Cinzel;
+  margin-bottom: 8px;
+}
+.action-tooltip p {
+  margin: 7px 0;
+}
+.action-detail-note {
+  color: #aebfba;
+  font-size: 11px;
+}
+.action-availability {
+  border-top: 1px solid #52625b;
+  padding-top: 8px;
+  color: #98c8a3;
+}
+.action-availability.unavailable {
+  color: #e2ad86;
+}
+.action-hotspot:focus-visible {
+  box-shadow: 0 0 0 2px #dec489;
+}
+.shortcut-window {
+  width: min(1100px, 95vw);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: #101e25f5;
+  border: 1px solid #a58d5c;
+  box-shadow: 0 24px 90px #000b;
+}
+.shortcut-window > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 22px 25px 14px;
+  border-bottom: 1px solid #7c75503b;
+}
+.shortcut-window h2 {
+  font-size: 25px;
+  margin: 6px 0;
+}
+.shortcut-window p {
+  font: 12px/1.5 Arial;
+  color: #acbeb9;
+  margin: 7px 0;
+}
+.shortcut-window > .sheet-party {
+  padding: 10px 25px;
+}
+.shortcut-layout {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 22px;
+  min-height: 0;
+  padding: 4px 25px 20px;
+  overflow: auto;
+}
+.shortcut-slots ol {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+.shortcut-slots li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid #82927840;
+  background: #16282b;
+  min-height: 48px;
+}
+.shortcut-slots li > span {
+  flex: 1;
+  font-size: 12px;
+}
+.shortcut-slots li > small {
+  font: 10px Arial;
+  color: #83958b;
+}
+.shortcut-slots kbd {
+  border: 1px solid #ac9462;
+  padding: 5px 8px;
+  color: #e7ce91;
+}
+.shortcut-slots li button {
+  padding: 3px 6px;
+  font: 13px Arial;
+}
+.shortcut-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.shortcut-search label {
+  display: grid;
+  gap: 5px;
+  font: 11px Arial;
+  color: #b9c9bf;
+}
+.shortcut-search label:first-child {
+  flex: 1;
+}
+.shortcut-search input,
+.shortcut-search select {
+  width: 100%;
+  padding: 9px;
+  background: #0c181f;
+  color: #e0e1ca;
+  border: 1px solid #617065;
+}
+.shortcut-cards {
+  max-height: 52vh;
+  overflow: auto;
+  padding-right: 6px;
+  display: grid;
+  gap: 8px;
+}
+.shortcut-cards article {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #64796555;
+  background: #192a30;
+}
+.shortcut-cards details {
+  flex: 1;
+  min-width: 0;
+}
+.shortcut-cards summary {
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 0;
+  color: #e1d5b4;
+}
+.shortcut-cards article > button {
+  padding: 6px 10px;
+  font: 11px Arial;
+}
+.shortcut-window > footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 13px 25px;
+  border-top: 1px solid #7c75503b;
+}
+@media (max-width: 800px) {
+  .shortcut-layout {
+    grid-template-columns: 1fr;
+  }
+  .shortcut-cards {
+    max-height: 35vh;
+  }
+  .shortcut-window h2 {
+    font-size: 19px;
+  }
+  .shortcut-slots ol {
+    grid-template-columns: 1fr 1fr;
+  }
+  .shortcut-slots li > span {
+    font-size: 10px;
+  }
+}
+
+.favorite-bar > button[data-action="shortcuts"] {
+  width: 76px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  font: 11px Arial;
+}
+.favorite-bar > button[data-action="shortcuts"] small {
+  font-size: 8px;
+  color: #98aa9f;
+}

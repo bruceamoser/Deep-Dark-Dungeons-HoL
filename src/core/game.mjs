@@ -1122,6 +1122,19 @@ export class Game {
     );
     this.emit("change");
   }
+  setShortcuts(index, ids) {
+    const h = this.party[index];
+    if (
+      !h ||
+      !Array.isArray(ids) ||
+      ids.length > 8 ||
+      new Set(ids).size !== ids.length ||
+      ids.some((id) => !this.availableActions(h).some((c) => c.id === id))
+    )
+      throw new Error("Choose up to eight distinct learned actions.");
+    h.favorites = [...ids];
+    this.emit("change");
+  }
   favorite(index, id) {
     const h = this.party[index];
     if (!this.availableActions(h).some((c) => c.id === id))

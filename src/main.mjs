@@ -1,3 +1,5 @@
+import { shortcutManager } from "./ui/shortcuts.mjs";
+import { SHORTCUT_KEYS, actionDetailsHTML } from "./ui/action-details.mjs";
 import { fiercenessIndicator } from "./ui/fierceness.mjs";
 import { forgeScreen } from "./ui/forge.mjs";
 import { forgeCatalog } from "./core/forge.mjs";
@@ -401,8 +403,13 @@ async function init() {
     }
     if (e.key.toLowerCase() === "c" || e.key.toLowerCase() === "i")
       sheet(game.selected);
-    if (/^[5-9]$/.test(e.key)) {
-      const id = game.active.favorites?.[+e.key - 5];
+    if (
+      SHORTCUT_KEYS.includes(e.key) &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey
+    ) {
+      const id = game.active.favorites?.[SHORTCUT_KEYS.indexOf(e.key)];
       if (id) activateAction(id);
     }
     if (/^[1-4]$/.test(e.key)) attempt(() => game.select(Number(e.key) - 1));
@@ -597,6 +604,9 @@ function action(a, arrived = false) {
       break;
     case "formation":
       formation();
+      break;
+    case "shortcuts":
+      openShortcuts(game.selected);
       break;
     case "actions":
       actions();
@@ -886,6 +896,18 @@ function workshop(slot, development = false, respec = false) {
     },
   });
 }
+function openShortcuts(index) {
+  cancelTargeting();
+  closeModal();
+  shortcutManager({
+    root: modal,
+    game,
+    index,
+    close: closeModal,
+    attempt,
+    character: sheet,
+  });
+}
 function sheet(index) {
   cancelTargeting();
   closeModal();
@@ -898,6 +920,7 @@ function sheet(index) {
     close: closeModal,
     attempt,
     activate: activateAction,
+    shortcuts: openShortcuts,
     train: (i) => workshop(i, true),
     respec: respecHero,
     treat: (i, woundId, method) => {
@@ -1019,11 +1042,11 @@ function combatDock() {
     cards
       .map((c, i) => {
         const reason = game.actionReason(c.id);
-        return `<button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" title="${esc(c.name)} · ${(game.powerSpec(c.id) ?? ABILITIES[c.id]).category}${reason ? " · " + esc(reason) : ""}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${i + 5 <= 9 ? i + 5 : ""}</small>${icon(actionIcon(c.id))}${abilityType(c, game.powerSpec(c.id) ?? ABILITIES[c.id])}<span>${esc(c.name)}</span></button>`;
+        return `<div class="action-hotspot" tabindex="${reason ? "0" : "-1"}" aria-describedby="action-tip-${i}"><button class="hot-action ${selectedAction?.id === c.id ? "active" : ""}" data-hot-action="${c.id}" aria-describedby="action-tip-${i}" aria-label="${esc(c.name)}" ${reason ? "disabled" : ""}><small>${SHORTCUT_KEYS[i]}</small>${icon(actionIcon(c.id))}${abilityType(c, game.powerSpec(c.id) ?? ABILITIES[c.id])}<span>${esc(c.name)}</span></button><div class="action-tooltip" id="action-tip-${i}" role="tooltip">${actionDetailsHTML(game, c.id, h)}</div></div>`;
       })
       .join("") ||
     '<span class="cost-note">Pin favorite actions from Character → Abilities.</span>'
-  }</div><div class="quick-gear"><span>READY / STOW</span>${h.preview.inventory.items
+  }${button("Shortcuts", "shortcuts", "MANAGE BAR")}</div><div class="quick-gear"><span>READY / STOW</span>${h.preview.inventory.items
     .filter((i) => i.carried && i.hands)
     .map(
       (i) =>
