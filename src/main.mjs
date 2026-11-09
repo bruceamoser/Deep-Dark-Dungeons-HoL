@@ -1078,10 +1078,11 @@ function formation() {
     });
 }
 function reaction({ hero, enemy }) {
+  const counter = game.activeTactics(hero).find((t) => t.effects.riposte);
   dialog(
     "Shield Block?",
-    `<p>${esc(enemy.name)} attacks ${esc(hero.name)}. Spend their Reaction for +1 defense Boon until their next turn. This stacks with Defend.</p>`,
-    '<button id="skip-block">Keep Reaction</button><button id="use-block" class="primary">Shield Block</button>',
+    `<p>${esc(enemy.name)} attacks ${esc(hero.name)}. Spend their Reaction for +1 defense Boon until their next turn. This stacks with Defend.</p>${counter ? "<p><b>Counterattack prepared.</b> Keep your Reaction to strike back automatically after an adjacent physical attack, if still able to fight. Shield Block spends that Reaction.</p>" : ""}`,
+    `<button id="skip-block" ${counter ? 'class="primary"' : ""}>${counter ? "Keep Reaction for counter" : "Keep Reaction"}</button><button id="use-block" ${counter ? "" : 'class="primary"'}>Shield Block</button>`,
   );
   modal.querySelector(".close").onclick = () =>
     toast("Resolve the pending attack to continue.");
