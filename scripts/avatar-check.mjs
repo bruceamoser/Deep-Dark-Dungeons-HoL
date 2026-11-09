@@ -1,3 +1,4 @@
+import { enterGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 const gear = process.argv.includes("--gear");
 const browser = await chromium.launch({
@@ -16,6 +17,7 @@ try {
   });
   await page.goto("http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await enterGame(page);
   const results = await page.evaluate(async (gear) => {
     const T = await import("/node_modules/three/build/three.module.js");
     const { equipmentAppearance } = await import("/src/view/appearance.mjs");

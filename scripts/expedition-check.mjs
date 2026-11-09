@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { fileURLToPath } from "node:url";
 import { chromium, expect } from "@playwright/test";
 export async function verifyExpeditionUI(page) {
@@ -35,7 +36,7 @@ export async function verifyExpeditionUI(page) {
     ).toBeVisible();
   }
   await page.keyboard.press("Escape");
-  await page.locator('[data-action="camp"]').first().click();
+  await settingsAction(page, "Camp & supplies");
   await expect(
     page.getByRole("dialog", { name: "Camp and supplies" }),
   ).toBeVisible();
@@ -204,6 +205,7 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
     );
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     await verifyExpeditionUI(page);
     expect(errors).toEqual([]);
   } finally {

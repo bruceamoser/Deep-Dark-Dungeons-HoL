@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { magicItem } from "../src/core/treasure.mjs";
 export async function verifyWeaponVisuals(page) {
@@ -53,9 +54,10 @@ export async function verifyWeaponVisuals(page) {
       expect(await visual()).toEqual(before);
       await page.screenshot({ path: `test-results/fixed-magic-${base}.png` });
       await page.keyboard.press("Escape");
-      await page.getByRole("button", { name: "Save", exact: true }).click();
+      await settingsAction(page, "Save");
       await page.reload();
       await page.waitForFunction(() => window.__ddd);
+      await enterGame(page);
       expect(await visual()).toEqual(before);
     }
     console.log(

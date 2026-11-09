@@ -1,10 +1,12 @@
-# Four Lanterns Deep — implementation status v0.8.3
+# Four Lanterns Deep — implementation status v0.8.4
 
 Playable desktop dungeon RPG with game-owned powers over HoL's base mechanics.
 The production presentation target remains; the current modular art and balance
 are a playable iteration rather than final production assets.
 
 ## Playable
+
+- Persistent preloaded title screen with click/Enter/Space entry; illustrated town directory and live-equipment portraits; centered clock and consolidated settings; Tab map/J journal toggles; saved actual-result camp reports and town recovery summaries.
 
 - Four Lanterns Deep identity, approved illustrated logo and animated loading lanterns/embers with reduced-motion support. Canonical GitHub repo and new update feed use Four-Lanterns-Deep; old installed updater URLs redirect successfully. Installed identifiers and save paths remain compatible.
 - Two distinct moustaches, fitted short/long beards, one tintable Mask and curated fantasy accessories. Pose-specific sword/hammer/shield grips, prepared counter duration/Reaction guidance, audio-clock music overlaps, direct chest/stair approach and per-hero shortcut management with detailed nonblocking hover/focus help.

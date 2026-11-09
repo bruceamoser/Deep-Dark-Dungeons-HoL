@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { learn, drafts } from "../tests/forge-fixture.mjs";
 export async function chooseNode(page, id, { buy = true } = {}) {
@@ -176,9 +177,10 @@ export async function verifyForgeUI(page) {
     await page.screenshot({ path: "test-results/forge-ballistics.png" });
     await page.locator(".forge-close").click();
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
     await page.reload();
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     expect(
       await page.evaluate(
         () => window.__ddd.game.party[0].preview.forge.profiles.ranged,

@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { verifyForgeUI } from "./forge-ui-check.mjs";
 import { verifyCharacter } from "./character-check.mjs";
@@ -15,16 +16,17 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(process.env.DDD_TEST_URL ?? "http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd);
+  await enterGame(page);
   await verifyForgeUI(page);
   await verifyCharacter(page);
-  await page.getByRole("button", { name: "Enter the depths" }).click();
+  await page.getByRole("button", { name: "The Depths" }).click();
   await page.waitForFunction(
     () => window.__ddd.game.mode === "exploration",
     null,
     { timeout: 15000 },
   );
   await verifyCombatUX(page);
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await settingsAction(page, "Save");
   expect(
     JSON.parse(
       await page.evaluate(() =>

@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifyRecovery(page) {
   const notices = async () => {
@@ -71,10 +72,11 @@ export async function verifyRecovery(page) {
   ).toBe(1);
   await page.screenshot({ path: "test-results/treated-wound.png" });
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await settingsAction(page, "Save");
   await expect(page.locator("#toast")).toContainText("saved");
   await page.reload();
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await enterGame(page);
   expect(
     await page.evaluate(
       () => window.__ddd.game.party[0].wounds[0].treatment.completed,
@@ -97,6 +99,7 @@ if (process.argv[1]?.endsWith("recovery-check.mjs")) {
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     await verifyRecovery(page);
     expect(errors).toEqual([]);
   } finally {

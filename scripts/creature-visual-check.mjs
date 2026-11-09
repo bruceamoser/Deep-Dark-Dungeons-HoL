@@ -1,3 +1,4 @@
+import { enterGame } from "./ui-session.mjs";
 import { CREATURE_ROSTER } from "../src/core/creature-roster.mjs";
 import { CONDITION_VISUALS } from "../src/view/conditions.mjs";
 import { expect, chromium } from "@playwright/test";
@@ -143,6 +144,7 @@ if (import.meta.url === new URL(process.argv[1], "file:").href) {
     p.on("pageerror", (e) => errors.push(e.message));
     await p.goto("http://127.0.0.1:5198");
     await p.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+    await enterGame(p);
     await verifyCreatureVisuals(p);
     expect(errors).toEqual([]);
   } finally {

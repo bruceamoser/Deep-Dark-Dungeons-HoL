@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
@@ -14,6 +15,7 @@ export async function verifyTownNavigation(p) {
     await p.waitForFunction(() => window.__ddd?.town.active, null, {
       timeout: 45000,
     });
+    await enterGame(p);
     await p.waitForTimeout(800);
     const roads = await p.evaluate(() => {
       const mesh =
@@ -35,16 +37,31 @@ export async function verifyTownNavigation(p) {
       angle: window.__ddd.town.angle,
       quaternion: window.__ddd.town.camera.quaternion.toArray(),
     }));
-    await p.mouse.move(
-      canvas.x + canvas.width * 0.6,
-      canvas.y + canvas.height * 0.6,
-    );
+    const dragPoint = await p.evaluate(() => {
+      const canvas = document.querySelector("#town-world"),
+        r = canvas.getBoundingClientRect();
+      for (const fy of [0.35, 0.5, 0.65, 0.25])
+        for (const fx of [0.4, 0.6, 0.75]) {
+          const x = r.x + r.width * fx,
+            y = r.y + r.height * fy;
+          if (
+            document.elementFromPoint(x, y) === canvas &&
+            document.elementFromPoint(x + 75, y) === canvas
+          )
+            return { x, y };
+        }
+      throw new Error(
+        "No unobstructed town canvas drag point: " +
+          document
+            .elementFromPoint(r.x + r.width * 0.6, r.y + r.height * 0.6)
+            ?.outerHTML.slice(0, 300) +
+          " / " +
+          document.body.className,
+      );
+    });
+    await p.mouse.move(dragPoint.x, dragPoint.y);
     await p.mouse.down({ button: "middle" });
-    await p.mouse.move(
-      canvas.x + canvas.width * 0.6 + 75,
-      canvas.y + canvas.height * 0.6,
-      { steps: 8 },
-    );
+    await p.mouse.move(dragPoint.x + 75, dragPoint.y, { steps: 8 });
     await p.mouse.up({ button: "middle" });
     const cameraAfter = await p.evaluate(() => ({
       angle: window.__ddd.town.angle,
@@ -80,13 +97,13 @@ export async function verifyTownNavigation(p) {
     ).toBeGreaterThan(10);
     await expect(p.locator(".market-window")).toBeVisible({ timeout: 12000 });
     await p.keyboard.press("Escape");
-    await p.keyboard.press("r");
+    await p.keyboard.press("i");
     await p.keyboard.press("Escape");
     expect(
       await p.evaluate(() => window.__ddd.town.navigator.destination),
     ).toBe(null);
-    await p.keyboard.press("w");
-    await p.keyboard.press("v");
+    await p.keyboard.press("s");
+    await p.keyboard.press("h");
     await expect(p.locator(".character-window")).toBeVisible({
       timeout: 12000,
     });
@@ -103,11 +120,12 @@ export async function verifyTownNavigation(p) {
       })),
     );
     expect(after).toEqual(before);
-    await p.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(p, "Save");
     await p.reload();
     await p.waitForFunction(() => window.__ddd?.town.active, null, {
       timeout: 45000,
     });
+    await enterGame(p);
     expect(
       await p.evaluate(() =>
         window.__ddd.game.party.map((h) => ({
@@ -199,6 +217,7 @@ if (
     const p = await b.newPage({ viewport: { width: 1600, height: 1000 } });
     await p.goto("http://127.0.0.1:5198");
     await p.waitForFunction(() => window.__ddd);
+    await enterGame(p);
     await verifyTownNavigation(p);
   } finally {
     await b.close();

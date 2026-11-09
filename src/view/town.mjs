@@ -193,9 +193,9 @@ export class TownView {
       const name = document.createElement("span");
       name.textContent = service.place;
       const key = document.createElement("kbd");
-      key.textContent = service.hotkey.toUpperCase();
+      key.textContent = `${service.shift ? "⇧" : ""}${service.hotkey.toUpperCase()}`;
       pin.append(name, key);
-      pin.title = `${service.detail} · Walk here (${service.hotkey.toUpperCase()})`;
+      pin.title = `${service.detail} · Walk here (${service.shift ? "⇧" : ""}${service.hotkey.toUpperCase()})`;
       pin.onclick = () => {
         if (this.canInteract()) this.navigate(service.id);
       };

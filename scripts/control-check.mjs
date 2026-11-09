@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { fileURLToPath } from "node:url";
 export async function verifyControls(page) {
@@ -111,7 +112,7 @@ export async function verifyControls(page) {
   expect(await page.evaluate(() => window.__ddd.game.campaign.formation)).toBe(
     "column",
   );
-  await page.locator('[data-action="sound"]').click();
+  await settingsAction(page, "Sound");
   await page.locator("#volume").fill("0.8");
   await page.getByRole("button", { name: "Play test sound" }).click();
   const audio = await page.evaluate(() => {
@@ -280,7 +281,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
-    await page.getByRole("button", { name: "Enter the depths" }).click();
+    await enterGame(page);
+    await page.getByRole("button", { name: "The Depths" }).click();
     await page.waitForFunction(
       () => window.__ddd.game.mode === "exploration",
       null,

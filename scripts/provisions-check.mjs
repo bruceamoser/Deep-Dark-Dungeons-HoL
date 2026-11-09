@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 export async function verifyProvisions(page) {
   const saved = await page.evaluate(() =>
@@ -60,7 +61,7 @@ export async function verifyProvisions(page) {
         );
       }),
     ).toBe(4);
-    await page.locator('[data-action="camp"]').first().click();
+    await settingsAction(page, "Camp & supplies");
     await expect(page.locator(".camp-stocks article").nth(1)).toContainText(
       "Next: 40 steps",
     );
@@ -69,9 +70,10 @@ export async function verifyProvisions(page) {
     );
     await page.screenshot({ path: "test-results/provisions-countdown.png" });
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
     await page.reload();
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     expect(
       await page.evaluate(
         () => window.__ddd.game.campaign.provisionTrail.steps,

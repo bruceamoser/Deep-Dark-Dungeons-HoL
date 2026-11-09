@@ -1,3 +1,5 @@
+import { verifyHud } from "./hud-check.mjs";
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { verifyShortcuts } from "./shortcuts-check.mjs";
 import { verifyReactiveCounters } from "./reactive-counter-check.mjs";
 import { verifyMusic } from "./music-check.mjs";
@@ -92,6 +94,7 @@ try {
   const errors = [];
   w.on("pageerror", (e) => errors.push(e.message));
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
+  await enterGame(w);
   await expect(w).toHaveTitle("Four Lanterns Deep");
   await expect(w.locator(".brand-title")).toContainText("Four Lanterns");
   await w.screenshot({ path: "test-results/native-town.png" });
@@ -99,6 +102,7 @@ try {
   const runCheck = async (fn) => {
     if (!selectedChecks || selectedChecks.includes(fn.name)) await fn(w);
   };
+  await runCheck(verifyHud);
   await runCheck(verifyMusic);
   await runCheck(verifyTownNavigation);
   await runCheck(verifyRespec);
@@ -119,13 +123,13 @@ try {
   await runCheck(verifyRoster);
   // Snapshot-based UI fixtures intentionally leave the simulation paused.
   await w.evaluate(() => window.__ddd.game.resume());
-  await w.getByRole("button", { name: "Enter the depths" }).click();
+  await w.getByRole("button", { name: "The Depths" }).click();
   await w.waitForFunction(
     () => window.__ddd.game.mode === "exploration",
     null,
     { timeout: 15000 },
   );
-  await w.getByRole("button", { name: "Save", exact: true }).click();
+  await settingsAction(w, "Save");
   await expect(w.locator("#toast")).toContainText("saved");
   const stored = await w.evaluate(() => window.desktop.load());
   expect(JSON.parse(stored).campaign.party).toHaveLength(4);

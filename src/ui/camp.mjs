@@ -1,3 +1,4 @@
+import { campSnapshot } from "../core/camp-report.mjs";
 import { fiercenessIndicator } from "./fierceness.mjs";
 import { SUPPLY_CADENCE } from "../core/provisions.mjs";
 import { CAMP_SUPPLIES } from "../core/camp-medical.mjs";
@@ -10,16 +11,48 @@ export function campScreen(props) {
     : dungeonCampScreen(props);
 }
 import { esc, icon } from "./icons.mjs";
+function campResults(host, report, done, elapsed) {
+  host.innerHTML = `<section class="camp-results" role="region" aria-label="Camp results"><span class="eyebrow">THE WATCH IS OVER · ${elapsed} HOURS</span><h3>Camp results</h3><div class="camp-results-party">${report.start
+    .map((h) => {
+      const end = report.end.find((p) => p.id === h.id) ?? h;
+      const materials = Object.entries(end.materials ?? {})
+        .map(([id, n]) => ({
+          name: id.replace("recipe-", "").replaceAll("-", " "),
+          delta: n - (h.materials?.[id] ?? 0),
+        }))
+        .filter((p) => p.delta);
+      return `<article><strong>${esc(h.name)}</strong><p>HP ${h.hp} → ${end.hp} · ${report.healed[h.id] ?? Math.max(0, end.hp - h.hp)} healed</p><p>Untreated wounds ${h.wounds} → ${end.wounds}</p>${materials.map((m) => `<p>${m.delta > 0 ? "+" : ""}${m.delta} ${esc(m.name)} material batches remaining</p>`).join("")}</article>`;
+    })
+    .join(
+      "",
+    )}</div><h4>Foraging, production & care</h4><div class="camp-results-log">${report.events.length ? report.events.map((e) => `<p>${esc(e)}</p>`).join("") : "<p>The company rested. No work was recorded.</p>"}</div><p class="cost-note">Results include completed hours. Produced supplies may have been used during camp. Grit is not restored.</p><footer><button class="primary" id="camp-results-done">Continue</button></footer></section>`;
+  host.querySelector("#camp-results-done").onclick = done;
+}
 function townCampScreen({ root, game, close, attempt }) {
   let timer = null,
     sleeping = false,
-    hours = 0;
+    hours = 0,
+    sleepReport = null;
   const stop = () => {
     clearTimeout(timer);
     timer = null;
     sleeping = false;
   };
   function draw() {
+    if (sleepReport?.end && !sleepReport.acknowledged) {
+      root.innerHTML =
+        '<div class="veil"><section class="camp-window" role="dialog" aria-label="Camp results"></section></div>';
+      campResults(
+        root.querySelector(".camp-window"),
+        sleepReport,
+        () => {
+          sleepReport.acknowledged = true;
+          draw();
+        },
+        hours,
+      );
+      return;
+    }
     const clock = game.clock(),
       reason = game.sleepReason();
     root.innerHTML = `<div class="veil"><section class="camp-window" role="dialog" aria-label="Camp and supplies"><header><div><span class="eyebrow">${game.mode === "town" ? "THE WAYFARER’S REST" : "A CIRCLE OF LIGHT"}</span><h2>Camp & supplies</h2></div><button class="icon-button close" aria-label="Close">${icon("close")}</button></header><div class="camp-clock"><b>Day ${clock.day}</b><span>${String(clock.hour).padStart(2, "0")}:${String(clock.minute).padStart(2, "0")}</span><small>Time passes while travelling, fighting and working.</small></div><div class="camp-party">${game.party
@@ -75,6 +108,7 @@ function townCampScreen({ root, game, close, attempt }) {
         return;
       }
       sleeping = true;
+      sleepReport = { start: campSnapshot(game), healed: {}, events: [] };
       hours = 0;
       draw();
       const next = () => {
@@ -93,7 +127,10 @@ function townCampScreen({ root, game, close, attempt }) {
             game.resume();
             return;
           }
-          if (hours >= 8) stop();
+          if (hours >= 8) {
+            stop();
+            sleepReport.end = campSnapshot(game);
+          }
           draw();
           if (sleeping) timer = setTimeout(next, 650);
         });
@@ -148,6 +185,20 @@ function dungeonCampScreen({ root, game, close, attempt, assets }) {
   }
   function draw() {
     if (disposed) return;
+    const report = game.campaign.camp?.report;
+    if (report?.end && !report.acknowledged) {
+      campResults(
+        host,
+        report,
+        () => {
+          report.acknowledged = true;
+          game.emit("change");
+          draw();
+        },
+        game.campaign.camp.elapsed,
+      );
+      return;
+    }
     const camp = game.campCanResume() ? game.campaign.camp : null;
     const last = game.campaign.camp;
     const elapsed =

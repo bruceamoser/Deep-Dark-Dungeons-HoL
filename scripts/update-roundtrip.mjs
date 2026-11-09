@@ -1,3 +1,4 @@
+import { settingsAction, enterGame } from "./ui-session.mjs";
 // Real Linux update, checksum rejection, save-failure protection and restart.
 // Usage: node scripts/update-roundtrip.mjs old.AppImage new.AppImage
 // Both must contain the updater. The first image must have an older version.
@@ -136,7 +137,8 @@ try {
   );
   const page = browser.contexts()[0].pages()[0];
   await page.waitForFunction(() => window.__ddd);
-  await page.getByRole("button", { name: "Updates", exact: true }).click();
+  await enterGame(page);
+  await settingsAction(page, "Updates");
   await page.evaluate(() => window.desktop.updates.check());
   await expect
     .poll(() => page.evaluate(() => window.desktop.updates.status()), {
@@ -190,6 +192,7 @@ try {
   restarted = await chromium.connectOverCDP(endpoint);
   const newPage = restarted.contexts()[0].pages()[0];
   await newPage.waitForFunction(() => window.__ddd);
+  await enterGame(newPage);
   expect(
     (await newPage.evaluate(() => window.desktop.updates.status())).current,
   ).toBe(version);

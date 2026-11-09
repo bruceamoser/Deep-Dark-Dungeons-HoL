@@ -1,3 +1,4 @@
+import { enterGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 await fs.mkdir("test-results", { recursive: true });
@@ -18,6 +19,7 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await enterGame(page);
   await page.locator('[data-hero="0"]').click();
   await page.waitForTimeout(500);
   await page.screenshot({ path: "test-results/kaykit-sheet.png" });

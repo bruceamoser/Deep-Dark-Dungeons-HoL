@@ -42,7 +42,8 @@ test("cancel stops travel and redirection keeps the current party position", () 
 
 test("service hotkeys and destinations are unique and known", () => {
   assert.equal(
-    new Set(TOWN_SERVICES.map((s) => s.hotkey)).size,
+    new Set(TOWN_SERVICES.map((s) => `${s.shift ? "Shift+" : ""}${s.hotkey}`))
+      .size,
     TOWN_SERVICES.length,
   );
   for (const s of TOWN_SERVICES) assert.ok(TOWN_NODES[s.node]);

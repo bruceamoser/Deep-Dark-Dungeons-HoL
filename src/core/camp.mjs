@@ -1,4 +1,10 @@
 import {
+  campSnapshot,
+  newCampReport,
+  finishCampReport,
+  validateCampReport,
+} from "./camp-report.mjs";
+import {
   locationFierceness,
   campProbability,
   campEncounterRandom,
@@ -91,6 +97,7 @@ export function campPeriod(party, assignments, period) {
 export function validateCamp(campaign) {
   const c = campaign.camp;
   if (!c) return;
+  validateCampReport(c.report);
   const whole = (n) => Number.isSafeInteger(n) && n >= 0;
   if (
     !c ||
@@ -250,6 +257,7 @@ export const campMethods = {
       : "No compatible material batch carried by the company.";
   },
   campEvent(text) {
+    this.campaign.camp.report?.events.push(text);
     this.campaign.camp.events.push(text);
     this.campaign.camp.events = this.campaign.camp.events.slice(-100);
     this.note(text);
@@ -353,6 +361,7 @@ export const campMethods = {
       ),
       status: "paused",
       events: [],
+      report: newCampReport(this),
     };
     this.campLight();
     this.campEvent(
@@ -396,6 +405,7 @@ export const campMethods = {
   breakCamp() {
     const c = this.campaign.camp;
     if (c && c.status !== "complete") c.status = "abandoned";
+    finishCampReport(this);
     this.map.lights =
       this.map.lights?.filter((l) => l.id !== "camp-fire") ?? [];
     this.syncTorches();
@@ -440,6 +450,7 @@ export const campMethods = {
       throw new Error("No camp at this location to continue.");
     const reason = this.sleepReason();
     if (reason) throw new Error(reason);
+    const before = campSnapshot(this);
     const c = this.campaign.camp,
       period = campPeriod(this.party, c.assignments, c.elapsed),
       rng = new Random((c.seed + c.elapsed * 32452843) >>> 0);
@@ -465,6 +476,12 @@ export const campMethods = {
         rng,
         c.targets?.[period.worker.heroId]?.[Math.floor(c.elapsed / 4) % 2],
       );
+    if (c.report)
+      for (const h of this.party) {
+        const hp = before.find((p) => p.id === h.heroId)?.hp ?? h.survival.hp;
+        c.report.healed[h.heroId] =
+          (c.report.healed[h.heroId] ?? 0) + Math.max(0, h.survival.hp - hp);
+      }
     c.elapsed++;
     const encounterRng = campEncounterRandom(c.seed, c.elapsed - 1);
     if (encounterRng.next() < this.campDanger(1, c).hourly) {
