@@ -593,7 +593,7 @@ function render() {
   if (town) {
     ui.innerHTML =
       header +
-      `<aside class="town-directory"><div class="town-masthead"><img src="/art/greyhaven-seal.svg" alt=""><div><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Greyhaven</h1></div></div><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><img class="building-icon" src="${hudArt.building(s)}" alt=""><span class="destination-copy"><span>${esc(s.label)}</span><small>${esc(s.detail)}</small></span><kbd>${s.shift ? "⇧" : ""}${s.hotkey.toUpperCase()}</kbd></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><img class="party-portrait" src="${hudArt.portrait(h)}" alt="${esc(h.name)}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<aside class="town-directory"><div class="town-masthead"><img src="/art/greyhaven-seal.svg" alt=""><div><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Greyhaven</h1></div></div><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><img class="building-icon" src="${hudArt.building(s)}" alt=""><span class="destination-copy"><span>${esc(s.label)}</span><small>${esc(s.detail)}${s.id === "descend" && c.returnPassage ? `<em class="return-depth">Return to depth ${c.returnPassage.depth}</em>` : ""}</small></span><kbd>${s.shift ? "⇧" : ""}${s.hotkey.toUpperCase()}</kbd></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><img class="party-portrait" src="${hudArt.portrait(h)}" alt="${esc(h.name)}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
   } else {
     const combat = game.mode === "combat",
       b = game.budget;
@@ -668,14 +668,6 @@ function bind() {
   );
 }
 function action(a, arrived = false) {
-  if (
-    game.mode === "town" &&
-    !arrived &&
-    TOWN_SERVICES.some((s) => s.id === a)
-  ) {
-    townView.navigate(a);
-    return;
-  }
   if (a === "settings") {
     settingsOpen = !settingsOpen;
     render();
@@ -684,6 +676,14 @@ function action(a, arrived = false) {
   if (settingsOpen) {
     settingsOpen = false;
     render();
+  }
+  if (
+    game.mode === "town" &&
+    !arrived &&
+    TOWN_SERVICES.some((s) => s.id === a)
+  ) {
+    townView.navigate(a);
+    return;
   }
   switch (a) {
     case "toggle-map":

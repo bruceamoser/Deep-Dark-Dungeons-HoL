@@ -11,7 +11,7 @@ export async function verifyRoster(page) {
       living: g.livingRoster().length,
     };
   });
-  await page.getByRole("button", { name: "Lantern Inn" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.keyboard.press("Escape");
   const created = await page.evaluate(() => {
     const g = window.__ddd.game,
@@ -19,7 +19,7 @@ export async function verifyRoster(page) {
     d.name = "Neris of the Lantern";
     return g.createRecruit(d).heroId;
   });
-  await page.getByRole("button", { name: "Lantern Inn" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.locator(`[data-roster-hero="${created}"]`).click();
   const recruitId = await page.evaluate(
     () =>
@@ -70,7 +70,7 @@ export async function verifyRoster(page) {
     await page.evaluate(() => window.__ddd.game.livingRoster().length),
   ).toBe(before.living + 1);
   expect(await page.evaluate(() => window.__ddd.game.party[0].xp)).toBe(400);
-  await page.getByRole("button", { name: "Lantern Inn" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.locator(`[data-roster-hero="${recruitId}"]`).click();
   await page.locator('[data-roster-slot="1"]').click();
   await page.locator("#assign-roster-hero").click();

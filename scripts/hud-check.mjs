@@ -44,12 +44,15 @@ export async function verifyHud(page) {
     () => window.__ddd.town.navigator.destination?.id === "fallen",
   );
   await page.keyboard.press("Escape");
+  await settingsAction(page, "Camp & supplies");
+  await expect(page.locator("#settings-menu")).toBeHidden();
+  await page.keyboard.press("Escape");
   await settingsAction(page, "Save");
   await expect(page.locator("#settings-menu")).toBeHidden();
   await page.screenshot({ path: "test-results/hud-greyhaven.png" });
   await page.evaluate(() => {
     const g = window.__ddd.game;
-    window.hudBefore = g.snapshot();
+    window.hudBefore = structuredClone(g.snapshot());
     g.descend();
     g.enemies = [];
     g.encounter = null;

@@ -5829,3 +5829,9 @@ p {
     margin-top: 8px;
   }
 }
+.return-depth {
+  display: block;
+  color: var(--gold);
+  font-style: normal;
+  margin-top: 4px;
+}

@@ -174,7 +174,7 @@ export async function verifyDungeonLoop(page) {
   await expect(page.locator('[data-action="descend"]')).toContainText(
     "Return to depth 5",
   );
-  await page.locator('[data-action="save"]').click();
+  await settingsAction(page, "Save");
   await expect(page.locator("#toast")).toContainText("saved");
   await page.reload();
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });

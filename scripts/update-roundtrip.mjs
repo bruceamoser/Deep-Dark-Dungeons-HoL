@@ -234,7 +234,7 @@ try {
   ).toBe(sha512);
   await newPage.screenshot({ path: "test-results/update-restarted.png" });
   console.log(
-    `Real AppImage download, verified replacement, restart into ${version}, with earlier save preservation and fresh-rule journey creation passed.`,
+    `Real AppImage download, verified replacement, restart into ${version}, ${oldSave.version === 1 ? "with earlier save preservation and fresh-rule journey creation" : "with the compatible journey and vault balance preserved"} passed.`,
   );
 } catch (error) {
   console.error(log, await fs.readFile(restartLog, "utf8").catch(() => ""));

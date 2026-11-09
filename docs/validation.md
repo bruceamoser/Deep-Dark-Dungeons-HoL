@@ -466,3 +466,11 @@ unmodified published v0.8.2 AppImage successfully checks its original live feed.
 Release gates also cover the actual old-to-new installation/save round trip,
 finished licensed Linux/Windows apps, public checksums, live old-client
 discovery/download of v0.8.3, and installed Debian package verification.
+
+## v0.8.4 — welcome, town HUD and camp results
+
+Author review, not independent review. 271 automated tests pass, including persisted camp results, actual accumulated healing/material outcomes, early-ending reports, corrupt report rejection and unique modifier-aware destination shortcuts. Branding checks pass at 1600/1100 widths with reduced-motion behavior and a disabled entry gate during preloading.
+
+Dedicated browser and packaged Linux HUD checks exercise click/Space/Enter entry, prepared models/music/fonts/shaders, rendered building icons and equipped-hero portraits, the centered clock/settings menu, town hotkeys, Tab/J toggles across renders and completed camp reports across reopening. Reports and compact layouts were visually inspected. The existing native regression exercises music, town paths/camera, creation/respec/Forge, gear, supplies, camping, combat, world interactions, creature/condition effects, wounds and independent saves. Renamed building controls are selected by destination ID because both the menu and the town pin now say Lantern Inn. Fixtures clone campaign snapshots to keep supply warnings isolated.
+
+A real v0.8.3 → v0.8.4 AppImage round trip passed checksum rejection, save-failure blocking, verified replacement/restart and compatible vault/save preservation, using isolated data. Linux launch checks run through the user session and aa-exec unconfined, preserving seccomp and the space-free runtime. Source-only and finished licensed installers remain separate qualification gates; Windows execution is verified by its installed-release CI flow before staged publication. The startup gate's longer preload uses an explicit 90-second test timeout and reports any actual initialization error.

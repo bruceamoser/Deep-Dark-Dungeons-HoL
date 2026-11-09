@@ -20,6 +20,10 @@ Audio's gain interpolation needs polling rather than an immediate full-gain asse
 
 Four verified Dungeon Mason runtime files were extracted privately from the locally installed licensed v0.8.3 app into ignored `public/assets/licensed/`. Purchased source remains private. Local launcher tests run through the user systemd manager to avoid the agent's NoNewPrivs restriction, then use aa-exec unconfined and retain sandboxing.
 
+## Qualification follow-up
+
+The native passes also cover the complete creator/reserves/Hall, combat/camera, supplies/crafting and the recall loop. The Depths retains its return-floor badge after recall. Dedicated final HUD and remaining creature/save checks are used after updating old menu assertions. A real 0.8.3 → 0.8.4 update passed all checksum/save/restart gates. Source-only Windows CI exposed a startup timeout; the diagnostic now waits explicitly up to 90 seconds and reports initialization failures. Installer publication remains gated on passing source/finished builds.
+
 ## Next / sync
 
 Finish qualification and release if any gate is outstanding; otherwise await Bruce's next task. This checkpoint is pushed on its named branch; verify the remote/PR before treating it as synced. See `current.md` and repository history for the exact checkpoint.

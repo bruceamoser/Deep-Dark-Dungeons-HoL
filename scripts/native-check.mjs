@@ -93,7 +93,7 @@ try {
   const w = context.pages()[0] ?? (await context.waitForEvent("page"));
   const errors = [];
   w.on("pageerror", (e) => errors.push(e.message));
-  await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
+  await w.waitForFunction(() => window.__ddd, null, { timeout: 90000 });
   await enterGame(w);
   await expect(w).toHaveTitle("Four Lanterns Deep");
   await expect(w.locator(".brand-title")).toContainText("Four Lanterns");

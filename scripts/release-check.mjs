@@ -60,7 +60,18 @@ try {
   const page = browser.contexts()[0].pages()[0];
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.waitForFunction(() => window.__ddd, { timeout: 60000 });
+  await page.waitForFunction(
+    () =>
+      window.__ddd ||
+      document.querySelector(".loading-screen h1")?.textContent ===
+        "The gate could not open",
+    null,
+    { timeout: 90000 },
+  );
+  expect(
+    await page.evaluate(() => !!window.__ddd),
+    await page.locator("body").innerText(),
+  ).toBe(true);
   await enterGame(page);
   if (process.env.DDD_REQUIRE_MASON === "1") {
     expect(
