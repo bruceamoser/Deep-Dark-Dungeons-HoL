@@ -80,7 +80,7 @@ app.whenReady().then(async () => {
     minHeight: 720,
     backgroundColor: "#080e13",
     title: "Four Lanterns Deep",
-    icon: path.join(root, "art/four-lanterns-seal.png"),
+    icon: path.join(root, "art/four-lanterns-icon-v2.png"),
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),

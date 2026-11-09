@@ -21,8 +21,8 @@ Local commands: `npm run package:linux`, `npm run package:windows`; `npm run pac
 ### Four Lanterns Deep display name (#78)
 
 The v0.8.3 display name changes across loading screens, in-game branding,
-window titles, desktop entries and installer shortcuts. The authored four-lantern
-seal replaces the game mark; Greyhaven keeps its own town crest. The repository,
+window titles, desktop entries and installer shortcuts. The illustrated four-lantern
+logo and matching icon replace the game mark; Greyhaven keeps its own town crest. The repository,
 app ID, package name, platform executable filenames, update feed and user-data
 directory retain their prior identifiers, so existing installs and saves continue.
 Windows packaging explicitly pins the legacy executable filename independently

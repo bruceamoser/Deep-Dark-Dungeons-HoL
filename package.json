@@ -53,7 +53,7 @@
       ],
       "signAndEditExecutable": false
     },
-    "icon": "public/art/four-lanterns-seal.png",
+    "icon": "public/art/four-lanterns-icon-v2.png",
     "afterPack": "scripts/after-pack.cjs",
     "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}",
     "publish": {
