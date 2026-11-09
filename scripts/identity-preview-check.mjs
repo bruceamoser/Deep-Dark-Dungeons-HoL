@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifyGameplayIdentity(page) {
   const saved = await page.evaluate(() =>
@@ -25,10 +26,11 @@ export async function verifyGameplayIdentity(page) {
     expect(model).toEqual(appearance);
     await page.screenshot({ path: "test-results/identity-sheet.png" });
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
     await expect(page.locator("#toast")).toContainText("saved");
     await page.reload();
     await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+    await enterGame(page);
     expect(
       await page.evaluate(
         () => window.__ddd.game.active.draft.appearance.mason.headpiece,
@@ -174,7 +176,7 @@ export async function verifyGameplayIdentity(page) {
       g.resume();
       g.emit("change");
     }, saved);
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
   }
 }
 if (process.argv[1]?.endsWith("identity-preview-check.mjs")) {
@@ -190,6 +192,7 @@ if (process.argv[1]?.endsWith("identity-preview-check.mjs")) {
   try {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+    await enterGame(page);
     await verifyGameplayIdentity(page);
     expect(errors).toEqual([]);
   } catch (e) {

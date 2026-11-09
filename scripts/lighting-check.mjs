@@ -1,3 +1,4 @@
+import { enterGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 await fs.mkdir("test-results", { recursive: true });
@@ -13,7 +14,8 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("http://127.0.0.1:5198");
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
-  await page.getByRole("button", { name: "Enter the depths" }).click();
+  await enterGame(page);
+  await page.getByRole("button", { name: "The Depths" }).click();
   await page.waitForFunction(
     () => window.__ddd.game.mode === "exploration",
     null,

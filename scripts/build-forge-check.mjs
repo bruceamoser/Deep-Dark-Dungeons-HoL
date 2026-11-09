@@ -1,3 +1,4 @@
+import { settingsAction } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { magicItem } from "../src/core/treasure.mjs";
 export async function verifyBuildForge(page) {
@@ -32,7 +33,7 @@ export async function verifyBuildForge(page) {
       ),
     ).toBe(false);
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Enter the depths" }).click();
+    await page.getByRole("button", { name: "The Depths" }).click();
     await page.waitForFunction(
       () => window.__ddd.game.mode === "exploration",
       null,
@@ -194,6 +195,6 @@ export async function verifyBuildForge(page) {
       g.resume();
       g.emit("change");
     }, saved);
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
   }
 }

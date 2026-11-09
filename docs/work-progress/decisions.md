@@ -13,3 +13,7 @@ Bruce wants development to execute on each local computer. Use the repository to
 - Purchased source assets stay private. Finished licensed builds use staged Dungeon Mason assets; public source builds have fallbacks. Follow `docs/releases.md`.
 - Personal GitHub identity is process-scoped. Never switch global GitHub authentication.
 - Passing PRs may be author-reviewed and merged under existing authorization. A WIP checkpoint must remain unmerged until ready.
+
+## 2026-11-09 — Welcome and HUD shortcuts
+
+Keep the logo visible until preload finishes and the player enters explicitly. Place utility controls under one settings gear and center the clock beside the location. Town uses I/M/G/S/L/H/Shift+S/D: Shift+S resolves Bruce's duplicate S requests for Smithy/Shrine. Camp reports show actual completed-hour outcomes, persist across dungeon save/load, and require acknowledgement before returning to planning.

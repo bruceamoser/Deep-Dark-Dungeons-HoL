@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { expect, chromium } from "@playwright/test";
 import { pathToFileURL } from "node:url";
 export async function verifyMusic(page) {
@@ -37,7 +38,7 @@ export async function verifyMusic(page) {
       return Math.sqrt(a.reduce((sum, v) => sum + v * v, 0) / a.length);
     });
   try {
-    await page.locator('[data-action="sound"]').click();
+    await settingsAction(page, "Sound");
     await page.locator("#volume").fill("0.8");
     await page.locator("#music-volume").fill("0.65");
     await page.locator("#effects-volume").fill("0");
@@ -62,9 +63,9 @@ export async function verifyMusic(page) {
     expect(await energy()).toBeLessThan(0.0001);
     await page.locator("#effects-volume").fill("1");
     await page.getByRole("button", { name: "Play test sound" }).click();
-    expect(
-      await page.evaluate(() => window.__ddd.sound.effects.gain.value),
-    ).toBeGreaterThan(0.9);
+    await expect
+      .poll(() => page.evaluate(() => window.__ddd.sound.effects.gain.value))
+      .toBeGreaterThan(0.9);
     await page.locator("#music-muted").uncheck();
     await page.locator(".music-credits summary").click();
     await expect(page.locator(".music-credits")).toContainText(
@@ -83,11 +84,11 @@ export async function verifyMusic(page) {
       g.emit("change");
     });
     await waitTrack("exploration");
-    await page.locator('[data-action="camp"]').first().click();
+    await settingsAction(page, "Camp & supplies");
     await waitTrack("camp");
     await page.keyboard.press("Escape");
     await waitTrack("exploration");
-    await page.locator('[data-action="camp"]').first().click();
+    await settingsAction(page, "Camp & supplies");
     await waitTrack("camp");
     await page.evaluate(() => {
       const g = window.__ddd.game,
@@ -145,9 +146,10 @@ export async function verifyMusic(page) {
       g.emit("floor");
       g.emit("change");
     }, saved);
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
     await page.reload();
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     expect(
       await page.evaluate(() => ({
         music: window.__ddd.sound.music.volume,
@@ -188,6 +190,7 @@ if (
     const p = await b.newPage({ viewport: { width: 1600, height: 1000 } });
     await p.goto("http://127.0.0.1:5198");
     await p.waitForFunction(() => window.__ddd);
+    await enterGame(p);
     await verifyMusic(p);
   } finally {
     await b.close();

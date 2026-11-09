@@ -7,6 +7,8 @@ export const esc = (s) =>
       ],
   );
 const paths = {
+  settings:
+    "M9 3h6l1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1zM16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0",
   hat: "M4 17 8 4l4 5 4-5 4 13M2 18h20M4 21h16",
   belt: "M2 8h20v8H2zM9 7h6v10H9zM12 12h6",
   ring: "M16 15a6 6 0 1 1-12 0 6 6 0 0 1 12 0M7 5l3-3 3 3-3 5z",

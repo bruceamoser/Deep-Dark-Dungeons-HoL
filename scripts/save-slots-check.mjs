@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifySaveSlots(page) {
   await page.evaluate(() => {
@@ -19,7 +20,7 @@ export async function verifySaveSlots(page) {
     g.resume();
   });
   const original = await page.evaluate(() => window.__ddd.library.active);
-  await page.getByRole("button", { name: "Runs", exact: true }).click();
+  await settingsAction(page, "Runs");
   await expect(page.locator(".runs-window")).toBeVisible();
   expect(await page.evaluate(() => window.__ddd.game.suspended)).toBe(true);
   await page.locator("#run-rename").fill("The Ember Company");
@@ -42,19 +43,20 @@ export async function verifySaveSlots(page) {
     window.__ddd.game.campaign.bank = 654;
     window.__ddd.game.emit("change");
   });
-  await page.getByRole("button", { name: "Runs", exact: true }).click();
+  await settingsAction(page, "Runs");
   await page.locator("#exit-run").click();
   await expect(page.locator("#resume-run")).toHaveCount(0);
   expect(await page.evaluate(() => window.__ddd.game.suspended)).toBe(true);
   // A restart after exit opens the library, rather than entering a run.
   await page.reload();
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await enterGame(page);
   await expect(page.locator(".runs-window")).toBeVisible();
   await page.locator(`[data-run="${checkpoint}"]`).click();
   await page.locator("#load-run").click();
   await expect(page.locator(".runs-window")).toHaveCount(0);
   expect(await page.evaluate(() => window.__ddd.game.campaign.bank)).toBe(321);
-  await page.getByRole("button", { name: "Runs", exact: true }).click();
+  await settingsAction(page, "Runs");
   await page.locator(`[data-run="${original}"]`).click();
   await page.locator("#load-run").click();
   await expect(page.locator(".runs-window")).toHaveCount(0);
@@ -99,7 +101,7 @@ export async function verifySaveSlots(page) {
   await expect(page.locator(".runs-window")).toHaveCount(0);
   expect(await page.evaluate(() => window.__ddd.game.mode)).toBe("town");
   expect(await page.evaluate(() => window.__ddd.game.campaign.bank)).toBe(0);
-  await page.getByRole("button", { name: "Runs", exact: true }).click();
+  await settingsAction(page, "Runs");
   await page.locator(`[data-run="${battle}"]`).click();
   await page.locator("#load-run").click();
   await expect(page.locator(".runs-window")).toHaveCount(0);
@@ -162,6 +164,7 @@ export async function verifySaveSlots(page) {
   expect(await page.evaluate(() => window.__ddd.library.active)).toBe(null);
   await page.reload();
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await enterGame(page);
   await expect(page.locator(".runs-window")).toBeVisible();
   await expect(page.locator(`[data-run="${battle}"]`)).toHaveCount(0);
   await page.locator(`[data-run="${original}"]`).click();
@@ -184,6 +187,7 @@ if (process.argv[1]?.endsWith("save-slots-check.mjs")) {
   try {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+    await enterGame(page);
     await verifySaveSlots(page);
     expect(errors).toEqual([]);
   } catch (e) {

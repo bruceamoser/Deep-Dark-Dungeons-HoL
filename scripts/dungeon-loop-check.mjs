@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 import { magicItem, recallScroll } from "../src/core/treasure.mjs";
 export async function verifyDungeonLoop(page) {
@@ -27,7 +28,7 @@ export async function verifyDungeonLoop(page) {
   await page.locator('[data-merchant="arcana"]').click();
   await page.screenshot({ path: "test-results/market-magic.png" });
   await page.locator(".close").click();
-  await page.locator('[data-action="bestiary"]').click();
+  await settingsAction(page, "Bestiary");
   await page.locator("#creature-search").fill("wolf");
   await expect(page.locator('[data-creature="creature-wolf"]')).toBeVisible();
   await page.locator('[data-creature="creature-wolf"]').click();
@@ -173,10 +174,11 @@ export async function verifyDungeonLoop(page) {
   await expect(page.locator('[data-action="descend"]')).toContainText(
     "Return to depth 5",
   );
-  await page.locator('[data-action="save"]').click();
+  await settingsAction(page, "Save");
   await expect(page.locator("#toast")).toContainText("saved");
   await page.reload();
   await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+  await enterGame(page);
   await expect(page.locator('[data-action="descend"]')).toContainText(
     "Return to depth 5",
   );
@@ -212,6 +214,7 @@ if (import.meta.url === new URL(process.argv[1], "file:").href) {
   try {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd, null, { timeout: 45000 });
+    await enterGame(page);
     await verifyDungeonLoop(page);
     expect(errors).toEqual([]);
   } catch (e) {

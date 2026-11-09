@@ -10,7 +10,9 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Current task
 
-Establish repository-based handoffs for local development across machines. No new gameplay feature is assigned. This checkpoint's delivery branch is `codex/local-work-handoff`; inspect its PR/remote status to determine whether it has merged before resuming.
+Implement Bruce's eight welcome/HUD/camp touches as v0.8.4 on `codex/entry-town-hud-camp-summary`. Entry waits for preload and explicit click/Enter/Space; Greyhaven gets the requested building directory and rendered hero portraits; clock is centered; top tools move under Settings; Tab/J toggle map/journal; completed camps retain actual result reports. Duplicate S shortcuts use S for Smithy and Shift+S for Shrine.
+
+Implementation and initial checks are complete. 271 automated tests and the dedicated browser/native HUD flow pass. Full native regression, compact layout checks and finished installer qualification are part of the release gate; consult the PR and latest dated handoff for final outcomes. Do not assume a working version is already the public latest release.
 
 ## Recent local diagnosis
 
@@ -21,9 +23,9 @@ The installed executable passed the release smoke flow (rendering, Forge, isolat
 ## Next agent
 
 1. Follow `AGENTS.md` and the startup process in this folder.
-2. Confirm the handoff-process PR has merged or fetch its branch.
-3. Read the latest handoff and current feature docs. Ask for the next gameplay task if none has been supplied.
-4. Before building, check licensed-asset availability and runtime freshness; pulling source does not rebuild ignored installers.
+2. Check `codex/entry-town-hud-camp-summary`, its PR and the v0.8.4 release/workflow for delivery state.
+3. Read the latest handoff and current feature docs. No further gameplay task is assigned after these eight UI touches.
+4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
 
 ## Transfer gaps
 

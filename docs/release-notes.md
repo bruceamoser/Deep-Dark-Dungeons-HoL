@@ -1,3 +1,20 @@
+**v0.8.4 — A quieter interface, a warmer welcome**
+
+- The illustrated loading screen stays until you choose **Enter Greyhaven**. Click, Enter or Space enters after models, town assets, fonts, portraits, building images, music recordings and initial scene shaders are prepared. World simulation stays paused behind the screen.
+- Greyhaven's directory now lists Lantern Inn (I), Market Square (M), Guildhall (G), Ember Smithy (S), Wayfarer Lodge (L), Healer’s House (H), The Shrine (Shift+S) and The Depths (D), with building thumbnails and descriptions. Shift+S resolves the two requested S shortcuts.
+- The company cards have portraits rendered from each hero's actual appearance and equipped gear.
+- Day/time sits beside the location at the center of the header. Save, runs, sound, updates, help, bestiary and camp controls are grouped under the settings gear in town and dungeon.
+- **Tab** toggles the dungeon map; **J** toggles the expedition journal. These shortcuts do not consume combat actions or interfere with text fields and modal dialogs.
+- Completed dungeon camps show actual HP recovery, wound changes, remaining material gains and a full activity record of foraging, production, water gathering and care. Reports survive saves and reopening until acknowledged. Breaking camp early reports completed work; town sleep also gets a recovery summary.
+
+Existing Forge journeys remain compatible. Installers retain the same package/save identifiers. Licensed character sources remain private.
+
+### Install
+
+Debian/Ubuntu: `sudo apt install ./Four-Lanterns-Deep-0.8.4-amd64.deb`. Other Linux: the AppImage or Linux installer bundle. Windows: `Four-Lanterns-Deep-Setup-0.8.4-x64.exe`. Installed releases can use **Settings → Updates → Save & restart to install**.
+
+---
+
 **v0.8.3 — Four Lanterns Deep**
 
 A new identity, clearer character customization and smoother dungeon play.

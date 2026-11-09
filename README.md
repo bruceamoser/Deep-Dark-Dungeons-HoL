@@ -40,6 +40,10 @@ Packaging creates Linux AppImage/Debian packages or a Windows NSIS setup executa
 
 ## Controls
 
+- Loading: click Enter Greyhaven, or press Enter/Space once ready.
+- Greyhaven services: I Inn, M Market, G Guildhall, S Smithy, L Lodge, H Healer, Shift+S Shrine, D Depths.
+- Settings gear: save, runs, audio, updates, help, bestiary and camp. Tab toggles the dungeon map; J toggles the journal.
+
 - Click ground to move; 1–4 select a hero.
 - Near opposition, movement stops and HoL alternating turns begin.
 - Bow attacks fire modeled arrows; melee swings show the held blade and its trail. Fire, frost and life spells have distinct effects.

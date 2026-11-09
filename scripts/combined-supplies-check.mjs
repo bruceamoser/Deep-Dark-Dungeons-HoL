@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 export async function verifyCombinedSupplies(page) {
   const saved = await page.evaluate(() =>
@@ -58,9 +59,10 @@ export async function verifyCombinedSupplies(page) {
     ).toBe(fixture.bulk);
     await page.screenshot({ path: "test-results/combined-supplies.png" });
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
     await page.reload();
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     expect(
       await page.evaluate(
         (id) => ({

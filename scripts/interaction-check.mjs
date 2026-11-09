@@ -1,3 +1,4 @@
+import { enterGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 
 export async function verifyInteractions(page) {
@@ -111,10 +112,8 @@ export async function verifyInteractions(page) {
   expect(await page.evaluate(() => window.__ddd.game.mode)).toBe("exploration");
   await page.screenshot({ path: "test-results/stair-arrival-dialog.png" });
   await page.locator('[data-world-option="use"]').click();
-  await expect(
-    page.getByRole("button", { name: "Enter the depths" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Enter the depths" }).click();
+  await expect(page.getByRole("button", { name: "The Depths" })).toBeVisible();
+  await page.getByRole("button", { name: "The Depths" }).click();
   await page.waitForFunction(
     () => window.__ddd.game.mode === "exploration",
     null,
@@ -137,7 +136,8 @@ if (process.argv[1]?.endsWith("interaction-check.mjs")) {
   try {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
-    await page.getByRole("button", { name: "Enter the depths" }).click();
+    await enterGame(page);
+    await page.getByRole("button", { name: "The Depths" }).click();
     await page.waitForFunction(
       () => window.__ddd.game.mode === "exploration",
       null,

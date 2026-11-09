@@ -1,3 +1,4 @@
+import { HudArt } from "./view/hud-art.mjs";
 import { shortcutManager } from "./ui/shortcuts.mjs";
 import { SHORTCUT_KEYS, actionDetailsHTML } from "./ui/action-details.mjs";
 import { fiercenessIndicator } from "./ui/fierceness.mjs";
@@ -42,6 +43,13 @@ const esc = (s) =>
   );
 let toastTimer, modalCleanup, updateStatus;
 function closeModal() {
+  settingsOpen = false;
+  ui.querySelector('[data-action="settings"]')?.setAttribute(
+    "aria-expanded",
+    "false",
+  );
+  const settingsMenu = ui.querySelector("#settings-menu");
+  if (settingsMenu) settingsMenu.hidden = true;
   modalCleanup?.();
   modalCleanup = null;
   modal.replaceChildren();
@@ -69,7 +77,40 @@ const logoLights = [
   [53.9, 33.0, 2.5, 2.6],
   [59.5, 37.6, 1.5, 3.8],
 ];
-ui.innerHTML = `<div class="loading-screen"><div class="loading-logo"><img class="loading-seal" src="/art/four-lanterns-logo-v2.png" alt="Four Lanterns Deep" width="1536" height="1024"><div class="logo-light-effects" aria-hidden="true">${logoLights.map(([x, y, size, duration], i) => `<i class="logo-flame-glow" style="left:${x}%;top:${y}%;--glow-size:${size}%;--flicker-time:${duration}s;--flicker-delay:-${i * 0.73}s"></i>${Array.from({ length: 3 }, (_, j) => `<i class="logo-ember" style="left:${x}%;top:${y}%;--ember-delay:-${i + j * 1.2}s;--ember-time:${3.5 + j * 0.8}s;--ember-drift:${(j - 1) * 16 + 5}px;--ember-rise:${35 + i * 5}px"></i>`).join("")}`).join("")}</div></div><h1 class="loading-accessible-title">Four Lanterns Deep</h1><div class="eyebrow">HEROES OF LEGEND</div><div class="loading-rule" aria-hidden="true"></div><p role="status">Lighting the way beneath Greyhaven…</p></div>`;
+const entry = document.createElement("div");
+entry.id = "entry-screen";
+document.body.classList.add("enter-pending");
+document.body.append(entry);
+entry.innerHTML = `<div class="loading-screen"><div class="loading-logo"><img class="loading-seal" src="/art/four-lanterns-logo-v2.png" alt="Four Lanterns Deep" width="1536" height="1024"><div class="logo-light-effects" aria-hidden="true">${logoLights.map(([x, y, size, duration], i) => `<i class="logo-flame-glow" style="left:${x}%;top:${y}%;--glow-size:${size}%;--flicker-time:${duration}s;--flicker-delay:-${i * 0.73}s"></i>${Array.from({ length: 3 }, (_, j) => `<i class="logo-ember" style="left:${x}%;top:${y}%;--ember-delay:-${i + j * 1.2}s;--ember-time:${3.5 + j * 0.8}s;--ember-drift:${(j - 1) * 16 + 5}px;--ember-rise:${35 + i * 5}px"></i>`).join("")}`).join("")}</div></div><h1 class="loading-accessible-title">Four Lanterns Deep</h1><div class="eyebrow">HEROES OF LEGEND</div><div class="loading-rule" aria-hidden="true"></div><p role="status">Lighting the way beneath Greyhaven…</p><button id="enter-game" class="primary" disabled>Preparing the expedition…</button><small class="entry-key-hint">ENTER / SPACE / CLICK</small></div>`;
+let entered = false,
+  entryReady = false,
+  hudArt,
+  settingsOpen = false,
+  mapVisible = true,
+  journalVisible = true;
+function enterGame() {
+  if (!entryReady || entered) return;
+  entered = true;
+  attempt(() => sound.unlock());
+  entry.remove();
+  document.body.classList.remove("enter-pending");
+  if (!runsOpen) game.resume();
+  syncMusic();
+  sound.music.sync();
+  showSupplyNotice();
+}
+entry.querySelector("#enter-game").onclick = enterGame;
+document.addEventListener(
+  "keydown",
+  (e) => {
+    if (!entered && ["Enter", "Space"].includes(e.code)) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      enterGame();
+    }
+  },
+  true,
+);
 let game,
   scene,
   townView,
@@ -342,13 +383,27 @@ async function init() {
   }
   // Demo starts from legal published characters, never randomized partial builds.
   scene.updateVisibility(game.party, game.seen);
+  game.pause();
+  hudArt = new HudArt(scene.assets, townView.models);
+  game.party.forEach((h) => hudArt.portrait(h));
+  TOWN_SERVICES.forEach((s) => hudArt.building(s));
+  await Promise.all([document.fonts.ready, sound.music.preload()]);
   render();
-  showSupplyNotice();
+  await Promise.all([
+    scene.renderer.compileAsync(scene.scene, scene.camera),
+    townView.renderer.compileAsync(townView.scene, townView.camera),
+  ]);
+  render();
   setInterval(() => {
-    if (!modal.children.length) game.step();
+    if (entered && !modal.children.length) game.step();
   }, 170);
   document.addEventListener("keydown", (e) => {
-    if (supplyDialog) return;
+    if (!entered || supplyDialog) return;
+    if (e.key === "Escape" && settingsOpen) {
+      settingsOpen = false;
+      render();
+      return;
+    }
     if (e.key === "Escape" && runsOpen) {
       e.preventDefault();
       if (library.active && !runsBusy) resumeRun();
@@ -394,7 +449,7 @@ async function init() {
         return;
       }
       const destination = TOWN_SERVICES.find(
-        (s) => s.hotkey === e.key.toLowerCase(),
+        (s) => s.hotkey === e.key.toLowerCase() && !!s.shift === e.shiftKey,
       );
       if (destination && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
@@ -402,6 +457,25 @@ async function init() {
         return;
       }
     }
+    if (
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      !e.repeat &&
+      !settingsOpen &&
+      (e.key === "Tab" || e.key.toLowerCase() === "j")
+    ) {
+      e.preventDefault();
+      if (e.key === "Tab") mapVisible = !mapVisible;
+      else journalVisible = !journalVisible;
+      render();
+      return;
+    }
+    if (
+      ["Enter", "Space"].includes(e.code) &&
+      e.target.closest?.("#settings-menu, .settings-gear")
+    )
+      return;
     if (e.code === "Space") {
       e.preventDefault();
       attempt(() => game.endTurn());
@@ -423,7 +497,7 @@ async function init() {
     if (e.key.toLowerCase() === "e")
       (townView.active ? townView : scene).rotate(1);
     if (e.key.toLowerCase() === "f") scene.focusOn(game.active);
-    if (e.key.toLowerCase() === "g") {
+    if (game.mode !== "town" && e.key.toLowerCase() === "g") {
       scene.gridEnabled = !scene.gridEnabled;
       scene.updateTacticalGrid(game, {
         targeting: !!selectedAction,
@@ -468,6 +542,13 @@ async function init() {
     toast(
       "Your earlier-edition save is preserved. A fresh v0.6 journey has begun.",
     );
+  entryReady = true;
+  entry.querySelector("[role=status]").textContent =
+    "The lanterns are lit. Your company awaits.";
+  const enterButton = entry.querySelector("#enter-game");
+  enterButton.disabled = false;
+  enterButton.textContent = "Enter Greyhaven";
+  enterButton.focus();
   window.__ddd = {
     game,
     scene,
@@ -488,7 +569,7 @@ function button(label, action, sub = "", primary = false) {
   return `<button data-action="${action}" class="${primary ? "primary" : ""}">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
 }
 function syncMusic() {
-  if (game?.campaign)
+  if (entered && game?.campaign)
     sound.music.setScene(
       musicScene(game.mode, !!modal.querySelector(".dungeon-camp")),
     );
@@ -499,11 +580,12 @@ function render() {
   if (!selectedAction) document.querySelector("#power-target-hint")?.remove();
   if (scene?.map && game?.map)
     scene.updateTacticalGrid(game, { targeting: !!selectedAction });
-  if (!game?.campaign) return;
+  if (!game?.campaign || !hudArt) return;
   const town = ["town", "defeat"].includes(game.mode),
     h = game.active,
     c = game.campaign;
-  const header = `<div class="topbar"><div class="brand"><img src="/art/four-lanterns-icon-v2.png" alt="Four Lanterns Deep seal"><span class="brand-title">Four Lanterns<br>Deep</span><small>HEROES OF LEGEND</small></div><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2>${town ? "" : fiercenessIndicator(game.locationFierceness())}</div><div class="top-tools">${button(`Day ${game.clock().day} · ${String(game.clock().hour).padStart(2, "0")}:${String(game.clock().minute).padStart(2, "0")}`, "camp", "CAMP & SUPPLIES")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button(sound.muted ? "Sound off" : "Sound on", "sound")}${button("?", "help")}</div></div>`;
+  const clock = game.clock();
+  const header = `<div class="topbar"><div class="brand"><img src="/art/four-lanterns-icon-v2.png" alt="Four Lanterns Deep seal"><span class="brand-title">Four Lanterns<br>Deep</span><small>HEROES OF LEGEND</small></div><div class="header-center"><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2>${town ? "" : fiercenessIndicator(game.locationFierceness())}</div><div class="header-clock"><span>Day ${clock.day}</span><b>${String(clock.hour).padStart(2, "0")}:${String(clock.minute).padStart(2, "0")}</b></div></div><div class="top-tools"><button data-action="settings" class="settings-gear icon-button" aria-label="Settings" aria-expanded="${settingsOpen}" aria-controls="settings-menu">${icon("settings")}${updateStatus?.phase === "downloaded" ? '<i class="update-dot"></i>' : ""}</button><nav id="settings-menu" aria-label="Game settings" ${settingsOpen ? "" : "hidden"}>${button("Camp & supplies", "camp")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button("Sound", "sound")}${button("Help", "help")}${!town ? button(`${mapVisible ? "Hide" : "Show"} map · Tab`, "toggle-map") + button(`${journalVisible ? "Hide" : "Show"} journal · J`, "toggle-journal") : ""}</nav></div></div>`;
   townView.setActive(town, game.party);
   townView.party.visible = game.mode === "town";
   scene.renderEnabled = !town;
@@ -511,7 +593,7 @@ function render() {
   if (town) {
     ui.innerHTML =
       header +
-      `<aside class="town-directory"><div class="town-masthead"><img src="/art/greyhaven-seal.svg" alt=""><div><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Greyhaven</h1></div></div><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><span>${esc(s.id === "descend" && c.returnPassage ? `Return to depth ${c.returnPassage.depth}` : s.label)}</span><small>${esc(s.place)}<kbd>${s.hotkey.toUpperCase()}</kbd></small></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
+      `<aside class="town-directory"><div class="town-masthead"><img src="/art/greyhaven-seal.svg" alt=""><div><div class="eyebrow">THE LAST LIGHT ABOVE</div><h1>Greyhaven</h1></div></div><p class="town-welcome">A roof, a warm hearth, and one more road into the dark.</p>${game.mode === "defeat" ? `<p>The expedition has ended. Their names remain.</p>${button("Assemble a new company", "new-party", "BEGIN AGAIN", true)}` : ""}<nav aria-label="Greyhaven destinations">${TOWN_SERVICES.map((s) => `<button data-action="${s.id}" class="town-destination ${s.id === "descend" ? "primary" : ""}"><img class="building-icon" src="${hudArt.building(s)}" alt=""><span class="destination-copy"><span>${esc(s.label)}</span><small>${esc(s.detail)}${s.id === "descend" && c.returnPassage ? `<em class="return-depth">Return to depth ${c.returnPassage.depth}</em>` : ""}</small></span><kbd>${s.shift ? "⇧" : ""}${s.hotkey.toUpperCase()}</kbd></button>`).join("")}</nav><div class="town-treasury"><span><b>${c.bank}</b> vault coins</span><span><b>${c.expeditions}</b> expeditions</span></div><p class="town-instructions">Choose a building or use its hotkey.<br>Your company walks there.</p></aside><div class="town-party">${game.party.map((h, i) => `<button data-hero="${i}"><img class="party-portrait" src="${hudArt.portrait(h)}" alt="${esc(h.name)}"><strong>${esc(h.name.split(" ")[0])}</strong><small>${esc(className(h))} · ${h.survival.hp} HP</small>${xpMeter(h, true)}</button>`).join("")}</div>`;
   } else {
     const combat = game.mode === "combat",
       b = game.budget;
@@ -537,12 +619,12 @@ function render() {
         : "REAL-TIME EXPLORATION";
     ui.innerHTML =
       header +
-      `<div class="hero-panel">${game.party.map((p, i) => `<button class="hero-card ${i === game.selected && (!combat || game.encounter.nextSide === "players") ? "active" : ""}" data-select="${i}" ${selectable(p) ? "" : "disabled"} aria-label="${esc(p.name)}${combat ? " · " + heroState(p) : ""}"><span class="number">0${i + 1}</span><div style="flex:1"><h3>${esc(p.name)}</h3><div class="class">${esc(className(p))} · ${p.survival.status}${combat ? ` <b class="hero-turn-state">${heroState(p)}</b>` : ""}</div><div class="bar"><span style="width:${(p.survival.hp / p.survival.maxHp) * 100}%"></span></div><div class="vitals"><span>${p.survival.hp} / ${p.survival.maxHp} HP</span><span>${p.survival.gritAvailable} GRIT</span></div>${xpMeter(p, true)}</div></button>`).join("")}<div class="party-hint">1–4 SELECT · CLICK GROUND TO MOVE</div></div><div class="compass">N<b>◇</b>Q ↶ &nbsp; ↷ E</div><div class="minimap"><canvas id="map" width="155" height="155"></canvas><footer>${c.haul} COINS IN THE PACK${c.pendingTreasureXP ? `<small>+${c.pendingTreasureXP} XP EACH ON RETURN</small>` : ""}</footer></div><aside class="eventlog"><div class="eyebrow">EXPEDITION JOURNAL</div>${game.log
+      `<div class="hero-panel">${game.party.map((p, i) => `<button class="hero-card ${i === game.selected && (!combat || game.encounter.nextSide === "players") ? "active" : ""}" data-select="${i}" ${selectable(p) ? "" : "disabled"} aria-label="${esc(p.name)}${combat ? " · " + heroState(p) : ""}"><span class="number">0${i + 1}</span><div style="flex:1"><h3>${esc(p.name)}</h3><div class="class">${esc(className(p))} · ${p.survival.status}${combat ? ` <b class="hero-turn-state">${heroState(p)}</b>` : ""}</div><div class="bar"><span style="width:${(p.survival.hp / p.survival.maxHp) * 100}%"></span></div><div class="vitals"><span>${p.survival.hp} / ${p.survival.maxHp} HP</span><span>${p.survival.gritAvailable} GRIT</span></div>${xpMeter(p, true)}</div></button>`).join("")}<div class="party-hint">1–4 SELECT · CLICK GROUND TO MOVE</div></div><div class="compass">N<b>◇</b>Q ↶ &nbsp; ↷ E</div><div class="minimap" ${mapVisible ? "" : "hidden"}><canvas id="map" width="155" height="155"></canvas><footer>${c.haul} COINS IN THE PACK${c.pendingTreasureXP ? `<small>+${c.pendingTreasureXP} XP EACH ON RETURN</small>` : ""}</footer></div><aside class="eventlog" ${journalVisible ? "" : "hidden"}><div class="eyebrow">EXPEDITION JOURNAL</div>${game.log
         .slice(-4)
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
           "",
-        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Recipes", "workshop", "CRAFT & REPLENISH") + button("Make camp", "camp", "SLEEP & RECOVER") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Formation sets marching order"}</div></div>`;
+        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Recipes", "workshop", "CRAFT & REPLENISH") + button("Make camp", "camp", "SLEEP & RECOVER") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Tab map · J journal · Formation sets marching order"}</div></div>`;
     drawMap();
   }
   bind();
@@ -586,6 +668,15 @@ function bind() {
   );
 }
 function action(a, arrived = false) {
+  if (a === "settings") {
+    settingsOpen = !settingsOpen;
+    render();
+    return;
+  }
+  if (settingsOpen) {
+    settingsOpen = false;
+    render();
+  }
   if (
     game.mode === "town" &&
     !arrived &&
@@ -595,6 +686,14 @@ function action(a, arrived = false) {
     return;
   }
   switch (a) {
+    case "toggle-map":
+      mapVisible = !mapVisible;
+      render();
+      break;
+    case "toggle-journal":
+      journalVisible = !journalVisible;
+      render();
+      break;
     case "descend":
       game.descend();
       scene.focusOn(game.active);
@@ -820,7 +919,7 @@ function dialog(title, content, footer = "") {
 function help() {
   dialog(
     "A light in the dark",
-    `<p>In Greyhaven, select a building and your company walks to its entrance before the service opens. <b>R</b> inn/company, <b>M</b> market, <b>T</b> guildhall, <b>W</b> workshop, <b>P</b> provisions, <b>V</b> infirmary, <b>H</b> fallen shrine, <b>D</b> dungeon gate. These hotkeys take the same routes. Choose another destination to redirect; <b>Escape</b> cancels travel.</p><p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures start alternating HoL turns. Choose heroes with <b>1–4</b>; only the acting hero moves in combat.</p><p><b>Right-drag</b> grabs and pans the ground, <b>wheel</b> zooms, <b>middle-drag</b> or <b>Q / E</b> rotate, and <b>F</b> follows. <b>G</b> toggles exploration squares; combat always shows the tactical grid. Teal squares are reachable with your remaining movement; gold squares use the last of it. Hover a square for its cost. Allies allow passage but cannot be endpoints.</p><p><b>C / I</b> opens your hero. Ready weapons and armor in Equipment, pin favorite powers in Abilities, and customize individual looks in Appearance anywhere. In combat, choose a power then its target; Escape cancels freely. Ground powers preview their affected squares. Instant area strikes spare allies; persistent fire and hazards affect both sides. Strongest matching power buffs and debuffs apply; extra actions and healing have limits.</p><p>HP healing, stabilization and wound treatment are separate. Journey shows camp supplies or infirmary prices for treatment. Scars, wound count and spent Grit persist. The <b>recipe book</b> lets you learn, craft, or replenish supplies using prepared batches. Crafting and treatment advance time; food, water, torches and sleep matter.</p><p><b>Runs</b> pauses and saves. Name journeys, keep separate checkpoints, or delete old saves after confirmation. Save &amp; exit returns to the library. Escape reaches it during a combat decision. The company register holds reserve heroes and the fallen hall. XP comes from exploration, encounters and recovered treasure; train in town. Six merchants supply the expedition, a Scroll of Return opens a two-way passage, and every fifth floor has a guardian.</p><p>HoL supplies the base mechanics. This game's powers, recipes, simplified treatment and dungeon progression are explicit computer-game adaptations.</p>`,
+    `<p>In Greyhaven, select a building and your company walks to its entrance before the service opens. <b>I</b> Lantern Inn, <b>M</b> Market Square, <b>G</b> Guildhall, <b>S</b> Ember Smithy, <b>L</b> Wayfarer Lodge, <b>H</b> Healer’s House, <b>Shift+S</b> The Shrine, <b>D</b> The Depths. These hotkeys take the same routes. Choose another destination to redirect; <b>Escape</b> cancels travel.</p><p>Lead four heroes through the crypt. Click the floor to travel together. Nearby creatures start alternating HoL turns. Choose heroes with <b>1–4</b>; only the acting hero moves in combat.</p><p><b>Right-drag</b> grabs and pans the ground, <b>wheel</b> zooms, <b>middle-drag</b> or <b>Q / E</b> rotate, and <b>F</b> follows. <b>G</b> toggles exploration squares; combat always shows the tactical grid. Teal squares are reachable with your remaining movement; gold squares use the last of it. Hover a square for its cost. Allies allow passage but cannot be endpoints.</p><p><b>C / I</b> opens your hero. Ready weapons and armor in Equipment, pin favorite powers in Abilities, and customize individual looks in Appearance anywhere. In combat, choose a power then its target; Escape cancels freely. Ground powers preview their affected squares. Instant area strikes spare allies; persistent fire and hazards affect both sides. Strongest matching power buffs and debuffs apply; extra actions and healing have limits.</p><p>HP healing, stabilization and wound treatment are separate. Journey shows camp supplies or infirmary prices for treatment. Scars, wound count and spent Grit persist. The <b>recipe book</b> lets you learn, craft, or replenish supplies using prepared batches. Crafting and treatment advance time; food, water, torches and sleep matter.</p><p><b>Tab</b> toggles the dungeon map and <b>J</b> toggles the expedition journal. The <b>settings gear</b> holds save, runs, audio, updates, help and bestiary.</p><p><b>Runs</b> pauses and saves. Name journeys, keep separate checkpoints, or delete old saves after confirmation. Save &amp; exit returns to the library. Escape reaches it during a combat decision. The company register holds reserve heroes and the fallen hall. XP comes from exploration, encounters and recovered treasure; train in town. Six merchants supply the expedition, a Scroll of Return opens a two-way passage, and every fifth floor has a guardian.</p><p>HoL supplies the base mechanics. This game's powers, recipes, simplified treatment and dungeon progression are explicit computer-game adaptations.</p>`,
   );
 }
 function roster(options = {}) {
@@ -1424,6 +1523,8 @@ async function openRuns() {
 }
 
 init().catch((e) => {
+  entry.remove();
+  document.body.classList.remove("enter-pending");
   console.error(e);
   ui.innerHTML = `<div class="loading-screen"><h1>The gate could not open</h1><p>${esc(e.message)}</p></div>`;
 });

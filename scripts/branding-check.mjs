@@ -1,3 +1,4 @@
+import { enterGame } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 const b = await chromium.launch({
   headless: true,
@@ -13,8 +14,13 @@ try {
     await gate;
     await route.continue();
   });
-  await p.goto("http://127.0.0.1:5198", { waitUntil: "domcontentloaded" });
+  await p.goto(process.env.DDD_TEST_URL ?? "http://127.0.0.1:5198", {
+    waitUntil: "domcontentloaded",
+  });
   await expect(p.locator(".loading-seal")).toBeVisible();
+  await expect(p.locator("#enter-game")).toBeDisabled();
+  await p.keyboard.press("Enter");
+  await expect(p.locator("#entry-screen")).toBeVisible();
   await expect(p).toHaveTitle("Four Lanterns Deep");
   await expect(p.locator(".loading-seal")).toHaveAttribute(
     "src",
@@ -52,6 +58,7 @@ try {
   await p.waitForFunction(() => window.__ddd?.town.active, null, {
     timeout: 45000,
   });
+  await enterGame(p);
   for (const [width, height] of [
     [1600, 1000],
     [1100, 720],

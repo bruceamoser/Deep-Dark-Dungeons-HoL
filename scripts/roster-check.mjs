@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { chromium, expect } from "@playwright/test";
 export async function verifyRoster(page) {
   const before = await page.evaluate(() => {
@@ -10,7 +11,7 @@ export async function verifyRoster(page) {
       living: g.livingRoster().length,
     };
   });
-  await page.getByRole("button", { name: "The company register" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.keyboard.press("Escape");
   const created = await page.evaluate(() => {
     const g = window.__ddd.game,
@@ -18,7 +19,7 @@ export async function verifyRoster(page) {
     d.name = "Neris of the Lantern";
     return g.createRecruit(d).heroId;
   });
-  await page.getByRole("button", { name: "The company register" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.locator(`[data-roster-hero="${created}"]`).click();
   const recruitId = await page.evaluate(
     () =>
@@ -61,14 +62,15 @@ export async function verifyRoster(page) {
   );
   await page.screenshot({ path: "test-results/hero-experience.png" });
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await settingsAction(page, "Save");
   await page.reload();
   await page.waitForFunction(() => window.__ddd);
+  await enterGame(page);
   expect(
     await page.evaluate(() => window.__ddd.game.livingRoster().length),
   ).toBe(before.living + 1);
   expect(await page.evaluate(() => window.__ddd.game.party[0].xp)).toBe(400);
-  await page.getByRole("button", { name: "The company register" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.locator(`[data-roster-hero="${recruitId}"]`).click();
   await page.locator('[data-roster-slot="1"]').click();
   await page.locator("#assign-roster-hero").click();
@@ -93,9 +95,7 @@ export async function verifyRoster(page) {
     }
     g.emit("change");
   });
-  await page
-    .getByRole("button", { name: "Hall of Fallen Heroes", exact: false })
-    .click();
+  await page.getByRole("button", { name: "The Shrine", exact: false }).click();
   await expect(page.locator(".register-inspector")).toContainText(
     "Neris of the Lantern",
   );
@@ -109,9 +109,10 @@ export async function verifyRoster(page) {
   await page.locator(`[data-roster-hero="${before.second}"]`).click();
   await page.locator("#assign-roster-hero").click();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await settingsAction(page, "Save");
   await page.reload();
   await page.waitForFunction(() => window.__ddd);
+  await enterGame(page);
   expect(
     await page.evaluate(() => window.__ddd.game.campaign.fallenHeroes.length),
   ).toBe(1);
@@ -135,6 +136,7 @@ if (process.argv[1]?.endsWith("roster-check.mjs")) {
   try {
     await page.goto("http://127.0.0.1:5198");
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     await verifyRoster(page);
     expect(errors).toEqual([]);
   } catch (e) {

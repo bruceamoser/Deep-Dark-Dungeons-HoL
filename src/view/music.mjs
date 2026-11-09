@@ -37,6 +37,17 @@ export class GameMusic {
     this.sequence = 0;
     this.error = null;
   }
+  async preload() {
+    this.preloaded = new Map();
+    await Promise.all(
+      this.tracks.map(async (t) => {
+        try {
+          const r = await fetch(t.url);
+          if (r.ok) this.preloaded.set(t.url, await r.arrayBuffer());
+        } catch {}
+      }),
+    );
+  }
   attach(context, destination) {
     if (this.context) return;
     this.context = context;
@@ -93,7 +104,11 @@ export class GameMusic {
       record.buffer =
         this.current?.track === track
           ? this.current.buffer
-          : await this.loadBuffer(track.url, context);
+          : this.preloaded?.has(track.url)
+            ? await context.decodeAudioData(
+                this.preloaded.get(track.url).slice(0),
+              )
+            : await this.loadBuffer(track.url, context);
       if (token !== this.sequence || this.context !== context) {
         this.stop(record);
         return;

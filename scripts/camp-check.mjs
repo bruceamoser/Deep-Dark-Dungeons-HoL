@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 export async function verifyDungeonCamp(page) {
   const saved = await page.evaluate(() =>
@@ -32,7 +33,7 @@ export async function verifyDungeonCamp(page) {
       page.locator('.topbar [aria-label="Creatures in the area"]'),
     ).toBeVisible();
     await expect(page.locator('[data-action="rest"]')).toHaveCount(0);
-    await page.locator('[data-action="camp"]').first().click();
+    await settingsAction(page, "Camp & supplies");
     await expect(
       page.getByRole("dialog", { name: "Dungeon camp", exact: true }),
     ).toBeVisible();
@@ -110,9 +111,10 @@ export async function verifyDungeonCamp(page) {
       await page.evaluate(() => window.__ddd.game.campaign.camp.elapsed),
     ).toBe(1);
     await page.keyboard.press("Escape");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await settingsAction(page, "Save");
     await page.reload();
     await page.waitForFunction(() => window.__ddd);
+    await enterGame(page);
     expect(
       await page.evaluate(() => window.__ddd.game.campaign.camp.elapsed),
     ).toBe(1);
@@ -124,7 +126,7 @@ export async function verifyDungeonCamp(page) {
       g.campaign.supplyNotices = [];
       g.emit("change");
     });
-    await page.locator('[data-action="camp"]').first().click();
+    await settingsAction(page, "Camp & supplies");
     await expect(page.locator("#camp-run")).toHaveText("Continue camp");
     await page.locator("#camp-run").click();
     await page.waitForFunction(

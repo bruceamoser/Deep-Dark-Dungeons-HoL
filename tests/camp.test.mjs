@@ -248,3 +248,37 @@ test("severe wound care reserves one restoration supply and carries timed treatm
   assert.equal(checks, 1);
   assert.equal(healer.supplies[draught.instanceId], 12);
 });
+
+test("completed camp reports retain actual foraging and healing through save/load and acknowledgement", () => {
+  const g = quiet();
+  g.party.forEach((h) => (h.survival.hp = 1));
+  const duties = Object.fromEntries(
+    g.party.map((h) => [h.heroId, ["forage", "guard"]]),
+  );
+  g.startCamp(duties);
+  g.forageProjection = "herbs";
+  for (let i = 0; i < 8; i++) g.campHour();
+  const report = g.campaign.camp.report;
+  assert.equal(report.start[0].hp, 1);
+  assert.equal(report.end[0].hp, 13);
+  assert.equal(report.healed[g.party[0].heroId], 12);
+  assert.equal(
+    report.events.filter((e) => e.includes("finds one batch")).length,
+    4,
+  );
+  const restored = new Game(R, C);
+  restored.load(g.snapshot());
+  assert.deepEqual(restored.campaign.camp.report, report);
+  restored.campaign.camp.report.acknowledged = true;
+  assert.equal(restored.snapshot().camp.report.acknowledged, true);
+});
+test("ending camp early preserves the completed-hour report and rejects corrupt result records", () => {
+  const g = quiet();
+  g.startCamp(plan(g));
+  g.campHour();
+  g.breakCamp();
+  assert.ok(g.campaign.camp.report.end);
+  const bad = g.snapshot();
+  bad.camp.report.start[0].hp = "bad";
+  assert.throws(() => new Game(R, C).load(bad), /camp results/);
+});

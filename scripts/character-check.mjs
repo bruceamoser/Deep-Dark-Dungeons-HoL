@@ -28,7 +28,8 @@ export async function verifyCharacter(page) {
   );
   await page.screenshot({ path: "test-results/readied-bow.png" });
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "The company register" }).click();
+  await expect(page.locator(".character-window")).toHaveCount(0);
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.locator('[data-roster-slot="2"]').click();
   await page.locator("#create-roster-hero").click();
   await expect(page.locator("#hero-name")).toHaveValue("");
@@ -39,7 +40,7 @@ export async function verifyCharacter(page) {
   ).toEqual(Array(6).fill("0"));
   await page.locator("#hero-name").fill("Mara of the Gate");
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "The company register" }).click();
+  await page.locator('.town-directory [data-action="roster"]').click();
   await page.locator('[data-roster-slot="2"]').click();
   await page.locator("#create-roster-hero").click();
   await expect(page.locator("#hero-name")).toHaveValue("");

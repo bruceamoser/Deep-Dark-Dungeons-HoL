@@ -1,3 +1,4 @@
+import { enterGame, settingsAction } from "./ui-session.mjs";
 // Smoke-test the actual AppImage or installed Windows executable, with real IPC,
 // an isolated save directory, and Chromium's renderer sandbox enabled.
 import fs from "node:fs/promises";
@@ -59,7 +60,19 @@ try {
   const page = browser.contexts()[0].pages()[0];
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.waitForFunction(() => window.__ddd, { timeout: 60000 });
+  await page.waitForFunction(
+    () =>
+      window.__ddd ||
+      document.querySelector(".loading-screen h1")?.textContent ===
+        "The gate could not open",
+    null,
+    { timeout: 90000 },
+  );
+  expect(
+    await page.evaluate(() => !!window.__ddd),
+    await page.locator("body").innerText(),
+  ).toBe(true);
+  await enterGame(page);
   if (process.env.DDD_REQUIRE_MASON === "1") {
     expect(
       await page.evaluate(() => window.__ddd.scene.assets.has("DungeonMason")),
@@ -80,7 +93,7 @@ try {
     await expect(page).toHaveTitle("Four Lanterns Deep");
     await verifyMusic(page);
   }
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await settingsAction(page, "Save");
   const saved = await page.evaluate(() => window.desktop.load());
   expect(JSON.parse(saved).campaign.party.length).toBe(4);
   await page.locator('[data-action="training"]').click();
@@ -100,7 +113,7 @@ try {
   await expect(page.locator(".forge-svg")).toBeVisible();
   await page.locator(".forge-close").click();
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Updates", exact: true }).click();
+  await settingsAction(page, "Updates");
   await expect(page.locator("#update-panel")).toContainText(
     `Version ${version}`,
   );
