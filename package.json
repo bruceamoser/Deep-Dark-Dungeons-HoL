@@ -24,7 +24,7 @@
   },
   "build": {
     "appId": "com.bruceamoser.deepdarkdungeons",
-    "productName": "Deep Dark Dungeons - HoL",
+    "productName": "Four Lanterns Deep",
     "directories": {
       "output": "release"
     },
@@ -42,7 +42,7 @@
       "executableName": "deep-dark-dungeons-hol",
       "desktop": {
         "entry": {
-          "Name": "Deep Dark Dungeons - HoL"
+          "Name": "Four Lanterns Deep"
         }
       },
       "maintainer": "Bruce A. Moser <bruceamoser@users.noreply.github.com>"
@@ -53,7 +53,7 @@
       ],
       "signAndEditExecutable": false
     },
-    "icon": "public/art/greyhaven-seal.png",
+    "icon": "public/art/four-lanterns-seal.png",
     "afterPack": "scripts/after-pack.cjs",
     "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}",
     "publish": {
@@ -74,7 +74,8 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "deleteAppDataOnUninstall": false,
-      "artifactName": "Deep-Dark-Dungeons-HoL-Setup-${version}-${arch}.${ext}"
+      "artifactName": "Deep-Dark-Dungeons-HoL-Setup-${version}-${arch}.${ext}",
+      "shortcutName": "Four Lanterns Deep"
     },
     "deb": {
       "afterInstall": "desktop/deb-after-install.sh",
@@ -93,7 +94,8 @@
         "pkexec"
       ],
       "artifactName": "Deep-Dark-Dungeons-HoL-${version}-${arch}.${ext}"
-    }
+    },
+    "executableName": "Deep Dark Dungeons - HoL"
   },
   "dependencies": {
     "electron-updater": "6.8.11",

@@ -170,3 +170,10 @@ CC BY 4.0, selected by Bruce. Source links, hashes and exact files are recorded 
 [the music manifest](music-provenance.json); attribution is bundled and
 visible in Sound. See [soundtrack decisions and licensing](music.md). Procedural
 wind/foley/combat sounds remain game-authored on their own effects bus.
+
+### Four Lanterns Deep seal (#78)
+
+Game-authored vector mark: `public/art/four-lanterns-seal.svg`, with a 512px
+transparent PNG for desktop packaging. Four warm lanterns and a descending
+stair distinguish the game from the Greyhaven town seal, which remains at
+town buildings. No third-party artwork is included in the new mark.

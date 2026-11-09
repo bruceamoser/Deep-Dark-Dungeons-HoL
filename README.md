@@ -1,4 +1,6 @@
-# Deep Dark Dungeons - HoL
+# Four Lanterns Deep
+
+Formerly Deep Dark Dungeons. A four-hero expedition beneath Greyhaven.
 
 A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, based on **Heroes of Legend**. Target: Linux and Windows, stylized dark fantasy, a persistent town, repeated descents and recoverable expedition losses.
 
@@ -6,7 +8,7 @@ A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, base
 
 ## Download and install
 
-Get the [latest release](https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Deep-Dark-Dungeons-HoL-0.7.0-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
+Get the [latest release](https://github.com/bruceamoser/Deep-Dark-Dungeons-HoL/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Deep-Dark-Dungeons-HoL-0.8.3-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
 
 The installed game checks for updates on startup and every four hours, downloads them in the background, and offers **Updates → Save & restart to install**. Your active journey is saved before installation. Updates preserve save files. v0.6 requires new journeys; earlier-edition runs remain on disk but cannot be loaded by this edition. Source-checkout/unpacked builds link to the release installer instead of self-updating. See [release details and publishing](docs/releases.md).
 

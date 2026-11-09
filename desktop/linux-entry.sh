@@ -14,7 +14,7 @@ if [[ -n "$game_helper" ]]; then
 else
   unset CHROME_DEVEL_SANDBOX
   if [[ -r /proc/sys/kernel/apparmor_restrict_unprivileged_userns && "$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns)" == 1 ]]; then
-    message='Deep Dark Dungeons needs the sandbox helper from Google Chrome or Chromium on this Ubuntu system. Install Chrome or Chromium, then launch the game again. Sandboxing remains enabled.'
+    message='Four Lanterns Deep needs the sandbox helper from Google Chrome or Chromium on this Ubuntu system. Install Chrome or Chromium, then launch the game again. Sandboxing remains enabled.'
     printf '%s\n' "$message" >&2
     if command -v zenity >/dev/null; then zenity --error --text="$message" || true; fi
     exit 1

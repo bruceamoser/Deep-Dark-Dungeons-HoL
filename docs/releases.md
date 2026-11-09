@@ -6,7 +6,7 @@ Windows uses a per-user NSIS installer. Linux offers an amd64 Debian package wit
 
 `electron-updater` reads the packaged GitHub provider configuration. Only stable newer versions are accepted; downgrade and prerelease updates are disabled. Checks run after the save bridge is ready, every four hours, and on demand. Downloads run in the background with SHA-512 validation against the release metadata. The main process accepts only fixed update commands from the trusted main frame. Release text is not executed or rendered as HTML. The renderer cannot choose a feed, file or executable.
 
-Installation is explicit. **Save & restart to install** sends the existing native-close save request. Only a successful disk-save acknowledgement invokes `quitAndInstall`; a save failure retains the downloaded update and reports the error. Automatic install-on-quit is disabled. The application name, app ID and save directory remain stable. Local unpacked/development builds show a release-download link instead of claiming they can self-update. Source checkout launches remain useful for development; install the AppImage or Debian package to use release updates.
+Installation is explicit. **Save & restart to install** sends the existing native-close save request. Only a successful disk-save acknowledgement invokes `quitAndInstall`; a save failure retains the downloaded update and reports the error. Automatic install-on-quit is disabled. The application displays Four Lanterns Deep. The app ID, executable filenames, save directory and update feed retain their original identifiers for upgrade compatibility. Local unpacked/development builds show a release-download link instead of claiming they can self-update. Source checkout launches remain useful for development; install the AppImage or Debian package to use release updates.
 
 ## Publishing
 
@@ -17,3 +17,14 @@ Installation is explicit. **Save & restart to install** sends the existing nativ
 5. Verify the public release assets and live update check. Do not replace a published installer in place; corrections get a new version/tag.
 
 Local commands: `npm run package:linux`, `npm run package:windows`; `npm run package:dir` retains the development launcher target. Build platforms sequentially when using the same checkout because Vite's output directory is shared. `node scripts/release-check.mjs <AppImage-or-installed-exe>` checks real rendering, saves and update IPC with isolated data; Linux also checks seccomp and the unconfined terminal AppArmor context. Tests must never use a real player save directory.
+
+### Four Lanterns Deep display name (#78)
+
+The v0.8.3 display name changes across loading screens, in-game branding,
+window titles, desktop entries and installer shortcuts. The authored four-lantern
+seal replaces the game mark; Greyhaven keeps its own town crest. The repository,
+app ID, package name, platform executable filenames, update feed and user-data
+directory retain their prior identifiers, so existing installs and saves continue.
+Windows packaging explicitly pins the legacy executable filename independently
+of the new product name. Linux menu entries and the portable installer use the
+new friendly name. Historical release notes keep their original names.

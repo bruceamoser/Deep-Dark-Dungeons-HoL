@@ -25,7 +25,7 @@ if [[ "$(uname -s)" == Linux ]]; then
   else
     unset CHROME_DEVEL_SANDBOX
     if [[ -r /proc/sys/kernel/apparmor_restrict_unprivileged_userns && "$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns)" == 1 ]]; then
-      printf '%s\n' 'Deep Dark Dungeons: no usable system Chromium sandbox helper was found.' 'Install Google Chrome or Chromium with its sandbox helper, then run this launcher again.' >&2
+      printf '%s\n' 'Four Lanterns Deep: no usable system Chromium sandbox helper was found.' 'Install Google Chrome or Chromium with its sandbox helper, then run this launcher again.' >&2
       exit 1
     fi
   fi
@@ -37,7 +37,7 @@ if [[ "$(uname -s)" == Linux ]]; then
     game_runtime_root="${XDG_RUNTIME_DIR:-/tmp}/deep-dark-dungeons-hol-$UID"
   fi
   if [[ "$game_runtime_root" =~ [[:space:]] || -L "$game_runtime_root" ]]; then
-    printf '%s\n' 'Deep Dark Dungeons needs a private runtime directory without spaces.' >&2
+    printf '%s\n' 'Four Lanterns Deep needs a private runtime directory without spaces.' >&2
     exit 1
   fi
   mkdir -p -- "$game_runtime_root"

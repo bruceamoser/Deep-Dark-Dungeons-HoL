@@ -15,6 +15,8 @@ try {
   });
   await p.goto("http://127.0.0.1:5198", { waitUntil: "domcontentloaded" });
   await expect(p.locator(".loading-seal")).toBeVisible();
+  await expect(p).toHaveTitle("Four Lanterns Deep");
+  await expect(p.locator(".loading-seal")).toHaveAttribute("src", "/art/four-lanterns-seal.svg");
   await p.evaluate(() => document.fonts.ready);
   await p.screenshot({ path: "test-results/greyhaven-loading.png" });
   release();

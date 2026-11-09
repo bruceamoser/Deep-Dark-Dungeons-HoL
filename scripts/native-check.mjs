@@ -92,6 +92,8 @@ try {
   const errors = [];
   w.on("pageerror", (e) => errors.push(e.message));
   await w.waitForFunction(() => window.__ddd, { timeout: 45000 });
+  await expect(w).toHaveTitle("Four Lanterns Deep");
+  await expect(w.locator(".brand-title")).toContainText("Four Lanterns");
   await w.screenshot({ path: "test-results/native-town.png" });
   const selectedChecks = process.env.DDD_NATIVE_CHECKS?.split(",");
   const runCheck = async (fn) => {

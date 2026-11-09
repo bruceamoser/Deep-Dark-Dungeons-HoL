@@ -77,6 +77,7 @@ try {
     await verifyCombinedSupplies(page);
     await verifyTownNavigation(page);
     await verifyDungeonCamp(page);
+    await expect(page).toHaveTitle("Four Lanterns Deep");
     await verifyMusic(page);
   }
   await page.getByRole("button", { name: "Save", exact: true }).click();
