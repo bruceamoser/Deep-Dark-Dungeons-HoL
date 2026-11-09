@@ -65,7 +65,12 @@ test("general foraging grants exactly one batch, finds water, respects empty rol
   for (let i = 0; i < 6; i++) g.campForage(h, { int: () => 25 });
   assert.ok(h.recipeMaterials["recipe-travel-food"] > 3);
   g.map.waterSources = [];
+  const flask = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-water-flask",
+  );
+  h.supplies[flask.instanceId] = 4;
   g.campForage(h, { int: () => 1 });
+  assert.equal(g.supplyValue(h, flask), 8);
   assert.equal(g.campWaterSource(), true);
   const copy = new Game(R, C);
   copy.load(structuredClone(g.snapshot()), { resume: false });

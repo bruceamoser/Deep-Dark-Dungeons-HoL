@@ -23,3 +23,5 @@ Keep the logo visible until preload finishes and the player enters explicitly. P
 Bruce wants player-facing camp text to report what happened, without dice, probability percentages or roll tiers. Keep the rules internal. Camp supplies use qualitative stock labels; foraging reports found resources or nothing.
 
 Camp planning shows two tasks per companion and expected HP recovery only when injured. Stores show current supplies per character and a possible-gain hint from assigned work, without numerical end-state projections or hourly rota detail.
+
+Bruce explicitly changed camp supply pacing: no automatic food, water or lighting costs while resting, including no deferred consumption timer debt. Required crafting/medical inputs still apply. New/refilled water uses d8; existing depleted pools retain their amounts until refill. Forage probabilities remain unchanged and hidden from camp UI.

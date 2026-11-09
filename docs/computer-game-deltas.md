@@ -286,3 +286,11 @@ range, cost, effects, equipment/supply needs, applicable damage bonuses and
 current availability. Disabled slots remain focusable for their explanation.
 Descriptions read current compiled powers and never consume attack buffs or
 mutate a target; target resistance and conditional bonuses are stated separately.
+
+## November 9 camp resource preservation and water capacity
+
+Bruce explicitly superseded camp provision costs: resting in dungeon camp or town sleep does not consume food, water or lighting supplies. Movement and non-camp downtime costs remain unchanged. Camp hours do not advance provision intervals or daily food/water ages, so resuming does not charge a deferred camp cost. Existing unmet needs are retained; rest does not create supplies or erase pre-existing hunger/thirst. Task-specific crafting materials and medical supplies still apply. A campfire remains as initially available without hourly fuel checks.
+
+New ordinary/starting water flasks and well/gather/forage refills use d8. Existing partially depleted flasks retain their current amounts until refilled; larger combined pools are not reduced. Source rules files remain untouched.
+
+Foraging odds remain the November 8 bands and training modifiers, internal to the engine. Player-facing camp text reports outcomes rather than dice/bands/percentages. Store cards show each hero's current qualitative stocks and possible gains, task choices show injured-only expected HP healing, and explicit saved camp order is independent of combat formation.

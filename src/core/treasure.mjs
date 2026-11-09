@@ -405,7 +405,7 @@ export function ordinaryItem(C, catalogId, instanceId) {
     held: false,
     worn: false,
     inventoryDie:
-      definition.inventoryDie ?? (catalogId === "item-water-flask" ? 6 : null),
+      catalogId === "item-water-flask" ? 8 : (definition.inventoryDie ?? null),
   };
 }
 export function recallScroll(seed, instanceId = `recall-${seed >>> 0}`) {
@@ -455,7 +455,7 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
   const p = R.workshopCharacter(draft, C);
   if (!p.valid) return p;
   for (const i of p.inventory.items)
-    if (i.catalogId === "item-water-flask") i.inventoryDie = 6;
+    if (i.catalogId === "item-water-flask") i.inventoryDie = 8;
   const treasure = (hero.treasure ?? []).map((saved) => {
     // Rebuild mechanics from the generation receipt; never trust persisted effect values.
     const item =

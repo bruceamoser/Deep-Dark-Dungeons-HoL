@@ -28,7 +28,7 @@ export async function verifyProvisions(page) {
         Object.assign(h, { x: i < 2 ? 2 : 1, z: i % 2 ? 3 : 2 });
         for (const item of h.preview.inventory.items) {
           if (item.catalogId === "item-water-flask")
-            h.supplies[item.instanceId] = 6;
+            h.supplies[item.instanceId] = 8;
           if (item.catalogId === "item-food-bundle")
             h.supplies[item.instanceId] = 8;
         }
@@ -60,11 +60,11 @@ export async function verifyProvisions(page) {
           ),
         );
       }),
-    ).toBe(4);
+    ).toBe(6);
     await settingsAction(page, "Camp & supplies");
     await expect(page.locator(".camp-stocks article")).toHaveCount(4);
     await expect(page.locator(".camp-stocks article").first()).toContainText(
-      "WaterLow",
+      "WaterStocked",
     );
     await expect(page.locator(".camp-stocks")).not.toContainText("Next:");
     await page.screenshot({ path: "test-results/provisions-countdown.png" });

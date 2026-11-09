@@ -83,7 +83,7 @@ function townCampScreen({ root, game, close, attempt }) {
       })
       .join(
         "",
-      )}</div><div class="camp-rest"><div><h3>${sleeping ? `Sleeping · ${hours}/8 hours` : "Rest until ready"}</h3><p>Eight hours of sleep clears fatigue. Food and water are used automatically each day. Sleep restores 2 HP per hour without restoring Grit or removing wounds.</p>${reason ? `<p class="cost-note">${esc(reason)}</p>` : ""}</div><button id="sleep" class="primary" ${!sleeping && reason ? "disabled" : ""}>${sleeping ? "Wake the company" : "Sleep for 8 hours"}</button></div><footer>Torches occupy a hand. Torches and campfires consume fuel while burning. Automatic dousing preserves the remaining burn time. Fatigue begins after 16 hours awake.</footer></section></div>`;
+      )}</div><div class="camp-rest"><div><h3>${sleeping ? `Sleeping · ${hours}/8 hours` : "Rest until ready"}</h3><p>Eight hours of sleep clears fatigue. Food, water and lighting supplies are preserved while resting. Sleep restores 2 HP per hour without restoring Grit or removing wounds.</p>${reason ? `<p class="cost-note">${esc(reason)}</p>` : ""}</div><button id="sleep" class="primary" ${!sleeping && reason ? "disabled" : ""}>${sleeping ? "Wake the company" : "Sleep for 8 hours"}</button></div><footer>Torches occupy a hand. Campfires do not consume lighting supplies. Automatic dousing preserves the remaining burn time. Fatigue begins after 16 hours awake.</footer></section></div>`;
     root.querySelector(".close").onclick = close;
     root.querySelectorAll("[data-torch]").forEach(
       (b) =>
@@ -284,7 +284,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
       camp ? camp.total - camp.elapsed : total,
       camp ?? game.active,
     );
-    host.innerHTML = `<div class="camp-plan-top"><div><span class="eyebrow">${last?.status === "complete" && !camp ? "CAMP COMPLETE" : camp?.status === "interrupted" ? "WATCH INTERRUPTED" : "REST & RECOVERY"}</span><h3>${camp ? `Hour ${elapsed} of ${camp.total}` : "Plan the watch"}</h3><p>Choose two tasks for each companion. They rest between tasks.</p></div><label>Camp length<select id="camp-length" ${camp ? "disabled" : ""}>${Array.from(
+    host.innerHTML = `<div class="camp-plan-top"><div><span class="eyebrow">${last?.status === "complete" && !camp ? "CAMP COMPLETE" : camp?.status === "interrupted" ? "WATCH INTERRUPTED" : "REST & RECOVERY"}</span><h3>${camp ? `Hour ${elapsed} of ${camp.total}` : "Plan the watch"}</h3><p>Choose two tasks for each companion. Resting uses no food, water or lighting supplies.</p></div><label>Camp length<select id="camp-length" ${camp ? "disabled" : ""}>${Array.from(
       { length: 89 },
       (_, i) => i + 8,
     )

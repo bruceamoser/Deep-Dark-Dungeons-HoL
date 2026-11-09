@@ -125,14 +125,14 @@ export const foragingMethods = {
           (i) =>
             i.carried &&
             i.catalogId === "item-water-flask" &&
-            this.supplyValue(p, i) < 6,
+            this.supplyValue(p, i) < 8,
         );
         if (item) {
           target = { hero: p, item };
           break;
         }
       }
-      if (target) target.hero.supplies[target.item.instanceId] = 6;
+      if (target) target.hero.supplies[target.item.instanceId] = 8;
       this.campEvent(
         `${h.name} found water${target ? ` and replenished ${target.hero.name}'s water flask` : this.campWaterSource() ? "; the company can gather more nearby" : " but could not reach a safe source"}.`,
       );

@@ -89,7 +89,7 @@ test("general foraging finds one material per success; crafting consumes compati
   const flask = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-water-flask",
   );
-  assert.equal(g.supplyValue(h, flask), 6);
+  assert.equal(g.supplyValue(h, flask), 8);
 });
 
 test("wandering creatures can interrupt a cleared floor; workers detect, Guard adds a Boon, failed watch is an ambush", () => {

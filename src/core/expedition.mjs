@@ -19,7 +19,7 @@ export const EXPEDITION_TIME = Object.freeze({
 });
 export const SUPPLY_DICE = Object.freeze({
   "item-food-bundle": 8,
-  "item-water-flask": 6, // A filled flask gains a supply die in this adaptation.
+  "item-water-flask": 8, // A filled flask gains a supply die in this adaptation.
   "item-lighting-bundle": 6,
 });
 export function prepareExpedition(campaign) {
@@ -363,10 +363,16 @@ export const expeditionMethods = {
     if (!Number.isSafeInteger(seconds) || seconds < 0)
       throw new Error("Time must be whole nonnegative seconds.");
     prepareExpedition(this.campaign);
+    const resting = sleeping || sleepingHeroes !== null;
     this.campaign.clockSeconds += seconds;
     this.expireBattlefield();
     this.campaign.hours = Math.floor(this.campaign.clockSeconds / 3600);
     for (const h of this.party.filter((h) => h.survival.status !== "dead")) {
+      if (resting) {
+        // Camp is a resource-free planning/recovery phase, without deferred needs debt.
+        h.needs.ateAt += seconds;
+        h.needs.drankAt += seconds;
+      }
       const asleep = sleeping || sleepingHeroes?.includes(h.heroId);
       if (asleep && h.survival.status === "active") {
         h.needs.restedAt += seconds; // Sleep itself is not time spent awake.
@@ -390,9 +396,9 @@ export const expeditionMethods = {
         );
       }
     }
-    if (provisions && seconds >= 60)
+    if (provisions && !resting && seconds >= 60)
       this.stationarySupplies(seconds, { camping: !!sleepingHeroes });
-    if (provisions) this.autoProvisions();
+    if (provisions && !resting) this.autoProvisions();
     if (!sleeping && !sleepingHeroes)
       for (const h of this.party) h.needs.sleepProgress = 0;
     this.emit("time");
@@ -405,7 +411,7 @@ export const expeditionMethods = {
       );
     if (!flasks.length) throw new Error("This hero needs a water flask.");
     for (const item of flasks)
-      h.supplies[item.instanceId] = Math.max(6, this.supplyValue(h, item));
+      h.supplies[item.instanceId] = Math.max(8, this.supplyValue(h, item));
     this.note(
       `${h.name} refills ${flasks.length} water flask${flasks.length === 1 ? "" : "s"} at the well.`,
     );

@@ -20,3 +20,9 @@ The complete native Linux regression passes via the exact `launch-game.sh`, user
 ## Remaining / transfer
 
 No assigned gameplay work remains. No new installer release was requested or published. Checkout launcher includes this development follow-up; installed releases stay at v0.8.4 until a later release. Existing historical saved journal strings retain their recorded wording. No new private assets or machine setup requirements; licensed exports and build outputs remain ignored and machine-local.
+
+## Water and camp supply pacing follow-up
+
+Bruce requested d8 starting/refilled water and no automatic food/water/lighting consumption during camp. Implemented for dungeon camp and town sleep, including suspended food/water ages and provision intervals so no deferred charge occurs on exit. Pre-existing hunger/thirst remains; task-specific crafting/medical supplies still spend normally. Existing partially used flasks are not silently refilled; new, bought and refilled ordinary flasks use d8 without reducing larger combined pools.
+
+Foraging audit: 90,000 duty draws over 10,000 seeds, three camps with three untrained foragers each, yielded 22 all-empty three-camp sequences (0.22%, near the theoretical 0.195%). No stuck roll or systematic failure found; odds unchanged. Existing integration tests exercise every resource and persistent rewards. 273 tests and the rebuilt licensed Linux directory package pass for this mechanics follow-up. Native run results are recorded on PR #108; final follow-up log is `/tmp/fld-rest-water-native.log`.

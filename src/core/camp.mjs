@@ -292,7 +292,7 @@ export const campMethods = {
         for (const i of p.preview.inventory.items.filter(
           (i) => i.carried && i.catalogId === "item-water-flask",
         ))
-          p.supplies[i.instanceId] = Math.max(6, this.supplyValue(p, i));
+          p.supplies[i.instanceId] = Math.max(8, this.supplyValue(p, i));
       this.campEvent(`${h.name} fills the company's water flasks.`);
       return;
     }
