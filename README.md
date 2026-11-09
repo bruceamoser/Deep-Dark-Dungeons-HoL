@@ -6,6 +6,10 @@ A desktop, single-player, 3D isometric dungeon-delving RPG for four heroes, base
 
 **v0.6 — The Discipline Forge.** A playable dungeon RPG with game-owned character progression over HoL combat and survival mechanics. Eighteen discipline origins, 72 circular paths and 33 combined techniques share one persistent DP budget. See [implementation coverage and limitations](docs/implementation-status.md). The high-end presentation target remains an acceptance requirement.
 
+## Working across local computers
+
+Shared Codex instructions live in [AGENTS.md](AGENTS.md). Say **“Pull the repo and get the latest working progress”** to resume, or **“Save working progress so I can switch machines”** to checkpoint. See the [local handoff process](docs/work-progress/README.md) and [current progress](docs/work-progress/current.md). Code and explicit project knowledge travel through GitHub; work executes locally.
+
 ## Download and install
 
 Get the [latest release](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/latest). Windows has an installer; Debian/Ubuntu has a `.deb` package (`sudo apt install ./Four-Lanterns-Deep-0.8.3-amd64.deb`). Other Linux systems can use the `linux-x64.tar.gz` bundle: extract it and run `bash install-linux.sh` to add the game to your applications menu. A standalone AppImage is also available. No development tools or GitHub account are needed. Initial Windows builds are unsigned.
