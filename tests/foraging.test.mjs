@@ -126,3 +126,62 @@ test("paused duty changes affect future work without repeating time, healing or 
   assert.equal(g.campaign.camp.elapsed, 2);
   assert.equal(g.clock().seconds, time + 3600);
 });
+
+test("relevant discipline ranks improve matching finds while abilities contribute larger bonuses", () => {
+  const base = forageTable();
+  for (const rank of [1, 2, 3]) {
+    const wilderness = forageTable({
+      ranks: { "discipline-wilderness": rank },
+    });
+    assert.equal(wilderness.findChance, 50 + rank * 3);
+    assert.equal(wilderness.bands.find((b) => b.id === "herbs").chance, 6);
+    const craft = forageTable({ ranks: { "discipline-craft": rank } });
+    assert.equal(craft.findChance, 50 + rank * 2);
+    assert.equal(craft.bands.find((b) => b.id === "food").chance, 14);
+    const medicine = forageTable({ ranks: { "discipline-medicine": rank } });
+    assert.equal(medicine.findChance, 50 + rank);
+    assert.equal(medicine.bands.find((b) => b.id === "water").chance, 8);
+  }
+  assert.deepEqual(
+    forageTable({ ranks: { "discipline-flame": 3, "discipline-arms": 3 } }),
+    base,
+  );
+  const combined = forageTable({
+    ranks: { "discipline-wilderness": 1 },
+    powers: ["power-field-replenishment"],
+  });
+  assert.equal(combined.findChance, 71);
+  assert.ok(
+    forageTable({ powers: ["power-field-artisan"] }).findChance >
+      forageTable({ ranks: { "discipline-craft": 3 } }).findChance,
+  );
+  const capped = forageTable({
+    ranks: {
+      "discipline-wilderness": 3,
+      "discipline-craft": 3,
+      "discipline-medicine": 3,
+    },
+    powers: [
+      "power-field-replenishment",
+      "power-forager-remedies",
+      "power-field-artisan",
+    ],
+    healingSkills: 3,
+  });
+  assert.equal(capped.findChance, 85);
+  for (let roll = 1; roll <= 100; roll++)
+    assert.ok(forageOutcome(capped, roll));
+});
+
+test("camp uses the acting hero's discipline ranks without sharing them across the company", () => {
+  const g = fresh(),
+    h = g.party[0],
+    other = g.party[1];
+  h.preview.state.ranks = {};
+  other.preview.state.ranks = {};
+  const before = g.campForageTable(h).findChance,
+    otherBefore = g.campForageTable(other).findChance;
+  h.preview.state.ranks["discipline-wilderness"] = 1;
+  assert.equal(g.campForageTable(h).findChance, Math.min(85, before + 3));
+  assert.equal(g.campForageTable(other).findChance, otherBefore);
+});

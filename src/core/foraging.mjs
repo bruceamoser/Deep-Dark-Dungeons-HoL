@@ -1,3 +1,4 @@
+import { DISCIPLINE_FORAGING } from "./discipline-benefits.mjs";
 import { distance, key, lineOfSight } from "./dungeon.mjs";
 export const FORAGE_RESOURCES = Object.freeze([
   { id: "water", name: "Water", base: 8 },
@@ -23,6 +24,7 @@ export const FORAGE_RESOURCES = Object.freeze([
 ]);
 export function forageTable({
   powers = [],
+  ranks = {},
   remedies = false,
   salvage = false,
   healingSkills = 0,
@@ -33,6 +35,22 @@ export function forageTable({
     modifiers.push({ name, changes });
     for (const [id, n] of Object.entries(changes)) bonus[id] += n;
   };
+  for (const [id, benefit] of Object.entries(DISCIPLINE_FORAGING)) {
+    const rank = Math.max(
+      0,
+      Math.min(3, Math.floor(ranks[`discipline-${id}`] ?? 0)),
+    );
+    if (rank)
+      add(
+        `${benefit.name} training`,
+        Object.fromEntries(
+          Object.entries(benefit.resources).map(([resource, weight]) => [
+            resource,
+            rank * weight,
+          ]),
+        ),
+      );
+  }
   if (powers.includes("power-field-replenishment"))
     add("Field Replenishment", { water: 4, wood: 4, food: 6, fletching: 4 });
   if (powers.includes("power-forager-remedies"))
@@ -86,6 +104,7 @@ export const foragingMethods = {
   campForageTable(h) {
     return forageTable({
       powers: this.powerIds(h),
+      ranks: h.preview.state.ranks,
       remedies: this.knownRecipes(h).has("recipe-field-dressing"),
       salvage: this.traits(h).some((t) => t.salvage),
       healingSkills: this.campHealSkills(h).length,

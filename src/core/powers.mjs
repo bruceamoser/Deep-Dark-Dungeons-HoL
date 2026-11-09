@@ -161,7 +161,7 @@ power(
   1,
   "field-artisan",
   "Field Artisan",
-  "Learn the smoke flask and cord recipes. Crafting takes 25% less time. Use the recipe book at camp or in town.",
+  "Greatly improves finding wood and fletching materials when foraging. Learn the smoke flask and cord recipes. Crafting takes 25% less time. Use the recipe book at camp or in town.",
   {
     category: "passive",
     target: "self",
@@ -635,7 +635,7 @@ power(
   2,
   "field-replenishment",
   "Field Replenishment",
-  "At camp or in town, replenish arrows, torches or food using their recipe and materials. Basic recipes are always known; crafting time is reduced by 25%.",
+  "Greatly improves finding water, wood, food and fletching materials when foraging. At camp or in town, replenish arrows, torches or food using their recipe and materials. Basic recipes are always known; crafting time is reduced by 25%.",
   {
     category: "passive",
     target: "self",

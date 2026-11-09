@@ -294,3 +294,7 @@ Bruce explicitly superseded camp provision costs: resting in dungeon camp or tow
 New ordinary/starting water flasks and well/gather/forage refills use d8. Existing partially depleted flasks retain their current amounts until refilled; larger combined pools are not reduced. Source rules files remain untouched.
 
 Foraging odds remain the November 8 bands and training modifiers, internal to the engine. Player-facing camp text reports outcomes rather than dice/bands/percentages. Store cards show each hero's current qualitative stocks and possible gains, task choices show injured-only expected HP healing, and explicit saved camp order is independent of combat formation.
+
+## November 9 discipline foraging competence
+
+Each effective rank I–III adds a small personal bonus: Wilderness +1 point each to water/wood/food; Craft +1 each to wood/fletching; Medicine +1 to medicinal materials. Starting origins count immediately. Relevant abilities retain their larger existing bonuses and stack with these benefits under the existing 85% total find cap. Unrelated disciplines grant no forage bonus. This supersedes the previous absence of discipline-only forage effects. Descriptions remain qualitative in player UI.

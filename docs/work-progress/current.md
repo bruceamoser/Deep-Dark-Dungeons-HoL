@@ -10,7 +10,9 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Current task
 
-Camp presentation follow-up: plain-language outcomes replace foraging dice/percentages, crafting supply dice and treatment roll tiers. Camp planning no longer exposes forage bands or numerical interruption odds. Each companion chooses two tasks; only injured companions show expected HP recovery. Stores show each character’s current supplies with a possible-increase hint tied to assigned work, without projection ranges or consumption counters. Portrait cards let the player choose camp work order before starting; the order survives save/load and does not change combat formation. Torch illumination follows the animated held flame rather than the character’s head. New/refilled water is d8. Camp and town sleep preserve food/water/lighting and their consumption timers; crafting/medical task costs remain. Forage odds are unchanged after a seed/roll audit. Mechanics and saves are unchanged. Branch `codex/camp-plain-outcomes`; see [handoff](handoffs/2026-11-09-camp-plain-outcomes.md). 273 unit tests, browser interaction checks and the complete native Linux launcher regression pass. The local launcher is rebuilt with these changes. This source change is not a new public installer release; v0.8.4 remains the latest published version.
+Relevant disciplines now give small personal, rank-based foraging bonuses; dedicated abilities retain the larger bonuses. Wilderness improves water/wood/food, Craft wood/fletching, Medicine medicinal materials. Origins and rank II/III descriptions explain this without showing probabilities. Existing characters benefit automatically; save format unchanged. Branch `codex/discipline-foraging-benefits`, base `bd001cb`; see [handoff](handoffs/2026-11-09-discipline-foraging-benefits.md).
+
+Camp UX, d8 water, resource-free rest and torch lighting were merged in [PR #108](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/108) at `bd001cb`. See [camp handoff](handoffs/2026-11-09-camp-plain-outcomes.md). These changes and discipline bonuses are local development builds; latest published installer remains v0.8.4. Purchased assets stay private.
 
 ## Previous delivered task
 
@@ -38,7 +40,7 @@ The installed executable passed the release smoke flow (rendering, Forge, isolat
 
 1. Follow `AGENTS.md` and the startup process in this folder.
 2. v0.8.4 is delivered. Read the latest handoff for verification and local setup notes; no UI qualification task remains.
-3. Read the camp presentation handoff for the latest source follow-up.
+3. Read the discipline foraging handoff for the latest source follow-up.
 4. Licensed runtime exports have been staged privately from the installed licensed v0.8.3 app and verified (251 nodes, 20 animations, 39 weapon grips). These ignored files do not travel with Git. Preserve finished-release staging rules.
 
 ## Transfer gaps
