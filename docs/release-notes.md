@@ -1,3 +1,21 @@
+**v0.8.5 — The creatures fight back**
+
+- **Distinct enemy tactics.** Pack hunters coordinate, duelists seek separate opponents, guardians protect nearby ground and allies, predators pursue exposed heroes, and ranged creatures seek clear shots and firing distance. Supports relieve afflicted allies and controllers disrupt the company.
+- **Real creature abilities.** Creatures choose from all their printed main attacks, including third attacks. They use useful control, support, terrain and movement maneuvers, obey ammunition and attack cooldowns, and avoid poor friendly-fire angles. Breath cones affect allied creatures too. The bestiary explains behavior and lists every attack.
+- **Counterplay to control.** Use **Break free** to spend a Main Action escaping a creature's hold, or **Clear caltrops** to remove a nearby patch. Creature movement follows terrain, occupancy and the printed opportunity-attack exemptions. Creature opportunity strikes use their own basic attack profiles.
+- **Simpler camp planning.** Choose two tasks per companion. Injured heroes show expected healing. Company stores show each hero's current supplies, actual portrait and possible gains; arrow controls set camp work order before resting. The bottom hourly rota, odds tables, stock projections and consumption counters are gone. Outcomes report what was found, made or healed.
+- **Rest preserves supplies.** Dungeon camp and town sleep no longer automatically consume food, water or lighting supplies, or defer those costs until departure. Crafting and care still require materials. Water flasks have a larger starting/refilled supply, while existing partially used supplies remain until refilled.
+- **Discipline competence.** Wilderness, Craft and Medicine each provide small relevant foraging benefits that improve with rank, stacking with stronger dedicated abilities. Existing characters gain them automatically.
+- **Torch and portrait fixes.** Held torch illumination follows the animated flame instead of the head. Portraits frame the equipped character's face correctly. Temporary creature light fields correctly release automatically doused torches when they expire.
+
+Existing Forge journeys continue; no character rebuild or respec is required. Creature statistics and encounter budgets are unchanged in this behavior update. The same installed identifiers and save locations are retained.
+
+### Install
+
+Debian/Ubuntu: `sudo apt install ./Four-Lanterns-Deep-0.8.5-amd64.deb`. Other Linux: the AppImage or Linux installer bundle. Windows: `Four-Lanterns-Deep-Setup-0.8.5-x64.exe`. Installed releases can use **Settings → Updates → Save & restart to install**.
+
+---
+
 **v0.8.4 — A quieter interface, a warmer welcome**
 
 - The illustrated loading screen stays until you choose **Enter Greyhaven**. Click, Enter or Space enters after models, town assets, fonts, portraits, building images, music recordings and initial scene shaders are prepared. World simulation stays paused behind the screen.

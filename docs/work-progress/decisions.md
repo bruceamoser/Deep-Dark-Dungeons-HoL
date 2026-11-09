@@ -29,3 +29,7 @@ Bruce explicitly changed camp supply pacing: no automatic food, water or lightin
 ## 2026-11-09 — Disciplines provide relevant basic competence
 
 Bruce wants small thematic discipline benefits as well as larger ability benefits. Applied first to foraging: each Wilderness rank adds one point to water/wood/food bands, each Craft rank adds one to wood/fletching, and each Medicine rank adds one to medicinal materials. Rank is taken from the acting hero’s effective Forge ranks, including origin grants. No party-wide sharing and no benefit from unrelated disciplines. Existing ability bonuses stack, retain larger contributions, and share the existing 85% overall find cap. Forge text explains benefits qualitatively; no odds table returns to camp.
+
+## 2026-11-09 — Creature goals and tactical abilities
+
+Bruce needs varied enemy behavior to assess balance. Assign identity-driven goals, choose among all printed main attacks, obey cooldowns/ammo, use meaningful support/control/terrain/mobility maneuvers, and preserve legal action/terrain/reaction/perception constraints. Keep printed stats and encounter budgets unchanged during this behavior change. No unprinted summons, free buffs or friendly-fire immunity. Add deterministic Main Action escape from creature holds and Main Action caltrop clearing so newly active control has player counterplay. Preserve/validate tactical commitments through saves. See `docs/creature-ai.md` for deliberate narrative/conditional omissions and NPC collateral resolution.

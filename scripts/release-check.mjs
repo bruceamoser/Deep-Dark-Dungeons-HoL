@@ -1,3 +1,4 @@
+import { verifyCreatureAI } from "./creature-ai-check.mjs";
 import { enterGame, settingsAction } from "./ui-session.mjs";
 // Smoke-test the actual AppImage or installed Windows executable, with real IPC,
 // an isolated save directory, and Chromium's renderer sandbox enabled.
@@ -93,6 +94,7 @@ try {
     await expect(page).toHaveTitle("Four Lanterns Deep");
     await verifyMusic(page);
   }
+  await verifyCreatureAI(page);
   await settingsAction(page, "Save");
   const saved = await page.evaluate(() => window.desktop.load());
   expect(JSON.parse(saved).campaign.party.length).toBe(4);

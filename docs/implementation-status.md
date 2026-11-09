@@ -53,3 +53,7 @@ Finished apps use the purchased Dungeon Mason modular characters with KayKit sce
 [Historical source-card review](ability-coverage.json) ·
 [v0.5 design and research](v0.5-gameplay-design.md) · [Earlier plan](gameplay-and-identity-plan.md) ·
 [Adaptations](computer-game-deltas.md) · [Validation](validation.md)
+
+## Creature tactical behavior follow-up
+
+The 58-creature roster now has tactical goals and selection across all 120 printed main actions, with cooldowns, useful maneuvers, positioning, support, friendly-fire cones and saved commitments. See [coverage and limits](creature-ai.md). These source/development changes do not assert that every printed reaction or narrative/environmental action is newly automated, or that play balance is complete.

@@ -1,5 +1,5 @@
 import { surfaceAt } from "./battlefield.mjs";
-import { Random, key, distance, lineOfSight, pathfind } from "./dungeon.mjs";
+import { Random, key, distance, lineOfSight } from "./dungeon.mjs";
 import { CREATURE_ROSTER, BOSSES } from "./creature-roster.mjs";
 export { CREATURE_ROSTER };
 export function encounterBudget(levels, depth, difficulty = 1) {
@@ -141,41 +141,67 @@ export const bestiaryMethods = {
       })) ?? []
     );
   },
-  creatureAction(e, basic = false) {
+  creatureActions(e) {
     const c = this.creature(e);
     if (!c)
-      return {
-        name: "Basic Melee",
-        attribute: "agility",
-        type: "physical",
-        range: 1,
-        outcomes: { weak: "5", standard: "3", strong: "2" },
-      };
-    const a =
-        c.actions.main.actions[
-          basic ||
-          (e.ammunition === 0 &&
-            /arrow|dart|stone/i.test(c.actions.main.actions[1].name))
-            ? 0
-            : 1
-        ],
-      details = c.reference.specialtyDetails.find((d) => d.title === a.name);
-    const fields = details?.fields ?? [],
-      target = fields.find((f) => f.label === "Target")?.text ?? "";
-    return {
-      name: a.name,
-      attribute: a.defense.attribute,
-      type: (fields.find((f) => f.label === "Damage type")?.text ?? "physical")
-        .replace(".", "")
-        .toLowerCase(),
-      range: Number(target.match(/within (\d+) squares/)?.[1] ?? 1),
-      ammunition:
+      return [
+        {
+          index: 0,
+          name: "Basic Melee",
+          attribute: "agility",
+          type: "physical",
+          range: 1,
+          outcomes: { weak: "5", standard: "3", strong: "2" },
+          available: true,
+        },
+      ];
+    return c.actions.main.actions.map((a, index) => {
+      const details = c.reference.specialtyDetails.find(
+          (d) => d.title === a.name,
+        ),
+        fields = details?.fields ?? [];
+      const target = fields.find((f) => f.label === "Target")?.text ?? "";
+      const ammunition =
         fields.some((f) => f.label === "Ammunition") ||
-        /Ammunition.*inventory d6/i.test(details?.markdown ?? ""),
-      spell: fields.some((f) => f.label === "Spell"),
-      hearing: /can hear/.test(target),
-      outcomes: a.outcomes,
-    };
+        /Ammunition.*inventory d6/i.test(details?.markdown ?? "");
+      const cooldown =
+        /consecutive turns|cannot use this attack next turn/i.test(
+          (details?.markdown ?? "") + fields.map((f) => f.text).join(" "),
+        );
+      const area = /cone of 3 rows/.test(target) ? "cone" : null;
+      return {
+        index,
+        name: a.name,
+        attribute: a.defense.attribute,
+        type: (
+          fields.find((f) => f.label === "Damage type")?.text ?? "physical"
+        )
+          .replace(".", "")
+          .toLowerCase(),
+        range: area
+          ? 3
+          : Number(target.match(/within (\d+) squares/)?.[1] ?? 1),
+        ammunition,
+        spell: fields.some((f) => f.label === "Spell"),
+        hearing: /can hear/.test(target),
+        area,
+        cooldown,
+        hold: /holder suffers its own Grappled/.test(details?.markdown ?? ""),
+        outcomes: a.outcomes,
+        available:
+          (!ammunition || e.ammunition !== 0) &&
+          (!cooldown ||
+            e.aiState?.lastActions?.[a.name] !== (e.powerTurn ?? 0) - 1),
+      };
+    });
+  },
+  creatureAction(e, basic = false) {
+    const actions = this.creatureActions(e);
+    return basic
+      ? actions[0]
+      : (actions.find((a) => a.name === e.aiState?.action && a.available) ??
+          actions.find((a) => a.index === 1 && a.available) ??
+          actions[0]);
   },
   creatureDefense(e, h, spec) {
     const c = this.creature(e),
@@ -212,6 +238,10 @@ export const bestiaryMethods = {
       banes++;
     }
     if (e.hunker && spec.type === "physical") banes++;
+    if (e.aiState?.nextAttackBane) {
+      banes++;
+      delete e.aiState.nextAttackBane;
+    }
     // Cover is an alternative Reaction: one guardian may interpose, no movement or damage transfer.
     const guardian = this.enemies.find(
       (g) =>
@@ -248,43 +278,25 @@ export const bestiaryMethods = {
         3 - Math.min(3, Math.max(restrictions.dazed, restrictions.grappled));
     e.retained = ["main", "maneuver", "reaction"].slice(0, count);
     if (!e.retained.includes("reaction")) e.reactionUsed = true;
-    if (!this.enemyCapable(e) || !e.retained.includes("maneuver")) return;
-    const maneuvers =
-      this.creature(e)?.actions.maneuvers.actions.map((a) => a.name) ?? [];
-    if (maneuvers.includes("Study the Opening")) e.study = true;
-    else if (maneuvers.includes("Defend")) e.defending = true;
-    // Selecting Defend is the AI policy; it does not grant unprinted Stalking Step or shield effects.
-  },
-  moveCreatureIntoRange(e, h, range, planOnly = false) {
-    if (distance(e, h) <= range && lineOfSight(this.map, e, h)) return [];
-    const blocked = this.occupied(e.id),
-      candidates = Object.values(this.map.tiles).filter(
-        (p) =>
-          distance(p, h) <= range &&
-          distance(p, h) > 0 &&
-          !this.map.obstacles[key(p.x, p.z)] &&
-          !blocked.has(key(p.x, p.z)) &&
-          lineOfSight(this.map, p, h),
-      );
-    const routes = candidates
-      .map((p) => pathfind(this.map, e, p, blocked))
-      .filter((p) => p.length)
-      .sort((a, b) => a.length - b.length);
-    const route = routes[0],
-      speed = this.enemySpeed(e);
-    const points = [];
-    let spent = 0;
-    for (const p of route ?? []) {
-      spent +=
-        this.map.tiles[key(p.x, p.z)]?.difficult ||
-        surfaceAt(this.map, p, "difficult")
-          ? 2
-          : 1;
-      if (spent > speed) break;
-      points.push(p);
+    if (e.aiState?.baseStability !== undefined) {
+      e.stability = e.aiState.baseStability;
+      delete e.aiState.baseStability;
     }
-    if (!planOnly && points.length) Object.assign(e, points.at(-1));
-    return points;
+    e.aiState ??= {};
+    e.aiState.anchor ??= { x: e.x, z: e.z };
+    e.aiState.maneuverDone = false;
+    e.aiState.fireBonus = 0;
+    e.aiState.movingManeuver = false;
+    delete e.aiState.evade;
+    delete e.aiState.nextAttackBane;
+    const zones = this.map.zones ?? [];
+    this.map.zones = zones.filter(
+      (z) => !(z.source === e.id && z.npcUntilTurn <= (e.powerTurn ?? 0)),
+    );
+    if (zones.length !== this.map.zones.length) {
+      this.syncTorches();
+      this.emit("battlefield");
+    }
   },
   creatureAfterHit(e, h, spec, damage) {
     if (e.type === "creature-emberling" && spec.type === "cold")
@@ -309,12 +321,23 @@ export const bestiaryMethods = {
     }
   },
   addCreatureCondition(h, key, rating, e) {
+    if (
+      !h.survival &&
+      this.creature(h)?.immunities.some((i) => i.toLowerCase() === key)
+    )
+      return;
+    h.conditions ??= [];
     h.conditions.push({
       id: `creature-effect-${crypto.randomUUID()}`,
       key,
       rating,
       source: e.id,
-      persistence: key === "prone" ? "binary" : "temporary",
+      persistence:
+        key === "prone"
+          ? "binary"
+          : key === "grappled"
+            ? "maintained"
+            : "temporary",
       order: this.encounter?.serial ?? 0,
     });
     this.note(`${h.name}: ${key} ${rating}.`);

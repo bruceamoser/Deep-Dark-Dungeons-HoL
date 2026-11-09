@@ -273,6 +273,14 @@ export const powerMethods = {
       !this.map.tiles[key(point.x, point.z)]
     )
       throw new Error("Choose a valid target on the dungeon floor.");
+    if (
+      spec.effects.some((e) => e.kind === "clearNpcTerrain") &&
+      !(this.map.zones ?? []).some(
+        (z) =>
+          z.caltrops && z.cells.some((p) => p.x === point.x && p.z === point.z),
+      )
+    )
+      throw new Error("Choose a caltrop patch within reach.");
     if (spec.otherOnly && point.id === actor.id)
       throw new Error("Choose another companion.");
     if (
@@ -454,6 +462,18 @@ export const powerMethods = {
       )
         return `No ${p.category} remains.`;
     }
+    if (
+      p.effects.some((e) => e.kind === "breakHold") &&
+      !(h.conditions ?? []).some((c) => c.heldTarget === h.id && c.holder)
+    )
+      return "No creature is holding this hero.";
+    if (
+      p.effects.some((e) => e.kind === "clearNpcTerrain") &&
+      !(this.map.zones ?? []).some(
+        (z) => z.caltrops && z.cells.some((p) => distance(h, p) <= 1),
+      )
+    )
+      return "No caltrops within reach.";
     if (p.shield && !this.held(h, "item-ordinary-shield"))
       return "Ready a shield first.";
     if (p.weapon && !this.held(h, `item-ordinary-${p.weapon}-weapon`))
@@ -507,6 +527,14 @@ export const powerMethods = {
         !this.supplyItem(h, "item-ammunition-bundle")
       )
         continue;
+      if (effect.kind === "clearNpcTerrain") {
+        this.clearCreatureTerrain(h, point);
+        continue;
+      }
+      if (effect.kind === "breakHold") {
+        this.breakCreatureHold(h);
+        continue;
+      }
       if (effect.kind === "zone") {
         this.createSurface(
           effect.surface,

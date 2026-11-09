@@ -1,3 +1,4 @@
+import { CREATURE_GOALS } from "../core/creature-ai.mjs";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
 import { esc, icon } from "./icons.mjs";
 export function bestiaryScreen({ root, game, close, selectedId }) {
@@ -18,8 +19,7 @@ export function bestiaryScreen({ root, game, close, selectedId }) {
       )
       .join(
         "",
-      )}</select><div class="creature-list"></div></aside><main><div class="creature-portrait"><img src="/vendor/hol/assets/bestiary/${c.id}.webp" alt="${esc(c.name)} book illustration"><span class="creature-cv">${c.cv}<small>COMBAT VALUE</small></span></div><span class="eyebrow">${esc(c.family)} · Appears from depth ${look.depth}</span><h2>${esc(c.name)}</h2><p>${esc(c.classification.role)}</p><div class="creature-stat-row"><span>HEALTH<b>${c.hp.max}</b></span><span>SPEED<b>${c.speed.ordinary}</b></span><span>STABILITY<b>${c.defenses.stability}</b></span></div><p><b>Resistances</b> · ${esc(c.resistances.sourceText)}<br><b>Immunities</b> · ${esc(c.immunities.join(", ") || "None")}<br><b>Evasion</b> · ${esc(c.defenses.evasion.sourceText)}<br><b>Threat</b> · ${esc(c.defenses.threat.sourceText)}</p><h3>Attacks</h3>${c.actions.main.actions
-      .slice(0, 2)
+      )}</select><div class="creature-list"></div></aside><main><div class="creature-portrait"><img src="/vendor/hol/assets/bestiary/${c.id}.webp" alt="${esc(c.name)} book illustration"><span class="creature-cv">${c.cv}<small>COMBAT VALUE</small></span></div><span class="eyebrow">${esc(c.family)} · Appears from depth ${look.depth}</span><h2>${esc(c.name)}</h2><p>${esc(c.classification.role)}</p><div class="creature-stat-row"><span>HEALTH<b>${c.hp.max}</b></span><span>SPEED<b>${c.speed.ordinary}</b></span><span>STABILITY<b>${c.defenses.stability}</b></span></div><p><b>Resistances</b> · ${esc(c.resistances.sourceText)}<br><b>Immunities</b> · ${esc(c.immunities.join(", ") || "None")}<br><b>Evasion</b> · ${esc(c.defenses.evasion.sourceText)}<br><b>Threat</b> · ${esc(c.defenses.threat.sourceText)}</p><h3>Combat behavior</h3><p>${esc(CREATURE_GOALS[game.enemyPersonality({ type: c.id })])}</p><h3>Attacks</h3>${c.actions.main.actions
       .map(
         (a) =>
           `<article class="creature-action"><b>${esc(a.name)}</b><small>${esc(a.defense.sourceText)} defense</small><div>${["weak", "standard", "strong"].map((t) => `<span>${t.toUpperCase()}<strong>${esc(a.outcomes[t])}</strong></span>`).join("")}</div></article>`,
