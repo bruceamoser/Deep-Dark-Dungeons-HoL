@@ -4,43 +4,36 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Baseline
 
-- Product: **Four Lanterns Deep**; canonical repository `bruceamoser/Four-Lanterns-Deep`.
-- Latest published release: **[v0.8.5](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.5)**, published November 9. Immutable game source/tag: `23effe99ae9ae3d4ba82e12d4fadb999e125c8a3` / `v0.8.5` (PR #110).
-- Progression remains the v0.6 Discipline Forge. See [implementation status](../implementation-status.md), [adaptations](../computer-game-deltas.md) and [release process](../releases.md).
+- Product: **Four Lanterns Deep**; repository `bruceamoser/Four-Lanterns-Deep`.
+- Latest published release remains **[v0.8.5](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.5)**, immutable source/tag `23effe99ae9ae3d4ba82e12d4fadb999e125c8a3`. The fixes below are unreleased source changes; package version remains 0.8.5 until a release preparation change.
+- Progression remains the v0.6 Discipline Forge. Follow [implementation status](../implementation-status.md), [adaptations](../computer-game-deltas.md) and [release process](../releases.md).
 
-## Latest completed work
+## Latest completed implementation
 
-Bruce requested progress docs, commit/push/merge and a new release while away at dinner. Gameplay PR #110 and release checkpoints #111/#112 are merged; final delivery documentation is PR #113. **v0.8.5 is published as latest**, with licensed AppImage, Debian, Windows NSIS installer, portable Windows ZIP and Linux install bundle.
+Bruce's four player-feedback reports are handled through issues #114–#117 and PRs:
 
-The release includes tactical creature personalities and ability use across all 58 creatures / 120 Main entries, camp task/supply UX with portraits/order controls and plain outcomes, d8 water, no automatic survival consumption during camp, discipline foraging bonuses, and light following the held torch. See [creature AI coverage](../creature-ai.md), [AI handoff](handoffs/2026-11-09-creature-tactical-ai.md) and [release delivery](handoffs/2026-11-09-v085-release.md). Creature statistics/CV and encounter budgets are unchanged; balance still needs player feedback.
+- [#118](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/118): inspected-hero field actions, validated town/dungeon companion picker and actual Forge descriptions. Merged at `1a0ea6e`.
+- [#119](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/119): confirmation before harmful routes, all party followers, interaction approaches, movement powers/swaps/landings and new-hazard pauses. Merged at `21e8945`.
+- [#120](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/120): one-point diagonals beside a single occupied side square; solid corners, occupied destinations and two blocked sides remain blocked. Merged at `6eb0f66`.
+- [#121](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/121): hazard escape and budgeted safer creature routes, water for removable Burning, paid self/adjacent-ally condition care and constrained printed support. This completion checkpoint accompanies that PR; inspect GitHub for its final merge SHA rather than treating the branch SHA as main.
+
+Printed statistics, CV and encounter budgets are unchanged. Current 58 encounter cards have no allied HP-healing ability; no unprinted healing spell was added. See [creature AI](../creature-ai.md) and [session handoff](handoffs/2026-11-09-player-feedback-fixes.md).
 
 ## Verification
 
-- 298 unit tests; complete native Linux regression through the actual rebuilt `launch-game.sh`, sandbox enabled and normal terminal AppArmor context; source-build installer CI; finished licensed local AppImage; isolated Linux bundle installation.
-- All three final licensed installer checks pass: AppImage, installed Debian and installed Windows NSIS, [run 42719699495](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42719699495). Reviewed QA revision `40766f1`; immutable app source/tag `23effe9`. Earlier renderer timing issues and the QA-only fix are recorded in the release handoff.
-- Public release assets downloaded after publication: all ten SHA-256 entries pass; Linux/Windows updater sizes and SHA-512 match. Unmodified published 0.8.4 discovered and downloaded 0.8.5 from its original live GitHub feed using isolated data.
-- Actual 0.8.4→0.8.5 replacement/restart, save/vault preservation, corrupt-checksum rejection and failed-save install protection pass. No real player saves used or changed.
+- Both latest gameplay-head CI jobs pass **320 unit tests** and build: runs `42741730864` and `42741742486`, source checkpoint `9769908`. Local full suite passed 319 before the final starred-water test; final focused AI/care suite passed 34 including it.
+- Rebuilt licensed checkout and verified 251 nodes, 20 animations and 39 weapon grips.
+- All native Linux regression checks qualified across two passes through actual `launch-game.sh`, terminal AppArmor context, sandbox and renderer seccomp enabled. First pass qualified HUD/music/town/respec/Forge/gear/shortcuts. The old direct-counter fixture then needed legal enemy-turn initialization; after fixing it, reaction-through-end checks all pass, including the new AI, field abilities, hazard/diagonal UI, camp, effects, recovery, all creature visuals, named saves, pending reactions and window-close disk save. Logs and exact commands are in the session handoff.
+- No new installers or public release were produced for this batch. Historical v0.8.5 release qualification remains in [its handoff](handoffs/2026-11-09-v085-release.md).
 
-## Local machine
+## Local machine and next agent
 
-The checkout launcher is rebuilt as 0.8.5 with verified private licensed runtime exports. Installed system copies are separate: use Settings → Updates or the new installers. This release task did not root-install or replace Bruce's live system package.
+Checkout `/home/bruce/Projects/Deep-Dark-Dungeons-HoL` has a rebuilt runtime containing these unreleased changes. Bruce's separately installed system package remains 0.8.5 and was not replaced. Real saves and personal running windows were not used for tests or closed. Existing untracked superseded Borin body/layer prototypes remain untouched.
 
-Earlier menu diagnosis: a user desktop entry shadowed the installed system entry and launched an old 0.6.0 checkout. It was replaced with the installed Four Lanterns Deep entry and KDE cache refreshed. The historical desktop executable/package name remains `deep-dark-dungeons-hol`; product/menu title is Four Lanterns Deep.
-
-Native checks run from the user systemd session then `aa-exec -p unconfined`: the agent's `NoNewPrivs=1` cannot qualify the SUID sandbox directly. Keep sandboxing enabled and the launcher’s space-free runtime staging.
-
-## Current bug-fix work
-
-Bruce reported field abilities from character sheets (#114), diagonal movement (#115), hazardous-route confirmation (#116) and creature self-preservation/ally care (#117). Work follows issue → branch → PR → author review/checks → merge → next issue. No new release has been published for these fixes.
-
-#114 merged in PR #118 (`1a0ea6e`): inspected-hero field actions, validated town/dungeon companion picker, actual Forge descriptions. All 298 baseline unit tests and focused native checks pass.
-
-#116 merged in PR #119 (`21e8945`): party-wide hazardous-route consent, movement-power/landing checks, preserved approach intent and new-hazard pauses. Eight focused safety tests, final rebuilt native field/movement regression and both CI jobs pass.
-
-#115 merged in PR #120 (`6eb0f66`): one-point diagonals beside a single occupied side square; solid corners, occupied destinations and two blocked sides remain blocked. Focused unit/native mouse-click checks and complete CI pass.
-
-Active branch: `codex/117-creature-self-preservation`, based on `6eb0f66`. Creatures escape harmful fields, choose budgeted safer routes, seek water while burning and spend a Main action on temporary condition care for themselves/adjacent allies. Existing printed support stays constrained. Current encounter cards have no allied HP-healing power; no new healing spell or stats/CV changes are introduced. New unit/native scenarios cover escape, water and actual ally-care actions. Full unit/native regression is running before author review/merge. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
+1. Follow `AGENTS.md`, fetch and inspect status/worktrees before resuming. Verify final PR #121 merge and the remote checkpoint.
+2. No implementation work remains for these four reports. Keep source/release/installed versions distinct; any next release must follow `docs/releases.md`, version preparation and finished licensed installer gates.
+3. Use player feedback for balance against the new AI; do not inflate printed stats or restore superseded body/clothing prototypes.
 
 ## Transfer gaps
 
-Purchased Dungeon Mason exports, build outputs, saves, local tools and MCP configuration are not transferred by Git. Use [machine setup](machines.md). This repository process preserves explicit project knowledge, not every chat on every device.
+Purchased Dungeon Mason exports, build outputs, saves, local tools and MCP configuration do not transfer by Git. See [machine setup](machines.md). This process transfers explicit project memory, not every chat or local database.

@@ -5,7 +5,7 @@
 - Work branch: `codex/117-creature-self-preservation` (base `6eb0f66`).
 - Base: `23396f5`, fetched and confirmed current before work.
 - Issues: #114, #115, #116, #117. Follow the issue/branch/PR/review/merge sequence.
-- Status: #114/#116/#115 merged in PRs #118/#119/#120; #117 in progress; no new release.
+- Status: implementation complete and verified; #114/#116/#115 merged in PRs #118/#119/#120. Completion checkpoint for PR #121; verify its final merge on GitHub. No new release.
 
 ## Completed
 
@@ -21,7 +21,7 @@ All 298 unit tests pass (`/tmp/fld-fixes-unit-full.log`). Rebuilt licensed check
 
 ## Remaining and next steps
 
-Finish #117 full unit/native verification, author review and passing CI, then merge. Update this checkpoint with actual results before final delivery.
+Finish the completion checkpoint review and passing CI for PR #121, then merge and verify remote main. No feature implementation remains. Do not conflate this unreleased checkout with the installed/published 0.8.5.
 
 ## Local-only state / transfer needs
 
@@ -29,7 +29,7 @@ Paid Dungeon Mason runtime exports verified on this machine. Existing untracked 
 
 ## Sync status
 
-PRs #118/#119/#120 are merged. Push and verify the current #117 branch before handoff.
+PRs #118/#119/#120 are merged. Code checkpoint `9769908a30904de82b38cc61f4de203a2bdcba62` is verified on remote `codex/117-creature-self-preservation`. This completion-doc checkpoint belongs to PR #121; verify final head/main before reporting delivery.
 
 ## #116 hazardous routes
 
@@ -52,3 +52,13 @@ New `creature-care.mjs` provides damage-aware hazard estimates, budgeted safe ro
 All 58 cards were audited: no allied HP-healing ability exists; existing vampire self-restoration remains unchanged. No unprinted HP healing or stats/encounter changes. See `docs/creature-ai.md`. Initial 32 AI/care tests pass; added a full-turn adjacent-aid regression, full unit suite and rebuilt actual-launcher native suite running. Initial fixtures used invalid persistence names/turn setup, corrected. Native care scenario exposed movement away before aid; implementation now prioritizes urgent adjacent ally care before approach.
 
 #117 regression checkpoint: full local suite passes 319 tests before the final starred-Burning water regression. Broader native run passes HUD/music/town/respec/Forge/gear/shortcut checks, then the old counter fixture bypassed `enemyManeuver` so its direct attack had no retained Main action. Fixed the fixture to initialize its legal turn rather than weakening the action guard. Rerun the affected reaction-through-end native checks. Water preference and early ally aid now consider only removable temporary self conditions; starred wound Burning cannot lure an NPC to ineffective water treatment.
+
+## Final verification and delivery checkpoint
+
+- Complete CI unit/build jobs pass **320 tests**, zero failures, on gameplay head `9769908`: runs `42741730864` / `42741742486`.
+- Local `npm test` passes 319 before the final starred-water case (`/tmp/fld-fixes-final-unit.log`); final `node --test tests/creature-care.test.mjs tests/creature-ai.test.mjs` passes 34 (`/tmp/fld-117-unit-final.log`). No gameplay/source changes after those checks.
+- Licensed `npm run package:dir` succeeds; `node scripts/verify-dungeon-mason.mjs` confirms 251 nodes, 20 animations, shared skin/masks and 39 grips.
+- Actual sandboxed `npm run test:native` first qualifies HUD/music/town/respec/Forge/gear/shortcuts (`/tmp/fld-fixes-final-native.log`). The direct counter fixture's missing enemy-turn setup was corrected; no Main-action guard was weakened.
+- Rerun all remaining checks with `DDD_NATIVE_CHECKS=verifyReactiveCounters,verifyCreatureAI,verifyFieldAbilities,verifyMovementSafety,verifyWeaponRoll,verifyAppearanceUX,verifyGameplayIdentity,verifyDungeonCamp,verifyExpeditionUI,verifyTorchModels,verifyWeaponVisuals,verifyCombinedSupplies,verifyProvisions,verifyCharacter,verifyRoster,verifyControls,verifyCombatUX,verifyInteractions,verifyEffects,verifyRecovery,verifyDungeonLoop,verifyCreatureVisuals,verifySaveSlots npm run test:native`: **all pass** (`/tmp/fld-fixes-native-remaining.log`). Includes new actual AI actions, one-point mouse diagonal/hover, free hazard cancel, normal surface damage, actual field dressing/HP effects, effects/recovery, all 58 visuals, save/reaction restoration and native window-close save. Runtime path has no spaces; no `--no-sandbox`; renderer seccomp is active in terminal AppArmor context.
+- Author review is recorded in all four PRs; none is described as independent review. Final completion docs are source-only; they do not change qualified game bytes.
+- No new release/installers/system install in this batch. Installed game remains 0.8.5. Do not tag a new release without version preparation and finished licensed installer qualification. Real saves, private source assets and existing untracked prototypes remain untouched.
