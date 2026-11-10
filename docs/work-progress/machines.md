@@ -28,3 +28,9 @@ Network/Git metadata/desktop checks require the environment's approved escalated
 ## Not synced by this process
 
 Uncommitted or ignored files, purchased assets, real save games, installed packages, user application shortcuts, secrets, environment variables, editor state, running processes and machine-local chat storage. Record required transfers in each handoff; do not silently assume they exist elsewhere. Do not commit or modify real player saves as test fixtures.
+
+## bmoser asset toolchain — November 10
+
+Blender 5.2.4 LTS is installed under `~/.local/opt`, with `~/.local/bin/blender` and a user application-menu entry. Rigify and the matching MCP for Blender 2.2.7 add-on are enabled. `mcp-for-blender` is an isolated uv tool; the loopback bridge uses port 9876 with telemetry disabled for the configured session. See [pipeline setup](../asset-production-pipeline.md). Meshy is deferred. An isolated Blender workspace may be open; do not assume personal windows are disposable.
+
+DeepSeek is available through the separate `codex --profile deepseek` file and scoped provider catalog. GPT remains default. The key is entered with `fld-credentials set deepseek` and stored outside Git; command-backed auth reads it. Never copy its value into configuration, logs or this repo. Neither credentials nor local tool/config installations travel with Git; another machine needs its own setup. Live Responses/CLI/Blender read-only tests passed; this chat’s built-in collaboration model list and mixed-provider desktop picker were not modified or verified.

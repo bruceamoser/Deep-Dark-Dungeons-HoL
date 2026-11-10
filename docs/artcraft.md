@@ -40,3 +40,7 @@ Verified content pipeline (executed November 7, 2026):
 4. TextureCraft `mesh_export` with `format: glb` writes embedded textures. The test output carried `NORMAL`, `POSITION` and `TEXCOORD_0` plus `baseColorTexture` and `metallicRoughnessTexture`, which `GLTFLoader` reads directly.
 
 SolidCraft is a CAD kernel, so this path suits hard-surface props, architecture and equipment. It does not produce organic creature or character meshes, and no tested app in this set replaces the rigged CC0 character packs.
+
+## November 10 asset-production setup
+
+Blender 5.2.4 LTS, bundled Rigify and MCP for Blender 2.2.7 are installed on the bmoser desktop. Loopback bridge inspection and a DeepSeek Codex-profile inspection succeeded. The reviewed [asset-production workflow](asset-production-pipeline.md) supersedes blanket weld/purge/transform instructions. Meshy is optional and deferred; SolidCraft remains for hard-surface parts. This setup does not imply that creatures have been remodeled.
