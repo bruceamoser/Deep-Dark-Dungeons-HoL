@@ -2,18 +2,18 @@
 
 Updated: 2026-11-10 (America/New_York).
 
-## Active — v0.8.7 staged publication
+## Complete — v0.8.7 published
 
-All nine feedback items are implemented. Equipment PR146 is merged at `db741592`; release PR148 is author-reviewed and merged at `f7da756a951abaff5c5261f257e755765ad027f3`. Immutable tag `v0.8.7` points there. #127/#144 are closed; release #147 remains open until publication/public checks finish. See [catalogue](../equipment-bonuses.md) and [handoff](handoffs/2026-11-10-equipment-release.md).
+All nine player-feedback items, including the approved equipment catalogue, are implemented, author-reviewed and merged. Equipment PR 146 closed #127/#144. Release PR 148 merged at `f7da756a951abaff5c5261f257e755765ad027f3`; immutable tag `v0.8.7` points there. [v0.8.7 is public/latest](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.7), with eleven finished licensed release assets. Publication run [42772691226](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42772691226) passed AppImage, installed Debian, installed Windows NSIS and publication.
 
-Full 357-test suite, final 45 focused tests, complete sandboxed native launcher sweep, both source installer platforms, final licensed AppImage smoke check, isolated Linux bundle installer and real 0.8.6→0.8.7 update safety/restart pass. Finished licensed apps are staged privately in `release/staged-0.8.7`. Draft upload/publication workflow and public asset/hash/manifest/live-feed checks are pending. Documentation checkpoint branch: `codex/v087-publication-record`.
+See [delivery handoff](handoffs/2026-11-10-equipment-release.md), [equipment catalogue](../equipment-bonuses.md) and [release notes](../release-notes.md). Final documentation PR 149 closes release #147 after verification. No gameplay WIP remains. Resume from main; preserve the untracked superseded Borin prototypes.
 
-## Completed verification
+## Verified
 
-Final gameplay head passes 344 tests and build. Actual sandboxed native launcher checks cover selection, HUD, routes, camp, 58 creature visuals, challenge, training/save compatibility and area-arrow pointer preview/cancel/use. Handoff records exact scoped runs and resolved QA failures. Author review is not independent review.
+357 rules tests, final focused equipment tests, complete exact-launcher native suite, both source installer platforms, finished licensed AppImage checks and isolated Linux bundle installer passed. Real 0.8.6→0.8.7 replacement/restart preserved the journey and vault, rejected corrupt downloads and blocked installation on save failure. All public download checksums and both updater manifests verify. An unmodified published 0.8.6 client discovered and downloaded public 0.8.7 through its existing feed. Review was author review, not independent review.
 
-## Version and machine state
+## Machine and private state
 
-Latest public release remains v0.8.6 until staged publication succeeds; source/package/tag are prepared at v0.8.7. Installed Debian remains0.8.6 and was not replaced. Use `release/qa-tmp` for TMPDIR on this machine: /tmp is almost full. Initial Debian packaging failed there; the main-disk retry succeeded.
+Installed Debian was verified 0.8.6 and left unchanged; use Settings → Updates to install 0.8.7. Checkout runtime/builds are 0.8.7. Real saves and personal windows were untouched. Purchased exports, installers and QA outputs stay ignored and do not transfer through Git.
 
-Private assets, QA outputs and installed copies do not transfer through Git. Real saves/personal windows and untracked Borin prototypes remain untouched. Final publication/public verification and synced completion records are the only remaining work.
+Use `TMPDIR="$PWD/release/qa-tmp"` for builds and QA on this desktop because /tmp is almost full. The first Debian packaging attempt failed there; the main-disk retry succeeded. Follow [machine setup](machines.md) and AGENTS.md before resuming on another computer.

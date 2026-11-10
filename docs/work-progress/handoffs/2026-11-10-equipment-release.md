@@ -1,33 +1,35 @@
-# Equipment and patch release — November 10, 2026
+# v0.8.7 delivery — November 10, 2026
 
-## Objective and authorization
+## Completed objective
 
-Bruce approved the complete item-type catalogue and strongest-matching stacking, then explicitly requested finishing, committing/pushing, updating progress documentation, author review/merge and a new release. See docs/equipment-bonuses.md for durable approved categories and chosen conservative values. #144 is the implementation; #127 is its parent.
+Bruce approved the item-by-item equipment catalogue and strongest matching bonuses, then explicitly requested completion, commit/push, progress records, author review/merge and a new patch release. All nine feedback items are merged and v0.8.7 is public/latest. Source rules, Foundry, purchased source assets and real player saves were not changed.
 
-## Current checkpoint
+- Equipment PR 146: `db741592f50931557ee6c1304297f3f7e38c5442`; closes #127/#144.
+- Release PR 148 and immutable v0.8.7 tag: `f7da756a951abaff5c5261f257e755765ad027f3`.
+- Finished installer verification/publication: [run 42772691226](https://github.com/bruceamoser/Four-Lanterns-Deep/actions/runs/42772691226), all three platforms and publish passed.
+- [Public release](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.7): eleven assets, stable/latest, not a draft or prerelease.
+- Final documentation PR 149 records delivery and closes release issue #147. Author review is not independent review.
 
-Branch codex/144-equipment-bonuses, base f66704142b97bf613046ebf61e1c8fb4f31a8ec4. Implementation and QA in progress; not yet merged or released. New magic receipts are revision 3; legacy receipts preserve identities and names while reconstructing approved effects. Added form pools, stacking, weapon scoping, discipline roll competence, defensive/condition/terrain bonuses, carrying/storage, optional kits and toggleable magical light. Source rules/Foundry remain untouched.
+## Implemented equipment decisions
 
-## Validation so far
+[Equipment bonuses](../../equipment-bonuses.md) records the complete approved catalogue, chosen conservative values, stacking, scope and legacy mapping. New receipts use revision 3. Older receipts keep names, identity, version, ownership and equipment state while reconstructing legal readable effects. Strongest matching bonuses apply; normal armour and Shield Block still combine within the existing resistance cap. Weapons have accuracy, damage, Strong/hidden damage, range and plain Push 1; no armour penetration or activated magical-ability affixes. Discipline competence improves all matching ability rolls without granting abilities. Light reduces own Bulk; approved forms can provide toggleable equipped fuel-free illumination. Belts include Fortitude. Cloaks, enchanted packs and optional kits have real slots and effects.
 
-32 focused existing loot/build integration tests pass after updating obsolete-effect expectations. 13 new catalogue/stacking/combat/weight/light/save tests pass. Initial new-test failures were fixture mistakes: a nonexistent intersection name and an arena light radius above the save validator's limit. Both corrected without weakening validators. The full rules suite passed 357/357. The actual sandboxed native launcher equipment check passed descriptions, equip/remove, live light toggles and inactive stowed effects, plus native-close disk save; screenshot inspected. Final small integration/QA edits pass 45 focused tests; final full native sweep and release qualification remain pending.
+The eight earlier feedback items remain documented in the [previous completion handoff](2026-11-10-feedback-completion.md), supplies, creature casting, challenge, progression and area-arrow feature docs. Its old equipment-discussion/no-release status is superseded by this delivery.
 
-## Next
+## Verification evidence
 
-Finish author review, full tests and sandboxed native equipment interaction. Update exact evidence here, open PR for #144, review/check/merge. Then prepare v0.8.7 on a separate release branch and follow docs/releases.md: licensed local builds, installer/update qualification, version PR, reviewed tag, draft upload and Verify/publish staged release workflow. Do not publish source-only fallback builds.
+- Full rules suite: 357/357. Final 45 focused loot/equipment checks passed after small integration changes. Equipment documentation head `780b53b` passed both CI runs 42770222495/42770227408. Release head `caa2d03` passed both rules/build checks and source installer run 42770607896 on Linux and Windows.
+- Full actual `launch-game.sh` suite passed all gameplay/UI modules, 58 creature visuals, 17 condition layers, run slots and native-close save. Normal terminal AppArmor, renderer seccomp and sandboxing were retained. Log: `release/equipment-native-full.log`. Equipment inspector screenshot was inspected.
+- Licensed exports verify 251 nodes, 20 animations and 39 grips. Local Linux and Windows ASARs report 0.8.7 and contain Dungeon Mason. Platform builds were sequential. Source-only CI fallbacks were never used as published licensed apps.
+- Final licensed AppImage checks passed appearance, weapon forms, supplies, town, camp, music, creature AI, Forge, disk-save IPC and supported updates: `release/v087-appimage.log`.
+- Actual published 0.8.6→0.8.7 update rejected corrupt checksums, retained retry, blocked installation on save failure, then replaced/restarted successfully with compatible journey and vault preserved: `release/v087-roundtrip.log`.
+- Finalized initial assets in `release/staged-0.8.7` passed SHA256SUMS; Linux metadata sizes/SHA512 match. Isolated bundle installation and friendly desktop entry passed: `release/v087-bundle-install.log`.
+- All eleven public assets were downloaded to `release/published-0.8.7`; all ten checksum entries and both Linux/Windows updater manifests verify. An unmodified published 0.8.6 client discovered/downloaded 0.8.7 with no feed override: `release/v087-live-feed.log`.
 
-Installed Debian remains 0.8.6; no personal saves/windows touched. Existing untracked Borin prototypes remain untouched. Licensed exports/builds/QA profiles stay ignored and need private transfer. Use release/qa-tmp for TMPDIR because /tmp is nearly full. Git/network/native checks need approved escalated execution on this desktop.
+Resolved QA failures: the two initial new-test failures were fixture errors (nonexistent intersection name and oversized arena light radius); validators remained intact. Initial Debian packaging failed in the almost-full /tmp tmpfs. Rebuilding with TMPDIR on the main disk succeeded (`release/v087-linux-retry.log`). Other build logs: `release/v087-windows.log`, `release/v087-dir.log`. No published binary was replaced in place.
 
-## Equipment merged; release preparation
+## Resume and machine boundaries
 
-PR146 author-reviewed and merged at db741592f50931557ee6c1304297f3f7e38c5442. Final documentation head 780b53b passed both CI runs 42770222495/42770227408. The complete native launcher suite passed (release/equipment-native-full.log), including all prior feedback features and equipment, run slots and native-close save, with terminal AppArmor and renderer sandbox/seccomp retained. Screenshot of the equipment inspector was inspected. #127 and #144 are closed.
+Use main after final documentation PR 149 merges. No feature/release work remains pending. Installed Debian was verified 0.8.6 and deliberately left unchanged; update through Settings → Updates. Checkout runtime/builds are 0.8.7. No personal game/Blender/Unity window or real save was used or closed. The unrelated untracked Borin prototypes remain untouched.
 
-Release issue #147; codex/v087-release from db741592. Version/lockfile and release notes prepared for 0.8.7. Finished licensed builds and release qualification in progress. Installed Debian remains 0.8.6, unchanged.
-
-## v0.8.7 qualified and tagged
-
-Release PR148 author-reviewed/merged at f7da756a951abaff5c5261f257e755765ad027f3; immutable tag v0.8.7 matches it. Rules/build CI passed both checks; source installer run42770607896 passed both Linux and Windows. Finished licensed Linux AppImage/Debian and Windows portable apps built locally; both ASARs report0.8.7 with Dungeon Mason present. Licensed export verification passed251 nodes/20 animations/39 grips.
-
-Final AppImage smoke check passed with licensed models, sandbox/terminal AppArmor, gameplay, music, save IPC and supported update controls: release/v087-appimage.log. Real published0.8.6→0.8.7 round trip passed checksum rejection, failed-save installation guard, verified replacement/restart and journey/vault preservation: release/v087-roundtrip.log. Full native gameplay source sweep had already passed unchanged source. Initial Debian packaging failed in full /tmp; retry with TMPDIR=$PWD/release/qa-tmp succeeded (release/v087-linux-retry.log). Windows/checkout builds: release/v087-windows.log and v087-dir.log.
-
-Eight finalized initial assets in ignored release/staged-0.8.7 have valid SHA256SUMS; Linux metadata sizes/SHA512 match. Isolated Linux installer and friendly menu entry pass (release/v087-bundle-install.log); no system install performed. Draft upload is in progress; staged publication then public download/hashes/manifests/live feed remain pending. Do not overwrite published installers; corrections need a new version. Source-only CI builds must never replace the licensed apps.
+Purchased exports, installer archives, test profiles and screenshots stay private/ignored and need separate transfer. Use `TMPDIR="$PWD/release/qa-tmp"` on this desktop; /tmp is nearly full. Personal GitHub identity is bruceamoser without switching global authentication. Git/network/native operations require this environment's approved escalated execution. Follow AGENTS.md and machine setup before resuming elsewhere.
