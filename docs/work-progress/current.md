@@ -2,6 +2,14 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — bestiary model comparison
+
+Bruce requested actual models beside book pictures for local art review. Implemented for all 58 creatures through the real game factory, neutral inspection lighting, fitted framing, drag/wheel/keyboard rotation and zoom, reset, supported animation previews and retained list position. One canvas/context per open guide with model switching and full close cleanup. Both Settings and enemy inspection entry points wired. Branch `codex/bestiary-model-preview`, base `b13e448` after merged wave-04 PR #157; consult Git/PR history for subsequent checkpoint/merge. [Feature](../bestiary-model-review.md), [handoff](handoffs/2026-11-10-bestiary-model-preview.md).
+
+358 tests/build and final muted exact native launcher pass: all 58 models/matching art, same live canvas across selections, controls/poses/search, Escape/Close/reopen/context cleanup, sandbox/seccomp and isolated save/close. Inspected Ash/Werebear screenshots. Earlier test counted canvas data attributes as list buttons; corrected selector and final gate passes. Checkout launcher refreshed (0.8.7 label), installed/public release unchanged; Windows not exercised. No rules/stats/saves/assets changed by this viewer.
+
+No pending worker job. Next art candidates remain Shieldguard/Ghoul/Ghast (26 each), checking current overrides first. First-pass art limitations remain in the wave reports; a functioning preview is not final art approval.
+
 ## Latest work — creature wave 04
 
 Bruce asked to continue. Werebear, Hobgoblin Marshal and Ash Demon are integrated after three parallel DeepSeek authors and returned organizer findings for all three; one separate Werebear revision, four calls total. Branch `codex/deepseek-creature-wave-04`, base `af20959`; see actual Git/PR history for subsequent checkpoint/merge. [Report](../creature-model-wave-04.md), [provenance](../creature-wave-04-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-04.md).
