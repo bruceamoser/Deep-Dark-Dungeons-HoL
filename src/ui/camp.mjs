@@ -353,7 +353,7 @@ function dungeonCampScreen({
             const duty = assignments[h.heroId][slot],
               desc = CAMP_DUTIES.find((d) => d.id === duty);
             const target = targets[h.heroId]?.[slot];
-            const warning = game.campDutyReason(h, duty, target);
+            const currentWarning = game.campDutyReason(h, duty, target);
             const patientOptions =
               duty === "heal"
                 ? game.party
@@ -382,6 +382,17 @@ function dungeonCampScreen({
             const projectPlan =
               forecast?.projectLow?.[`${h.heroId}:${slot}`] ??
               game.campRestockPlan(h, duty, target);
+            const contingent =
+              projectPlan?.reason &&
+              forecast?.projectPossible?.some(
+                (p) =>
+                  p[`${h.heroId}:${slot}`] && !p[`${h.heroId}:${slot}`].reason,
+              );
+            const warning =
+              (projectPlan ? projectPlan.reason : currentWarning) +
+              (contingent
+                ? " A successful forage could enable this task."
+                : "");
             const supplyOptions =
               spec && !projectPlan?.water
                 ? game.supplyRows().filter((r) => r.supply === spec.id)
@@ -394,7 +405,7 @@ function dungeonCampScreen({
               projectPlan && !projectPlan.reason
                 ? projectPlan.water
                   ? "Fill carried flasks to at least d8."
-                  : `${projectPlan.row.name}: ${projectPlan.row.before ? `d${projectPlan.row.before}` : "Empty"} → d${projectPlan.after} · ${projectPlan.units} ${projectPlan.material.name.toLowerCase()}.`
+                  : `${projectPlan.row.name}: ${projectPlan.row.before ? `d${projectPlan.row.before}` : "Empty"} → d${projectPlan.after} · ${projectPlan.units} ${projectPlan.material.name.toLowerCase()}${projectPlan.gift ? ` · Maker’s gift preserves ${projectPlan.requiredUnits} units` : ""}${projectPlan.bulkAdded ? ` · +${projectPlan.bulkAdded} supply Bulk` : ""}.`
                 : "";
             return `<label class="camp-duty"><span title="${esc(desc.detail)}">Task ${slot + 1}</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${supplySelect}${preview ? `<small class="camp-project-preview">${esc(preview)}</small>` : ""}${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
           })

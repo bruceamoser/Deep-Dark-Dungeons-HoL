@@ -1,7 +1,11 @@
 import { chromium, expect } from "@playwright/test";
 import { enterGame, settingsAction } from "./ui-session.mjs";
 export async function verifyHud(page) {
-  await expect(page.locator(".topbar > .top-tools > button")).toHaveCount(1);
+  await expect(page.locator(".topbar > .top-tools > button")).toHaveCount(2);
+  await expect(page.locator('.topbar [data-action="supplies"]')).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Settings", exact: true }),
+  ).toHaveCount(1);
   await expect(page.locator(".header-center")).toContainText("Day");
   await expect(page.locator("#settings-menu")).toBeHidden();
   const names = [
@@ -91,7 +95,7 @@ export async function verifyHud(page) {
     page.getByRole("region", { name: "Camp results" }),
   ).toBeVisible();
   await expect(page.locator(".camp-results-log")).toContainText(
-    "found medicinal materials",
+    "medicinal herbs",
   );
   await expect(page.locator(".camp-results-party")).toContainText("healed");
 

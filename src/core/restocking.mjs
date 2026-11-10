@@ -244,7 +244,7 @@ export const restockingMethods = {
           ...(spec.id === "dressings" ? ["power-forager-remedies"] : []),
         ].includes(id),
       ) ||
-      this.traits(h).some((t) => t.craft || t.craftImprove)
+      this.traits(h).some((t) => t.craft)
     )
       rank = Math.max(rank, 1);
     return 1 + Math.min(2, rank);
@@ -321,14 +321,23 @@ export const restockingMethods = {
       units = cost;
     }
     const material = MATERIAL_STOCKS.find((m) => m.id === spec.material);
+    const gift =
+      after > row.before &&
+      this.traits(worker).some((t) => t.craftImprove) &&
+      worker.traitUses?.craftImprove !== this.clock().day;
     return {
       spec,
       row,
       after,
-      units,
+      units: gift ? 0 : units,
+      requiredUnits: units,
+      gift,
       steps,
       material,
       worker: worker.heroId,
+      bulkAdded: row.missing
+        ? this.C.inventory.equipment.find((i) => i.id === spec.item).bulk
+        : 0,
       reason:
         after === row.before
           ? `Needs ${restockCost(row.before, SUPPLY_LADDER[from + 1])} ${material.name.toLowerCase()}; the party has ${available}.`
@@ -385,7 +394,10 @@ export const restockingMethods = {
       );
       return;
     }
-    this.consumeMaterialStock(plan.spec.material, plan.units);
+    if (plan.gift) {
+      worker.traitUses ??= {};
+      worker.traitUses.craftImprove = this.clock().day;
+    } else this.consumeMaterialStock(plan.spec.material, plan.units);
     const made = this.applyRestock(plan.row, plan.after);
     if (plan.row.missing)
       for (const entries of Object.values(this.campaign.camp?.targets ?? {}))

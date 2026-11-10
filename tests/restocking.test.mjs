@@ -172,12 +172,18 @@ test("old recipe batches and typed material dice migrate once, preserving weight
   old.materialType = "recipe-fletched-ammunition";
   const rare = ordinaryItem(g.C, "item-material-bundle", "special-materials");
   rare.materialType = "recipe-lesser-healing-bottle";
-  (h.treasure ??= []).push(old, rare);
+  const untyped = ordinaryItem(g.C, "item-material-bundle", "untyped");
+  (h.treasure ??= []).push(old, rare, untyped);
   h.supplies[old.instanceId] = 4;
   g.refreshHero(h);
   const bulk = h.preview.inventory.bulk,
     copy = new Game(R, C);
   copy.load(structuredClone(g.snapshot()), { resume: false });
+  assert.ok(
+    copy.party[0].preview.inventory.items.find(
+      (i) => i.instanceId === "untyped",
+    ).inventoryDie,
+  );
   assert.equal(copy.materialCount("food"), 8);
   assert.equal(copy.materialCount("craft"), 16);
   assert.equal(copy.party[0].preview.inventory.bulk, bulk);
@@ -191,6 +197,14 @@ test("old recipe batches and typed material dice migrate once, preserving weight
   second.load(structuredClone(copy.snapshot()), { resume: false });
   assert.equal(second.materialCount("craft"), 16);
   assert.equal(second.materialCount("food"), 8);
+  second.transferTreasure(0, "legacy-materials", 1);
+  assert.equal(second.materialCount("craft"), 16);
+  assert.equal(
+    second.party[1].preview.inventory.items.find(
+      (i) => i.instanceId === "legacy-materials",
+    ).bulk,
+    old.bulk,
+  );
   second.consumeMaterialStock("craft", 1);
   assert.equal(second.materialCount("craft"), 15);
 });
@@ -263,4 +277,31 @@ test("automatic procurement honors the best capable buying/crafting discount", (
   g.party[0].survival.status = "dead";
   assert.equal(g.townRestockPlan(row, 8).price, price);
   assert.equal(g.ingredientPurchasePrice("craft", 4), ingredients);
+});
+
+test("Maker's Gift preserves real ingredients once per day and does not create them from nothing", () => {
+  const g = fresh(),
+    row = arrows(g),
+    worker = g.party[0],
+    target = { heroId: row.hero, supplyId: row.itemId },
+    owner = g.party.find((h) => h.heroId === row.hero);
+  const original = g.traits.bind(g);
+  g.traits = (h) =>
+    h === worker ? [...original(h), { craftImprove: true }] : original(h);
+  owner.supplies[row.itemId] = 4;
+  assert.match(g.campRestockPlan(worker, "arrows", target).reason, /Needs/);
+  g.addMaterialStock(worker, "craft", 4);
+  field(g);
+  g.startCamp(duties(g));
+  const p = g.campRestockPlan(worker, "arrows", target);
+  assert.equal(p.gift, true);
+  assert.equal(p.units, 0);
+  assert.equal(p.requiredUnits, 1);
+  g.performCampRestock(worker, "arrows", null, target);
+  assert.equal(g.materialCount("craft"), 4);
+  assert.equal(worker.traitUses.craftImprove, g.clock().day);
+  const second = g.campRestockPlan(worker, "arrows", target);
+  assert.equal(second.gift, false);
+  g.performCampRestock(worker, "arrows", null, target);
+  assert.equal(g.materialCount("craft"), 2);
 });

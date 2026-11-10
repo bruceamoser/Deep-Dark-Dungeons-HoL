@@ -140,6 +140,9 @@ export async function verifySimpleSupplies(page) {
     await expect(
       page.locator(".camp-project-preview").filter({ hasText: "d4 → d8" }),
     ).toHaveCount(1);
+    await expect(
+      page.locator(".camp-member").nth(1).locator(".camp-duty").nth(1),
+    ).toContainText("the party has 1");
     await page.screenshot({ path: "test-results/supplies-camp-project.png" });
     await page.locator("#camp-hour").click();
     await page.locator("#camp-hour").click();

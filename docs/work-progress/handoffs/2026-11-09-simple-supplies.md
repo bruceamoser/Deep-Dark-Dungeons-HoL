@@ -4,8 +4,8 @@
 - Task: implement Bruce's approved direct-restock + camp-project design.
 - Work branch: `codex/122-simple-supplies`.
 - Base: `b9ee51fa2de1684e5aee82e902f15e1ada2d0358`, fetched/verified main before work.
-- Issue: #122; follow issue → branch → PR → author review/checks → merge.
-- Status: implementation complete; verification and layout polish in progress. No new release.
+- Issue: #122; PR #123; follow issue → branch → PR → author review/checks → merge.
+- Status: implementation/layout complete; final incremental qualification and author review/CI gate in progress. No new release.
 
 ## Completed
 
@@ -33,8 +33,14 @@ Paid Dungeon Mason runtime exports and rebuilt runtime are ignored. Installed ga
 
 ## Sync status
 
-This source/docs checkpoint is being pushed to `codex/122-simple-supplies`. Verify remote head before calling it synced. Do not merge an unfinished checkpoint.
+Implementation checkpoint `4f62882` and procurement checkpoint `768229f` are verified on remote `codex/122-simple-supplies`. Final source/docs belong to PR #123; verify its final head/main before delivery. Do not merge until final qualification passes.
 
 ## Qualification checkpoint
 
 All 329 unit tests pass (`/tmp/fld-supplies-unit-final.log`). Final focused regression after procurement-rate coverage passes 35 tests; it now verifies the best capable buyer/crafting discount automatically applies, and dead heroes cannot supply that bonus. Compacted the stock overview, collapsed camp supply details while preserving work-order controls, added task portraits and a reduced-motion-aware die-growth animation. Full final native regression is running in `/tmp/fld-supplies-native-final.log`. Draft PR #123 tracks this complete feature; no merge before final qualification/review.
+
+## Final review findings
+
+Added direct legacy-ingredient transfer and untagged-material preservation checks. Updated the HUD fixture for the intentionally added Supplies shortcut and renamed herb reports; no gameplay checks were weakened. The affected native suite then passed completely in `/tmp/fld-supplies-native-affected-final.log`, including sandbox and disk saves.
+
+Visual review caught a later camp task displaying no warning despite earlier material spending. It now uses its projected work-order shortage and explains when a successful forage could enable it. New supply creation previews include added Bulk. Reviewed Maker’s Gift: it now preserves required materials only once per day, shares the old receipt with advanced crafting and cannot craft from no inputs. Final dedicated restocking suite passes 11; final supply/camp/foraging suite passes 30. Final incremental native results are in `/tmp/fld-supplies-native-polish-final.log`. Final CI must pass before merge.

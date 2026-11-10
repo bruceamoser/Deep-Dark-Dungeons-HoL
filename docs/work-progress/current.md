@@ -14,21 +14,21 @@ Bruce approved the direct-restocking + camp-project design. Issue [#122](https:/
 
 Implemented: a party Supplies overview, reviewed Greyhaven restock to a preferred die, shared carried ingredient stocks, deterministic specialist camp projects with work-order previews and recipient selection, compatible migration preserving old materials' value/Bulk, and advanced-recipe separation. See [feature rules](../supplies.md) and [session handoff](handoffs/2026-11-09-simple-supplies.md).
 
-Status: verification/polish in progress; do not merge until the final native/unit/CI checks and author review pass. Focused engine/migration tests and initial native Supplies/camp/advanced-recipe/save checks pass. Full unit suite and compact-layout qualification are running. No new release or system installation requested.
+Implementation is complete in [PR #123](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/123), with final verification/review under way. The overview and camp layout are compact; later-task shortages use work-order projections. Best capable buying/crafting discounts apply automatically. Maker’s Gift retains its shared once-per-day receipt and requires real ingredients. No new release or system installation requested.
 
 ## Verification
 
-- Both latest gameplay-head CI jobs pass **320 unit tests** and build: runs `42741730864` and `42741742486`, source checkpoint `9769908`. Local full suite passed 319 before the final starred-water test; final focused AI/care suite passed 34 including it.
-- Rebuilt licensed checkout and verified 251 nodes, 20 animations and 39 weapon grips.
-- All native Linux regression checks qualified across two passes through actual `launch-game.sh`, terminal AppArmor context, sandbox and renderer seccomp enabled. First pass qualified HUD/music/town/respec/Forge/gear/shortcuts. The old direct-counter fixture then needed legal enemy-turn initialization; after fixing it, reaction-through-end checks all pass, including the new AI, field abilities, hazard/diagonal UI, camp, effects, recovery, all creature visuals, named saves, pending reactions and window-close disk save. Logs and exact commands are in the session handoff.
-- No new installers or public release were produced for this batch. Historical v0.8.5 release qualification remains in [its handoff](handoffs/2026-11-09-v085-release.md).
+- Local full suite passes 329 tests before the final procurement/Maker’s Gift additions; dedicated final restocking suite passes 11 and the final supply/camp/foraging suite passes 30. Gameplay-head CI at `768229f` passes 330 tests/build; the final head includes the additional daily-gift regression and must pass CI before merge.
+- Rebuilt licensed checkout; actual `launch-game.sh` native checks pass HUD, the new Supplies screen, reviewed/free-cancel/exact-cost restocking, shared ingredients and Bulk, compact 1100×800 bounds, specialist projects and paused camp save/reload, camp medical/resting/animation/order, advanced rope crafting, combined supply preservation, provision movement, character/roster and named/pending-reaction saves. Sandbox, renderer seccomp, terminal AppArmor context and window-close disk save pass.
+- Final incremental desktop pass checks projected shortages and the finished project/recipe UI. See the session handoff for logs and qualification status; any failure must be resolved before merging.
+- Historical release qualification remains in [v0.8.5 handoff](handoffs/2026-11-09-v085-release.md). No new installers/publication in this task.
 
 ## Local machine and next agent
 
 Checkout `/home/bruce/Projects/Deep-Dark-Dungeons-HoL` has a rebuilt runtime containing these unreleased changes. Bruce's separately installed system package remains 0.8.5 and was not replaced. Real saves and personal running windows were not used for tests or closed. Existing untracked superseded Borin body/layer prototypes remain untouched.
 
 1. Follow `AGENTS.md`, fetch and inspect the active #122 branch/PR before resuming. Preserve unrelated untracked art prototypes.
-2. Complete simpler-supplies qualification and review, then merge the passing PR and close #122. Keep source/release/installed versions distinct.
+2. Verify PR #123 final checks/merge and issue #122 closure. Implementation is complete; any future release needs version preparation and finished licensed installer gates. Keep source/release/installed versions distinct.
 3. The previous four gameplay fixes are complete; do not reimplement them or restore superseded prototypes.
 
 ## Transfer gaps
