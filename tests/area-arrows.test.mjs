@@ -22,5 +22,15 @@ for(const [power,node,status] of [
 });
 test('area arrows reject empty ammunition before spending',()=>{
  const g=setup('marksmanship:2:0'),ammo=g.supplyItem(g.active,'item-ammunition-bundle');g.active.supplies[ammo.instanceId]=0;
- assert.throws(()=>g.useAbility('power-barbed-arrow',{x:9,z:5}),/ammunition/);assert.equal(g.encounter.current,null);
+ assert.throws(()=>g.useAbility('power-barbed-arrow',{x:9,z:5}),/ammunition/i);assert.equal(g.encounter.current,null);
+});
+
+
+test('the last ammunition use resolves the entire area, then prevents a later volley',()=>{
+ const g=setup('marksmanship:2:0'),ammo=g.supplyItem(g.active,'item-ammunition-bundle');g.active.supplies[ammo.instanceId]=4;g.supplyDie=()=>1;
+ g.useAbility('power-barbed-arrow',{x:9,z:5});assert.equal(g.active.supplies[ammo.instanceId],0);assert.ok(g.enemies.slice(0,2).every(e=>e.hp<100));
+});
+test('invalid range rejects area arrows before turn commitment or ammunition spending',()=>{
+ const g=setup('marksmanship:2:0'),before=JSON.stringify(g.active.supplies);
+ assert.throws(()=>g.useAbility('power-barbed-arrow',{x:15,z:15}),/range/i);assert.equal(g.encounter.current,null);assert.equal(JSON.stringify(g.active.supplies),before);
 });
