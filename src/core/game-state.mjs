@@ -1,3 +1,4 @@
+import { CHALLENGES } from "./challenge.mjs";
 import { validateCamp } from "./camp.mjs";
 import { RECIPES } from "./recipes.mjs";
 import { SURFACE_COLORS } from "./battlefield.mjs";
@@ -9,6 +10,8 @@ const recipeIds = new Set(RECIPES.map((r) => r.id));
 // Missing fields are legitimate in pre-0.4 saves.
 export function validateGameState(campaign) {
   validateCamp(campaign);
+  if (campaign.challenge !== undefined && !Object.hasOwn(CHALLENGES, campaign.challenge))
+    throw new Error("Invalid encounter challenge.");
   if (
     campaign.restockTarget !== undefined &&
     !SUPPLY_TARGETS.includes(campaign.restockTarget)

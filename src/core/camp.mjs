@@ -1,3 +1,4 @@
+import { challenge } from "./challenge.mjs";
 import {
   campSnapshot,
   newCampReport,
@@ -358,7 +359,7 @@ export const campMethods = {
         r.cv <= 30,
     );
     if (!cells.length || !pool.length) return [];
-    return cells.slice(0, Math.min(2, cells.length)).map((p, i) => {
+    return cells.slice(0, Math.min(Math.round(2 * challenge(this.campaign.challenge).factor), cells.length)).map((p, i) => {
       const r = pool[rng.int(0, pool.length - 1)];
       return {
         ...p,

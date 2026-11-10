@@ -185,6 +185,7 @@ export class Game {
     this.campaign = {
       seed: Math.floor(Math.random() * 2147483647),
       depth: 1,
+      challenge: "standard",
       bank: 0,
       haul: 0,
       expeditions: 0,
@@ -481,6 +482,7 @@ export class Game {
         this.party
           .filter((h) => h.survival.status !== "dead")
           .map((h) => h.preview.state.level),
+        this.campaign.challenge ?? "standard",
       );
     if (
       !saved ||

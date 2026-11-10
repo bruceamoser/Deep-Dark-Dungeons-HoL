@@ -1,3 +1,4 @@
+import { verifyChallenge } from "./challenge-check.mjs";
 import { verifyCreatureAI } from "./creature-ai-check.mjs";
 import { verifyFieldAbilities } from "./field-abilities-check.mjs";
 import { verifyMovementSafety } from "./movement-safety-check.mjs";
@@ -105,6 +106,7 @@ try {
   const runCheck = async (fn) => {
     if (!selectedChecks || selectedChecks.includes(fn.name)) await fn(w);
   };
+  await runCheck(verifyChallenge);
   await runCheck(verifyHud);
   await runCheck(verifyMusic);
   await runCheck(verifyTownNavigation);
