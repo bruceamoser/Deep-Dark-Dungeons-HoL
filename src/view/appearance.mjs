@@ -83,6 +83,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   model.traverse((o) => {
     if (
       o.isMesh &&
+      !(enemy && name === "HobgoblinShieldguard") &&
       /sword|shield|axe|crossbow|knife|dagger|wand|staff|spellbook|mug|throwable/i.test(
         o.name,
       )
@@ -139,7 +140,12 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     ranged = held("item-ordinary-ranged-weapon") || look?.weapon === "bow";
   if (
     right &&
-    !(enemy && ["AnimatedStatue", "HobgoblinMarshal"].includes(name)) &&
+    !(
+      enemy &&
+      ["AnimatedStatue", "HobgoblinMarshal", "HobgoblinShieldguard"].includes(
+        name,
+      )
+    ) &&
     ((enemy &&
       !ranged &&
       ["melee", "spear", "chain"].includes(look?.weapon ?? "melee")) ||
@@ -168,7 +174,11 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     bow.rotation.x = Math.PI / 2;
     left.add(bow);
   }
-  if (left && (held("item-ordinary-shield") || look?.shield)) {
+  if (
+    left &&
+    !(enemy && name === "HobgoblinShieldguard") &&
+    (held("item-ordinary-shield") || look?.shield)
+  ) {
     const shield = clone(assets.get("shield").scene);
     shield.name = "Readied shield";
     left.add(shield);

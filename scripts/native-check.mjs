@@ -46,6 +46,11 @@ import { verifyControls } from "./control-check.mjs";
 if (process.platform !== "linux")
   throw new Error("This launcher regression check requires Linux.");
 const root = path.resolve(import.meta.dirname, "..");
+// Explicit installed-target QA; ordinary runs still exercise launch-game.sh.
+const installedTarget = process.env.DDD_NATIVE_EXECUTABLE;
+const launchTarget = installedTarget
+  ? path.resolve(installedTarget)
+  : path.join(root, "launch-game.sh");
 const userData = await fs.mkdtemp(path.join(os.tmpdir(), "ddd-native-check-"));
 // The desktop host has a userns-allowing AppArmor profile. A normal terminal
 // is unconfined and is subject to Ubuntu's userns restriction. Match the latter.
@@ -55,7 +60,7 @@ const child = spawn(
     "-p",
     "unconfined",
     "--",
-    path.join(root, "launch-game.sh"),
+    launchTarget,
     "--remote-debugging-port=0",
     "--mute-audio",
     "--inspect=0",
@@ -165,14 +170,17 @@ try {
   const { processInfo } = await cdp.send("SystemInfo.getProcessInfo");
   const renderers = processInfo.filter((p) => p.type === "renderer");
   expect(renderers.length).toBeGreaterThan(0);
+  const mainPid = installedTarget
+    ? (processInfo.find((p) => p.type === "browser")?.id ?? child.pid)
+    : child.pid;
   const mainArgs = (
-    await fs.readFile(`/proc/${child.pid}/cmdline`, "utf8")
+    await fs.readFile(`/proc/${mainPid}/cmdline`, "utf8")
   ).split("\0");
   expect(mainArgs.join(" ")).toMatch(/(?:^|\s)--mute-audio(?:\s|$)/);
   expect(mainArgs.join(" ")).not.toMatch(/(?:^|\s)--no-sandbox(?:\s|$)/);
-  expect(await fs.readlink(`/proc/${child.pid}/exe`)).not.toMatch(/\s/);
+  expect(await fs.readlink(`/proc/${mainPid}/exe`)).not.toMatch(/\s/);
   expect(
-    (await fs.readFile(`/proc/${child.pid}/attr/current`, "utf8")).trim(),
+    (await fs.readFile(`/proc/${mainPid}/attr/current`, "utf8")).trim(),
   ).toBe("unconfined");
   for (const renderer of renderers) {
     const status = await fs.readFile(`/proc/${renderer.id}/status`, "utf8");
@@ -231,7 +239,7 @@ try {
     "Native window-close handshake saved the latest state before exit.",
   );
   console.log(
-    "Exact Linux launcher in the normal terminal AppArmor context, rendered scene and disk save passed; runtime path has no spaces, renderers have seccomp filtering and no --no-sandbox flag.",
+    `${installedTarget ? "Installed executable " + launchTarget : "Exact Linux launcher"} in the normal terminal AppArmor context, rendered scene and disk save passed; runtime path has no spaces, renderers have seccomp filtering and no --no-sandbox flag.`,
   );
 } catch (error) {
   const page = browser?.contexts()[0]?.pages()[0];

@@ -55,4 +55,10 @@ Four successful DeepSeek calls under `~/.local/share/four-lanterns-workers/2026-
 
 ## bmoser bestiary viewer checkpoint — November 10
 
-Checkout launcher includes the live book/model comparison for all 58 entries after a package rebuild, still labeled 0.8.7. Final muted native comparison/control/context-cleanup and exact sandboxed launcher/save checks pass. Installed/public release unchanged; Windows not exercised. Test screenshots/logs stay local; code/docs transfer through Git. Task-owned Vite5187 stopped during delivery cleanup. No pending API/Blender worker.
+Checkout launcher includes the live book/model comparison for all 58 entries after a package rebuild, still labeled 0.8.7. Final muted native comparison/control/context-cleanup and exact sandboxed launcher/save checks pass. Installed/public release unchanged; Windows not exercised. Test screenshots/logs stay local; code/docs transfer through Git. Task-owned Vite 5187 stopped during delivery cleanup. No pending API/Blender worker.
+
+## bmoser wave-05 installation — November 10
+
+Normal menu target is now the current local AppImage `~/.local/share/deep-dark-dungeons-hol/Deep-Dark-Dungeons-HoL.AppImage`. Supported checksum installer creates user desktop override and preserves real save paths. Previous desktop entry backed up under `~/.local/share/four-lanterns-install-backups/2026-11-10-wave-05/`. Root-owned Chrome helper from `/opt/google/chrome/chrome-sandbox` provides sandboxing; no global kernel setting changed. System `/opt` Debian installation is untouched. Source label 0.8.7, unpublished local review build; do not confuse it with the immutable public 0.8.7 binary. AppImage and Debian files are local/ignored under release/.
+
+Final installed-target native checks pass 19 updated actors,58 bestiary comparisons/controls/cleanup, sandbox and isolated save/close; default checkout checks also cover 58 adapters/17conditions. Both muted. Six successful DeepSeek calls, no remaining job Blender. Windows not exercised. Experimental Modly/rigging tools/weights remain uninstalled; a pilot is next. Git does not transfer installed binaries/private hero exports/credentials/toolchains.

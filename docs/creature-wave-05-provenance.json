@@ -1,0 +1,147 @@
+{
+  "created": "2026-11-10",
+  "authoring": "Three parallel DeepSeek Flash CLI authors. GPT organizer returned findings for all three. Ghoul incorporated feedback in its author job; two separate Shieldguard revisions and one separate Ghast revision. Six calls total, all successful/bounded. Organizer/author review, not independent art approval.",
+  "donors": [
+    {
+      "file": "public/assets/characters/series4/Ninja.glb",
+      "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0",
+      "license": "CC0-1.0; public/assets/characters/LICENSE.txt"
+    },
+    {
+      "file": "public/assets/creatures/wave-04/HobgoblinMarshal.glb",
+      "sha256": "a5d271716a712f9117dd9be66d4b8e88d70464d3015140183c64233d34eda749",
+      "license": "Project-authored CC0-derived; docs/creature-wave-04-provenance.json"
+    }
+  ],
+  "originalContributions": "Project-authored undead anatomy/materials/clothing, shield/spear/regiment marks, adapted Marshal armor/body. No new public license assignment for project contributions. Originals untouched; no paid generation/downloaded new art.",
+  "assets": [
+    {
+      "name": "HobgoblinShieldguard",
+      "creatureId": "creature-hobgoblin-shieldguard",
+      "file": "public/assets/creatures/wave-05/HobgoblinShieldguard.glb",
+      "sha256": "a8f4216391336038ff4a2c592cc3f57bd14dfeba40acb0c69c4fc55aa14e9ed9",
+      "editable": "art/source/creatures/HobgoblinShieldguard.blend",
+      "builder": "scripts/toolchain/creature-workers/hobgoblin-shieldguard.py",
+      "bytes": 404296,
+      "triangles": 3344,
+      "materials": 7,
+      "meshCount": 3,
+      "threeRenderMeshes": 13,
+      "drawCalls": 13,
+      "textures": 0,
+      "embeddedImages": 0,
+      "skinnedVertices": 7219,
+      "maxWeightInfluences": 1,
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "bones": [23],
+      "presentationScale": [1, 1, 1],
+      "bindVerification": [
+        {
+          "skin": "Rig_Medium",
+          "bones": 23,
+          "missing": [],
+          "extra": [],
+          "parentMismatches": [],
+          "maxLocalRestDelta": 1.095607876777649e-5,
+          "maxInverseBindDelta": 8.344650836988876e-7,
+          "rawMaxInverseBindDelta": 8.344650836988876e-7,
+          "pass": true
+        }
+      ],
+      "reproducibility": "Byte-identical Blender 5.2.4 LTS portable rebuild",
+      "reviewedStates": ["idle", "walk", "spear-stab", "hit", "death"],
+      "limitations": "Established red-brown hobgoblin face/armor, burgundy tabard, tall regiment-marked red shield and ranked spear replace the green brute. Returned Ninja-faced first draft and landscape shield; final uses Marshal family body. Gear follows actual spear-stab clips; marks/armor/grip remain simplified."
+    },
+    {
+      "name": "CryptGhoul",
+      "creatureId": "creature-crypt-ghoul",
+      "file": "public/assets/creatures/wave-05/CryptGhoul.glb",
+      "sha256": "4189838560e06b9df6e0e726d8d477e8f67018bf515c6cbbdf6d0fc34035beb5",
+      "editable": "art/source/creatures/CryptGhoul.blend",
+      "builder": "scripts/toolchain/creature-workers/crypt-ghoul.py",
+      "bytes": 241852,
+      "triangles": 3988,
+      "materials": 8,
+      "meshCount": 1,
+      "threeRenderMeshes": 8,
+      "drawCalls": 8,
+      "textures": 0,
+      "embeddedImages": 0,
+      "skinnedVertices": 4586,
+      "maxWeightInfluences": 3,
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "bones": [23],
+      "presentationScale": [1.16, 1.16, 1.16],
+      "bindVerification": [
+        {
+          "skin": "Rig_Medium",
+          "bones": 23,
+          "missing": [],
+          "extra": [],
+          "parentMismatches": [],
+          "maxLocalRestDelta": 1.0952353477478027e-5,
+          "maxInverseBindDelta": 8.344650268554688e-7,
+          "rawMaxInverseBindDelta": 0.13793134689331055,
+          "pass": true
+        }
+      ],
+      "reproducibility": "Byte-identical Blender 5.2.4 LTS portable rebuild",
+      "reviewedStates": [
+        "idle",
+        "walk",
+        "slash",
+        "hit",
+        "death",
+        "unarmed-punch"
+      ],
+      "limitations": "Bare emaciated green-gray corpse, curved thorax/head, ribs, sunken amber eyes, projecting toothy mouth, long hooked fingers, sparse dark hair and loincloth replace a hairy werewolf proxy. Returned clean straight skeleton-like first draft. Ribs/skin/hair remain schematic and anatomy needs later refinement."
+    },
+    {
+      "name": "Ghast",
+      "creatureId": "creature-ghast",
+      "file": "public/assets/creatures/wave-05/Ghast.glb",
+      "sha256": "22014da020f42f1358a1963f4f3fa9824c76e262b31492f50cc0524b3e9f04f8",
+      "editable": "art/source/creatures/Ghast.blend",
+      "builder": "scripts/toolchain/creature-workers/ghast.py",
+      "bytes": 310732,
+      "triangles": 4416,
+      "materials": 8,
+      "meshCount": 1,
+      "threeRenderMeshes": 8,
+      "drawCalls": 8,
+      "textures": 0,
+      "embeddedImages": 0,
+      "skinnedVertices": 5138,
+      "maxWeightInfluences": 2,
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "bones": [23],
+      "presentationScale": [1, 1, 1],
+      "bindVerification": [
+        {
+          "skin": "Rig_Medium",
+          "bones": 23,
+          "missing": [],
+          "extra": [],
+          "parentMismatches": [],
+          "maxLocalRestDelta": 1.0952353477478027e-5,
+          "maxInverseBindDelta": 8.344650268554688e-7,
+          "rawMaxInverseBindDelta": 8.344650268554688e-7,
+          "pass": true
+        }
+      ],
+      "reproducibility": "Byte-identical Blender 5.2.4 LTS portable rebuild",
+      "reviewedStates": [
+        "idle",
+        "walk",
+        "slash",
+        "hit",
+        "death",
+        "unarmed-punch"
+      ],
+      "limitations": "Pale corpse aristocrat in ragged green/cream/gold ceremonial clothing, dirty white hair, brooch, open teeth and red talons replaces stitched Monstrosity. Returned detached hands/wrong rest geometry and cone-like crown. Canonical-rest limbs now stay attached through shared clips; rigid cloth, large skull and weak hunch remain first-pass."
+    }
+  ]
+}

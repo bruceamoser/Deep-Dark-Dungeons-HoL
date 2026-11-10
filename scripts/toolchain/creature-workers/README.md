@@ -45,3 +45,13 @@ timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 -
 ```
 
 All use the unchanged Ninja donor. Werebear/Ash Demon rebuild byte-identically; Marshal matches JSON/indices/positions/normals/joints/weights/binds with two unused UV accessors differing by at most 5.96e-8 (no texture images). See [wave-04 report](../../../docs/creature-model-wave-04.md) and provenance for returned face/claw, helm/armor/saber and ash/fire/wing revisions, costs and explicit first-pass gaps. The reusable `compare_asset_rig.py` validates direct canonical rest/bind preservation; actual Three.js/native poses remain required.
+
+## Wave 05
+
+```sh
+timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 --python scripts/toolchain/creature-workers/hobgoblin-shieldguard.py
+timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 --python scripts/toolchain/creature-workers/crypt-ghoul.py
+timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 --python scripts/toolchain/creature-workers/ghast.py
+```
+
+Shieldguard adapts the accepted Marshal; undead import the Ninja rig. All rebuild byte-identically under Blender 5.2.4 LTS. Ghoul's deliberate 1.16 presentation scale requires `compare_asset_rig.py ... --presentation-scale 1.16 1.16 1.16`; the other two pass the default direct comparison. See [wave-05 report](../../../docs/creature-model-wave-05.md) for rejected identity/limb/shield drafts, accepted costs, actual game checks and remaining first-pass limitations.

@@ -25,7 +25,14 @@ const rows = [
   ["orc-shieldbreaker", "OrcBrute", "warband", 4, "melee"],
   ["orc-warcaller", "OrcBrute", "warband", 4, "staff"],
   ["hobgoblin-longbow", "OrcRaider", "warband", 3, "bow"],
-  ["hobgoblin-shieldguard", "OrcBrute", "warband", 4, "spear", true],
+  [
+    "hobgoblin-shieldguard",
+    "HobgoblinShieldguard",
+    "warband",
+    4,
+    "spear",
+    true,
+  ],
   ["hobgoblin-marshal", "HobgoblinMarshal", "warband", 6, "melee"],
   ["cave-bat", "CaveBat", "vermin", 1, "bite"],
   ["giant-rat", "Rat", "vermin", 1, "bite"],
@@ -37,8 +44,8 @@ const rows = [
   ["wererat", "Wererat", "beasts", 3, "melee"],
   ["werewolf", "WerewolfWolf", "beasts", 5, "claw"],
   ["werebear", "Werebear", "beasts", 6, "claw"],
-  ["crypt-ghoul", "WerewolfMan", "dead", 3, "claw"],
-  ["ghast", "Monstrosity", "dead", 5, "claw"],
+  ["crypt-ghoul", "CryptGhoul", "dead", 3, "claw"],
+  ["ghast", "Ghast", "dead", 5, "claw"],
   ["plague-zombie", "PlagueZombie", "dead", 2, "claw"],
   ["mire-ooze", "Ooze", "vermin", 2, "slam"],
   ["animated-armor", "BlackKnight", "constructs", 3, "melee", true],
@@ -66,6 +73,9 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  HobgoblinShieldguard: "/assets/creatures/wave-05/HobgoblinShieldguard.glb",
+  Ghast: "/assets/creatures/wave-05/Ghast.glb",
+  CryptGhoul: "/assets/creatures/wave-05/CryptGhoul.glb",
   HobgoblinMarshal: "/assets/creatures/wave-04/HobgoblinMarshal.glb",
   AshDemon: "/assets/creatures/wave-04/AshDemon.glb",
   Werebear: "/assets/creatures/wave-04/Werebear.glb",
@@ -125,6 +135,9 @@ export const CREATURE_MODELS = {
  * through the procedural creature path.
  */
 export const HUMANOID_MODELS = new Set([
+  "HobgoblinShieldguard",
+  "Ghast",
+  "CryptGhoul",
   "HobgoblinMarshal",
   "AshDemon",
   "Werebear",

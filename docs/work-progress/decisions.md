@@ -80,8 +80,14 @@ Wave 03 returned a Strider that reconstructed the rig after overlooking a suppli
 
 ## 2026-11-10 — Wave-04 first-pass coverage and canonical rig gate
 
-Continue roster coverage with bounded parallel DeepSeek authors; organizer returns actual exported-pose findings rather than trusting self-ratings. Werebear/Marshal/Ash fit78/83/74: below80 bear/demon are explicitly first-pass coverage, retained for later refinement, not final art approval. A reusable comparator checks named hierarchy/local rest/inverse binds for every direct canonical skin; added joints/deliberate presentation scale require explicit separate review. Actual unarmed attacks/visible pixels/costs/native final material instances remain required. See [wave-04 report](../creature-model-wave-04.md).
+Continue roster coverage with bounded parallel DeepSeek authors; organizer returns actual exported-pose findings rather than trusting self-ratings. Werebear/Marshal/Ash fit78/83/74: below 80 bear/demon are explicitly first-pass coverage, retained for later refinement, not final art approval. A reusable comparator checks named hierarchy/local rest/inverse binds for every direct canonical skin; added joints/deliberate presentation scale require explicit separate review. Actual unarmed attacks/visible pixels/costs/native final material instances remain required. See [wave-04 report](../creature-model-wave-04.md).
 
 ## 2026-11-10 — Bestiary as local art review
 
 Bruce wants the model beside its creature illustration to review locally. Use the actual appearance factory and gear, neutral inspection lighting, manual rotation/zoom and supported animation previews. Keep one context across selections and dispose copied resources on switch/close; never substitute a separate approved-looking render for the real game model. Preview availability does not change fit ratings or imply art approval. See [bestiary comparison](../bestiary-model-review.md).
+
+## 2026-11-10 — Installed review builds and next pipeline test
+
+Bruce reviews through the installed game's normal menu, so checkout rebuilds alone are insufficient. Current-source licensed AppImage now supersedes the old user menu target; keep the stable per-user path updated for accepted local art batches, retain real saves and verify the exact menu executable with isolated data/silent audio. Do not overwrite public releases or claim the system Debian package changed. See [wave 05](../creature-model-wave-05.md).
+
+Bruce proposed Modly plus local rigging/motion tools, then explicitly prioritized completing wave 05 before a pipeline test. Next is a bounded one-creature comparison against the current model; verify exact primary repos, model/component licenses, hardware fit, automation and animated export before adoption. No experimental tool/weight installation or generation has occurred. Existing working models remain the baseline.

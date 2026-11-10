@@ -1,5 +1,6 @@
 // Separate neutral/pose render of a worker GLB before game integration.
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { chromium } from "@playwright/test";
 const [input, output, scaleText = "0.85", clipSource = "shared"] =
@@ -229,6 +230,7 @@ try {
     );
   const report = {
     input: path.resolve(input),
+    sha256: createHash("sha256").update(bytes).digest("hex"),
     bytes: bytes.length,
     textures: manifest.textures?.length ?? 0,
     embeddedImages: manifest.images?.length ?? 0,
