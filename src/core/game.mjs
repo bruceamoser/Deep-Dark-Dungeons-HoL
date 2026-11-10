@@ -1,4 +1,5 @@
 import { creatureAiMethods } from "./creature-ai.mjs";
+import { movementSafetyMethods } from "./movement-safety.mjs";
 import { foragingMethods, migrateForagePlan } from "./foraging.mjs";
 import { provisionMethods, prepareProvisions } from "./provisions.mjs";
 import { migrateCombinedSupplies } from "./supply-dice.mjs";
@@ -55,7 +56,7 @@ import {
   storedHero,
 } from "./roster.mjs";
 import { ABILITIES, coverage } from "./abilities.mjs";
-import { formationRoutes, validateFormation } from "./formations.mjs";
+import { validateFormation } from "./formations.mjs";
 import {
   generate,
   Random,
@@ -170,6 +171,8 @@ export class Game {
   }
   fresh(drafts) {
     this.pause();
+    this.pendingMovement = null;
+    this.movementConsent = new Set();
     this.pendingDefense = null;
     this.pendingProvocation = null;
     this.busy = false;
@@ -200,6 +203,8 @@ export class Game {
     this.resume();
   }
   load(c, { resume = true } = {}) {
+    this.pendingMovement = null;
+    this.movementConsent = new Set();
     validateGameState(c);
     migrateForagePlan(c);
     prepareProvisions(c);
@@ -415,6 +420,8 @@ export class Game {
     };
   }
   newFloor(saved, { silent = false } = {}) {
+    this.pendingMovement = null;
+    this.movementConsent = new Set();
     this.campaign.deepest = Math.max(
       this.campaign.deepest ?? 1,
       this.campaign.depth,
@@ -568,7 +575,7 @@ export class Game {
     );
   }
   useAbility(id, targetId, options = {}) {
-    if (POWERS[id]) return this.usePower(id, targetId);
+    if (POWERS[id]) return this.usePower(id, targetId, options);
     if (ABILITIES[id]?.tactic) return this.useTactic(id, targetId);
     if (id === "ability-lantern-in-the-palm")
       return this.toggleLantern(this.selected);
@@ -1704,6 +1711,7 @@ export class Game {
   }
   move(to) {
     if (this.busy) return;
+    this.pendingMovement = null;
     this.pendingInteraction = null;
     if (
       this.mode === "combat" &&
@@ -1712,36 +1720,8 @@ export class Game {
       throw new Error(
         "Move through companions, but finish on an empty square.",
       );
-    const route = this.route(to);
-    if (!route.length) return;
-    if (this.mode === "combat" && !this.encounter.current) this.beginHero();
-    if (this.mode === "combat") {
-      if (this.encounter.current !== this.active.id)
-        throw new Error("Choose a hero whose turn is available.");
-      const remaining = this.movementLeft();
-      const cost = route.reduce((n, p) => n + this.moveCost(p), 0);
-      if (cost > remaining)
-        throw new Error(
-          `This route costs ${cost} movement; only ${remaining} remains.`,
-        );
-      this.budgets[this.active.id] = this.R.spendMovement(this.budget, {
-        operationId: `move-${crypto.randomUUID()}`,
-        amount: cost,
-        conditions: this.restrictions(this.active),
-      });
-      this.paths.clear();
-      this.paths.set(this.active.id, route);
-    } else {
-      this.paths = formationRoutes(
-        this.map,
-        this.party,
-        this.enemies,
-        this.campaign.formation,
-        this.campaign.order,
-        to,
-      );
-    }
-    this.emit("change");
+    const plan = this.movementPlan(to);
+    return plan ? this.requestMovement(plan) : false;
   }
   step() {
     if (
@@ -1750,6 +1730,7 @@ export class Game {
       !["exploration", "combat"].includes(this.mode)
     )
       return;
+    if (this.checkMovementHazards()) return;
     const marching =
       this.mode === "combat"
         ? this.encounter.current === this.active.id
@@ -2305,6 +2286,7 @@ Object.assign(
   recoveryMethods,
 );
 Object.assign(Game.prototype, interactionMethods);
+Object.assign(Game.prototype, movementSafetyMethods);
 Object.assign(Game.prototype, rosterMethods, experienceMethods);
 
 Object.assign(

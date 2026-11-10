@@ -52,6 +52,7 @@ Packaging creates Linux AppImage/Debian packages or a Windows NSIS setup executa
 - Formation chooses two by two, single file, wedge or line, with editable marching order.
 - Hover a coffer, lost expedition cache or stairs to highlight it. Click for Inspect, Approach, Collect/Recover or travel, and Leave. Loot is collected deliberately through this menu; walking past it does not collect it.
 - Actions opens the acting hero’s supported cards. Choose one, then click its target; self actions offer Use on self. Choose a different action to switch, or use Cancel, Escape or the same action again to leave targeting without spending.
+- Harmful fire/trap routes ask for confirmation before movement or action costs, including party followers and movement powers. Cancel or Escape stops the route; new hazards pause travel for another decision.
 - Heroes can pass willing companions but must end on an empty square. Prone occupied squares cost 2 movement. This is an explicit companion-passage adaptation; standing enemies still block.
 - C / I opens the character command screen: animated equipment preview, pack, quick ready/stow, abilities and Journey. Star favorite actions to put them on the combat bar; 5–9 activate the first five. Shield Block is offered before eligible enemy attacks.
 - Sound opens master volume, mute and a test sound. Audio starts on the first click or key press.

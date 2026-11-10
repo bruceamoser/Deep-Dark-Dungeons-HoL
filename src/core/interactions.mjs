@@ -135,10 +135,13 @@ export const interactionMethods = {
     if (!candidates.length)
       throw new Error("There is no clear route beside that object.");
     this.move(candidates[0].p);
-    this.pendingInteraction = { id, useOnArrival };
+    if (this.pendingMovement)
+      this.pendingMovement.interaction = { id, useOnArrival };
+    else this.pendingInteraction = { id, useOnArrival };
     this.checkInteractionArrival();
   },
   checkInteractionArrival() {
+    if (this.pendingMovement) return;
     if (!this.pendingInteraction) return;
     if (this.mode !== "exploration") {
       this.pendingInteraction = null;
