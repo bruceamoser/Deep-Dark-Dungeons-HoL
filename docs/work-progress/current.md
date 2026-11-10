@@ -1,20 +1,17 @@
 # Current working progress
 
-Updated: 2026-11-09 (America/New_York).
+Updated: 2026-11-10 (America/New_York).
 
-## Active feedback investigation
+## Active — equipment bonus discussion
 
-Issue #127, active implementation branch `codex/136-area-arrows`. Nine feedback requests are tracked. Turn-selection PR #129 merged after 332-test CI and native checks. HUD Speed/DR #130 merged in PR137. Route preview #131 merged in PR138. Ingredient-free camp #132 merged in PR139. Creature casting #133 merged PR140. Challenge settings #134 merged PR141. Slower progression #135 merged PR142. Area arrows #136 in progress; equipment remains deferred. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Accepted: ingredient-free probabilistic basic camp tasks, automatic recipients with override; level2/depth4, level3/depth7, level4/depth11 without reducing earned levels, independent of difficulty. Equipment discussion deferred. Continue independent combat/HUD/route and asset investigation.
+Eight player-feedback implementation items are reviewed and merged: PR129, PR137–PR143. Parent #127 remains open for equipment design #144. Bruce wants to proceed item type by item type, hearing available bonuses first. Begin with weapons, then armour, shields and accessories. No equipment-affix changes agreed or implemented yet. See [completion handoff](handoffs/2026-11-10-feedback-completion.md), [decisions](decisions.md), [camp supplies](../supplies.md), [creature audit](../creature-casting.md), [challenge](../challenge.md), [progression](../progression.md) and [area arrows](../area-arrows.md).
 
-## Delivered
+## Completed verification
 
-Four Lanterns Deep **v0.8.6** is published as latest: https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.6
-Immutable source/tag `6a844f9ab017314ddc5158c8365d639dfa5dc6ab`, release PR #125. Supplies PR #123 and player-feedback PRs #118–#121 are merged. No remaining implementation work.
+Final gameplay head passes 344 tests and build. Actual sandboxed native launcher checks cover selection, HUD, routes, camp, 58 creature visuals, challenge, training/save compatibility and area-arrow pointer preview/cancel/use. Handoff records exact scoped runs and resolved QA failures. Author review is not independent review.
 
-331 tests pass; complete sandboxed native launcher regression passes. Finished licensed AppImage, installed Debian and Windows NSIS checks all pass in staged run 42753469276, which published the release. See [release handoff](handoffs/2026-11-09-v086-release.md), [supply rules](../supplies.md) and [release process](../releases.md). All ten public SHA-256 entries and both updater SHA-512 manifests pass; published 0.8.5 discovers/downloads 0.8.6 through its live feed. Author review is not independent review.
+## Version and machine state
 
-## Local state and transfer
+Latest published version remains [v0.8.6](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.6), source/tag `6a844f9ab017314ddc5158c8365d639dfa5dc6ab`. Feedback changes are unreleased main source, package version still0.8.6 until release preparation. Installed Debian version verified0.8.6; not replaced. Checkout `/home/bruce/Projects/Deep-Dark-Dungeons-HoL` runtime is rebuilt with these changes. No new release requested in this batch.
 
-Checkout `/home/bruce/Projects/Deep-Dark-Dungeons-HoL` is rebuilt at 0.8.6. The separately installed user game was not replaced; update through Settings → Updates or the published installer. Real saves and personal windows were untouched. Existing untracked Borin prototypes remain untouched.
-
-Private Dungeon Mason exports and local build/test outputs do not transfer through Git. Follow [machines](machines.md), [decisions](decisions.md) and AGENTS.md. Verify the release and final delivery PR on GitHub when switching machines; do not repeat completed features.
+Private assets, QA outputs and installed copies do not transfer through Git. Real saves and personal windows were not used or closed. Untracked superseded Borin prototypes remain untouched. Follow AGENTS.md and [machine setup](machines.md); pull main and verify the final completion PR before resuming. Equipment discussion is the only remaining original feedback task.

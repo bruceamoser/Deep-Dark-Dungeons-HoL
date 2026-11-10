@@ -47,3 +47,7 @@ Bruce approved the simpler supply design: individual carried consumable dice; on
 ## 2026-11-10 — Simplified camp and progression targets
 
 Bruce supersedes ingredient requirements for basic camp replenishment: no required supplies, hidden success chances improved by relevant training, automatic recipient with manual override. Healing still consumes dressings and wound care remains once per day per wound. Difficulty changes encounter challenge separately. New progression aims for level 2 around depth 4, level 3 around depth 7 and level 4 around depth 11; never remove already-earned levels. Equipment bonus design discussion comes after the other feedback issues.
+
+## 2026-11-10 — Equipment discussion order
+
+After all eight implementation items merged, Bruce requested proceeding item type by item type with available bonuses explained first. Start with weapons, then armour, shields and accessories. Existing generated bonuses remain until agreed. Parent #127 and focused #144 track this discussion.
