@@ -33,3 +33,5 @@ Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero 
 #135 latest rules/build CI passes. Native respec passes; Forge level30-gate fixture still awarded the former capped-curve amount, so its valid earned-level guard rejected training. Updated that fixture to xpForLevel(30); rerunning remaining Forge/roster/controls. No gameplay failure hidden or guard weakened.
 
 #135 338 full local tests pass. Respec/Forge/roster desktop checks passed separately after updating XP fixtures/formatting. Controls then exposed #133 corpse-tint dereferencing absent look on an untyped fallback enemy; added optional guard and rebuilding/rerunning controls. Existing native fixture provides fallback regression coverage.
+
+#135 merged PR142 after 338 rules tests, final CI, native respec/Forge/roster/control checks (split runs, corrected XP QA and fallback guard). #136 adds Barbed Volley and Flaming/Thorn Arrow areas while preserving node/save IDs. Focused and actual pointer preview/cancel/cast tests underway. Equipment discussion is the only design topic after this implementation.
