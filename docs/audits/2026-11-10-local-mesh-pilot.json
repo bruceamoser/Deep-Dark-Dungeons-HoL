@@ -1,0 +1,79 @@
+{
+  "status": "pilot complete; motion and production acceptance fail",
+  "tools": {
+    "tools/modly": {
+      "commit": "f11a4d2bd9fe994b9d30f76a36cb6c18ac8733ea",
+      "remote": "https://github.com/lightningpixel/modly.git"
+    },
+    "extensions/trellis2": {
+      "commit": "db287c0c37241c354bb4addf2ca5f53ba0d866f3",
+      "remote": "https://github.com/lightningpixel/modly-trellis2-gguf-extension.git"
+    },
+    "tools/mesh2motion": {
+      "commit": "fd9fdeb2ba214d210e8e4f28015c2a3c06cd8f5b",
+      "remote": "https://github.com/Mesh2Motion/mesh2motion-app.git"
+    },
+    "tools/assetfurnace": {
+      "commit": "f6d7559cae6d8468e7fc10188c08708baa70408a",
+      "remote": "https://github.com/Bingeljell/image-to-3dlab.git"
+    },
+    "weights": {
+      "repository": "Aero-Ex/Trellis2-GGUF",
+      "revision": "edf81aef93af0823ac8721da3c9cd3c52d539f87",
+      "quantization": "Q5_K_M"
+    }
+  },
+  "artifacts": [
+    {
+      "name": "crypt-ghoul-generated.glb",
+      "bytes": 72934656,
+      "sha256": "cccfca34ce30e4dd331e5fdcc1819799a5e69809a129d1d778bf8d95d83b0f36"
+    },
+    {
+      "name": "crypt-ghoul-textured.glb",
+      "bytes": 126115748,
+      "sha256": "a93bc9c00525a993332fab2badad27cd049c565e459333b7f4857146da5dbb1a"
+    },
+    {
+      "name": "crypt-ghoul-rig-proxy.glb",
+      "bytes": 4587100,
+      "sha256": "5bc0ddf04ddad2df8a3552bc8eca98095d609d4ad2187c09302d9aa3dd2277b0"
+    },
+    {
+      "name": "crypt-ghoul-m2m-experimental.glb",
+      "bytes": 8677576,
+      "sha256": "f6d6a058f41f428f2a1bb6d13ee61157d53899bef814bc687e52d2ccfce361c8"
+    }
+  ],
+  "rig_test": {
+    "bones": 28,
+    "clips": [
+      {
+        "name": "Idle_A",
+        "duration": 3.0833332538604736
+      },
+      {
+        "name": "Crouch_Walk",
+        "duration": 2.4583332538604736
+      },
+      {
+        "name": "Punch_Jab",
+        "duration": 1.0416666269302368
+      },
+      {
+        "name": "Hit_Chest",
+        "duration": 0.375
+      },
+      {
+        "name": "Death_A",
+        "duration": 4.583333492279053
+      }
+    ],
+    "triangles": 54597
+  },
+  "raw_shape_triangles": 4055161,
+  "proxy_triangles": 55212,
+  "baseline_fit": 78,
+  "candidate_fit": null,
+  "reason": "No production fit rating until optimized and animated candidate passes. Static source noticeably closer; naive reduction and initial skinning fail."
+}
