@@ -59,3 +59,7 @@ Bruce completed the item-by-item discussion and approved strongest matching equi
 ## 2026-11-10 — Asset-production preparation and optional cloud generation
 
 Bruce requested Blender/useful tools, a DeepSeek worker and review of the proposed hybrid generation pipeline. Meshy was subsequently clarified as optional; defer its account, installation and paid generation. Use Blender/Rigify/MCP plus existing assets first. GPT remains the default design/integration model; DeepSeek is a separate authenticated Codex profile for bounded worker jobs, not a claimed built-in subagent model. Preserve credentials outside Git with helper-backed auth. Replace blanket geometry/transform cleanup with inspected, selective changes and require real deformation/render/export evidence. See the asset-production pipeline and repo skill for details. Blender must be open for interactive MCP calls; background scripts start their own instance.
+
+## 2026-11-10 — Recognizable roster first, refinement second
+
+Bruce accepted the first model pilots with a facial-contrast correction: recolor existing eye/mouth details rather than add geometry. Establish decent, recognizable, animated/equipped models across the roster, then return with high-capability guidance for deeper anatomy/material/detail refinement. Keep editable sources and validate improvements in-game. Broad coverage should not stall on finishing every small detail of the first four creatures.

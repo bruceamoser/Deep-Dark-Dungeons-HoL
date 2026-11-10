@@ -1,3 +1,4 @@
+import { colorGoblinFace } from "./goblin-face.mjs";
 import { masonAppearance } from "./mason-heroes.mjs";
 import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
@@ -122,6 +123,8 @@ export function equipmentAppearance(assets, hero, enemy = false) {
         : paint(o.material);
     });
   }
+  if (enemy && look?.theme === "goblins" && look.model === "OrcRaider")
+    colorGoblinFace(model, owned);
   let right, left;
   model.traverse((o) => {
     const slot = o.name.toLowerCase().replace(/[._-]/g, "");
