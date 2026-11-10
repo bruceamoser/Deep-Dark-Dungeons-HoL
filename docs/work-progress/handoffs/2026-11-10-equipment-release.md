@@ -17,3 +17,9 @@ Branch codex/144-equipment-bonuses, base f66704142b97bf613046ebf61e1c8fb4f31a8ec
 Finish author review, full tests and sandboxed native equipment interaction. Update exact evidence here, open PR for #144, review/check/merge. Then prepare v0.8.7 on a separate release branch and follow docs/releases.md: licensed local builds, installer/update qualification, version PR, reviewed tag, draft upload and Verify/publish staged release workflow. Do not publish source-only fallback builds.
 
 Installed Debian remains 0.8.6; no personal saves/windows touched. Existing untracked Borin prototypes remain untouched. Licensed exports/builds/QA profiles stay ignored and need private transfer. Use release/qa-tmp for TMPDIR because /tmp is nearly full. Git/network/native checks need approved escalated execution on this desktop.
+
+## Equipment merged; release preparation
+
+PR146 author-reviewed and merged at db741592f50931557ee6c1304297f3f7e38c5442. Final documentation head 780b53b passed both CI runs 42770222495/42770227408. The complete native launcher suite passed (release/equipment-native-full.log), including all prior feedback features and equipment, run slots and native-close save, with terminal AppArmor and renderer sandbox/seccomp retained. Screenshot of the equipment inspector was inspected. #127 and #144 are closed.
+
+Release issue #147; codex/v087-release from db741592. Version/lockfile and release notes prepared for 0.8.7. Finished licensed builds and release qualification in progress. Installed Debian remains 0.8.6, unchanged.

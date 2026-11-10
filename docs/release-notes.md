@@ -1,3 +1,21 @@
+**v0.8.7 — Better journeys, clearer equipment**
+
+- Equipment bonuses now say what they do: accuracy, damage, range, Push 1, defence, resistance, attributes and discipline competence. Matching equipment bonuses use the strongest value. Light reduces Bulk; suitable equipment can provide toggleable, fuel-free magical illumination.
+- New enchanted cloaks, backpacks and optional kits join the existing forms. Existing magic items keep their names and identities while receiving the approved effects.
+- Switch the acting hero freely until an action or movement commits the turn. Speed and physical DR sit beside Grit, and hovered movement routes show damaging ground and opportunity-attack risks.
+- Basic camp duties make arrows, dressings and torches or find food and water without ingredient management. Relevant training improves hidden success chances; recipients are automatic with an optional override. Medical care still consumes dressings and wound treatment remains once per day per wound.
+- Choose Story, Adventurer, Veteran or Perilous encounter challenge independently of progression. The slower XP curve targets level 2 around depth 4, level 3 around depth 7 and level 4 around depth 11. Existing earned levels and progress are preserved.
+- Barbed Volley and Flaming/Thorn Arrow hit areas, use ordinary bow/ammunition/action costs and spare allies.
+- Improved creature casting uses closer matches from the owned model collections, with corrected scale and tint.
+
+Existing journeys remain compatible. Save locations, installed application identifiers and update compatibility are retained.
+
+### Install
+
+Debian/Ubuntu: `sudo apt install ./Four-Lanterns-Deep-0.8.7-amd64.deb`. Other Linux: AppImage or Linux installer bundle. Windows: `Four-Lanterns-Deep-Setup-0.8.7-x64.exe`. Installed releases: **Settings → Updates**.
+
+---
+
 **v0.8.6 — Ready for the road**
 
 - One party Supplies screen with reviewed Greyhaven restocking, preferred departure stock and exact coin/Bulk previews.
