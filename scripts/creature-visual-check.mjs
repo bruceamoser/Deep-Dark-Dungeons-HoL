@@ -91,7 +91,7 @@ export async function verifyCreatureVisuals(page) {
       expect(actor.low, actor.type).toBeGreaterThan(-1.5);
       expect(actor.coloured, actor.type).toBeGreaterThan(0);
     }
-    if ([0, 24, 32, 48].includes(offset))
+    if ([0, 8, 16, 24, 32, 40, 48, 56].includes(offset))
       await page.screenshot({
         path: `test-results/book-creatures-${offset}.png`,
       });

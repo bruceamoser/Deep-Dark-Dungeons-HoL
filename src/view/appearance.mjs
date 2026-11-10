@@ -105,8 +105,10 @@ export function equipmentAppearance(assets, hero, enemy = false) {
           m.color.set(
             /^.*(armor|helmet|metal).*$/i.test(o.name)
               ? theme.metal
-              : (theme.skin ?? theme.cloth),
+              : /_(Head|ArmLeft|ArmRight)$/.test(o.name) ? (theme.skin ?? theme.cloth) : theme.cloth,
           );
+        if (look.theme === "dead" && /_(Head|ArmLeft|ArmRight|LegLeft|LegRight)$/.test(o.name) && m.color)
+          m.color.set(theme.skin);
         return m;
       };
       o.material = Array.isArray(o.material)
@@ -317,7 +319,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     model.userData.setConcealed(!!hero.concealed);
   }
   model.scale.multiplyScalar(
-    enemy ? (look?.theme === "kobolds" ? 0.65 : 0.95) : 0.85,
+    enemy ? (["goblins", "kobolds"].includes(look?.theme) ? 0.65 : 0.95) : 0.85,
   );
   const clips = gameClips({ skeleton: /^Skeleton/.test(name) });
   return {
