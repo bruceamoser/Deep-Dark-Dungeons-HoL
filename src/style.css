@@ -199,6 +199,12 @@ p {
   display: flex;
   justify-content: space-between;
 }
+.hero-card .vitals span {
+  white-space: nowrap;
+}
+.hero-card .vitals span:first-child {
+  flex-basis: 100%;
+}
 .bar {
   height: 3px;
   background: #03090c;
