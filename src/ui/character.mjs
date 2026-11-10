@@ -19,6 +19,7 @@ export function characterSheet({
   attempt,
   activate,
   shortcuts,
+  supplies,
   train,
   respec,
   treat,
@@ -191,7 +192,7 @@ export function characterSheet({
       if (!items.some((i) => i.instanceId === selection))
         selection =
           items.find((i) => i.held)?.instanceId ?? items[0]?.instanceId;
-      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">PREPARE FOR THE DEPTHS</span><h3>Inventory</h3></div><div class="pack-weight ${p.inventory.encumbrance ? "overweight" : ""}">${icon("pack")}<b>${p.inventory.bulk}</b> / ${p.inventory.capacity}<small>BULK</small></div></div><div class="torch-controls"><span>☀ <b>${h.torch?.held ? (h.torch.lit ? "Torch burning" : "Torch doused in light") : "Torch stowed"}</b> · ${game.freeHands(h)} free hand${game.freeHands(h) === 1 ? "" : "s"}</span><button id="sheet-torch" ${game.torchReason(index) ? "disabled" : ""} title="${esc(game.torchReason(index))}">${h.torch?.held ? "Stow torch" : "Ready torch"}</button></div><div class="pack-toolbar"><div class="filter-tabs">${[
+      content.innerHTML = `<div class="section-heading"><div><span class="eyebrow">PREPARE FOR THE DEPTHS</span><h3>Inventory</h3></div><div class="pack-weight ${p.inventory.encumbrance ? "overweight" : ""}">${icon("pack")}<b>${p.inventory.bulk}</b> / ${p.inventory.capacity}<small>BULK</small></div></div><div class="torch-controls"><span>☀ <b>${h.torch?.held ? (h.torch.lit ? "Torch burning" : "Torch doused in light") : "Torch stowed"}</b> · ${game.freeHands(h)} free hand${game.freeHands(h) === 1 ? "" : "s"}</span><button id="sheet-torch" ${game.torchReason(index) ? "disabled" : ""} title="${esc(game.torchReason(index))}">${h.torch?.held ? "Stow torch" : "Ready torch"}</button>${supplies ? `<button id="sheet-supplies">Party supplies</button>` : ""}</div><div class="pack-toolbar"><div class="filter-tabs">${[
         ["all", "All"],
         ["weapons", "Weapons"],
         ["armor", "Armor"],
@@ -205,6 +206,9 @@ export function characterSheet({
         .join(
           "",
         )}</div><input id="pack-search" type="search" placeholder="Search pack…" aria-label="Search inventory" value="${esc(query)}"></div><p class="equipment-help">Use <b>Equip / Ready</b> on any item. <b>Unequip / Stow</b> returns it to your backpack. Click a slot beside your hero to find matching gear.</p>${selectedSlot ? `<div class="slot-filter"><span>Choosing equipment · <b>${esc(EQUIPMENT_SLOTS.find(([id]) => id === selectedSlot)?.[1])}</b></span><button id="clear-slot">Show all slots</button></div>` : ""}<div class="inventory-workspace"><div class="inventory-grid equipment-list"></div><aside class="item-inspector"></aside></div><div class="pack-note">${p.inventory.encumbrance ? `Overburdened · Speed reduced by ${p.inventory.encumbrance}.` : "Unequipping keeps the item. Replaced gear goes back into your backpack."}</div>`;
+      root
+        .querySelector("#sheet-supplies")
+        ?.addEventListener("click", supplies);
       root.querySelector("#sheet-torch").onclick = () =>
         attempt(() => {
           game.toggleTorch(index);

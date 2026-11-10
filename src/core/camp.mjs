@@ -10,15 +10,15 @@ import {
   campEncounterRandom,
 } from "./fierceness.mjs";
 import { Random, distance, key, lineOfSight } from "./dungeon.mjs";
-import { ordinaryItem } from "./treasure.mjs";
+import { BASIC_SUPPLIES } from "./supply-stock.mjs";
 import { CREATURE_ROSTER } from "./creature-roster.mjs";
 
 export const CAMP_DUTIES = Object.freeze([
   {
     id: "dressings",
-    name: "Make dressings",
+    name: "Prepare dressings",
     detail:
-      "Requires the field dressing recipe and one medicinal-material batch; replenishes dressings.",
+      "Use shared medicinal herbs to improve carried dressings. Requires recipe knowledge.",
   },
   {
     id: "heal",
@@ -38,13 +38,14 @@ export const CAMP_DUTIES = Object.freeze([
   },
   {
     id: "arrows",
-    name: "Fletch arrows",
-    detail: "Craft tools + one arrow-material batch; replenish arrows.",
+    name: "Prepare arrows",
+    detail:
+      "Use shared crafting materials and tools to improve carried arrows.",
   },
   {
     id: "cook",
     name: "Prepare food",
-    detail: "One edible-ingredient batch; replenish food.",
+    detail: "Cook shared food ingredients into carried provisions.",
   },
   {
     id: "water",
@@ -53,8 +54,9 @@ export const CAMP_DUTIES = Object.freeze([
   },
   {
     id: "torches",
-    name: "Bind torches",
-    detail: "Craft tools + one torch-material batch; replenish torches.",
+    name: "Prepare torches",
+    detail:
+      "Use shared crafting materials and tools to improve carried lighting supplies.",
   },
   {
     id: "forage",
@@ -69,18 +71,6 @@ const dutyIds = new Set([
   "forage-arrows",
   "forage-torches",
 ]);
-const recipes = {
-  dressings: "recipe-field-dressing",
-  arrows: "recipe-fletched-ammunition",
-  cook: "recipe-travel-food",
-  torches: "recipe-bound-torches",
-};
-const products = {
-  dressings: ["item-field-dressing", 4],
-  arrows: ["item-ammunition-bundle", 8],
-  cook: ["item-food-bundle", 8],
-  torches: ["item-lighting-bundle", 6],
-};
 export function campPeriod(
   party,
   assignments,
@@ -150,7 +140,10 @@ export function validateCamp(campaign) {
                 t !== null &&
                 (typeof t !== "object" ||
                   !c.partyIds.includes(t.heroId) ||
-                  (t.woundId !== undefined && typeof t.woundId !== "string")),
+                  (t.woundId !== undefined && typeof t.woundId !== "string") ||
+                  (t.supplyId !== undefined &&
+                    (typeof t.supplyId !== "string" ||
+                      t.supplyId.length > 160))),
             ),
         ))) ||
     !c.sleepHours ||
@@ -222,51 +215,11 @@ export const campMethods = {
         ))
     );
   },
-  campMaterial(recipe) {
-    for (const h of this.party.filter((h) => h.survival.status === "active")) {
-      if ((h.recipeMaterials?.[recipe] ?? 0) > 0)
-        return { hero: h, batch: true };
-      const item = h.preview.inventory.items.find(
-        (i) =>
-          i.carried && i.materialType === recipe && this.supplyValue(h, i) > 0,
-      );
-      if (item) return { hero: h, item };
-    }
-    return null;
-  },
   campDutyReason(h, duty, target) {
     if (["heal", "treat"].includes(duty))
       return this.campMedicalReason(h, duty, target);
-    if (duty === "forage") return "";
-    if (duty === "water")
-      return !this.campWaterSource()
-        ? "No water source within three squares."
-        : !this.party.some((p) =>
-              p.preview.inventory.items.some(
-                (i) => i.carried && i.catalogId === "item-water-flask",
-              ),
-            )
-          ? "The company needs a water flask."
-          : "";
-    const recipe = recipes[duty];
-    if (!recipe) return "";
-    if (duty === "dressings" && !this.knownRecipes(h).has(recipe))
-      return "Learn the field dressing recipe first.";
-    if (
-      ["arrows", "torches"].includes(duty) &&
-      !this.traits(h).some((t) => t.improvise) &&
-      !this.party.some(
-        (p) =>
-          p.survival.status === "active" &&
-          p.preview.inventory.items.some(
-            (i) => i.carried && i.catalogId === "item-craft-tools",
-          ),
-      )
-    )
-      return "The company needs craft tools.";
-    return this.campMaterial(recipe)
-      ? ""
-      : "The company lacks the materials for this task.";
+    if (duty === "forage" || duty === "guard") return "";
+    return this.campRestockPlan(h, duty, target)?.reason ?? "";
   },
   campEvent(text) {
     this.campaign.camp.report?.events.push(text);
@@ -277,63 +230,13 @@ export const campMethods = {
   campDuty(h, duty, rng, medicalTarget) {
     if (["heal", "treat"].includes(duty))
       return this.campMedicalDuty(h, duty, medicalTarget);
-    const reason = this.campDutyReason(h, duty);
-    if (reason) {
-      this.campEvent(`${h.name}: ${reason}`);
-      return;
-    }
     if (duty === "guard") {
       this.campEvent(`${h.name} keeps a dedicated watch.`);
       return;
     }
     if (duty === "forage") return this.campForage(h, rng);
-    if (duty === "water") {
-      for (const p of this.party)
-        for (const i of p.preview.inventory.items.filter(
-          (i) => i.carried && i.catalogId === "item-water-flask",
-        ))
-          p.supplies[i.instanceId] = Math.max(8, this.supplyValue(p, i));
-      this.campEvent(`${h.name} fills the company's water flasks.`);
-      return;
-    }
-    const recipe = recipes[duty],
-      material = this.campMaterial(recipe),
-      [catalogId, die] = products[duty];
-    let target;
-    for (const p of this.party) {
-      const item = p.preview.inventory.items.find(
-        (i) =>
-          i.carried &&
-          i.catalogId === catalogId &&
-          this.supplyValue(p, i) < die,
-      );
-      if (item) {
-        target = { hero: p, item };
-        break;
-      }
-    }
-    if (!target) {
-      const item = ordinaryItem(
-        this.C,
-        catalogId,
-        `camp-made-${crypto.randomUUID()}`,
-      );
-      (h.treasure ??= []).push(item);
-      target = { hero: h, item };
-    }
-    target.hero.supplies[target.item.instanceId] = die;
-    if (material.batch) material.hero.recipeMaterials[recipe]--;
-    else
-      this.checkSupply(
-        material.hero,
-        material.item,
-        "crafting materials",
-        rng.int(1, this.supplyValue(material.hero, material.item)),
-      );
-    this.refreshHero(target.hero);
-    this.campEvent(
-      `${h.name} replenished ${target.item.definition.name.toLowerCase()}.`,
-    );
+    if (BASIC_SUPPLIES.some((s) => s.duty === duty))
+      return this.performCampRestock(h, duty, rng, medicalTarget);
   },
   startCamp(
     assignments,

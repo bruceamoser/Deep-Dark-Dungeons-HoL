@@ -1,3 +1,4 @@
+import { BASIC_SUPPLIES, MATERIAL_STOCKS } from "../core/supply-stock.mjs";
 const supplyLabel = (value) =>
   value <= 0
     ? "Empty"
@@ -24,11 +25,13 @@ function campResults(host, report, done, elapsed) {
       const end = report.end.find((p) => p.id === h.id) ?? h;
       const materials = Object.entries(end.materials ?? {})
         .map(([id, n]) => ({
-          name: id.replace("recipe-", "").replaceAll("-", " "),
+          name:
+            MATERIAL_STOCKS.find((s) => s.id === id)?.name ??
+            id.replace("recipe-", "").replaceAll("-", " "),
           delta: n - (h.materials?.[id] ?? 0),
         }))
         .filter((p) => p.delta);
-      return `<article><strong>${esc(h.name)}</strong><p>HP ${h.hp} → ${end.hp} · ${report.healed[h.id] ?? Math.max(0, end.hp - h.hp)} healed</p><p>Untreated wounds ${h.wounds} → ${end.wounds}</p>${materials.map((m) => `<p>${m.delta > 0 ? "+" : ""}${m.delta} ${esc(m.name)} material batches remaining</p>`).join("")}</article>`;
+      return `<article><strong>${esc(h.name)}</strong><p>HP ${h.hp} → ${end.hp} · ${report.healed[h.id] ?? Math.max(0, end.hp - h.hp)} healed</p><p>Untreated wounds ${h.wounds} → ${end.wounds}</p>${materials.map((m) => `<p>${m.delta > 0 ? "+" : ""}${m.delta} ${esc(m.name)} ingredients remaining</p>`).join("")}</article>`;
     })
     .join(
       "",
@@ -153,11 +156,21 @@ function townCampScreen({ root, game, close, attempt }) {
   };
 }
 
-function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
+function dungeonCampScreen({
+  root,
+  game,
+  close,
+  attempt,
+  assets,
+  portrait,
+  project,
+  supplies,
+}) {
   let timer = null,
     running = false,
     disposed = false,
-    total = 8;
+    total = 8,
+    storesOpen = false;
   let order = [
     ...(game.campCanResume()
       ? (game.campaign.camp.order ?? game.party.map((h) => h.heroId))
@@ -182,6 +195,20 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
     assignments = structuredClone(game.campaign.camp.assignments);
     total = game.campaign.camp.total;
     targets = structuredClone(game.campaign.camp.targets ?? targets);
+  }
+  if (project && assignments[project.worker]) {
+    const start = game.campCanResume() ? game.campaign.camp.elapsed : 0;
+    const limit = game.campCanResume() ? game.campaign.camp.total : 8;
+    const hour = Array.from(
+      { length: Math.max(0, limit - start) },
+      (_, i) => start + i,
+    ).find((n) => order[n % 4] === project.worker);
+    if (hour !== undefined) {
+      const slot = Math.floor(hour / 4) % 2;
+      assignments[project.worker][slot] = project.duty;
+      targets[project.worker][slot] = project.target;
+      if (game.campCanResume()) game.updateCampDuties(assignments, targets);
+    }
   }
   root.innerHTML = `<div class="veil camp-veil"><section class="dungeon-camp" role="dialog" aria-modal="true" aria-label="Dungeon camp"><header><div><span class="eyebrow">BENEATH THE LAST LIGHT</span><h2>A circle in the dark</h2></div><button class="icon-button camp-close" aria-label="Close camp">${icon("close")}</button></header><div class="camp-landscape"><canvas aria-label="Animated company campsite"></canvas></div><div class="camp-plan"></div></section></div>`;
   root.querySelector(".camp-close").onclick = close;
@@ -213,6 +240,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
       return;
     }
     const camp = game.campCanResume() ? game.campaign.camp : null;
+    if (camp?.targets) targets = structuredClone(camp.targets);
     const last = game.campaign.camp;
     const elapsed =
       camp?.elapsed ?? (last?.status === "complete" ? last.elapsed : 0);
@@ -267,19 +295,21 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
     const orderedParty = order.map((id) =>
       game.party.find((h) => h.heroId === id),
     );
-    const supplyOverview = `<section class="camp-stocks" aria-label="Character supplies"><div class="camp-forecast-heading"><span class="eyebrow">COMPANY STORES</span><small>Set camp order before resting · ↑ Supplies may increase</small></div><div class="camp-character-stores">${orderedParty
+    const supplyOverview = `<details class="camp-stocks" aria-label="Character supplies" ${storesOpen ? "open" : ""}><summary class="camp-forecast-heading"><span class="eyebrow">COMPANY STORES & WORK ORDER</span><small>Expand to inspect companions and change camp order</small></summary><div class="camp-character-stores">${orderedParty
       .map(
         (h, position) =>
-          `<article data-store-hero="${h.heroId}"><header class="camp-store-hero">${portrait ? `<img src="${portrait(h)}" alt="${esc(h.name)}">` : ""}<div><h4>${esc(h.name)}</h4><span>Camp order ${position + 1}</span></div><div class="camp-order-controls"><button data-camp-order="${position}" data-step="-1" aria-label="Move ${esc(h.name)} earlier" ${camp || running || position === 0 ? "disabled" : ""}>↑</button><button data-camp-order="${position}" data-step="1" aria-label="Move ${esc(h.name)} later" ${camp || running || position === order.length - 1 ? "disabled" : ""}>↓</button></div></header>${CAMP_SUPPLIES.map(
-            ([name, id]) => {
+          `<article data-store-hero="${h.heroId}"><header class="camp-store-hero">${portrait ? `<img src="${portrait(h)}" alt="${esc(h.name)}">` : ""}<div><h4>${esc(h.name)}</h4><span>Camp order ${position + 1}</span></div><div class="camp-order-controls"><button data-camp-order="${position}" data-step="-1" aria-label="Move ${esc(h.name)} earlier" ${camp || running || position === 0 ? "disabled" : ""}>↑</button><button data-camp-order="${position}" data-step="1" aria-label="Move ${esc(h.name)} later" ${camp || running || position === order.length - 1 ? "disabled" : ""}>↓</button></div></header>${CAMP_SUPPLIES.filter(
+            ([name]) => name !== "Materials",
+          )
+            .map(([name, id]) => {
               const key = Array.isArray(id) ? id.join(",") : id;
               const increase =
                 forecast?.supplyPotential?.[key]?.[game.party.indexOf(h)];
               return `<div class="camp-store-line"><span>${name}</span><b>${diceSummary([h], id)}</b>${increase ? '<small class="camp-store-gain">↑ May increase</small>' : ""}</div>`;
-            },
-          ).join("")}</article>`,
+            })
+            .join("")}</article>`,
       )
-      .join("")}</div></section>`;
+      .join("")}</div></details>`;
     const danger = game.campDanger(
       camp ? camp.total - camp.elapsed : total,
       camp ?? game.active,
@@ -294,7 +324,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
       )
       .join(
         "",
-      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>Enemies may interrupt the camp</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-rota-heading"><span>COMPANION</span><span>FIRST TASK</span><span>SECOND TASK</span></div><div class="camp-rota">${orderedParty
+      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>Enemies may interrupt the camp</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-ingredients">${MATERIAL_STOCKS.map((m) => `<span>${m.name} <b>${game.materialCount(m.id)}</b></span>`).join("")}<button id="camp-supplies" ${running ? "disabled" : ""}>Manage supplies</button></div><div class="camp-rota-heading"><span>COMPANION</span><span>FIRST TASK</span><span>SECOND TASK</span></div><div class="camp-rota">${orderedParty
       .map((h) => {
         const i = game.party.indexOf(h);
         const activity = camp
@@ -316,7 +346,7 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
         const careSummary = injured
           ? `<small class="camp-health">Expected healing: ${low === high ? low : `${low}–${high}`} HP</small>`
           : "";
-        return `<article class="camp-member ${camp && period.worker === h ? "on-watch" : ""}"><div class="camp-member-title"><span class="camp-number">${String(i + 1).padStart(2, "0")}</span><div><h3>${esc(h.name)}</h3><small>${esc(activity)}</small>${careSummary}</div></div>${[
+        return `<article class="camp-member ${camp && period.worker === h ? "on-watch" : ""}"><div class="camp-member-title"><span class="camp-number">${String(i + 1).padStart(2, "0")}</span>${portrait ? `<img class="camp-task-portrait" src="${portrait(h)}" alt="">` : ""}<div><h3>${esc(h.name)}</h3><small>${esc(activity)}</small>${careSummary}</div></div>${[
           0, 1,
         ]
           .map((slot) => {
@@ -348,7 +378,25 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
             const patientSelect = ["heal", "treat"].includes(duty)
               ? `<select data-camp-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} patient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Choose ${duty === "heal" ? "companion" : "wound"}</option>${patientOptions.map((p) => `<option value="${p.value}" ${p.value === `${target?.heroId ?? ""}|${target?.woundId ?? ""}` ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>`
               : "";
-            return `<label class="camp-duty"><span title="${esc(desc.detail)}">Task ${slot + 1}</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
+            const spec = BASIC_SUPPLIES.find((s) => s.duty === duty);
+            const projectPlan =
+              forecast?.projectLow?.[`${h.heroId}:${slot}`] ??
+              game.campRestockPlan(h, duty, target);
+            const supplyOptions =
+              spec && !projectPlan?.water
+                ? game.supplyRows().filter((r) => r.supply === spec.id)
+                : [];
+            const supplySelect =
+              spec && !projectPlan?.water
+                ? `<select data-supply-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} supply recipient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Lowest carried supply</option>${supplyOptions.map((r) => `<option value="${r.hero}|${r.itemId ?? "new"}" ${target?.heroId === r.hero && target?.supplyId === (r.itemId ?? "new") ? "selected" : ""}>${esc(r.name)} · ${r.missing ? "New supply" : r.before ? `d${r.before}` : "Empty"}</option>`).join("")}</select>`
+                : "";
+            const preview =
+              projectPlan && !projectPlan.reason
+                ? projectPlan.water
+                  ? "Fill carried flasks to at least d8."
+                  : `${projectPlan.row.name}: ${projectPlan.row.before ? `d${projectPlan.row.before}` : "Empty"} → d${projectPlan.after} · ${projectPlan.units} ${projectPlan.material.name.toLowerCase()}.`
+                : "";
+            return `<label class="camp-duty"><span title="${esc(desc.detail)}">Task ${slot + 1}</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${supplySelect}${preview ? `<small class="camp-project-preview">${esc(preview)}</small>` : ""}${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
           })
           .join("")}</article>`;
       })
@@ -362,6 +410,10 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
       .join(
         "",
       )}</div><footer><div><small>${esc(reason || (game.campWaterSource() ? "Water source nearby · gather water is available." : "No water source nearby · carried water must last."))}</small><small>Closing pauses the camp. Completed hours, supplies and healing are saved.</small></div><button id="camp-break" ${!camp ? "disabled" : ""}>Break camp</button><button id="camp-hour" ${reason || running ? "disabled" : ""}>Advance one hour</button><button id="camp-run" class="primary" ${reason ? "disabled" : ""}>${running ? "Pause" : camp ? "Continue camp" : "Make camp"}</button></footer>`;
+    host.querySelector(".camp-stocks").ontoggle = (e) => {
+      if (e.target.isConnected) storesOpen = e.target.open;
+    };
+    host.querySelector("#camp-supplies").onclick = () => supplies?.();
     host.querySelector("#camp-length").onchange = (e) => {
       total = +e.target.value;
       draw();
@@ -411,6 +463,18 @@ function dungeonCampScreen({ root, game, close, attempt, assets, portrait }) {
                 }
               : null;
           }
+          if (!["heal", "treat"].includes(s.value))
+            targets[s.dataset.campHero][+s.dataset.campSlot] = null;
+          revised();
+        }),
+    );
+    host.querySelectorAll("[data-supply-target]").forEach(
+      (s) =>
+        (s.onchange = () => {
+          const [heroId, supplyId] = s.value.split("|");
+          targets[s.dataset.supplyTarget][+s.dataset.targetSlot] = heroId
+            ? { heroId, supplyId }
+            : null;
           revised();
         }),
     );

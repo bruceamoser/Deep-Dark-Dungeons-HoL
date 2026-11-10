@@ -1,8 +1,9 @@
 import { recipeBook } from "./recipes.mjs";
 import { CRAFT_MATERIALS } from "../core/crafting.mjs";
 import { esc, icon } from "./icons.mjs";
-export function workshopScreen({ root, game, close, attempt }) {
-  if (game.C.gamePowers) return recipeBook({ root, game, close, attempt });
+export function workshopScreen({ root, game, close, attempt, supplies }) {
+  if (game.C.gamePowers)
+    return recipeBook({ root, game, close, attempt, supplies });
   let hero = game.selected,
     selected = "",
     supply = "";

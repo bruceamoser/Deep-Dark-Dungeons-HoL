@@ -1,4 +1,6 @@
 import { creatureAiMethods } from "./creature-ai.mjs";
+import { migrateSimpleStocks } from "./supply-stock.mjs";
+import { restockingMethods } from "./restocking.mjs";
 import { creatureCareMethods } from "./creature-care.mjs";
 import { movementSafetyMethods } from "./movement-safety.mjs";
 import { foragingMethods, migrateForagePlan } from "./foraging.mjs";
@@ -210,6 +212,7 @@ export class Game {
     migrateForagePlan(c);
     prepareProvisions(c);
     migrateCombinedSupplies(c, this.C);
+    migrateSimpleStocks(c, this.C);
     this.pause();
     prepareRoster(c);
     c.woundNotices ??= [];
@@ -2311,6 +2314,7 @@ Object.assign(
   recoveryMethods,
 );
 Object.assign(Game.prototype, interactionMethods);
+Object.assign(Game.prototype, restockingMethods);
 Object.assign(Game.prototype, movementSafetyMethods);
 Object.assign(Game.prototype, rosterMethods, experienceMethods);
 

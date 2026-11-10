@@ -46,6 +46,7 @@ export async function verifyDungeonCamp(page) {
     await expect(page.locator("[data-camp-slot]")).toHaveCount(8);
     await expect(page.locator(".camp-store-hero img")).toHaveCount(4);
     await expect(page.locator(".camp-watchline")).toHaveCount(0);
+    await page.locator(".camp-stocks > summary").click();
     const firstHero = await page
       .locator("[data-store-hero]")
       .first()
@@ -58,6 +59,7 @@ export async function verifyDungeonCamp(page) {
         .getAttribute("data-store-hero"),
     ).toBe(firstHero);
     await page.locator('[data-camp-order="1"][data-step="-1"]').click();
+    await page.locator(".camp-stocks > summary").click();
     await expect(page.locator(".camp-danger")).toContainText(
       "Enemies may interrupt the camp",
     );

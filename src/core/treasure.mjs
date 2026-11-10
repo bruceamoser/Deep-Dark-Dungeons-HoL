@@ -1,4 +1,5 @@
 import { combineSupplyDice, collapseSupplyDice } from "./supply-dice.mjs";
+import { MATERIAL_STOCKS, stockForItem } from "./supply-stock.mjs";
 import { gameBulk, encumbranceFor } from "./bulk.mjs";
 import { traitsOf } from "./ancestry-game.mjs";
 import { Random } from "./dungeon.mjs";
@@ -480,20 +481,39 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
           ? saved.hands
           : item.hands,
       quantity: saved.quantity ?? item.quantity,
-      bulk: item.definition.bulk * (saved.quantity ?? item.quantity),
+      bulk:
+        saved.stockUnits !== undefined
+          ? saved.stockBulk
+          : item.definition.bulk * (saved.quantity ?? item.quantity),
+      ...(saved.stockUnits !== undefined
+        ? {
+            stockUnits: saved.stockUnits,
+            stockBulk: saved.stockBulk,
+            inventoryDie: null,
+          }
+        : {}),
       materialType: saved.materialType,
       combinedSupply: !!saved.combinedSupply,
       ...(saved.reserveDice ? { reserveDice: [...saved.reserveDice] } : {}),
-      definition: saved.materialType
-        ? {
-            ...item.definition,
-            price:
-              saved.materialType === "recipe-lesser-healing-bottle" ? 80 : 12,
-            name: `${item.definition.name} · ${saved.materialType.replace("recipe-", "").replaceAll("-", " ")}`,
-          }
-        : saved.definition?.name
-          ? { ...item.definition, name: saved.definition.name }
-          : item.definition,
+      definition:
+        saved.stockUnits !== undefined
+          ? {
+              ...item.definition,
+              name: `${MATERIAL_STOCKS.find((s) => s.id === stockForItem(saved))?.name ?? "Materials"} · ${saved.stockUnits} units`,
+              inventoryDie: null,
+            }
+          : saved.materialType
+            ? {
+                ...item.definition,
+                price:
+                  saved.materialType === "recipe-lesser-healing-bottle"
+                    ? 80
+                    : 12,
+                name: `${item.definition.name} · ${saved.materialType.replace("recipe-", "").replaceAll("-", " ")}`,
+              }
+            : saved.definition?.name
+              ? { ...item.definition, name: saved.definition.name }
+              : item.definition,
       carried: saved.carried !== false,
       held: !!saved.held,
       worn: !!saved.worn,

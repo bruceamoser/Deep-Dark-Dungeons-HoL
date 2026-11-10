@@ -509,3 +509,52 @@
   min-width: 28px;
   font-size: 14px;
 }
+
+.camp-ingredients {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 8px 0 14px;
+  padding: 10px 12px;
+  background: #14262cc9;
+  border: 1px solid #556452;
+  font-size: 12px;
+}
+.camp-ingredients span {
+  flex: 1;
+  white-space: nowrap;
+}
+.camp-ingredients b {
+  color: #e9d7a4;
+  margin-left: 7px;
+}
+.camp-ingredients button {
+  font-size: 12px;
+}
+.camp-project-preview {
+  color: #b9e0ac;
+  line-height: 1.45;
+  display: block;
+  margin: 5px 0;
+}
+
+.camp-stocks > summary {
+  cursor: pointer;
+  margin: 0;
+  padding: 3px 0;
+}
+.camp-stocks[open] > summary {
+  margin-bottom: 12px;
+}
+.camp-stocks:not([open]) {
+  padding: 10px 13px;
+}
+.camp-task-portrait {
+  width: 42px;
+  height: 48px;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid #6b7352;
+  background: #203632;
+}
