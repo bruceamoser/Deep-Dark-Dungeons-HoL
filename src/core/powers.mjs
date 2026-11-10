@@ -355,10 +355,12 @@ power(
   "marksmanship",
   1,
   "barbed-arrow",
-  "Barbed Arrow",
-  "A readied bow deals 2/4/6 physical damage and Bleeding 1. Uses ammunition. Twice per encounter.",
+  "Barbed Volley",
+  "Loose barbed arrows into a radius of 1 within 8 squares: 2/4/6 physical damage and Bleeding 1 to enemies. Allies are spared. Requires a readied bow and ammunition; check ammunition once after the volley.",
   strike("agility", "physical", {
     weapon: "ranged",
+    target: "ground",
+    radius: 1,
     range: 8,
     effects: [
       { kind: "damage", type: "physical", amount: [2, 4, 6] },

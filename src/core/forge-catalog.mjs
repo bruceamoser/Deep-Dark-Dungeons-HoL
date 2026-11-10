@@ -114,13 +114,13 @@ const PATHS = {
     [
       "Penetration",
       [
-        P("barbed-arrow", "Barbed Arrow"),
+        P("barbed-arrow", "Barbed Volley"),
         S("Open wounds", "+1 Bleeding applied.", { bleeding: 1 }),
         U(
           "Serrated arrow",
           "barbed-arrow",
           { condition: 1 },
-          "Barbed Arrow applies one additional Bleeding.",
+          "Barbed Volley applies one additional Bleeding.",
         ),
         P("piercing-flight", "Piercing Flight", 3),
       ],

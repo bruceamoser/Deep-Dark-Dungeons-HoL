@@ -97,14 +97,14 @@ export function addForgePowers(definitions) {
   add(
     "flaming-arrow",
     "Flaming Arrow",
-    "A fire arrow applies Burning 2. Uses the bow profile and ammunition.",
-    bow([status("burning", 2)], { damageType: "fire" }),
+    "A bursting fire arrow strikes enemies in a radius of 1 within 6 squares and applies Burning 2. Uses the bow profile and ammunition. Allies are spared.",
+    bow([status("burning", 2)], { damageType: "fire", target:"ground", radius:1, range:6 }),
   );
   add(
     "thorn-arrow",
     "Thorn Arrow",
-    "An arrow applies Slowed 2 and Bleeding 1.",
-    bow([status("slowed", 2), status("bleeding", 1)]),
+    "A thorn arrow bursts into a radius of 1 within 6 squares, applying Slowed 2 and Bleeding 1 to enemies. Uses the bow profile and ammunition. Allies are spared.",
+    bow([status("slowed", 2), status("bleeding", 1)], {target:"ground",radius:1,range:6}),
   );
   add(
     "renewing-grove",
