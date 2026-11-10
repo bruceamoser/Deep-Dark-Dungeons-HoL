@@ -143,6 +143,48 @@ export async function verifyMovementSafety(page) {
     console.log(
       "Actual diagonal combat click warns before fire; Cancel is free, confirmation pays one movement and applies normal surface damage.",
     );
+    await page.evaluate(() => {
+      const g = window.__ddd.game;
+      Object.assign(g.active, { x: 5, z: 5, conditions: [] });
+      Object.assign(g.enemies[0], { x: 5, z: 4 });
+      g.map.zones = [];
+      g.paths.clear();
+      g.encounter = g.R.startEncounter(
+        [
+          ...g.party.map((h) => ({ id: h.id, side: "players" })),
+          { id: g.enemies[0].id, side: "opposition" },
+        ],
+        [6, 6, 6],
+      );
+      g.beginHero();
+      g.budgets[g.active.id] = g.R.spendMovement(g.budget, {
+        operationId: "one-point",
+        amount: g.movementLeft() - 1,
+        conditions: g.restrictions(g.active),
+      });
+      g.emit("floor");
+      g.emit("change");
+    });
+    await page.mouse.move(target.x, target.y);
+    await expect(page.locator("#world-hint")).toContainText("Move · 1 / 1");
+    await page.mouse.click(target.x, target.y);
+    expect(await page.evaluate(() => window.__ddd.game.movementLeft())).toBe(0);
+    await page.evaluate(() => {
+      const g = window.__ddd.game;
+      g.suspended = false;
+      g.step();
+      g.pause();
+    });
+    expect(
+      await page.evaluate(() => [
+        window.__ddd.game.active.x,
+        window.__ddd.game.active.z,
+      ]),
+    ).toEqual([6, 4]);
+    expect(await page.locator("#modal-root > *").count()).toBe(0);
+    console.log(
+      "Actual combat diagonal past one side opponent works with one point left; hover reports 1 / 1.",
+    );
   } finally {
     if (await page.locator("#modal-root > *").count())
       await page.keyboard.press("Escape");
