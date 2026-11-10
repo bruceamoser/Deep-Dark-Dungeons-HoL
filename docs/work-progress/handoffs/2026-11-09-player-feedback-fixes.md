@@ -42,3 +42,5 @@ Initial 65/66 relevant tests passed; the failed saved-fixture check used an inva
 ## #115 diagonal clicks
 
 Reproduced the strict occupied-corner restriction: one opponent beside an otherwise open diagonal forced a two-point detour. Changed only actor-side corner gating; solid corners retain their restrictions. Added tests for one-point remaining movement, two-side blockers, occupied destinations and difficult diagonal costs, plus actual click/hover native coverage.
+
+#115 verification: all 11 focused diagonal/safety tests pass (`/tmp/fld-115-unit.log`). Actual sandboxed launcher check passes hazardous-route checks and the one-point diagonal click beside an opponent, including live hover cost (`/tmp/fld-115-native.log`). Scene resets require refocusing, waiting for the camera and actual pointer motion to refresh hover; native fixture synchronization corrected without weakening movement assertions.

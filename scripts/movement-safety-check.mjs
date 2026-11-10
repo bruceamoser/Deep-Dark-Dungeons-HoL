@@ -182,6 +182,7 @@ export async function verifyMovementSafety(page) {
         y: ((1 - v.y) * innerHeight) / 2,
       };
     });
+    await page.mouse.move(target.x - 30, target.y - 30);
     await page.mouse.move(target.x, target.y);
     await expect(page.locator("#world-hint")).toContainText("Move · 1 / 1");
     await page.mouse.click(target.x, target.y);
