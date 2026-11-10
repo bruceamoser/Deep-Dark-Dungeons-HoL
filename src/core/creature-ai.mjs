@@ -1,7 +1,7 @@
 import { distance, key, lineOfSight } from "./dungeon.mjs";
-import { leastCostPath, reachableCells, traversalCost } from "./movement.mjs";
+import { leastCostPath, traversalCost } from "./movement.mjs";
 import { illuminated } from "./lighting.mjs";
-import { surfaceAt } from "./battlefield.mjs";
+import { surfaceAt, wallAt } from "./battlefield.mjs";
 
 const groups = {
   pack: [
@@ -76,6 +76,10 @@ const conscious = (h) =>
   h.survival ? h.survival.status === "active" : h.hp > 0;
 const status = (h, name) =>
   (h.conditions ?? []).some((c) => c.key === name && c.rating !== 0);
+const temporaryStatus = (h, name) =>
+  (h.conditions ?? []).some(
+    (c) => c.key === name && c.persistence === "temporary" && c.rating > 0,
+  );
 export function coneCells(origin, toward, rows = 3) {
   const dx = toward.x - origin.x,
     dz = toward.z - origin.z;
@@ -218,20 +222,21 @@ export const creatureAiMethods = {
     const blocked = this.occupied(e.id),
       actors = [...this.party, ...this.enemies.filter((a) => a.hp > 0)];
     const cost = (p) => traversalCost(this.map, actors, p);
-    const cells = reachableCells(
-      this.map,
-      e,
-      this.enemySpeed(e),
-      blocked,
-      cost,
-    );
+    const risks = new Map();
+    const cells = this.enemyMovementCells(e, this.enemySpeed(e), blocked, cost),
+      danger = (p) => {
+        const k = key(p.x, p.z);
+        if (!risks.has(k)) risks.set(k, this.enemyDanger(e, p));
+        return risks.get(k);
+      },
+      escaping = danger(e) > 0;
     const style = this.enemyPersonality(e),
       ranged = action.range >= 4;
     const threats = this.enemyVisibleTargets(e);
     if (
-      ranged &&
+      h &&
       e.retained?.includes("maneuver") &&
-      threats.some((t) => distance(e, t) <= 1) &&
+      (escaping || (ranged && threats.some((t) => distance(e, t) <= 1))) &&
       this.enemyMobilityManeuver(
         e,
         h,
@@ -239,12 +244,27 @@ export const creatureAiMethods = {
       )
     )
       return [];
-    const danger = (p) =>
-      Number(surfaceAt(this.map, p, "fire")) * 8 +
-      Number(surfaceAt(this.map, p, "trap")) * 8;
+    let candidates = cells;
+    if (escaping) {
+      const safe = cells.filter((p) => !danger(p));
+      if (safe.length) {
+        const risk = Math.min(...safe.map((p) => p.risk));
+        candidates = safe.filter((p) => p.risk === risk);
+      }
+    } else candidates = cells.filter((p) => !p.risk);
+    const exits =
+      escaping && !candidates.some((p) => !danger(p))
+        ? Object.values(this.map.tiles).filter(
+            (p) =>
+              !danger(p) &&
+              !wallAt(this.map, p.x, p.z) &&
+              !this.map.obstacles?.[key(p.x, p.z)] &&
+              !blocked.has(key(p.x, p.z)),
+          )
+        : [];
     const score = (p) => {
-      const d = distance(p, h),
-        clear = lineOfSight(this.map, p, h),
+      const d = h ? distance(p, h) : 0,
+        clear = h && lineOfSight(this.map, p, h),
         nearest = Math.min(...threats.map((t) => distance(p, t)), 99);
       let n =
         clear &&
@@ -255,7 +275,7 @@ export const creatureAiMethods = {
           ? 20
           : -d * 2;
       if (ranged) n += Math.min(nearest, 3) * 3 - (nearest <= 1 ? 12 : 0);
-      if (style === "pack" && d <= 1)
+      if (h && style === "pack" && d <= 1)
         n += this.enemies.some(
           (a) =>
             a !== e && a.group === e.group && a.hp > 0 && distance(a, h) <= 1,
@@ -268,14 +288,18 @@ export const creatureAiMethods = {
       }
       if (style === "skirmisher")
         n -= threats.filter((t) => distance(p, t) <= 1).length * 2;
-      n -= danger(p) + p.cost * 0.3;
+      if (temporaryStatus(e, "burning") && surfaceAt(this.map, p, "water"))
+        n += 80;
+      if (exits.length) n -= Math.min(...exits.map((q) => distance(p, q))) * 30;
+      n -= danger(p) * 8 + p.cost * 0.3;
       return n;
     };
-    const options = cells.sort((a, b) => score(b) - score(a));
+    const options = candidates.sort((a, b) => score(b) - score(a));
     let best = { score: -Infinity, points: [] };
     for (const p of options.slice(0, 12)) {
       const points =
-        p.cost === 0 ? [] : leastCostPath(this.map, e, p, blocked, cost);
+        p.points ??
+        (p.cost === 0 ? [] : leastCostPath(this.map, e, p, blocked, cost));
       if (p.cost && !points.length) continue;
       // Prefer a safe line, and do not kite through a ready melee reaction for a trivial gain.
       const exposure = threats.filter(
@@ -370,8 +394,14 @@ export const creatureAiMethods = {
       const d = distance(p, h),
         reach = this.creatureAction(e).range,
         ranged = reach >= 4;
+      const safety =
+        -this.enemyDanger(e, p) * 50 +
+        (temporaryStatus(e, "burning") && surfaceAt(this.map, p, "water")
+          ? 80
+          : 0);
       if (ranged)
         return (
+          safety +
           Math.min(d, 3) * 3 +
           (lineOfSight(this.map, p, h) && d <= this.creatureAction(e).range
             ? 5
@@ -379,11 +409,12 @@ export const creatureAiMethods = {
         );
       if (reach > 1)
         return (
+          safety +
           Math.min(d, reach) * 3 +
           (d <= reach ? 5 : 0) -
           visible.filter((t) => distance(p, t) <= 1).length * 2
         );
-      return -d * 2 - visible.filter((t) => distance(p, t) <= 1).length;
+      return safety - d * 2 - visible.filter((t) => distance(p, t) <= 1).length;
     };
     for (const [name, budget, kind, ignore] of alternatives) {
       if (!names.includes(name)) continue;
@@ -410,9 +441,10 @@ export const creatureAiMethods = {
           : kind === "rubble" && this.map.tiles[key(p.x, p.z)]?.difficult
             ? 1
             : traversalCost(this.map, actors, p);
-      let choices = reachableCells(this.map, e, budget, blocked, cost).filter(
+      let choices = this.enemyMovementCells(e, budget, blocked, cost).filter(
         (p) =>
           p.cost > 0 &&
+          !p.risk &&
           !surfaceAt(this.map, p, "fire") &&
           !surfaceAt(this.map, p, "trap"),
       );
@@ -433,7 +465,8 @@ export const creatureAiMethods = {
         (a, b) => distanceScore(b) - distanceScore(a) || a.cost - b.cost,
       );
       for (const dest of choices) {
-        const points = leastCostPath(this.map, e, dest, blocked, cost);
+        const points =
+          dest.points ?? leastCostPath(this.map, e, dest, blocked, cost);
         if (!points.length) continue;
         if (
           kind === "dark" &&
@@ -496,12 +529,13 @@ export const creatureAiMethods = {
               4,
             )
           : -distance(p, h);
-      const choices = reachableCells(this.map, ally, 2, blocked, cost)
-        .filter((p) => p.cost > 0)
+      const choices = this.enemyMovementCells(ally, 2, blocked, cost)
+        .filter((p) => p.cost > 0 && !p.risk)
         .sort((a, b) => score(b) - score(a));
       for (const p of choices) {
         if (score(p) <= score(ally)) continue;
-        const points = leastCostPath(this.map, ally, p, blocked, cost);
+        const points =
+          p.points ?? leastCostPath(this.map, ally, p, blocked, cost);
         if (
           points.some(
             (q) =>
@@ -565,8 +599,7 @@ export const creatureAiMethods = {
     const blocked = this.occupied(e.id),
       cost = (p) =>
         traversalCost(this.map, [...this.party, ...this.enemies], p);
-    const options = reachableCells(
-      this.map,
+    const options = this.enemyMovementCells(
       e,
       this.enemySpeed(e),
       blocked,
@@ -574,6 +607,7 @@ export const creatureAiMethods = {
     ).filter(
       (p) =>
         p.cost > 0 &&
+        !p.risk &&
         !surfaceAt(this.map, p, "fire") &&
         !surfaceAt(this.map, p, "trap"),
     );
@@ -583,7 +617,9 @@ export const creatureAiMethods = {
     const dest = options.sort((a, b) => score(b) - score(a))[0];
     e.aiState.maneuverDone = true;
     this.enemyAnnounce(e, "Read the Blood Trail");
-    const points = dest ? leastCostPath(this.map, e, dest, blocked, cost) : [];
+    const points = dest
+      ? (dest.points ?? leastCostPath(this.map, e, dest, blocked, cost))
+      : [];
     this.enemyTravel(e, undefined, points);
     return true;
   },
@@ -686,7 +722,14 @@ export const creatureAiMethods = {
           visible(a, 3) &&
           hearing(a),
       )
-      .find((a) => status(a, "dazed") || status(a, "frightened"));
+      .find((a) =>
+        (a.conditions ?? []).some(
+          (c) =>
+            c.persistence === "temporary" &&
+            c.rating > 0 &&
+            ["dazed", "frightened"].includes(c.key),
+        ),
+      );
     let chosen;
     if (names.includes("Make Room") && h && this.enemyMakeRoom(e, h)) {
       this.enemyAnnounce(e, "Make Room");
@@ -703,7 +746,12 @@ export const creatureAiMethods = {
     }
 
     if (can("Keep the Rhythm") && ally) {
-      const k = status(ally, "dazed") ? "dazed" : "frightened";
+      const k = ally.conditions.some(
+        (c) =>
+          c.key === "dazed" && c.persistence === "temporary" && c.rating > 0,
+      )
+        ? "dazed"
+        : "frightened";
       ally.conditions = this.R.reduceTemporary(ally.conditions, k, 1);
       chosen = "Keep the Rhythm";
     } else if (can("Stoke the Core") && h) {

@@ -33,3 +33,9 @@ Bruce wants small thematic discipline benefits as well as larger ability benefit
 ## 2026-11-09 — Creature goals and tactical abilities
 
 Bruce needs varied enemy behavior to assess balance. Assign identity-driven goals, choose among all printed main attacks, obey cooldowns/ammo, use meaningful support/control/terrain/mobility maneuvers, and preserve legal action/terrain/reaction/perception constraints. Keep printed stats and encounter budgets unchanged during this behavior change. No unprinted summons, free buffs or friendly-fire immunity. Add deterministic Main Action escape from creature holds and Main Action caltrop clearing so newly active control has player counterplay. Preserve/validate tactical commitments through saves. See `docs/creature-ai.md` for deliberate narrative/conditional omissions and NPC collateral resolution.
+
+## 2026-11-09 — Movement consent and creature care
+
+Player fire/trap routes require explicit consent before cost, including formation followers, approaches, movement powers and dangerous landings. New hazards pause travel; already-paid travel does not pay twice. Normal walking consent is not saved; in-flight casting options retain receipts scoped to that paid action.
+
+A single occupied side square permits a one-point diagonal. Solid terrain corners, occupied destinations and two blocked side squares still block it. Creature escape takes priority over holding an attack; safer paths retain actual movement budgets and normal reactions. NPCs may spend the universal Main-action temporary-condition reduction on themselves/adjacent allies; starred remedies and HP-healing limits stay intact. Current encounter cards have no allied HP-healing ability. See the feature docs and PRs #118–#121.

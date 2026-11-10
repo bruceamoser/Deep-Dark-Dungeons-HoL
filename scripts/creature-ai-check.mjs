@@ -82,7 +82,31 @@ export async function verifyCreatureAI(page) {
       } else if (kind === "archer") {
         Object.assign(g.party[0], { x: 5, z: 5 });
         enemies = [make("bone-archer", "ai-actor", 4, 5)];
-      } else if (kind === "support") {
+      } else if (kind === "fire" || kind === "water") {
+        Object.assign(g.party[0], { x: 6, z: 5 });
+        enemies = [make("wolf", "ai-actor", 5, 5)];
+        g.map.zones = [
+          {
+            id: `care-${kind}`,
+            kind,
+            cells: [{ x: kind === "fire" ? 5 : 4, z: 5 }],
+            source: "qa",
+            expires: null,
+            hits: {},
+          },
+        ];
+        if (kind === "water")
+          enemies[0].conditions = [
+            {
+              id: "qa-burning",
+              key: "burning",
+              rating: 3,
+              source: "qa",
+              persistence: "temporary",
+              order: 0,
+            },
+          ];
+      } else if (kind === "support" || kind === "care") {
         Object.assign(g.party[0], { x: 8, z: 5 });
         enemies = [
           make("orc-warcaller", "ai-actor", 4, 5),
@@ -91,8 +115,8 @@ export async function verifyCreatureAI(page) {
         enemies[1].conditions = [
           {
             id: "qa-dazed",
-            key: "dazed",
-            rating: 2,
+            key: kind === "care" ? "burning" : "dazed",
+            rating: kind === "care" ? 3 : 2,
             source: "qa",
             persistence: "temporary",
             order: 0,
@@ -182,6 +206,50 @@ export async function verifyCreatureAI(page) {
       ),
     ).toBe(1);
     await page.screenshot({ path: "test-results/creature-ai-support.png" });
+    const fire = await page.evaluate(() => window.aiCheckScenario("fire"));
+    expect([fire.x, fire.z]).not.toEqual([5, 5]);
+    expect(
+      await page.evaluate(() => {
+        const g = window.__ddd.game,
+          e = g.enemies[0];
+        return g.map.zones.some(
+          (z) =>
+            z.kind === "fire" &&
+            z.cells.some((p) => p.x === e.x && p.z === e.z),
+        );
+      }),
+    ).toBe(false);
+    const water = await page.evaluate(() => window.aiCheckScenario("water"));
+    expect([water.x, water.z]).toEqual([4, 5]);
+    expect(
+      await page.evaluate(
+        () =>
+          window.__ddd.game.R.conditionSummary(
+            window.__ddd.game.enemies[0].conditions,
+          ).burning.rating,
+      ),
+    ).toBe(0);
+    const care = await page.evaluate(() => window.aiCheckScenario("care"));
+    expect(care.action).toBe("Smother flames");
+    expect(
+      await page.evaluate(
+        () =>
+          window.__ddd.game.R.conditionSummary(
+            window.__ddd.game.enemies[1].conditions,
+          ).burning.rating,
+      ),
+    ).toBe(2);
+    expect(
+      await page.evaluate(() =>
+        window.__ddd.game.enemies[0].retained.includes("main"),
+      ),
+    ).toBe(false);
+    await page.waitForFunction(
+      () => !window.__ddd.scene.entities.get("ai-actor")?.travel?.length,
+    );
+    await page.screenshot({
+      path: "test-results/creature-ai-condition-care.png",
+    });
     const ghoul = await page.evaluate(() => window.aiCheckScenario("ghoul"));
     expect(ghoul.action).toBe("Grave touch");
     const next = await page.evaluate(() => {
@@ -246,7 +314,7 @@ export async function verifyCreatureAI(page) {
     ).toContainText("Pinning bite");
     await page.keyboard.press("Escape");
     console.log(
-      "Creature AI: coordinated pack target, paid Break free and caltrop clearing, archer spacing/shot, ally support, third attack cooldown and full bestiary actions passed.",
+      "Creature AI: coordinated pack target, paid Break free and caltrop clearing, archer spacing/shot, ally support, fire escape, water extinguishing, paid ally condition care, third attack cooldown and full bestiary actions passed.",
     );
   } catch (error) {
     await page.screenshot({ path: "test-results/creature-ai-failure.png" });

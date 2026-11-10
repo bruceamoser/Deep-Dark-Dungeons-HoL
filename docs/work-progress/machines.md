@@ -19,6 +19,12 @@ User menu entries override system entries. Inspect both `~/.local/share/applicat
 
 Linux sandbox checks must preserve sandboxing and match the ordinary terminal AppArmor context. An agent process with `NoNewPrivs=1` cannot exercise a SUID helper; use a suitable normal desktop/terminal session and report the distinction.
 
+## Linux checkout used for player feedback fixes (2026-11-09)
+
+Checkout: `/home/bruce/Projects/Deep-Dark-Dungeons-HoL`; conversation placeholder `/home/bruce/Documents/ChatGPT/Deep-dark-dungons` is not the code repo. Node 22.22.1. Personal `gh` identity verified as `bruceamoser`; the other machine's `gh-project`/`gh-personal` helper paths are absent. No global authentication switch.
+
+Network/Git metadata/desktop checks require the environment's approved escalated execution. Actual `launch-game.sh` through `aa-exec -p unconfined` qualifies sandboxing here. Source changes require deliberate `npm run package:dir`; pulling does not replace the installed package. Installed package remains 0.8.5; the rebuilt checkout includes the unreleased player-feedback fixes. Preserve ignored licensed exports and untracked superseded Borin prototypes.
+
 ## Not synced by this process
 
 Uncommitted or ignored files, purchased assets, real save games, installed packages, user application shortcuts, secrets, environment variables, editor state, running processes and machine-local chat storage. Record required transfers in each handoff; do not silently assume they exist elsewhere. Do not commit or modify real player saves as test fixtures.
