@@ -31,6 +31,7 @@ const command = linux ? "/usr/bin/aa-exec" : executable;
 const args = [
   ...(linux ? ["-p", "unconfined", "--", executable] : []),
   "--remote-debugging-port=0",
+  "--mute-audio",
   "--inspect=0",
   ...(process.env.CI
     ? [

@@ -1,0 +1,73 @@
+{
+  "created": "2026-11-10",
+  "authoring": "Blender 5.2.4 LTS; scripts/toolchain/build_creature_pilots.py",
+  "donor": {
+    "file": "public/assets/characters/series4/Ninja.glb",
+    "creator": "Kay Lousberg / KayKit",
+    "license": "CC0-1.0",
+    "licenseFile": "public/assets/characters/LICENSE.txt",
+    "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0"
+  },
+  "originalContributions": "Rat anatomy, clay geometry, vortex, spear/pan, materials. Bruce Moser project assets; no new public license assigned. Original donor GLB unchanged.",
+  "assets": [
+    {
+      "name": "Wererat",
+      "file": "public/assets/creatures/pilots/Wererat.glb",
+      "sha256": "aa8f79843949f7e873546454d632774b58d213bb7b610312631f515d3d668a47",
+      "triangles": 6490,
+      "renderMeshes": 1,
+      "bones": [
+        27
+      ],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "materials": 7
+    },
+    {
+      "name": "ClayHelper",
+      "file": "public/assets/creatures/pilots/ClayHelper.glb",
+      "sha256": "994c60f0ac0fd34b43dbb03ae702cf50e00ec63cba507c336c364f8004298782",
+      "triangles": 2800,
+      "renderMeshes": 1,
+      "bones": [
+        23
+      ],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "materials": 4
+    },
+    {
+      "name": "AirVortex",
+      "file": "public/assets/creatures/pilots/AirVortex.glb",
+      "sha256": "ba5e1782e5f26ea2ddb5bbc57611d97b1e03b41b2d28aea4b3f4f9825cab6df0",
+      "triangles": 1546,
+      "renderMeshes": 8,
+      "bones": [],
+      "unweightedVertices": null,
+      "zeroAreaFaces": 0,
+      "materials": 3
+    },
+    {
+      "name": "GoblinSpear",
+      "file": "public/assets/creatures/pilots/GoblinSpear.glb",
+      "sha256": "3b995da5944f7f1dc8b160f91b87a5a5c4223723f012659c88c4618bece3319b",
+      "triangles": 1492,
+      "renderMeshes": 1,
+      "bones": [],
+      "unweightedVertices": null,
+      "zeroAreaFaces": 0,
+      "materials": 3
+    },
+    {
+      "name": "GoblinPan",
+      "file": "public/assets/creatures/pilots/GoblinPan.glb",
+      "sha256": "53a270b53cd6e6097a78424a6e2b750ffe0e7841c9317812c285680dc5c24a23",
+      "triangles": 412,
+      "renderMeshes": 1,
+      "bones": [],
+      "unweightedVertices": null,
+      "zeroAreaFaces": 0,
+      "materials": 1
+    }
+  ]
+}

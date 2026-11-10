@@ -2,6 +2,12 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — first creature model pilots
+
+Bruce authorized updating models. Goblin Spearhand now has a spear/pan, Wererat has rat anatomy/tail/thief clothing, Clay Helper is a grounded clay humanoid, and Air Elemental is a hollow animated wind vortex. Original sources and game rules are untouched. See [pilot report](../creature-model-pilots.md), [provenance](../creature-pilots-provenance.json) and [handoff](handoffs/2026-11-10-creature-model-pilots.md). Pilot fit scores: 66/77/76/85 respectively, with explicit remaining art gaps; no claim of final art approval.
+
+358 unit tests and scoped native creature/condition/animation checks pass, plus the separate weapon/save/reload native check. Checkout launcher is rebuilt with pilot content (version label remains 0.8.7); installed game and public release unchanged. No release was requested. Next: visual feedback/refinement, then expand the approach to remaining failed casts. Bruce requests quiet testing: native/release harnesses now use --mute-audio; preserve personal sound settings.
+
 ## Latest work — asset-production toolchain prepared
 
 Bruce requested Blender/tools, a usable DeepSeek worker and review of the supplied generation/conditioning blueprint. Blender 5.2.4 LTS, bundled Rigify and MCP for Blender 2.2.7 are installed/enabled on this bmoser machine. Official archive checksum verified; live scene inspection and a real skinned/animated GLB round trip pass. Meshy was explicitly clarified as optional and is deferred, with no account, server or paid generation created.
@@ -16,7 +22,7 @@ Bruce requested an honest scored comparison of current creatures to source descr
 
 Important findings: Golem key is visibly a floating winged creature, not a stone/clay humanoid; kobolds/hybrids/elementals and corpse proxies need appropriate bodies; several roles lack their stated equipment and humanoid theme geometry is bypassed. Bat body is invisible in both neutral capture and focused actual-game browser scene here; packaged/native reproduction is still needed. Earlier casting claims are explicitly superseded. No gameplay/assets changed and no new release made. See [audit handoff](handoffs/2026-11-10-creature-visual-fit-audit.md).
 
-Next: discuss/prioritize corrections with Bruce; no implementation is underway. Local source is 0.8.7, but this machine’s checkout launcher is still 0.8.5 and installed game 0.8.4. Other-machine runtime/installed-version claims below do not describe this machine.
+Historical survey checkpoint; first pilot implementation is now recorded above. Local source and rebuilt checkout launcher are 0.8.7 with pilot changes; installed game remains 0.8.4. Other-machine runtime/installed-version claims below do not describe this machine.
 
 ## Complete — v0.8.7 published
 

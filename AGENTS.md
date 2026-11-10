@@ -21,3 +21,7 @@ When Bruce says “pull the repo and get the latest working progress” (or equi
 During implementation, record meaningful decisions and unresolved failures. Before a pause, machine switch or final delivery of substantive work, update current progress and add a dated handoff using the template. Keep detailed feature docs current. Commit intended source/docs on a `codex/` branch and push a WIP checkpoint when unfinished; do not merge unfinished work. Verify the remote contains the checkpoint before claiming it is synced. If push fails, say the handoff remains local. A plain read-only question does not require a new checkpoint.
 
 Never commit credentials, purchased source/export assets, real saves, generated installers, caches or local chat databases. Record private transfer requirements and machine-specific paths, but do not assume Git synchronizes them. Use `docs/work-progress/README.md` for the complete procedure.
+
+## Quiet local testing
+
+Bruce requests low-volume local testing. Launch automated game instances with `--mute-audio` (or an isolated silent audio sink), including music tests; assess their internal audio signals without audible desktop playback. Leave personal game sound preferences and the desktop master volume unchanged.

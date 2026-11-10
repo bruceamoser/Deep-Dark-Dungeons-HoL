@@ -105,9 +105,15 @@ export function equipmentAppearance(assets, hero, enemy = false) {
           m.color.set(
             /^.*(armor|helmet|metal).*$/i.test(o.name)
               ? theme.metal
-              : /_(Head|ArmLeft|ArmRight)$/.test(o.name) ? (theme.skin ?? theme.cloth) : theme.cloth,
+              : /_(Head|ArmLeft|ArmRight)$/.test(o.name)
+                ? (theme.skin ?? theme.cloth)
+                : theme.cloth,
           );
-        if (look?.theme === "dead" && /_(Head|ArmLeft|ArmRight|LegLeft|LegRight)$/.test(o.name) && m.color)
+        if (
+          look?.theme === "dead" &&
+          /_(Head|ArmLeft|ArmRight|LegLeft|LegRight)$/.test(o.name) &&
+          m.color
+        )
           m.color.set(theme.skin);
         return m;
       };
@@ -133,8 +139,17 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       ["melee", "spear", "chain"].includes(look?.weapon ?? "melee")) ||
       melee)
   ) {
-    const sword = clone(assets.get("sword").scene);
-    sword.name = "Readied melee weapon";
+    const spear = enemy && look?.weapon === "spear";
+    const sword = clone(assets.get(spear ? "GoblinSpear" : "sword").scene);
+    if (spear)
+      sword.quaternion.set(
+        0.19467221817069416,
+        0,
+        0.6173664347642805,
+        0.7622082475930992,
+      );
+    if (name === "Wererat") sword.scale.setScalar(0.55);
+    sword.name = spear ? "Readied spear" : "Readied melee weapon";
     if (melee?.hands === 2) sword.scale.multiplyScalar(1.35);
     right.add(sword);
   }
@@ -318,10 +333,38 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     };
     model.userData.setConcealed(!!hero.concealed);
   }
+  if (enemy && hero.type === "creature-goblin-spearhand") {
+    const head = bones.get("head");
+    if (head) {
+      const pan = clone(assets.get("GoblinPan").scene);
+      pan.name = "Saucepan helmet";
+      pan.position.set(0, 1.02, 0);
+      head.add(pan);
+    }
+  }
+  if (enemy && name === "Wererat") {
+    const tails = [...bones.values()]
+      .filter((b) => /^tail_/.test(b.name))
+      .map((b) => ({ b, rest: b.quaternion.clone() }));
+    const turn = new T.Quaternion(),
+      axis = new T.Vector3(0, 0, 1);
+    model.userData.animate = (t, moving) =>
+      tails.forEach(({ b, rest }, i) => {
+        turn.setFromAxisAngle(
+          axis,
+          Math.sin(t * (moving ? 6 : 2) - i * 0.6) * 0.12,
+        );
+        b.quaternion.copy(rest).multiply(turn);
+      });
+  }
+  if (enemy && name === "ClayHelper") model.scale.multiplyScalar(0.9);
   model.scale.multiplyScalar(
     enemy ? (["goblins", "kobolds"].includes(look?.theme) ? 0.65 : 0.95) : 0.85,
   );
-  const clips = gameClips({ skeleton: /^Skeleton/.test(name) });
+  const clips = gameClips({
+    skeleton: /^Skeleton/.test(name),
+    spear: enemy && look?.weapon === "spear",
+  });
   return {
     model,
     clips: clips.length ? clips : (assets.get(name).animations ?? []),

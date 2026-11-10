@@ -34,7 +34,7 @@ const rows = [
   ["dire-wolf", "Wolf", "beasts", 4, "bite"],
   ["hell-hound", "Wolf", "infernal", 5, "bite"],
   ["winter-wolf", "Wolf", "rime", 9, "spell"],
-  ["wererat", "WerewolfMan", "beasts", 3, "melee"],
+  ["wererat", "Wererat", "beasts", 3, "melee"],
   ["werewolf", "WerewolfWolf", "beasts", 5, "claw"],
   ["werebear", "Monstrosity", "beasts", 6, "claw"],
   ["crypt-ghoul", "WerewolfMan", "dead", 3, "claw"],
@@ -43,12 +43,12 @@ const rows = [
   ["mire-ooze", "Ooze", "vermin", 2, "slam"],
   ["animated-armor", "BlackKnight", "constructs", 3, "melee", true],
   ["animated-statue", "Golem", "constructs", 4, "spear"],
-  ["clay-helper", "Golem", "constructs", 1, "slam"],
+  ["clay-helper", "ClayHelper", "constructs", 1, "slam"],
   ["clockwork-scout", "Clanker", "constructs", 1, "dart"],
   ["glass-sentinel", "FrostGolem", "constructs", 3, "spell"],
   ["stone-knuckle", "Golem", "constructs", 2, "slam"],
   ["icebound-warden", "FrostGolem", "rime", 4, "slam"],
-  ["air-elemental", "Ghost", "elementals", 4, "spell"],
+  ["air-elemental", "AirVortex", "elementals", 4, "spell"],
   ["emberling", "Demon", "infernal", 1, "slam"],
   ["cinder-strider", "Demon", "infernal", 3, "claw"],
   ["cinder-imp", "Demon", "infernal", 1, "claw"],
@@ -66,6 +66,11 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  Wererat: "/assets/creatures/pilots/Wererat.glb",
+  ClayHelper: "/assets/creatures/pilots/ClayHelper.glb",
+  AirVortex: "/assets/creatures/pilots/AirVortex.glb",
+  GoblinSpear: "/assets/creatures/pilots/GoblinSpear.glb",
+  GoblinPan: "/assets/creatures/pilots/GoblinPan.glb",
   // Animals and elementals keep the Quaternius meshes: they are quadrupeds and drips,
   // which the humanoid KayKit rigs cannot express.
   Bat: "/assets/creatures/bat.glb",
@@ -107,6 +112,8 @@ export const CREATURE_MODELS = {
  * through the procedural creature path.
  */
 export const HUMANOID_MODELS = new Set([
+  "Wererat",
+  "ClayHelper",
   "SkeletonWarrior",
   "SkeletonRogue",
   "SkeletonMage",

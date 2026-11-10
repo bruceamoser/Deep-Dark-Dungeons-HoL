@@ -11,27 +11,37 @@ const out = path.resolve(
 await fs.mkdir(out, { recursive: true });
 let ratings;
 try {
-  ratings = JSON.parse(
-    await fs.readFile("docs/audits/2026-11-10-creature-fit.json", "utf8"),
-  );
+  ratings =
+    process.env.AUDIT_RATINGS === "none"
+      ? undefined
+      : JSON.parse(
+          await fs.readFile(
+            process.env.AUDIT_RATINGS ??
+              "docs/audits/2026-11-10-creature-fit.json",
+            "utf8",
+          ),
+        );
 } catch (e) {
   if (e.code !== "ENOENT") throw e;
 }
 const data = JSON.parse(
   await fs.readFile("public/vendor/hol/data/creatures.json", "utf8"),
 );
-const rows = Object.entries(CREATURE_ROSTER).map(([id, casting]) => {
-  const c = data.creatures.find((c) => c.id === id);
-  return {
-    id,
-    name: c.name,
-    casting,
-    flavor: c.reference.flavorMarkdown,
-    size: c.size,
-    portrait: c.portrait,
-    source: c.source,
-  };
-});
+const selected = process.env.AUDIT_IDS?.split(",");
+const rows = Object.entries(CREATURE_ROSTER)
+  .filter(([id]) => !selected || selected.includes(id))
+  .map(([id, casting]) => {
+    const c = data.creatures.find((c) => c.id === id);
+    return {
+      id,
+      name: c.name,
+      casting,
+      flavor: c.reference.flavorMarkdown,
+      size: c.size,
+      portrait: c.portrait,
+      source: c.source,
+    };
+  });
 if (ratings) {
   const ids = ratings.rows.map((r) => r.id);
   if (
@@ -80,7 +90,7 @@ const browser = await chromium.launch({
 });
 try {
   const page = await browser.newPage({
-    viewport: { width: 1560, height: 1700 },
+    viewport: { width: 1560, height: rows.length <= 4 ? 1040 : 1700 },
     deviceScaleFactor: 1,
   });
   await page.route("**/__creature-fit__", (route) =>
@@ -173,7 +183,13 @@ try {
         renderer.render(scene, camera);
         shots.push(renderer.domElement.toDataURL("image/png"));
       }
-      result.push({ id: row.id, height: box.max.y - box.min.y, shots });
+      result.push({
+        id: row.id,
+        height: box.max.y - box.min.y,
+        drawCalls: renderer.info.render.calls,
+        renderedTriangles: renderer.info.render.triangles,
+        shots,
+      });
       mixer.stopAllAction();
       mixer.uncacheRoot(model);
       model.userData.dispose?.();
@@ -201,6 +217,8 @@ try {
     evidence.push({
       ...row,
       height: r.height,
+      drawCalls: r.drawCalls,
+      renderedTriangles: r.renderedTriangles,
       portraitData: portrait,
       shots: r.shots,
     });

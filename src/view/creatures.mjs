@@ -2,6 +2,7 @@ import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
 import { creatureLook } from "../core/creature-variation.mjs";
+import { animateAirVortex } from "./air-vortex.mjs";
 import { dressCreature } from "./creature-dress.mjs";
 const mat = (color, extra = {}) =>
   new T.MeshStandardMaterial({ color, roughness: 0.75, ...extra });
@@ -104,6 +105,7 @@ export function creatureAppearance(assets, data, bow) {
       weapon: "melee",
     },
     procedural = ["Rat", "Spider"].includes(look.model);
+  const air = look.model === "AirVortex";
   const body = procedural
     ? vermin(look.model)
     : clone(assets.get(look.model === "Ratkin" ? "Yeti" : look.model).scene);
@@ -155,8 +157,9 @@ export function creatureAppearance(assets, data, bow) {
       o.castShadow = true;
       o.material = o.material.clone();
       ownedMaterials.add(o.material);
-      o.material.color.multiply(new T.Color(palette[look.theme] ?? 0xbdb4a3));
-      if (look.theme === "haunted" || data.type === "creature-air-elemental") {
+      if (!air)
+        o.material.color.multiply(new T.Color(palette[look.theme] ?? 0xbdb4a3));
+      if (look.theme === "haunted") {
         o.material.transparent = true;
         o.material.opacity = 0.72;
         o.material.emissive.setHex(0x254552);
@@ -192,7 +195,7 @@ export function creatureAppearance(assets, data, bow) {
   // Theme and rank features are attached to the rig before it is scaled, so the
   // measurements below account for the added silhouette.
   const dressOwned = [];
-  dressCreature(body, creatureLook(look), dressOwned);
+  if (!air) dressCreature(body, creatureLook(look), dressOwned);
   for (const asset of dressOwned) {
     if (asset.isMaterial) ownedMaterials.add(asset);
     else ownedGeometries.add(asset);
@@ -235,5 +238,5 @@ export function creatureAppearance(assets, data, bow) {
   root.userData.height = desired;
   // Animals and procedural creatures cannot bind the KayKit humanoid rig tracks.
   // Keep their embedded clips and procedural motion instead.
-  return { model: root, clips };
+  return { model: root, clips: air ? animateAirVortex(root, body) : clips };
 }
