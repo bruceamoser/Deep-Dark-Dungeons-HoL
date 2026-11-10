@@ -33,7 +33,7 @@ Native checks run from the user systemd session then `aa-exec -p unconfined`: th
 
 Bruce reported field abilities from character sheets (#114), diagonal movement (#115), hazardous-route confirmation (#116) and creature self-preservation/ally care (#117). Work follows issue → branch → PR → author review/checks → merge → next issue. No new release has been published for these fixes.
 
-Active branch: `codex/114-sheet-field-abilities`, based on `23396f5`. The inspected hero now initiates their own actions; field ally powers open a validated companion picker in town and dungeon. Native verification and review are pending. Continue with #115–#117 after this PR passes and merges. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
+Active branch: `codex/114-sheet-field-abilities`, based on `23396f5`. The inspected hero now initiates their own actions; field ally powers open a validated companion picker in town and dungeon. All 298 unit tests and focused native field-action checks pass; PR #118 is under author review. Continue with #115–#117 after this PR passes and merges. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
 
 ## Transfer gaps
 

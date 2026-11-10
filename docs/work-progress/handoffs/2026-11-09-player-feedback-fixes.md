@@ -5,7 +5,7 @@
 - Work branch: `codex/114-sheet-field-abilities`.
 - Base: `23396f5`, fetched and confirmed current before work.
 - Issues: #114, #115, #116, #117. Follow the issue/branch/PR/review/merge sequence.
-- Status: implementation and verification in progress; no new release.
+- Status: #114 ready for author review in PR #118; no new release.
 
 ## Completed
 
@@ -17,11 +17,11 @@ Preserve source rules, printed creature stats/CV and existing terrain/reaction c
 
 ## Verification
 
-In progress: full unit suite, rebuilt checkout package and actual sandboxed `launch-game.sh` focused native check. Added `verifyFieldAbilities` checks for inspected caster identity, town/dungeon target validation, cancel and actual HP/charge effects.
+All 298 unit tests pass (`/tmp/fld-fixes-unit-full.log`). Rebuilt licensed checkout package. `verifyFieldAbilities` passes inspected caster identity, town/dungeon target validation, free cancel and actual HP/dressing consumption through `launch-game.sh` with sandboxing enabled (`/tmp/fld-114-native.log`). The picker uses the actual Forge-upgraded power description. Initial native-fixture assumptions about old rest charges, d4 exhaustion and town-only selectors were corrected; no gameplay assertions were relaxed.
 
 ## Remaining and next steps
 
-Finish #114 native verification and author review, merge passing PR. Then diagnose #115, implement #116 hazardous-route consent and #117 self-preservation/printed ally care, each with reviewed PR. Update this checkpoint with actual results before final delivery.
+Finish #114 author review and merge passing PR #118. Then diagnose #115, implement #116 hazardous-route consent and #117 self-preservation/printed ally care, each with reviewed PR. Update this checkpoint with actual results before final delivery.
 
 ## Local-only state / transfer needs
 
@@ -29,4 +29,4 @@ Paid Dungeon Mason runtime exports verified on this machine. Existing untracked 
 
 ## Sync status
 
-Not yet pushed; work remains local until branch checkpoint is verified remotely.
+PR #118 branch `codex/114-sheet-field-abilities` is pushed; verify the latest checkpoint with `git ls-remote` before handoff.

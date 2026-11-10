@@ -24,6 +24,9 @@ export async function verifyFieldAbilities(page) {
           h.survival.status = "active";
           h.conditions = [];
           h.restPowerUses = {};
+          for (const item of h.preview.inventory.items)
+            if (item.catalogId === "item-field-dressing")
+              h.supplies[item.instanceId] = 8;
         });
         g.party[0].survival.hp = Math.max(1, g.party[0].survival.maxHp - 7);
         g.emit("floor");
@@ -39,7 +42,11 @@ export async function verifyFieldAbilities(page) {
         })(),
       }));
       const open = async () => {
-        await page.locator('[data-hero="0"]').click();
+        await page
+          .locator(
+            mode === "town" ? '[data-hero="0"]' : '[data-action="sheet"]',
+          )
+          .click();
         await page.locator('[data-companion="2"]').click();
         await page.locator('[data-tab="abilities"]').click();
         const entry = page
