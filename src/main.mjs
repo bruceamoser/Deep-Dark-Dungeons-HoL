@@ -225,6 +225,7 @@ async function init() {
         ? game.enemies.find((e) => e.id === id.slice(9))
         : null;
       hint.hidden = !item && !creature;
+      if (item || creature || selectedAction || modal.children.length) scene.showPath([]);
       if (item) {
         hint.innerHTML = `<strong>${esc(item.name)}</strong><small>CLICK TO APPROACH · SHIFT-CLICK TO INSPECT</small>`;
         hint.style.left = `${Math.min(innerWidth - 250, event.clientX + 18)}px`;
@@ -234,11 +235,24 @@ async function init() {
         hint.style.left = `${Math.min(innerWidth - 300, event.clientX + 18)}px`;
         hint.style.top = `${Math.max(12, event.clientY - 65)}px`;
       } else if (p && !modal.children.length && game.mode !== "town") {
-        scene.showPath(game.route(p));
+        let preview;
+        try { preview = game.movementPreview(p); } catch { preview = null; }
+        const route = preview?.routes.get(preview.hero) ?? preview?.routes.values().next().value ?? [];
+        scene.showPath(route, preview ? { ...preview, origin: game.active } : null);
+        const risks = preview ? [
+          ...new Set(preview.hazards.map(h => `${h.name}: ${h.kind === "fire" ? "Burning ground" : "Trap"}`)),
+          ...new Set(preview.opportunities.map(h => `Opportunity attack: ${h.name}`)),
+        ] : [];
         if (game.mode === "combat" && !selectedAction) {
           const cell = scene.movementCells?.get(`${p.x},${p.z}`);
           hint.hidden = false;
-          hint.innerHTML = `<strong>${cell?.canEnd ? `Move · ${cell.cost} / ${game.movementLeft()}` : cell ? "Companion · pass through only" : "Outside movement range"}</strong><small>TEAL: REACHABLE · GOLD: LAST MOVEMENT</small>`;
+          hint.innerHTML = `<strong>${cell?.canEnd ? `Move · ${cell.cost} / ${game.movementLeft()}` : cell ? "Companion · pass through only" : "Outside movement range"}</strong><small>${risks.length ? esc(risks.join(" · ")) : "Route shown · Red: damage · Amber: opportunity attack"}</small>`;
+          hint.style.left = `${Math.min(innerWidth - 280, event.clientX + 18)}px`;
+          hint.style.top = `${Math.max(12, event.clientY - 65)}px`;
+        }
+        if (game.mode === "exploration" && preview && risks.length) {
+          hint.hidden = false;
+          hint.innerHTML = `<strong>Company route</strong><small>${esc(risks.join(" · "))}</small>`;
           hint.style.left = `${Math.min(innerWidth - 280, event.clientX + 18)}px`;
           hint.style.top = `${Math.max(12, event.clientY - 65)}px`;
         }

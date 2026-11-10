@@ -98,6 +98,18 @@ export async function verifyMovementSafety(page) {
       left: window.__ddd.game.movementLeft(),
       hp: window.__ddd.game.active.survival.hp,
     }));
+    await page.evaluate(() => Object.assign(window.__ddd.game.enemies[0], { x:4,z:5 }));
+    await page.mouse.move(target.x-30,target.y-30);
+    await page.mouse.move(target.x,target.y);
+    await expect(page.locator("#world-hint")).toContainText("Burning ground");
+    await expect(page.locator("#world-hint")).toContainText("Opportunity attack: Wolf");
+    const preview = await page.evaluate(() => window.__ddd.scene.pathGroup.userData.preview);
+    expect(preview.route).toEqual([{x:6,z:4}]);
+    expect(preview.hazards.length).toBeGreaterThan(0);
+    expect(preview.opportunities.length).toBeGreaterThan(0);
+    expect(await page.evaluate(() => window.__ddd.game.encounter.current)).toBeNull();
+    await page.screenshot({path:"test-results/movement-route-risks.png"});
+    await page.evaluate(() => Object.assign(window.__ddd.game.enemies[0], { x:12,z:12 }));
     await page.mouse.click(target.x, target.y);
     console.log(
       await page.evaluate(({ x, y }) => {

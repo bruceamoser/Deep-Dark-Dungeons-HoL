@@ -107,12 +107,15 @@ export class Scene {
     this.cursor.rotation.x = -Math.PI / 2;
     this.cursor.position.y = 0.035;
     this.scene.add(this.cursor);
-    this.pathGeo = new T.CircleGeometry(0.075, 12);
+    this.pathGeo = new T.RingGeometry(0.16, 0.23, 16);
     this.pathMat = new T.MeshBasicMaterial({
       color: color.gold,
       transparent: true,
       opacity: 0.8,
     });
+    this.pathMat.depthTest = false;
+    this.pathMat.depthWrite = false;
+    this.pathRiskMaterials = [0xe3ac55, 0xf06156].map(color => new T.MeshBasicMaterial({ color, depthTest: false, depthWrite: false }));
     this.pathGroup = new T.Group();
     this.scene.add(this.pathGroup);
     this.follow = true;
@@ -843,12 +846,26 @@ export class Scene {
     this.manualCamera = false;
     this.angle += (dir * Math.PI) / 2;
   }
-  showPath(path) {
+  showPath(path, preview = null) {
+    for (const child of this.pathGroup.children) if (child.isLine) child.geometry.dispose();
     this.pathGroup.clear();
+    this.pathGroup.userData.preview = preview ? {
+      route: path.map(p => ({ x:p.x,z:p.z })), hazards: preview.hazards, opportunities: preview.opportunities,
+    } : null;
+    if (path.length && preview) {
+      const origin = preview.routes?.get(preview.hero) === path ? preview.origin : null;
+      const points = [...(origin ? [origin] : []), ...path].map(p => new T.Vector3(p.x*TILE,0.14,p.z*TILE));
+      const line = new T.Line(new T.BufferGeometry().setFromPoints(points), this.pathMat);
+      line.renderOrder=9;
+      this.pathGroup.add(line);
+    }
     for (const p of path) {
-      const dot = new T.Mesh(this.pathGeo, this.pathMat);
+      const hazard = preview?.hazards.some(h => h.x===p.x && h.z===p.z);
+      const opportunity = preview?.opportunities.some(h => h.x===p.x && h.z===p.z);
+      const dot = new T.Mesh(this.pathGeo, hazard ? this.pathRiskMaterials[1] : opportunity ? this.pathRiskMaterials[0] : this.pathMat);
       dot.rotation.x = -Math.PI / 2;
-      dot.position.set(p.x * TILE, 0.06, p.z * TILE);
+      dot.position.set(p.x * TILE, 0.14, p.z * TILE);
+      dot.renderOrder=10;
       this.pathGroup.add(dot);
     }
   }
