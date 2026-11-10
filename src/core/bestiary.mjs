@@ -1,3 +1,4 @@
+import { challenge } from "./challenge.mjs";
 import { surfaceAt } from "./battlefield.mjs";
 import { Random, key, distance, lineOfSight } from "./dungeon.mjs";
 import { CREATURE_ROSTER, BOSSES } from "./creature-roster.mjs";
@@ -13,7 +14,8 @@ export function encounterBudget(levels, depth, difficulty = 1) {
     target: Math.round(party * pressure * difficulty),
   };
 }
-export function populateEncounters(map, catalog, levels) {
+export function populateEncounters(map, catalog, levels, challengeId = "standard") {
+  const setting = challenge(challengeId);
   const rng = new Random(map.seed + map.depth * 4373),
     records = catalog.creatures;
   const encounters = [],
@@ -32,7 +34,7 @@ export function populateEncounters(map, catalog, levels) {
     const budget = encounterBudget(
       levels,
       map.depth,
-      bossRoom ? 1.5 : i === map.rooms.length - 1 ? 1.25 : 1,
+      (bossRoom ? 1.5 : i === map.rooms.length - 1 ? 1.25 : 1) * setting.factor,
     );
     const unlock =
       map.depth +
@@ -54,11 +56,11 @@ export function populateEncounters(map, catalog, levels) {
       : null;
     const chosen = boss ? [boss] : [];
     let total = boss?.cv ?? 0;
-    while (chosen.length < 5) {
+    while (chosen.length < setting.count) {
       const choices = pool.filter(
         (c) =>
           c.cv + total <= budget.target &&
-          chosen.filter((x) => x.id === c.id).length < 2 &&
+          chosen.filter((x) => x.id === c.id).length < setting.copies &&
           !(
             chosen.some((x) =>
               /Dazed|Paralyzed/.test(x.actions.main.actions[1].damageSource),
