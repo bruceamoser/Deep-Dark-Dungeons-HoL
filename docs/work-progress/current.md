@@ -2,6 +2,10 @@
 
 Updated: 2026-11-09 (America/New_York).
 
+## Active feedback investigation
+
+Issue #127, branch `codex/127-player-feedback`. Nine new feedback requests are tracked; no gameplay fixes yet. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Design questions pending for camp, equipment, difficulty/progression and archery. Continue independent combat/HUD/route and asset investigation.
+
 ## Delivered
 
 Four Lanterns Deep **v0.8.6** is published as latest: https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.6
