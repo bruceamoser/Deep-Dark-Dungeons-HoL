@@ -52,7 +52,7 @@ export async function verifyRoster(page) {
   );
   await page.locator('[data-hero="0"]').click();
   await page.locator('[data-tab="journey"]').click();
-  await expect(page.locator(".experience-panel")).toContainText("10000 total XP");
+  await expect(page.locator(".experience-panel")).toContainText("10,000 total XP");
   await expect(page.locator(".experience-panel")).toContainText(
     "Training ready · Level 2",
   );
