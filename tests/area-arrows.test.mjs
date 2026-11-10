@@ -32,5 +32,5 @@ test('the last ammunition use resolves the entire area, then prevents a later vo
 });
 test('invalid range rejects area arrows before turn commitment or ammunition spending',()=>{
  const g=setup('marksmanship:2:0'),before=JSON.stringify(g.active.supplies);
- assert.throws(()=>g.useAbility('power-barbed-arrow',{x:15,z:15}),/range/i);assert.equal(g.encounter.current,null);assert.equal(JSON.stringify(g.active.supplies),before);
+ g.map.tiles["25,25"]={x:25,z:25}; assert.throws(()=>g.useAbility('power-barbed-arrow',{x:25,z:25}),/within.*squares/i);assert.equal(g.encounter.current,null);assert.equal(JSON.stringify(g.active.supplies),before);
 });

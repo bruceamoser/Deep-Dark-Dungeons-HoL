@@ -35,3 +35,5 @@ Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero 
 #135 338 full local tests pass. Respec/Forge/roster desktop checks passed separately after updating XP fixtures/formatting. Controls then exposed #133 corpse-tint dereferencing absent look on an untyped fallback enemy; added optional guard and rebuilding/rerunning controls. Existing native fixture provides fallback regression coverage.
 
 #135 merged PR142 after 338 rules tests, final CI, native respec/Forge/roster/control checks (split runs, corrected XP QA and fallback guard). #136 adds Barbed Volley and Flaming/Thorn Arrow areas while preserving node/save IDs. Focused and actual pointer preview/cancel/cast tests underway. Equipment discussion is the only design topic after this implementation.
+
+#136 edge tests verify final ammo affects whole burst and invalid attempts are free. Initial desktop test hit both foes but expected Bleeding on immune bone sentries; switched fixture to living bandits while retaining immunity rules. Final pointer qualification ongoing; no gameplay defect was concealed.
