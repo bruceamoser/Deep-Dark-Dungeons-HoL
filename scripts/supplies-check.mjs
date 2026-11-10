@@ -67,21 +67,8 @@ export async function verifySimpleSupplies(page) {
         initial.before - initial.price - party.total,
       );
     }
-    const bulkBefore = await page.evaluate(() =>
-      window.__ddd.game.party.reduce((n, h) => n + h.preview.inventory.bulk, 0),
-    );
-    await page.locator('[data-buy-stock="craft"]').click();
-    expect(
-      await page.evaluate(() => window.__ddd.game.materialCount("craft")),
-    ).toBeGreaterThanOrEqual(4);
-    expect(
-      await page.evaluate(() =>
-        window.__ddd.game.party.reduce(
-          (n, h) => n + h.preview.inventory.bulk,
-          0,
-        ),
-      ),
-    ).toBe(bulkBefore + 1);
+    await expect(page.locator('[data-buy-stock]')).toHaveCount(0);
+    await expect(page.locator('.supplies-layout aside')).toContainText('no ingredients');
     await page.locator('[data-supply-filter="all"]').click();
     await page.screenshot({ path: "test-results/supplies-town.png" });
     await page.setViewportSize({ width: 1100, height: 800 });
@@ -99,9 +86,7 @@ export async function verifySimpleSupplies(page) {
     await settingsAction(page, "Save");
     await page.reload();
     await waitForGame(page);
-    expect(
-      await page.evaluate(() => window.__ddd.game.materialCount("craft")),
-    ).toBeGreaterThanOrEqual(4);
+    expect(await page.evaluate(() => window.__ddd.game.materialCount("craft"))).toBe(0);
     await page.evaluate((ref) => {
       const g = window.__ddd.game;
       g.pause();
@@ -111,6 +96,7 @@ export async function verifySimpleSupplies(page) {
       g.paths.clear();
       g.busy = false;
       g.campWanderers = () => [];
+      g.campSupplyProjection = "success";
       g.campaign.camp = null;
       g.party.forEach((h, i) => {
         Object.assign(h, {
@@ -129,7 +115,7 @@ export async function verifySimpleSupplies(page) {
     await page.locator('.topbar [data-action="supplies"]').click();
     await page.locator('[data-supply-filter="arrows"]').click();
     await expect(page.locator(".supply-description")).toContainText(
-      "skilled preparation",
+      "suitable worker",
     );
     await page
       .getByRole("button", { name: "Plan at camp", exact: true })
@@ -137,12 +123,9 @@ export async function verifySimpleSupplies(page) {
     await expect(
       page.getByRole("dialog", { name: "Dungeon camp", exact: true }),
     ).toBeVisible();
-    await expect(
-      page.locator(".camp-project-preview").filter({ hasText: "d4 → d8" }),
-    ).toHaveCount(1);
-    await expect(
-      page.locator(".camp-member").nth(1).locator(".camp-duty").nth(1),
-    ).toContainText("the party has 1");
+    expect(await page.locator(".camp-project-preview").filter({ hasText: "May replenish" }).count()).toBeGreaterThan(0);
+    await expect(page.locator('.camp-plan')).toContainText('Basic camp tasks need no ingredients');
+    await expect(page.locator('[data-supply-target]').first()).toContainText('Automatic');
     await page.screenshot({ path: "test-results/supplies-camp-project.png" });
     await page.locator("#camp-hour").click();
     await page.locator("#camp-hour").click();
@@ -154,10 +137,10 @@ export async function verifySimpleSupplies(page) {
           ],
         initial.ref,
       ),
-    ).toBe(8);
+    ).toBe(6);
     expect(
       await page.evaluate(() => window.__ddd.game.materialCount("craft")),
-    ).toBe(materialBefore - 3);
+    ).toBe(materialBefore);
     await page.locator('[aria-label="Close camp"]').click();
     await settingsAction(page, "Save");
     await page.reload();
@@ -167,7 +150,7 @@ export async function verifySimpleSupplies(page) {
     ).toBe(2);
     expect(
       await page.evaluate(() => window.__ddd.game.materialCount("craft")),
-    ).toBe(materialBefore - 3);
+    ).toBe(materialBefore);
     expect(
       await page.evaluate(
         (ref) =>
@@ -176,9 +159,9 @@ export async function verifySimpleSupplies(page) {
           ],
         initial.ref,
       ),
-    ).toBe(8);
+    ).toBe(6);
     console.log(
-      "Party Supplies: reviewed/free-cancel restock, exact coin and Bulk costs, shared ingredients, compact layout, skilled camp project and paused save/reload passed.",
+      "Party Supplies: reviewed/free-cancel restock, exact coin and Bulk costs, ingredient-free tasks, compact layout, camp project and paused save/reload passed.",
     );
   } finally {
     if (await page.locator("#modal-root > *").count())
@@ -186,6 +169,7 @@ export async function verifySimpleSupplies(page) {
     await page.evaluate((saved) => {
       const g = window.__ddd.game;
       delete g.campWanderers;
+      delete g.campSupplyProjection;
       g.load(saved, { resume: false });
       g.emit("floor");
       g.emit("change");

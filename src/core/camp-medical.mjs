@@ -199,6 +199,7 @@ export const campMedicalMethods = {
           emit: () => {},
           campWanderers: () => [],
           forageProjection,
+          campSupplyProjection: favorable ? "success" : "failure",
           supplyNotice: () => {},
           dice: (n = 3) => Array(n).fill(favorable ? 6 : 1),
           supplyDie: (die) => (favorable ? die : 1),

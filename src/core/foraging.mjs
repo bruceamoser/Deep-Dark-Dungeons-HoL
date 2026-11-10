@@ -1,10 +1,4 @@
-import {
-  stockForRecipe,
-  restockCost,
-  MATERIAL_STOCKS,
-} from "./supply-stock.mjs";
 import { DISCIPLINE_FORAGING } from "./discipline-benefits.mjs";
-import { distance, key, lineOfSight } from "./dungeon.mjs";
 export const FORAGE_RESOURCES = Object.freeze([
   { id: "water", name: "Water", base: 8 },
   { id: "wood", name: "Wood & fuel", base: 12, recipe: "recipe-bound-torches" },
@@ -125,49 +119,10 @@ export const foragingMethods = {
       this.campEvent(`${h.name} found nothing.`);
       return;
     }
-    if (outcome.id === "water") {
-      const center = this.campaign.camp;
-      if (!this.campWaterSource()) {
-        const tile = Object.values(this.map.tiles).find(
-          (p) =>
-            distance(p, center) > 0 &&
-            distance(p, center) <= 2 &&
-            !this.map.obstacles[key(p.x, p.z)] &&
-            !this.occupied().has(key(p.x, p.z)) &&
-            lineOfSight(this.map, p, center),
-        );
-        if (tile)
-          (this.map.waterSources ??= []).push({
-            x: tile.x,
-            z: tile.z,
-            discovered: true,
-          });
-      }
-      let target;
-      for (const p of [h, ...this.party.filter((p) => p !== h)]) {
-        const item = p.preview.inventory.items.find(
-          (i) =>
-            i.carried &&
-            i.catalogId === "item-water-flask" &&
-            this.supplyValue(p, i) < 8,
-        );
-        if (item) {
-          target = { hero: p, item };
-          break;
-        }
-      }
-      if (target) target.hero.supplies[target.item.instanceId] = 8;
-      this.campEvent(
-        `${h.name} found water${target ? ` and replenished ${target.hero.name}'s water flask` : this.campWaterSource() ? "; the company can gather more nearby" : " but could not reach a safe source"}.`,
-      );
-      this.emit("party");
-      return;
-    }
-    const spec = stockForRecipe(outcome.recipe),
-      units = restockCost(0, spec.normal);
-    this.addMaterialStock(h, spec.material, units);
-    this.campEvent(
-      `${h.name} found ${units} ${MATERIAL_STOCKS.find((m) => m.id === spec.material).name.toLowerCase()} · ${spec.name.toLowerCase()} preparation available.`,
-    );
+    const duty={water:"water",wood:"torches",food:"cook",fletching:"arrows",herbs:"dressings"}[outcome.id];
+    const previous=this.campSupplyProjection;
+    this.campSupplyProjection="success";
+    try { this.performCampRestock(h,duty,rng); }
+    finally { this.campSupplyProjection=previous; }
   },
 };
