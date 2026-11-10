@@ -27,5 +27,5 @@ export async function verifyAreaArrows(page){
  expect(await page.evaluate(()=>window.__ddd.game.supplyItem(window.__ddd.game.active,'item-ammunition-bundle'))).toBeFalsy();
  expect(await page.evaluate(()=>window.__ddd.game.party[1].survival.hp)).toBe(before.hp);expect(await page.evaluate(()=>window.__ddd.game.budget.remaining.main)).toBe(0);
  console.log('Area arrow pointer preview, free cancellation, two-enemy hit, ally safety and action/ammo resolution passed.');
- }finally{if(await page.evaluate(()=>!!window.__ddd.selectedAction || document.querySelector('#modal-root').children.length>0)) await page.keyboard.press('Escape');await page.evaluate(saved=>{const g=window.__ddd.game;delete g.dice;delete g.supplyDie;g.load(saved,{resume:false});g.emit('floor');g.emit('change');},saved);}
+ }finally{while(await page.locator('.supply-alert button').count()) await page.locator('.supply-alert button').click();if(await page.evaluate(()=>!!window.__ddd.selectedAction || document.querySelector('#modal-root').children.length>0)) await page.keyboard.press('Escape');await page.evaluate(saved=>{const g=window.__ddd.game;delete g.dice;delete g.supplyDie;g.load(saved,{resume:false});g.emit('floor');g.emit('change');},saved);}
 }
