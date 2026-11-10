@@ -107,7 +107,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
               ? theme.metal
               : /_(Head|ArmLeft|ArmRight)$/.test(o.name) ? (theme.skin ?? theme.cloth) : theme.cloth,
           );
-        if (look.theme === "dead" && /_(Head|ArmLeft|ArmRight|LegLeft|LegRight)$/.test(o.name) && m.color)
+        if (look?.theme === "dead" && /_(Head|ArmLeft|ArmRight|LegLeft|LegRight)$/.test(o.name) && m.color)
           m.color.set(theme.skin);
         return m;
       };

@@ -31,3 +31,5 @@ Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero 
 #134 merged PR141 with seeded population, native settings/save and CI passing. #135 uses measured 10k/32.5k/85k early XP thresholds, increasing later costs, curve3 migration preserves earned levels/fraction across party/reserve/fallen. Seventy-four focused tests pass. Training UI fixtures now award the corresponding new thresholds; qualification ongoing.
 
 #135 latest rules/build CI passes. Native respec passes; Forge level30-gate fixture still awarded the former capped-curve amount, so its valid earned-level guard rejected training. Updated that fixture to xpForLevel(30); rerunning remaining Forge/roster/controls. No gameplay failure hidden or guard weakened.
+
+#135 338 full local tests pass. Respec/Forge/roster desktop checks passed separately after updating XP fixtures/formatting. Controls then exposed #133 corpse-tint dereferencing absent look on an untyped fallback enemy; added optional guard and rebuilding/rerunning controls. Existing native fixture provides fallback regression coverage.
