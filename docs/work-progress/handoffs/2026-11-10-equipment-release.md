@@ -23,3 +23,11 @@ Installed Debian remains 0.8.6; no personal saves/windows touched. Existing untr
 PR146 author-reviewed and merged at db741592f50931557ee6c1304297f3f7e38c5442. Final documentation head 780b53b passed both CI runs 42770222495/42770227408. The complete native launcher suite passed (release/equipment-native-full.log), including all prior feedback features and equipment, run slots and native-close save, with terminal AppArmor and renderer sandbox/seccomp retained. Screenshot of the equipment inspector was inspected. #127 and #144 are closed.
 
 Release issue #147; codex/v087-release from db741592. Version/lockfile and release notes prepared for 0.8.7. Finished licensed builds and release qualification in progress. Installed Debian remains 0.8.6, unchanged.
+
+## v0.8.7 qualified and tagged
+
+Release PR148 author-reviewed/merged at f7da756a951abaff5c5261f257e755765ad027f3; immutable tag v0.8.7 matches it. Rules/build CI passed both checks; source installer run42770607896 passed both Linux and Windows. Finished licensed Linux AppImage/Debian and Windows portable apps built locally; both ASARs report0.8.7 with Dungeon Mason present. Licensed export verification passed251 nodes/20 animations/39 grips.
+
+Final AppImage smoke check passed with licensed models, sandbox/terminal AppArmor, gameplay, music, save IPC and supported update controls: release/v087-appimage.log. Real published0.8.6→0.8.7 round trip passed checksum rejection, failed-save installation guard, verified replacement/restart and journey/vault preservation: release/v087-roundtrip.log. Full native gameplay source sweep had already passed unchanged source. Initial Debian packaging failed in full /tmp; retry with TMPDIR=$PWD/release/qa-tmp succeeded (release/v087-linux-retry.log). Windows/checkout builds: release/v087-windows.log and v087-dir.log.
+
+Eight finalized initial assets in ignored release/staged-0.8.7 have valid SHA256SUMS; Linux metadata sizes/SHA512 match. Isolated Linux installer and friendly menu entry pass (release/v087-bundle-install.log); no system install performed. Draft upload is in progress; staged publication then public download/hashes/manifests/live feed remain pending. Do not overwrite published installers; corrections need a new version. Source-only CI builds must never replace the licensed apps.
