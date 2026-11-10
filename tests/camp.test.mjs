@@ -67,14 +67,32 @@ test("camp saves resume the next period without repeating healing or rewards, re
 });
 
 test("basic food and water duties work without ingredients or a nearby source, with uncertain results", () => {
- const g=quiet(),h=g.party[0];g.startCamp(plan(g));
- const food=h.preview.inventory.items.find(i=>i.catalogId==="item-food-bundle");h.supplies[food.instanceId]=0;
- const t={heroId:h.heroId,supplyId:food.instanceId};assert.equal(g.campDutyReason(h,"cook",t),"");
- g.campDuty(h,"cook",{int:()=>100},t);assert.equal(h.supplies[food.instanceId],0);
- g.campDuty(h,"cook",{int:()=>1},t);assert.equal(h.supplies[food.instanceId],4);
- const flask=h.preview.inventory.items.find(i=>i.catalogId==="item-water-flask");h.supplies[flask.instanceId]=4;g.map.waterSources=[];
- g.campDuty(h,"water",{int:()=>1},{heroId:h.heroId,supplyId:flask.instanceId});assert.equal(g.supplyValue(h,flask),6);
- assert.equal(g.materialCount("food"),0);
+  const g = quiet(),
+    h = g.party[0];
+  g.startCamp(plan(g));
+  const food = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-food-bundle",
+  );
+  h.supplies[food.instanceId] = 0;
+  const t = { heroId: h.heroId, supplyId: food.instanceId };
+  assert.equal(g.campDutyReason(h, "cook", t), "");
+  g.campDuty(h, "cook", { int: () => 100 }, t);
+  assert.equal(h.supplies[food.instanceId], 0);
+  g.campDuty(h, "cook", { int: () => 1 }, t);
+  assert.equal(h.supplies[food.instanceId], 4);
+  const flask = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-water-flask",
+  );
+  h.supplies[flask.instanceId] = 4;
+  g.map.waterSources = [];
+  g.campDuty(
+    h,
+    "water",
+    { int: () => 1 },
+    { heroId: h.heroId, supplyId: flask.instanceId },
+  );
+  assert.equal(g.supplyValue(h, flask), 6);
+  assert.equal(g.materialCount("food"), 0);
 });
 
 test("wandering creatures can interrupt a cleared floor; workers detect, Guard adds a Boon, failed watch is an ambush", () => {
@@ -269,12 +287,23 @@ test("ending camp early preserves the completed-hour report and rejects corrupt 
 });
 
 test("camp store hints identify automatic recipients and disappear when work is removed", () => {
- const g=quiet(),duties=plan(g),h=g.party[2];
- const food=h.preview.inventory.items.find(i=>i.catalogId==="item-food-bundle");h.supplies[food.instanceId]=0;
- duties[g.party[1].heroId]=["cook","guard"];
- assert.deepEqual(g.campForecast(duties,8).supplyPotential["item-food-bundle"],[false,false,true,false]);
- duties[g.party[1].heroId]=["guard","guard"];
- assert.deepEqual(g.campForecast(duties,8).supplyPotential["item-food-bundle"],[false,false,false,false]);
+  const g = quiet(),
+    duties = plan(g),
+    h = g.party[2];
+  const food = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-food-bundle",
+  );
+  h.supplies[food.instanceId] = 0;
+  duties[g.party[1].heroId] = ["cook", "guard"];
+  assert.deepEqual(
+    g.campForecast(duties, 8).supplyPotential["item-food-bundle"],
+    [false, false, true, false],
+  );
+  duties[g.party[1].heroId] = ["guard", "guard"];
+  assert.deepEqual(
+    g.campForecast(duties, 8).supplyPotential["item-food-bundle"],
+    [false, false, false, false],
+  );
 });
 
 test("chosen camp order drives work, forecasts and save/load without reordering the party", () => {

@@ -119,10 +119,19 @@ export const foragingMethods = {
       this.campEvent(`${h.name} found nothing.`);
       return;
     }
-    const duty={water:"water",wood:"torches",food:"cook",fletching:"arrows",herbs:"dressings"}[outcome.id];
-    const previous=this.campSupplyProjection;
-    this.campSupplyProjection="success";
-    try { this.performCampRestock(h,duty,rng); }
-    finally { this.campSupplyProjection=previous; }
+    const duty = {
+      water: "water",
+      wood: "torches",
+      food: "cook",
+      fletching: "arrows",
+      herbs: "dressings",
+    }[outcome.id];
+    const previous = this.campSupplyProjection;
+    this.campSupplyProjection = "success";
+    try {
+      this.performCampRestock(h, duty, rng);
+    } finally {
+      this.campSupplyProjection = previous;
+    }
   },
 };

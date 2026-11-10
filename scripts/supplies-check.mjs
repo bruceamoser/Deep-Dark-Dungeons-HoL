@@ -67,8 +67,10 @@ export async function verifySimpleSupplies(page) {
         initial.before - initial.price - party.total,
       );
     }
-    await expect(page.locator('[data-buy-stock]')).toHaveCount(0);
-    await expect(page.locator('.supplies-layout aside')).toContainText('no ingredients');
+    await expect(page.locator("[data-buy-stock]")).toHaveCount(0);
+    await expect(page.locator(".supplies-layout aside")).toContainText(
+      "no ingredients",
+    );
     await page.locator('[data-supply-filter="all"]').click();
     await page.screenshot({ path: "test-results/supplies-town.png" });
     await page.setViewportSize({ width: 1100, height: 800 });
@@ -86,7 +88,9 @@ export async function verifySimpleSupplies(page) {
     await settingsAction(page, "Save");
     await page.reload();
     await waitForGame(page);
-    expect(await page.evaluate(() => window.__ddd.game.materialCount("craft"))).toBe(0);
+    expect(
+      await page.evaluate(() => window.__ddd.game.materialCount("craft")),
+    ).toBe(0);
     await page.evaluate((ref) => {
       const g = window.__ddd.game;
       g.pause();
@@ -123,9 +127,18 @@ export async function verifySimpleSupplies(page) {
     await expect(
       page.getByRole("dialog", { name: "Dungeon camp", exact: true }),
     ).toBeVisible();
-    expect(await page.locator(".camp-project-preview").filter({ hasText: "May replenish" }).count()).toBeGreaterThan(0);
-    await expect(page.locator('.camp-plan')).toContainText('Basic camp tasks need no ingredients');
-    await expect(page.locator('[data-supply-target]').first()).toContainText('Automatic');
+    expect(
+      await page
+        .locator(".camp-project-preview")
+        .filter({ hasText: "May replenish" })
+        .count(),
+    ).toBeGreaterThan(0);
+    await expect(page.locator(".camp-plan")).toContainText(
+      "Basic camp tasks need no ingredients",
+    );
+    await expect(page.locator("[data-supply-target]").first()).toContainText(
+      "Automatic",
+    );
     await page.screenshot({ path: "test-results/supplies-camp-project.png" });
     await page.locator("#camp-hour").click();
     await page.locator("#camp-hour").click();

@@ -78,37 +78,86 @@ test("town water refills existing flasks freely without reducing larger combined
 });
 
 test("basic camp tasks need no ingredients or tools, training improves hidden chance, success grows one step", () => {
- const g=fresh(),r=arrows(g),owner=g.party.find(h=>h.heroId===r.hero),t={heroId:r.hero,supplyId:r.itemId};
- owner.supplies[r.itemId]=4;field(g);g.startCamp(duties(g));
- const basic=g.campRestockPlan(g.party[0],"arrows",t),skilled=g.campRestockPlan(g.party[1],"arrows",t);
- assert.equal(basic.reason,"");assert.equal(skilled.after,6);assert.ok(skilled.chance>basic.chance);assert.equal(skilled.units,0);
- const bulk=owner.preview.inventory.bulk;
- g.performCampRestock(g.party[1],"arrows",{int:()=>100},t);assert.equal(owner.supplies[r.itemId],4);
- g.performCampRestock(g.party[1],"arrows",{int:()=>1},t);assert.equal(owner.supplies[r.itemId],6);
- assert.equal(owner.preview.inventory.bulk,bulk);assert.equal(g.materialCount("craft"),0);
- owner.supplies[r.itemId]=12;g.performCampRestock(g.party[1],"arrows",{int:()=>1},t);assert.equal(owner.supplies[r.itemId],20);
- assert.match(g.campRestockPlan(g.party[1],"arrows",t).reason,/full/);
+  const g = fresh(),
+    r = arrows(g),
+    owner = g.party.find((h) => h.heroId === r.hero),
+    t = { heroId: r.hero, supplyId: r.itemId };
+  owner.supplies[r.itemId] = 4;
+  field(g);
+  g.startCamp(duties(g));
+  const basic = g.campRestockPlan(g.party[0], "arrows", t),
+    skilled = g.campRestockPlan(g.party[1], "arrows", t);
+  assert.equal(basic.reason, "");
+  assert.equal(skilled.after, 6);
+  assert.ok(skilled.chance > basic.chance);
+  assert.equal(skilled.units, 0);
+  const bulk = owner.preview.inventory.bulk;
+  g.performCampRestock(g.party[1], "arrows", { int: () => 100 }, t);
+  assert.equal(owner.supplies[r.itemId], 4);
+  g.performCampRestock(g.party[1], "arrows", { int: () => 1 }, t);
+  assert.equal(owner.supplies[r.itemId], 6);
+  assert.equal(owner.preview.inventory.bulk, bulk);
+  assert.equal(g.materialCount("craft"), 0);
+  owner.supplies[r.itemId] = 12;
+  g.performCampRestock(g.party[1], "arrows", { int: () => 1 }, t);
+  assert.equal(owner.supplies[r.itemId], 20);
+  assert.match(g.campRestockPlan(g.party[1], "arrows", t).reason, /full/);
 });
 
 test("automatic camp recipient prefers lowest carried supply; manual choice and new supplies work", () => {
- const g=fresh(),r=arrows(g),owner=g.party.find(h=>h.heroId===r.hero);field(g);g.startCamp(duties(g));
- owner.supplies[r.itemId]=0;
- assert.equal(g.campRestockPlan(g.party[0],"arrows").row.hero,r.hero);
- const empty=g.supplyRows().find(r=>r.supply==="dressings"&&r.missing),target={heroId:empty.hero,supplyId:"new"};
- g.performCampRestock(g.party[0],"dressings",{int:()=>1},target);
- assert.ok(g.supplyRows().some(r=>r.supply==="dressings"&&r.hero===empty.hero&&!r.missing&&r.before===4));
+  const g = fresh(),
+    r = arrows(g),
+    owner = g.party.find((h) => h.heroId === r.hero);
+  field(g);
+  g.startCamp(duties(g));
+  owner.supplies[r.itemId] = 0;
+  assert.equal(g.campRestockPlan(g.party[0], "arrows").row.hero, r.hero);
+  const empty = g
+      .supplyRows()
+      .find((r) => r.supply === "dressings" && r.missing),
+    target = { heroId: empty.hero, supplyId: "new" };
+  g.performCampRestock(g.party[0], "dressings", { int: () => 1 }, target);
+  assert.ok(
+    g
+      .supplyRows()
+      .some(
+        (r) =>
+          r.supply === "dressings" &&
+          r.hero === empty.hero &&
+          !r.missing &&
+          r.before === 4,
+      ),
+  );
 });
 
 test("camp forecasts bound uncertain supply work without changing live state; saved completed work is not repeated", () => {
- const g=fresh(),r=arrows(g),h=g.party.find(h=>h.heroId===r.hero),t={heroId:r.hero,supplyId:r.itemId};h.supplies[r.itemId]=4;field(g);
- const plan=duties(g),targets={};plan[g.party[0].heroId]=["arrows","guard"];targets[g.party[0].heroId]=[t,null];
- const before=JSON.stringify(g.snapshot()),f=g.campForecast(plan,8,targets);
- assert.equal(JSON.stringify(g.snapshot()),before);
- assert.equal(f.low.find(h=>h.heroId===r.hero).supplies[r.itemId],4);
- assert.equal(f.high.find(h=>h.heroId===r.hero).supplies[r.itemId],6);
- g.startCamp(plan,8,targets);g.campSupplyProjection="success";g.campHour();assert.equal(h.supplies[r.itemId],6);
- const copy=new Game(R,C);copy.load(structuredClone(g.snapshot()),{resume:false});copy.campWanderers=()=>[];copy.campHour();
- assert.equal(copy.party.find(h=>h.heroId===r.hero).supplies[r.itemId],6);
+  const g = fresh(),
+    r = arrows(g),
+    h = g.party.find((h) => h.heroId === r.hero),
+    t = { heroId: r.hero, supplyId: r.itemId };
+  h.supplies[r.itemId] = 4;
+  field(g);
+  const plan = duties(g),
+    targets = {};
+  plan[g.party[0].heroId] = ["arrows", "guard"];
+  targets[g.party[0].heroId] = [t, null];
+  const before = JSON.stringify(g.snapshot()),
+    f = g.campForecast(plan, 8, targets);
+  assert.equal(JSON.stringify(g.snapshot()), before);
+  assert.equal(f.low.find((h) => h.heroId === r.hero).supplies[r.itemId], 4);
+  assert.equal(f.high.find((h) => h.heroId === r.hero).supplies[r.itemId], 6);
+  g.startCamp(plan, 8, targets);
+  g.campSupplyProjection = "success";
+  g.campHour();
+  assert.equal(h.supplies[r.itemId], 6);
+  const copy = new Game(R, C);
+  copy.load(structuredClone(g.snapshot()), { resume: false });
+  copy.campWanderers = () => [];
+  copy.campHour();
+  assert.equal(
+    copy.party.find((h) => h.heroId === r.hero).supplies[r.itemId],
+    6,
+  );
 });
 
 test("old recipe batches and typed material dice migrate once, preserving weight and advanced materials", () => {
@@ -227,8 +276,22 @@ test("automatic procurement honors the best capable buying/crafting discount", (
 });
 
 test("free basic preparation does not spend advanced Maker's Gift daily receipt or old materials", () => {
- const g=fresh(),r=arrows(g),worker=g.party[0],owner=g.party.find(h=>h.heroId===r.hero);field(g);g.startCamp(duties(g));
- g.addMaterialStock(worker,"craft",4);worker.traitUses={craftImprove:7};owner.supplies[r.itemId]=4;
- g.performCampRestock(worker,"arrows",{int:()=>1},{heroId:r.hero,supplyId:r.itemId});
- assert.equal(g.materialCount("craft"),4);assert.equal(worker.traitUses.craftImprove,7);assert.equal(owner.supplies[r.itemId],6);
+  const g = fresh(),
+    r = arrows(g),
+    worker = g.party[0],
+    owner = g.party.find((h) => h.heroId === r.hero);
+  field(g);
+  g.startCamp(duties(g));
+  g.addMaterialStock(worker, "craft", 4);
+  worker.traitUses = { craftImprove: 7 };
+  owner.supplies[r.itemId] = 4;
+  g.performCampRestock(
+    worker,
+    "arrows",
+    { int: () => 1 },
+    { heroId: r.hero, supplyId: r.itemId },
+  );
+  assert.equal(g.materialCount("craft"), 4);
+  assert.equal(worker.traitUses.craftImprove, 7);
+  assert.equal(owner.supplies[r.itemId], 6);
 });

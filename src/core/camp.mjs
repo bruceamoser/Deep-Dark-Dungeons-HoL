@@ -45,12 +45,14 @@ export const CAMP_DUTIES = Object.freeze([
   {
     id: "cook",
     name: "Find food",
-    detail: "Search for food. Wilderness training helps. No ingredients required.",
+    detail:
+      "Search for food. Wilderness training helps. No ingredients required.",
   },
   {
     id: "water",
     name: "Find water",
-    detail: "Search for clean water. Wilderness training helps; no nearby source required.",
+    detail:
+      "Search for clean water. Wilderness training helps; no nearby source required.",
   },
   {
     id: "torches",

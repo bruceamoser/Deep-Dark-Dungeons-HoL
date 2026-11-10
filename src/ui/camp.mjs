@@ -186,10 +186,7 @@ function dungeonCampScreen({
     game.party.map((h, i) => [h.heroId, [...defaults[i]]]),
   );
   let targets = Object.fromEntries(
-    game.party.map((h) => [
-      h.heroId,
-      [null, null],
-    ]),
+    game.party.map((h) => [h.heroId, [null, null]]),
   );
   if (game.campCanResume()) {
     assignments = structuredClone(game.campaign.camp.assignments);
@@ -401,8 +398,10 @@ function dungeonCampScreen({
               spec && !projectPlan?.water
                 ? `<select data-supply-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} supply recipient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Automatic · lowest supply</option>${supplyOptions.map((r) => `<option value="${r.hero}|${r.itemId ?? "new"}" ${target?.heroId === r.hero && target?.supplyId === (r.itemId ?? "new") ? "selected" : ""}>${esc(r.name)} · ${r.missing ? "New supply" : r.before ? `d${r.before}` : "Empty"}</option>`).join("")}</select>`
                 : "";
-            const preview = projectPlan && !projectPlan.reason
-              ? `May replenish ${projectPlan.row.name}'s ${projectPlan.spec.name.toLowerCase()}. No ingredients required.` : "";
+            const preview =
+              projectPlan && !projectPlan.reason
+                ? `May replenish ${projectPlan.row.name}'s ${projectPlan.spec.name.toLowerCase()}. No ingredients required.`
+                : "";
             return `<label class="camp-duty"><span title="${esc(desc.detail)}">Task ${slot + 1}</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${supplySelect}${preview ? `<small class="camp-project-preview">${esc(preview)}</small>` : ""}${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
           })
           .join("")}</article>`;

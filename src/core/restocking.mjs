@@ -250,25 +250,71 @@ export const restockingMethods = {
     return 1 + Math.min(2, rank);
   },
   campSupplyChance(worker, spec) {
-    const ranks = { food:["wilderness"], water:["wilderness"], arrows:["craft","marksmanship"], light:["craft"], dressings:["medicine"] }[spec.id] ?? [];
-    const rank = Math.max(0,...ranks.map(id=>worker.preview.state.ranks[`discipline-${id}`] ?? 0));
+    const ranks =
+      {
+        food: ["wilderness"],
+        water: ["wilderness"],
+        arrows: ["craft", "marksmanship"],
+        light: ["craft"],
+        dressings: ["medicine"],
+      }[spec.id] ?? [];
+    const rank = Math.max(
+      0,
+      ...ranks.map((id) => worker.preview.state.ranks[`discipline-${id}`] ?? 0),
+    );
     const powers = this.powerIds(worker);
-    const relevant = powers.includes("power-field-artisan") && ["arrows","light"].includes(spec.id) || powers.includes("power-field-replenishment") && ["food","water","arrows","light"].includes(spec.id) || powers.includes("power-forager-remedies") && spec.id==="dressings";
-    return Math.min(90,50+rank*10+(relevant?15:0));
+    const relevant =
+      (powers.includes("power-field-artisan") &&
+        ["arrows", "light"].includes(spec.id)) ||
+      (powers.includes("power-field-replenishment") &&
+        ["food", "water", "arrows", "light"].includes(spec.id)) ||
+      (powers.includes("power-forager-remedies") && spec.id === "dressings");
+    return Math.min(90, 50 + rank * 10 + (relevant ? 15 : 0));
   },
   campRestockPlan(worker, duty, target) {
-    const spec = BASIC_SUPPLIES.find(s=>s.duty===duty);
+    const spec = BASIC_SUPPLIES.find((s) => s.duty === duty);
     if (!spec) return null;
-    const fail = reason=>({spec,reason});
-    if (!this.canAct(worker)) return fail("This companion cannot prepare supplies.");
-    let rows=this.supplyRows().filter(r=>r.supply===spec.id && this.party.some(h=>h.heroId===r.hero && this.canAct(h)));
-    if (target?.supplyId) rows=rows.filter(r=>r.hero===target.heroId && (target.supplyId==="new" || r.itemId===target.supplyId));
-    else if (target?.heroId) rows=rows.filter(r=>r.hero===target.heroId);
-    const row=rows.filter(r=>r.before<20).sort((a,b)=>Number(a.missing)-Number(b.missing)||a.before-b.before)[0];
-    if (!row) return fail(rows.length?"These supplies are already full.":"Choose a capable companion's supply.");
-    const after=SUPPLY_LADDER[SUPPLY_LADDER.indexOf(row.before)+1];
-    return {spec,row,after,units:0,steps:1,chance:this.campSupplyChance(worker,spec),worker:worker.heroId,
-      bulkAdded:row.missing?this.C.inventory.equipment.find(i=>i.id===spec.item).bulk:0,reason:""};
+    const fail = (reason) => ({ spec, reason });
+    if (!this.canAct(worker))
+      return fail("This companion cannot prepare supplies.");
+    let rows = this.supplyRows().filter(
+      (r) =>
+        r.supply === spec.id &&
+        this.party.some((h) => h.heroId === r.hero && this.canAct(h)),
+    );
+    if (target?.supplyId)
+      rows = rows.filter(
+        (r) =>
+          r.hero === target.heroId &&
+          (target.supplyId === "new" || r.itemId === target.supplyId),
+      );
+    else if (target?.heroId)
+      rows = rows.filter((r) => r.hero === target.heroId);
+    const row = rows
+      .filter((r) => r.before < 20)
+      .sort(
+        (a, b) => Number(a.missing) - Number(b.missing) || a.before - b.before,
+      )[0];
+    if (!row)
+      return fail(
+        rows.length
+          ? "These supplies are already full."
+          : "Choose a capable companion's supply.",
+      );
+    const after = SUPPLY_LADDER[SUPPLY_LADDER.indexOf(row.before) + 1];
+    return {
+      spec,
+      row,
+      after,
+      units: 0,
+      steps: 1,
+      chance: this.campSupplyChance(worker, spec),
+      worker: worker.heroId,
+      bulkAdded: row.missing
+        ? this.C.inventory.equipment.find((i) => i.id === spec.item).bulk
+        : 0,
+      reason: "",
+    };
   },
   bestSupplyWorker(ref) {
     const { spec } = this.supplyRef(ref),
@@ -305,14 +351,29 @@ export const restockingMethods = {
     return made;
   },
   performCampRestock(worker, duty, rng, target) {
-    const plan=this.campRestockPlan(worker,duty,target);
-    if (plan.reason) { this.campEvent(`${worker.name}: ${plan.reason}`); return; }
-    const success=this.campSupplyProjection ? this.campSupplyProjection==="success" : rng.int(1,100)<=plan.chance;
-    if (!success) { this.campEvent(`${worker.name} could not replenish ${plan.spec.name.toLowerCase()} this watch.`); return; }
-    const made=this.applyRestock(plan.row,plan.after);
-    if (plan.row.missing) for(const entries of Object.values(this.campaign.camp?.targets ?? {})) for(const t of entries)
-      if(t?.heroId===plan.row.hero && t.supplyId==="new") t.supplyId=made.instanceId;
-    this.campEvent(`${worker.name} replenished ${plan.spec.name.toLowerCase()} for ${plan.row.name}.`);
+    const plan = this.campRestockPlan(worker, duty, target);
+    if (plan.reason) {
+      this.campEvent(`${worker.name}: ${plan.reason}`);
+      return;
+    }
+    const success = this.campSupplyProjection
+      ? this.campSupplyProjection === "success"
+      : rng.int(1, 100) <= plan.chance;
+    if (!success) {
+      this.campEvent(
+        `${worker.name} could not replenish ${plan.spec.name.toLowerCase()} this watch.`,
+      );
+      return;
+    }
+    const made = this.applyRestock(plan.row, plan.after);
+    if (plan.row.missing)
+      for (const entries of Object.values(this.campaign.camp?.targets ?? {}))
+        for (const t of entries)
+          if (t?.heroId === plan.row.hero && t.supplyId === "new")
+            t.supplyId = made.instanceId;
+    this.campEvent(
+      `${worker.name} replenished ${plan.spec.name.toLowerCase()} for ${plan.row.name}.`,
+    );
   },
   townRestockPlan(ref, target = this.campaign.restockTarget ?? 8) {
     if (!SUPPLY_TARGETS.includes(target))
