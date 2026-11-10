@@ -1066,15 +1066,17 @@ function commitTarget(targetId) {
   game.useAbility(selection.id, targetId, selection.options);
   cancelTargeting();
 }
-function activateAction(id) {
+function activateAction(id, index = game.selected) {
   attempt(() => {
-    if (selectedAction?.id === id) {
+    const hero = game.party[index];
+    if (selectedAction?.id === id && selectedAction.hero === hero.id) {
       closeModal();
       cancelTargeting();
       return;
     }
-    const reason = game.actionReason(id);
+    const reason = game.actionReason(id, hero);
     if (reason) throw new Error(reason);
+    if (game.selected !== index) game.select(index);
     closeModal();
     cancelTargeting(false);
     if (
@@ -1084,16 +1086,27 @@ function activateAction(id) {
       game.useAbility(id);
       return;
     }
-    if (POWERS[id]?.field && game.mode !== "combat") {
-      if (POWERS[id].target === "self") {
+    const fieldSpec = game.powerSpec(id, hero);
+    if (fieldSpec?.field && game.mode !== "combat") {
+      if (fieldSpec.target === "self") {
         game.useAbility(id, game.active.id);
         return;
       }
-      if (game.mode === "town" && POWERS[id].target === "ally") {
+      if (fieldSpec.target === "ally") {
+        const targets = game.party.map((h) => {
+          let reason = "";
+          try {
+            game.powerPlan(id, h.id, hero);
+          } catch (error) {
+            reason = error.message;
+          }
+          return `<button data-field-target="${h.id}" ${reason ? "disabled" : ""}>${esc(h.name)} · ${h.survival.hp}/${h.survival.maxHp} HP<small>${esc(reason || "Choose companion")}</small></button>`;
+        });
         dialog(
-          POWERS[id].name,
-          `<p>${esc(POWERS[id].description)}</p><div class="catalog-list">${game.party.map((h) => `<button data-field-target="${h.id}">${esc(h.name)} · ${h.survival.hp}/${h.survival.maxHp} HP</button>`).join("")}</div>`,
+          fieldSpec.name,
+          `<p>${esc(hero.name)} · Choose a companion.</p><p>${esc(fieldSpec.description)}</p><div class="catalog-list">${targets.join("")}</div><button id="cancel-field-action">Cancel</button>`,
         );
+        modal.querySelector("#cancel-field-action").onclick = closeModal;
         modal.querySelectorAll("[data-field-target]").forEach(
           (b) =>
             (b.onclick = () =>
