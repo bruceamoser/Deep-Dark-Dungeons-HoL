@@ -1,3 +1,18 @@
+**v0.8.6 — Ready for the road**
+
+- One party Supplies screen with reviewed Greyhaven restocking, preferred departure stock and exact coin/Bulk previews.
+- Shared food, crafting and medicinal ingredients; deterministic specialist camp projects with recipient selection and work-order shortage previews. Advanced crafting remains separate.
+- Compatible migration preserves existing supplies and legacy material value/weight. Maker’s Gift retains its daily limit.
+- Fixes field ability targeting, combat diagonal movement and consent before movement through hazards. Creatures escape harmful areas and use applicable condition remedies.
+
+Existing journeys remain compatible. Installers retain the same save and application identifiers.
+
+### Install
+
+Debian/Ubuntu: `sudo apt install ./Four-Lanterns-Deep-0.8.6-amd64.deb`. Other Linux: AppImage or Linux installer bundle. Windows: `Four-Lanterns-Deep-Setup-0.8.6-x64.exe`. Installed releases: **Settings → Updates**.
+
+---
+
 **v0.8.5 — The creatures fight back**
 
 - **Distinct enemy tactics.** Pack hunters coordinate, duelists seek separate opponents, guardians protect nearby ground and allies, predators pursue exposed heroes, and ranged creatures seek clear shots and firing distance. Supports relieve afflicted allies and controllers disrupt the company.

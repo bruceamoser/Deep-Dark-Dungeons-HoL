@@ -8,7 +8,11 @@ Updated: 2026-11-09 (America/New_York).
 - Latest published release remains **[v0.8.5](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.5)**, immutable source/tag `23effe99ae9ae3d4ba82e12d4fadb999e125c8a3`. The fixes below are unreleased source changes; package version remains 0.8.5 until a release preparation change.
 - Progression remains the v0.6 Discipline Forge. Follow [implementation status](../implementation-status.md), [adaptations](../computer-game-deltas.md) and [release process](../releases.md).
 
-## Current task — simpler supplies
+## Current task — publish v0.8.6
+
+Bruce requested the patch release. Active issue #124, branch `codex/v086-release`, base `2568232`. See [release handoff](handoffs/2026-11-09-v086-release.md). Version preparation and local qualification are in progress; v0.8.5 remains latest until all installer gates pass. The previous Supplies PR #123 is merged and #122 closed.
+
+## Completed implementation — simpler supplies
 
 Bruce approved the direct-restocking + camp-project design. Issue [#122](https://github.com/bruceamoser/Four-Lanterns-Deep/issues/122), branch `codex/122-simple-supplies`, base `b9ee51f` (all four previous player-feedback PRs #118–#121 are merged).
 
