@@ -173,3 +173,20 @@ test("leaps warn on landing, without incorrectly warning about ground crossed in
   assert.equal(g.pendingMovement, null);
   assert.deepEqual([g.active.x, g.active.z], [7, 4]);
 });
+
+
+test("selecting ready heroes does not commit a turn or apply turn-start effects", () => {
+  const g = arena();
+  const before = g.party.map(h => ({ ownTurn: h.survival.ownTurn, hp: h.survival.hp, powerTurn: h.powerTurn }));
+  g.select(1);
+  assert.equal(g.selected, 1);
+  assert.equal(g.encounter.current, null);
+  g.select(2);
+  assert.equal(g.selected, 2);
+  assert.equal(g.encounter.current, null);
+  assert.deepEqual(g.party.map(h => ({ ownTurn: h.survival.ownTurn, hp: h.survival.hp, powerTurn: h.powerTurn })), before);
+  g.select(0);
+  g.spend("main", "test-commit");
+  assert.equal(g.encounter.current, g.party[0].id);
+  assert.throws(() => g.select(1), /Finish the current/);
+});

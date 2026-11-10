@@ -43,3 +43,7 @@ A single occupied side square permits a one-point diagonal. Solid terrain corner
 ## 2026-11-09 — Direct restocking and camp preparation
 
 Bruce approved the simpler supply design: individual carried consumable dice; one party overview; exact before/after preview and a reviewable Greyhaven restock to a preferred target; deterministic camp projects; shared food/crafting/medicinal ingredients; advanced recipes kept separate. Depletion and one-step combining remain. Ingredient scarcity, paid work periods and camp interruption supply the tension. Relevant specialists improve more tiers while paying every tier's ingredients. See `docs/supplies.md` for chosen costs, migration and source adaptations.
+
+## 2026-11-10 — Simplified camp and progression targets
+
+Bruce supersedes ingredient requirements for basic camp replenishment: no required supplies, hidden success chances improved by relevant training, automatic recipient with manual override. Healing still consumes dressings and wound care remains once per day per wound. Difficulty changes encounter challenge separately. New progression aims for level 2 around depth 4, level 3 around depth 7 and level 4 around depth 11; never remove already-earned levels. Equipment bonus design discussion comes after the other feedback issues.

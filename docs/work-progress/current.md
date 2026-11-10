@@ -2,6 +2,10 @@
 
 Updated: 2026-11-09 (America/New_York).
 
+## Active feedback investigation
+
+Issue #127, active implementation branch `codex/128-turn-selection`. Nine feedback requests are tracked. First turn-selection fix has nine focused tests passing; native qualification/PR review remains. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Accepted: ingredient-free probabilistic basic camp tasks, automatic recipients with override; level2/depth4, level3/depth7, level4/depth11 without reducing earned levels, independent of difficulty. Equipment discussion deferred. Continue independent combat/HUD/route and asset investigation.
+
 ## Delivered
 
 Four Lanterns Deep **v0.8.6** is published as latest: https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.6

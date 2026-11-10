@@ -1621,12 +1621,6 @@ export class Game {
     }
     this.selected = i;
     this.party.forEach((h, j) => (h.selected = i === j));
-    if (
-      this.mode === "combat" &&
-      !this.encounter.current &&
-      this.encounter.nextSide === "players"
-    )
-      this.beginHero();
     this.emit("change");
   }
   occupied(except) {
