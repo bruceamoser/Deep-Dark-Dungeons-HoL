@@ -63,3 +63,9 @@ Bruce requested Blender/useful tools, a DeepSeek worker and review of the propos
 ## 2026-11-10 — Recognizable roster first, refinement second
 
 Bruce accepted the first model pilots with a facial-contrast correction: recolor existing eye/mouth details rather than add geometry. Establish decent, recognizable, animated/equipped models across the roster, then return with high-capability guidance for deeper anatomy/material/detail refinement. Keep editable sources and validate improvements in-game. Broad coverage should not stall on finishing every small detail of the first four creatures.
+
+## 2026-11-10 — Parallel model authors and staged refinement
+
+Bruce explicitly authorized DeepSeek workers on separate models concurrently, with GPT organizing, judging renders and returning concrete revisions. The first three-worker wave demonstrates model authoring, one requested revision and actual-game integration. Bruce accepted these as good first-pass work. Continue recognizable/playable coverage before detailed anatomy/material refinement, preserving editable Blender sources. Do not label first-pass acceptance as final art approval or author review as independent review.
+
+Each job owns its directory and Blender background process; no concurrent edits in the shared MCP scene or source checkout. Organizer alone integrates/merges. Keep the initial concurrency at three workers and use bounded runtimes, kill-after/cleanup and per-job locks. A completed export does not mean its Blender process exited: the first wave exposed shutdown hangs, now documented in the worker process. Raw transcripts/credentials remain local; accepted assets/builders/provenance and progress records are versioned. No automatic paid generation or unlimited swarm.

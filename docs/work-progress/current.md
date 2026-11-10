@@ -2,6 +2,14 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — parallel DeepSeek creature wave
+
+Three concurrent DeepSeek authoring workers completed Stone Knuckle, Kobold Tunnel Scout and Plague Zombie; GPT reviewed/returned one zombie revision and integrated all three. Bruce says these look good for a first pass. Branch `codex/deepseek-creature-wave-01`, base `1244c0a`; [PR #154](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/154) records the checkpoint/merge. See [wave report](../creature-model-wave-01.md), [worker process](../asset-worker-process.md) and [handoff](handoffs/2026-11-10-parallel-creature-workers.md). Fit scores 83/77/73 are scoped editorial identity scores, with explicit remaining art gaps. The historical full-roster audit remains unchanged.
+
+358 tests, portable byte-identical Blender rebuilds, separate Three.js/game-clip review, native seven-model/five-pose visibility checks, 58 creature adapters/17 conditions and exact sandboxed Linux launcher/save/close checks pass. Audio muted. Checkout launcher refreshed (version label 0.8.7); installed package/public release unchanged. Windows desktop interaction untested here. No worker API jobs remain active.
+
+Next: continue bounded parallel batches for failed casts, using one scene/job per worker and organizer review/revision; retain editable sources for later detail refinement. New runner `scripts/toolchain/run_asset_worker.py` has a fake-worker cleanup smoke check but has not itself run a live API job. Raw jobs/rejected renders under `~/.local/share/four-lanterns-workers/2026-11-10-wave-01/` are local-only. Accepted builders, `.blend`, GLBs, provenance and preview travel in Git. Blender shutdown hangs were confined/cleaned; use kill-after bounds and task-owned background processes.
+
 ## Latest follow-up — goblin facial contrast
 
 Bruce accepted the first pilots except the monochrome goblin face. Existing eye/brow/mouth/tusk/jewelry geometry now has contrasting vertex colours, preserving the original source and rig with no added facial meshes. See the follow-up in [pilot report](../creature-model-pilots.md) and [handoff](handoffs/2026-11-10-goblin-face-contrast.md). The current launcher includes this change; local tests remain muted.

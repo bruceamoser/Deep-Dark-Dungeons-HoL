@@ -345,9 +345,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       head.add(pan);
     }
   }
-  if (enemy && name === "Wererat") {
+  if (enemy && ["Wererat", "KoboldScout"].includes(name)) {
     const tails = [...bones.values()]
-      .filter((b) => /^tail_/.test(b.name))
+      .filter((b) => /^tail(?:_|[1-4]$)/.test(b.name))
       .map((b) => ({ b, rest: b.quaternion.clone() }));
     const turn = new T.Quaternion(),
       axis = new T.Vector3(0, 0, 1);

@@ -4,6 +4,10 @@ export async function verifyCreaturePilots(page) {
   const saved = await page.evaluate(() =>
     structuredClone(window.__ddd.game.snapshot()),
   );
+  const camera = await page.evaluate(() => {
+    const { zoom, angle, follow } = window.__ddd.scene;
+    return { zoom, angle, follow };
+  });
   try {
     await page.evaluate(() => {
       const { game: g, scene: s, C } = window.__ddd;
@@ -35,6 +39,9 @@ export async function verifyCreaturePilots(page) {
         "wererat",
         "clay-helper",
         "air-elemental",
+        "stone-knuckle",
+        "kobold-tunnel-scout",
+        "plague-zombie",
       ];
       g.enemies = ids.map((id, i) => {
         const c = C.creatures.creatures.find((c) => c.id === `creature-${id}`);
@@ -45,18 +52,19 @@ export async function verifyCreaturePilots(page) {
           hp: c.hp.max,
           maxHp: c.hp.max,
           cv: c.cv,
-          x: 5 + (i % 2) * 4,
-          z: 5 + Math.floor(i / 2) * 3,
+          x: 5 + (i % 3) * 2,
+          z: 5 + Math.floor(i / 3) * 2,
           conditions: [],
         };
       });
       g.emit("floor");
       g.emit("party");
       g.emit("change");
-      s.zoom = 16;
+      s.zoom = 22;
       s.angle = Math.PI / 4;
       s.resize();
-      s.focusOn({ x: 7, z: 7 });
+      s.follow = false;
+      s.focusOn({ x: 7, z: 7 }, false);
     });
     await page.waitForTimeout(1000);
     const inspection = await page.evaluate(() => {
@@ -110,11 +118,15 @@ export async function verifyCreaturePilots(page) {
             pan = e.model.getObjectByName("Saucepan helmet");
           return {
             id: e.data.type,
+            visible: e.group.visible,
             missing,
             poses,
             spear: !!spear,
             pan: !!pan,
-            tail: !!e.model.getObjectByName("tail_0"),
+            tail: !!(
+              e.model.getObjectByName("tail_0") ||
+              e.model.getObjectByName("tail1")
+            ),
             skull: e.model
               .getObjectsByProperty("isMesh", true)
               .some((o) => /skull/i.test(o.name)),
@@ -124,9 +136,10 @@ export async function verifyCreaturePilots(page) {
           };
         });
     });
-    expect(inspection).toHaveLength(4);
+    expect(inspection).toHaveLength(7);
     for (const e of inspection) {
       expect(e.missing, e.id).toEqual([]);
+      expect(e.visible, e.id + " is actually visible in the scene").toBe(true);
       expect(
         new Set(e.poses.map((p) => Math.round(p.fingerprint * 1000))).size,
         e.id + " changes pose",
@@ -140,6 +153,7 @@ export async function verifyCreaturePilots(page) {
     expect(inspection[1].tail).toBe(true);
     expect(inspection[3].wind).toBe(7);
     expect(inspection[3].skull).toBe(false);
+    expect(inspection[5].tail).toBe(true);
     for (const [name, label] of [
       ["Idle", "idle"],
       ["Walking_A", "walk"],
@@ -166,11 +180,16 @@ export async function verifyCreaturePilots(page) {
       JSON.stringify(inspection),
     );
   } finally {
-    await page.evaluate((saved) => {
-      const g = window.__ddd.game;
-      g.load(saved, { resume: false });
-      g.emit("floor");
-      g.emit("change");
-    }, saved);
+    await page.evaluate(
+      ({ saved, camera }) => {
+        const { game: g, scene: s } = window.__ddd;
+        g.load(saved, { resume: false });
+        g.emit("floor");
+        g.emit("change");
+        Object.assign(s, camera);
+        s.resize();
+      },
+      { saved, camera },
+    );
   }
 }
