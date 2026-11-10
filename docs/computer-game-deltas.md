@@ -306,3 +306,7 @@ Identity-driven combat goals replace nearest-target-only behavior. All printed m
 ## November 9 player movement consent
 
 Fire and harmful magical traps require explicit player consent before normal movement, coordinated party approaches, walking powers, swaps or dangerous landings commit their costs. Leaps/teleports inspect the landing rather than skipped ground. Confirmation covers only the reviewed field/cell/hero combinations. Newly encountered hazards pause remaining travel, and resuming an already-paid route does not pay again. Saved routes are rechecked after load; no silent consent is persisted. Forced enemy displacement retains its existing rules.
+
+## November 9 diagonal occupancy
+
+A single actor in a side square no longer turns a one-point diagonal into a two-step detour. The destination must remain free, both blocked side squares close the gap, and either solid wall/obstacle corner still blocks diagonal passage. Difficult terrain costs remain unchanged. This refines the original geometry adaptation without adding free movement or changing opportunity reach.

@@ -179,8 +179,9 @@ export function neighbors(map, p, blocked = new Set()) {
         wallAt(map, p.x, p.z + dz) ||
         map.obstacles?.[key(p.x + dx, p.z)] ||
         map.obstacles?.[key(p.x, p.z + dz)] ||
-        blocked.has(key(p.x + dx, p.z)) ||
-        blocked.has(key(p.x, p.z + dz)))
+        // A single side occupant does not fill the open diagonal. Two side
+        // occupants still close that gap; solid terrain always blocks corners.
+        (blocked.has(key(p.x + dx, p.z)) && blocked.has(key(p.x, p.z + dz))))
     )
       continue;
     result.push({ x, z });

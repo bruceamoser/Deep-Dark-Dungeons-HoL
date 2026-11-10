@@ -35,7 +35,9 @@ Bruce reported field abilities from character sheets (#114), diagonal movement (
 
 #114 merged in PR #118 (`1a0ea6e`): inspected-hero field actions, validated town/dungeon companion picker, actual Forge descriptions. All 298 baseline unit tests and focused native checks pass.
 
-Active branch: `codex/116-hazardous-movement`, based on `1a0ea6e`. Harmful routes require confirmation before paying; formation followers, click-to-interact approaches, walking powers, swaps and hazardous landings are included. New hazards pause travel; confirmation rechecks state and does not repay an already-started route. Focused tests and final rebuilt native check are in progress. #115 clarification received: the reported diagonal was a combat mouse click. Open one-point diagonal clicks pass native verification; investigate edge cases after #116. #117 is still pending. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
+#116 merged in PR #119 (`21e8945`): party-wide hazardous-route consent, movement-power/landing checks, preserved approach intent and new-hazard pauses. Eight focused safety tests, final rebuilt native field/movement regression and both CI jobs pass.
+
+Active branch: `codex/115-diagonal-occupants`, based on `21e8945`. Bruce clarified the reported diagonal was a combat mouse click. Found that one occupied side square incorrectly forced a detour. Open diagonals already worked; now one side occupant permits a one-point diagonal, while wall/obstacle corners, occupied destinations and two blocked side squares remain blocked. Unit/native checks are in progress. #117 creature self-preservation/printed ally care remains next. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
 
 ## Transfer gaps
 
