@@ -203,24 +203,23 @@ export function creatureAppearance(assets, data, bow) {
   body.updateMatrixWorld(true);
   const box = new T.Box3().setFromObject(body),
     height = box.max.y - box.min.y;
-  const desired =
-    look.model === "Bat"
-      ? 0.9
-      : look.model === "Wolf"
-        ? 1.05
-        : look.model === "Rat"
-          ? 0.65
-          : look.model === "Spider"
-            ? 0.8
-            : look.model === "Ooze"
-              ? 0.9
-              : look.theme === "goblins" || look.theme === "kobolds"
-                ? 1.25
-                : 1.8;
+  const desired = ["Bat", "CaveBat"].includes(look.model)
+    ? 0.9
+    : look.model === "Wolf"
+      ? 1.05
+      : look.model === "Rat"
+        ? 0.65
+        : look.model === "Spider"
+          ? 0.8
+          : look.model === "Ooze"
+            ? 0.9
+            : look.theme === "goblins" || look.theme === "kobolds"
+              ? 1.25
+              : 1.8;
   const scale = desired / Math.max(0.1, height);
   body.scale.multiplyScalar(scale);
   body.position.y -= box.min.y * scale;
-  if (look.model === "Bat" || look.model === "Ghost") body.position.y += 0.35;
+  if (["Bat", "CaveBat", "Ghost"].includes(look.model)) body.position.y += 0.35;
   if (data.type === "creature-clay-helper") root.scale.multiplyScalar(0.65);
   if (data.type === "creature-dire-wolf") root.scale.multiplyScalar(1.15);
   if (data.type === "creature-cinder-imp") root.scale.multiplyScalar(0.7);

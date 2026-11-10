@@ -2,13 +2,23 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — lowest-rated creature wave 02
+
+Bruce requested another parallel DeepSeek batch from the lowest remaining fit scores. Cave Bat (0→78), Animated Statue (2→80) and Kobold Emberkeeper (9→80) are integrated after organizer review and four requested revision jobs. Three authoring jobs ran concurrently; the exact bounded runner now passes live authoring and revision paths. Branch `codex/deepseek-creature-wave-02`, base `4f52b62`; see Git/PR history for checkpoint/merge. [Wave report](../creature-model-wave-02.md), [provenance](../creature-wave-02-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-02.md).
+
+Bat invisibility was fully transparent palette alpha, now repaired/recolored with original geometry/skin/animation payloads preserved. Statue is a civic guardian with authored spear/shield. Emberkeeper has wing/robe identity and an upright, short suspended brazier with floor contact in low poses. Original inputs/rules/creature IDs unchanged. All three have portable builders and editable Blender sources; this remains first-pass art with explicit gaps.
+
+358 tests, three portable rebuilds, separate Three.js/pixel/pose review and muted native checks pass: ten updated creatures, five baseline states (bat shares idle/movement flight), emberkeeper spellcast plus finite measured cup bounds/orientation, 58 adapters/17 conditions, sandboxed exact launcher/save/close. Corrected a test that measured a group rather than mesh children and moved a test-scene entrance prop that obscured a model; rerun screenshots show all ten. Checkout launcher refreshed, still 0.8.7; installed/public release unchanged. Windows packaging/interaction not run for this batch.
+
+Next lowest candidates: Cinder Strider (11), Kobold Trapkeeper (14), Emberling (16), verifying current scores before the next assignment. Keep three-worker cap, isolated jobs/scenes, organizer render/revision gate, quiet QA and editable sources. Raw wave-02 jobs under `~/.local/share/four-lanterns-workers/2026-11-10-wave-02/` are local-only; no worker API or task-owned Blender process remains. Accepted sources/assets/docs travel in Git. Full-roster high-end refinement remains unfinished.
+
 ## Latest work — parallel DeepSeek creature wave
 
 Three concurrent DeepSeek authoring workers completed Stone Knuckle, Kobold Tunnel Scout and Plague Zombie; GPT reviewed/returned one zombie revision and integrated all three. Bruce says these look good for a first pass. Branch `codex/deepseek-creature-wave-01`, base `1244c0a`; [PR #154](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/154) records the checkpoint/merge. See [wave report](../creature-model-wave-01.md), [worker process](../asset-worker-process.md) and [handoff](handoffs/2026-11-10-parallel-creature-workers.md). Fit scores 83/77/73 are scoped editorial identity scores, with explicit remaining art gaps. The historical full-roster audit remains unchanged.
 
 358 tests, portable byte-identical Blender rebuilds, separate Three.js/game-clip review, native seven-model/five-pose visibility checks, 58 creature adapters/17 conditions and exact sandboxed Linux launcher/save/close checks pass. Audio muted. Checkout launcher refreshed (version label 0.8.7); installed package/public release unchanged. Windows desktop interaction untested here. No worker API jobs remain active.
 
-Next: continue bounded parallel batches for failed casts, using one scene/job per worker and organizer review/revision; retain editable sources for later detail refinement. New runner `scripts/toolchain/run_asset_worker.py` has a fake-worker cleanup smoke check but has not itself run a live API job. Raw jobs/rejected renders under `~/.local/share/four-lanterns-workers/2026-11-10-wave-01/` are local-only. Accepted builders, `.blend`, GLBs, provenance and preview travel in Git. Blender shutdown hangs were confined/cleaned; use kill-after bounds and task-owned background processes.
+Next: continue bounded parallel batches for failed casts, using one scene/job per worker and organizer review/revision; retain editable sources for later detail refinement. Runner `scripts/toolchain/run_asset_worker.py` initially passed a fake-worker cleanup smoke check; its live paths are now verified by wave 02. Raw jobs/rejected renders under `~/.local/share/four-lanterns-workers/2026-11-10-wave-01/` are local-only. Accepted builders, `.blend`, GLBs, provenance and preview travel in Git. Blender shutdown hangs were confined/cleaned; use kill-after bounds and task-owned background processes.
 
 ## Latest follow-up — goblin facial contrast
 
