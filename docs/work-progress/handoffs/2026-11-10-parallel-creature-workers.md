@@ -20,7 +20,7 @@ Parallelize different assets in isolated scenes; organizer alone accepts/integra
 
 358 unit tests pass; all three portable builders rerun byte-identically; GLB reimport inspections show no unweighted/loose vertices or zero-area faces. Separate Three.js front/side/back/pose checks and actual appearance-factory captures inspected. Native checks pass through exact `launch-game.sh`, terminal-matching AppArmor/SUID sandbox, `--mute-audio`: seven authored creatures, distinct finite idle/walk/attack/hit/death poses, actual visibility, all 58 creature adapters/17 condition layers, isolated save and window-close handshake. Build command `npm run package:dir` refreshes checkout runtime only, still labeled 0.8.7. Logs `/tmp/fld-wave01-{tests,package,native,native-pilots}.log`.
 
-A test-scene layout initially left several actors outside party vision; compact layout/visibility assertions fixed and rerun. Finished Blender processes sometimes hung on shutdown; only task-owned background processes were cleaned. New runner's fake-worker descendant-cleanup smoke passes, Python/JS syntax passes. That exact wrapper has not run a live API job. Windows desktop interaction remains untested locally; repository installer CI is separate evidence.
+A test-scene layout initially left several actors outside party vision; compact layout/visibility assertions fixed and rerun. Finished Blender processes sometimes hung on shutdown; only task-owned background processes were cleaned. New runner's fake-worker descendant-cleanup smoke passes, Python/JS syntax passes. That exact wrapper has not run a live API job. Windows packaging and desktop interaction were not run for this wave; PR CI checks rules and the browser build.
 
 ## Remaining and next steps
 
@@ -32,4 +32,4 @@ Raw jobs, prompts, rejected/accepted review renders and event usage: `~/.local/s
 
 ## Sync status
 
-Intended checkpoint is the work branch above; verify origin/PR state using the personal `gh-project` helper and Git history. Never infer synchronization from a local file. Commit/push/author-review/merge occur after these records are written; final delivery reports their observed result.
+Implementation checkpoint `28307e444428a3a436acac5ddda75e59c504675f` was pushed and verified at `origin/codex/deepseek-creature-wave-01`. [PR #154](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/154) carries this work. Its CI/merge state is recorded in GitHub/history rather than predicted here. The final handoff-document clarification follows on the same branch; delivery verifies the resulting remote checkpoint and observed merge result. No credentials/raw worker transcripts are in the checkpoint.
