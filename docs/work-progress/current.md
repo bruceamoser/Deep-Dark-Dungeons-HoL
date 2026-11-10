@@ -33,7 +33,9 @@ Native checks run from the user systemd session then `aa-exec -p unconfined`: th
 
 Bruce reported field abilities from character sheets (#114), diagonal movement (#115), hazardous-route confirmation (#116) and creature self-preservation/ally care (#117). Work follows issue → branch → PR → author review/checks → merge → next issue. No new release has been published for these fixes.
 
-Active branch: `codex/114-sheet-field-abilities`, based on `23396f5`. The inspected hero now initiates their own actions; field ally powers open a validated companion picker in town and dungeon. All 298 unit tests and focused native field-action checks pass; PR #118 is under author review. Continue with #115–#117 after this PR passes and merges. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
+#114 merged in PR #118 (`1a0ea6e`): inspected-hero field actions, validated town/dungeon companion picker, actual Forge descriptions. All 298 baseline unit tests and focused native checks pass.
+
+Active branch: `codex/116-hazardous-movement`, based on `1a0ea6e`. Harmful routes require confirmation before paying; formation followers, click-to-interact approaches, walking powers, swaps and hazardous landings are included. New hazards pause travel; confirmation rechecks state and does not repay an already-started route. Focused tests and final rebuilt native check are in progress. #115 clarification received: the reported diagonal was a combat mouse click. Open one-point diagonal clicks pass native verification; investigate edge cases after #116. #117 is still pending. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
 
 ## Transfer gaps
 

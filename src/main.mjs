@@ -261,6 +261,7 @@ async function init() {
   );
   await townView.load();
   game.listeners.push((type, data) => {
+    if (type === "movement-warning") queueMicrotask(showMovementWarning);
     if (type === "camp-open") queueMicrotask(() => action("camp"));
     if (type === "feedback" && !modal.querySelector(".dungeon-camp"))
       scene.floatingText(data);
@@ -868,6 +869,36 @@ function clickTile(p, interactionId, event) {
       else worldMenu(interactionId, event);
     } else game.move(p);
   });
+}
+function showMovementWarning() {
+  const plan = game.pendingMovement;
+  if (!plan) return;
+  const affected = new Map();
+  for (const h of plan.hazards) {
+    const label =
+      h.kind === "fire" ? "Burning ground" : "Harmful magical field";
+    const k = `${h.hero}:${h.kind}`;
+    const entry = affected.get(k) ?? { name: h.name, label, count: 0 };
+    entry.count++;
+    affected.set(k, entry);
+  }
+  dialog(
+    "Hazardous route",
+    `<p>This route crosses harmful ground. Continue only if you want these companions to enter it.</p><ul>${[...affected.values()].map((h) => `<li><strong>${esc(h.name)}</strong> · ${h.label} · ${h.count} square${h.count === 1 ? "" : "s"}</li>`).join("")}</ul><p>${plan.paid ? "Travel is paused before entering the new hazard." : "No movement or actions have been spent."}</p><div class="dialog-actions"><button id="cancel-hazard-route">Cancel</button><button id="confirm-hazard-route">Cross hazardous ground</button></div>`,
+  );
+  modal.querySelector("section").setAttribute("aria-label", "Hazardous route");
+  modalCleanup = () => {
+    game.cancelMovement();
+    scene.showPath([]);
+  };
+  modal.querySelector("#cancel-hazard-route").onclick = closeModal;
+  modal.querySelector("#confirm-hazard-route").onclick = () => {
+    modalCleanup = null;
+    closeModal();
+    attempt(() => game.confirmMovement());
+  };
+  scene.showPath(plan.routes.values().next().value ?? []);
+  modal.querySelector("#cancel-hazard-route").focus();
 }
 function worldMenu(id, event) {
   const item = game.worldInteractions().find((i) => i.id === id);

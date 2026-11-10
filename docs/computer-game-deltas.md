@@ -302,3 +302,7 @@ Each effective rank I–III adds a small personal bonus: Wilderness +1 point eac
 ## November 9 tactical creature decisions
 
 Identity-driven combat goals replace nearest-target-only behavior. All printed main entries are considered, including third attacks and printed nonconsecutive-turn limits. Creature maneuvers, weighted positioning, taunts, visible targets, legal reaction exemptions, ally support and cone friendly fire now affect decisions. Printed statistics and encounter CV are unchanged. Creature action messages are plain outcomes. Game-owned Main Action Break free and Clear caltrops provide counterplay to maintained wolf holds and persistent caltrops. See [creature AI](creature-ai.md) for exact coverage, perception constraints, NPC collateral adaptation and intentional omissions. This supersedes the old first-specialty/Study-or-Defend AI policy.
+
+## November 9 player movement consent
+
+Fire and harmful magical traps require explicit player consent before normal movement, coordinated party approaches, walking powers, swaps or dangerous landings commit their costs. Leaps/teleports inspect the landing rather than skipped ground. Confirmation covers only the reviewed field/cell/hero combinations. Newly encountered hazards pause remaining travel, and resuming an already-paid route does not pay again. Saved routes are rechecked after load; no silent consent is persisted. Forced enemy displacement retains its existing rules.

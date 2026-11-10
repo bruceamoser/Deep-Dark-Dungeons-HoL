@@ -482,7 +482,7 @@ export const powerMethods = {
       return "Ammunition exhausted.";
     return "";
   },
-  usePower(id, target) {
+  usePower(id, target, options = {}) {
     const h = this.active,
       reason = this.powerReason(id, h);
     if (reason) throw new Error(reason);
@@ -491,6 +491,8 @@ export const powerMethods = {
       target,
       h,
     );
+    if (this.checkPowerMovement(id, target, { spec, point, route }, options))
+      return;
     if (this.mode === "combat") {
       this.spend(spec.category, id);
       if (
@@ -499,6 +501,7 @@ export const powerMethods = {
           kind: "ability",
           id,
           target,
+          options,
           label: spec.spell ? "casting" : "retrieving a supply",
         })
       )
