@@ -2071,8 +2071,10 @@ export class Game {
     }
     if (
       !this.enemyDanger(e, e) &&
-      !e.conditions?.some((c) =>
-        ["burning", "freezing", "bleeding"].includes(c.key),
+      !e.conditions?.some(
+        (c) =>
+          c.persistence === "temporary" &&
+          ["burning", "freezing", "bleeding"].includes(c.key),
       ) &&
       this.enemyCare(e, { othersOnly: true })
     ) {

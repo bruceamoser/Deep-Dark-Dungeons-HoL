@@ -116,6 +116,15 @@ test("burning creatures seek reachable water and extinguish through normal surfa
   assert.equal(R.conditionSummary(e.conditions).burning.rating, 0);
 });
 
+test("water does not attract creatures whose Burning comes only from a starred wound", () => {
+  const { g, e } = fixture();
+  Object.assign(g.party[0], { x: 6, z: 5 });
+  e.conditions = [condition("burning", 3, "starred")];
+  field(g, [{ x: 4, z: 5 }], "water");
+  const points = g.enemyPlanMovement(e, g.party[0], g.creatureAction(e));
+  assert.ok(!points.length || points.at(-1).x !== 4 || points.at(-1).z !== 5);
+});
+
 test("condition aid costs the Main action, supports an adjacent ally and preserves persistent sources", () => {
   const { g, e } = fixture("orc-warcaller"),
     ally = enemy("orc-shieldbreaker", "ally", 6, 5);

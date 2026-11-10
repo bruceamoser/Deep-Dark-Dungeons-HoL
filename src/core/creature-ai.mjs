@@ -76,6 +76,10 @@ const conscious = (h) =>
   h.survival ? h.survival.status === "active" : h.hp > 0;
 const status = (h, name) =>
   (h.conditions ?? []).some((c) => c.key === name && c.rating !== 0);
+const temporaryStatus = (h, name) =>
+  (h.conditions ?? []).some(
+    (c) => c.key === name && c.persistence === "temporary" && c.rating > 0,
+  );
 export function coneCells(origin, toward, rows = 3) {
   const dx = toward.x - origin.x,
     dz = toward.z - origin.z;
@@ -284,7 +288,8 @@ export const creatureAiMethods = {
       }
       if (style === "skirmisher")
         n -= threats.filter((t) => distance(p, t) <= 1).length * 2;
-      if (status(e, "burning") && surfaceAt(this.map, p, "water")) n += 80;
+      if (temporaryStatus(e, "burning") && surfaceAt(this.map, p, "water"))
+        n += 80;
       if (exits.length) n -= Math.min(...exits.map((q) => distance(p, q))) * 30;
       n -= danger(p) * 8 + p.cost * 0.3;
       return n;
@@ -391,7 +396,9 @@ export const creatureAiMethods = {
         ranged = reach >= 4;
       const safety =
         -this.enemyDanger(e, p) * 50 +
-        (status(e, "burning") && surfaceAt(this.map, p, "water") ? 80 : 0);
+        (temporaryStatus(e, "burning") && surfaceAt(this.map, p, "water")
+          ? 80
+          : 0);
       if (ranged)
         return (
           safety +

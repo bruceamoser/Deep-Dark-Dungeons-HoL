@@ -38,6 +38,7 @@ export async function verifyReactiveCounters(page) {
         "ability-shield-block",
       );
       g.useAbility("power-retaliating-guard");
+      g.enemyManeuver(g.enemies[0]);
       g.enemyAttack(g.enemies[0], h);
     });
     await expect(
