@@ -75,7 +75,7 @@ export async function verifyMovementSafety(page) {
         window.__ddd.scene.focus.distanceTo(window.__ddd.scene.targetFocus) <
         0.001,
     );
-    const target = await page.evaluate(() => {
+    let target = await page.evaluate(() => {
       const s = window.__ddd.scene,
         v = s.camera.position
           .clone()
@@ -164,6 +164,23 @@ export async function verifyMovementSafety(page) {
       });
       g.emit("floor");
       g.emit("change");
+      window.__ddd.scene.focusOn(g.active);
+    });
+    await page.waitForFunction(
+      () =>
+        window.__ddd.scene.focus.distanceTo(window.__ddd.scene.targetFocus) <
+        0.001,
+    );
+    target = await page.evaluate(() => {
+      const s = window.__ddd.scene,
+        v = s.camera.position
+          .clone()
+          .set(6 * 2.4, 0, 4 * 2.4)
+          .project(s.camera);
+      return {
+        x: ((v.x + 1) * innerWidth) / 2,
+        y: ((1 - v.y) * innerHeight) / 2,
+      };
     });
     await page.mouse.move(target.x, target.y);
     await expect(page.locator("#world-hint")).toContainText("Move · 1 / 1");
