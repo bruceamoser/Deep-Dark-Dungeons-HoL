@@ -29,3 +29,5 @@ Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero 
 #133 merged PR140: full gallery and final CI pass; optional new Dungeon Mason Monster Bundle candidate linked to Bruce, not purchased. #134 adds per-journey Story/Adventurer/Veteran/Perilous, future-floor/wanderer budgets, no printed-stat or direct XP multiplier. Qualification in progress. XP calibration sampled 30 seeds ×10 floors: 70% cumulative XP after floors3/6/10 ≈9579/32380/85784.
 
 #134 merged PR141 with seeded population, native settings/save and CI passing. #135 uses measured 10k/32.5k/85k early XP thresholds, increasing later costs, curve3 migration preserves earned levels/fraction across party/reserve/fallen. Seventy-four focused tests pass. Training UI fixtures now award the corresponding new thresholds; qualification ongoing.
+
+#135 latest rules/build CI passes. Native respec passes; Forge level30-gate fixture still awarded the former capped-curve amount, so its valid earned-level guard rejected training. Updated that fixture to xpForLevel(30); rerunning remaining Forge/roster/controls. No gameplay failure hidden or guard weakened.
