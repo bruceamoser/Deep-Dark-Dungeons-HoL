@@ -2,6 +2,12 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest follow-up — goblin facial contrast
+
+Bruce accepted the first pilots except the monochrome goblin face. Existing eye/brow/mouth/tusk/jewelry geometry now has contrasting vertex colours, preserving the original source and rig with no added facial meshes. See the follow-up in [pilot report](../creature-model-pilots.md) and [handoff](handoffs/2026-11-10-goblin-face-contrast.md). The current launcher includes this change; local tests remain muted.
+
+Bruce approved recognizable/playable roster coverage first, then a high-capability detail-refinement pass. Continue that staged approach rather than over-polish only the first four.
+
 ## Latest work — first creature model pilots
 
 Bruce authorized updating models. Goblin Spearhand now has a spear/pan, Wererat has rat anatomy/tail/thief clothing, Clay Helper is a grounded clay humanoid, and Air Elemental is a hollow animated wind vortex. Original sources and game rules are untouched. See [pilot report](../creature-model-pilots.md), [provenance](../creature-pilots-provenance.json) and [handoff](handoffs/2026-11-10-creature-model-pilots.md). Pilot fit scores: 66/77/76/85 respectively, with explicit remaining art gaps; no claim of final art approval.

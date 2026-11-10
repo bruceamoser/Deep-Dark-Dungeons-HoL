@@ -59,3 +59,9 @@ AUDIT_OUT=test-results/creature-model-pilots node scripts/creature-fit-capture.m
 The local `comparison.html` includes book/front/rear views and fixed review scores. `game-{idle,walk,attack,hit,death}.png` captures the actual-game fixture. These QA outputs are ignored; the model-only lineup and authored sources travel in Git. Source-book illustration rights remain unchanged.
 
 A bounded read-only DeepSeek worker reviewed provenance, the inspector, pose check and report. Its useful findings led to all-vertex/distinct-state checks, N/A weight metadata for unskinned assets and explicit material counts/measurement limits. It did not review art/images or independently rerun native QA; source test/security evidence lives in the main harness and logs, outside its four supplied files.
+
+## Facial-contrast follow-up
+
+Bruce accepted the first pilots but noted that the goblin's monochrome face hid its details. The existing untextured Orc Raider head now gets vertex colours for eye whites/pupils, brows, mouth, tusks and bronze nose/ear jewelry. No extra facial meshes or new GLB are added. The head geometry is cloned for instance ownership; original positions, UVs, skin weights, rig and source asset remain intact. Textured replacement heads bypass this palette pass. Other green Orc Raider goblin variants receive the same contrast; Orc Brute/boss and warband casts are outside this patch.
+
+Bruce approved a staged art direction: bring the roster to recognizable, playable models first, then revisit detail/anatomy/materials with a high-capability model. Preserve editable sources and verify each refinement visually and in motion rather than treating model capability as an automatic quality guarantee.
