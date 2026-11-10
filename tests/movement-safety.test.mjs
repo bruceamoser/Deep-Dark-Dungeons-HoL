@@ -190,3 +190,15 @@ test("selecting ready heroes does not commit a turn or apply turn-start effects"
   assert.equal(g.encounter.current, g.party[0].id);
   assert.throws(() => g.select(1), /Finish the current/);
 });
+
+
+test("hover preview matches movement route and reports actionable opportunity risks without spending", () => {
+ const g=arena();g.enemies[0].reactionUsed=false;
+ const before=g.movementLeft(),to={x:6,z:4};field(g,to);
+ const preview=g.movementPreview(to);
+ assert.deepEqual(preview.routes.get(g.active.id),g.movementPlan(to).routes.get(g.active.id));
+ assert.ok(preview.hazards.some(h=>h.kind==="fire"));
+ assert.ok(preview.opportunities.some(h=>h.enemy===g.enemies[0].id));
+ assert.equal(g.encounter.current,null);assert.equal(g.movementLeft(),before);assert.equal(g.paths.size,0);
+ g.enemies[0].reactionUsed=true;assert.equal(g.movementPreview(to).opportunities.length,0);
+});

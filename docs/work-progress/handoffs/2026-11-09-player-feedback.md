@@ -19,3 +19,5 @@ Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero 
 2026-11-10: #128 native selection, hazard/diagonal movement, combat controls and reactive counters pass. The combined selected-check sequence reached save-slots after prior fixture removed enemies, so its encounter setup had no enemy; rerunning save-slots on a fresh isolated profile. Code CI passes 332 tests. Added actual pointer selection coverage. Next issues: #130 HUD, #131 route risks, #132 camp, #133 creature visuals, #134 difficulty, #135 progression, #136 area archery. Equipment discussion remains last.
 
 #128 completed in PR129 with passing latest-head CI and isolated native saves. #130 adds current Speed/physical DR to party-card vitals, wrapping for compact widths; desktop coverage checks values for all four heroes.
+
+#130 merged in PR137 after native value/layout inspection and CI. #131 implements preview from actual movementPlan, visible route rings/line, damage and actionable opportunity markers, read-only hover. Hazard confirmation remains. Focused/unit and native risk checks pending.

@@ -1,4 +1,4 @@
-import { key } from "./dungeon.mjs";
+import { key, distance, lineOfSight } from "./dungeon.mjs";
 import { surfacesAt } from "./battlefield.mjs";
 import { formationRoutes } from "./formations.mjs";
 
@@ -25,6 +25,23 @@ export function routeHazards(map, party, routes) {
 }
 
 export const movementSafetyMethods = {
+  movementPreview(to) {
+    const plan = this.movementPlan(to);
+    if (!plan) return null;
+    const hazards = routeHazards(this.map, this.party, plan.routes);
+    const opportunities = [];
+    if (this.mode === "combat" && !this.budgets[this.active.id]?.disengaged && !this.tacticValue(this.active, "disengage")) {
+      const points = plan.routes.get(this.active.id) ?? [];
+      for (const foe of this.enemies) {
+        if (!this.canOpportunity(foe) || !this.encounter.roster.some(r => r.id === foe.id && !r.withdrawn)) continue;
+        [this.active, ...points.slice(0,-1)].forEach((from,i) => {
+          if (distance(from,foe)<=1 && distance(points[i],foe)>1 && lineOfSight(this.map,from,foe))
+            opportunities.push({ x: points[i].x, z: points[i].z, enemy: foe.id, name: foe.name });
+        });
+      }
+    }
+    return { ...plan, hazards, opportunities };
+  },
   movementPlan(to) {
     if (!this.route(to).length) return null;
     let cost = 0,
