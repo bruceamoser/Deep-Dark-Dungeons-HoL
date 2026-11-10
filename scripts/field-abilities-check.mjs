@@ -107,7 +107,8 @@ export async function verifyFieldAbilities(page) {
       "Character sheet selects the inspected caster; town/dungeon companion picker validates targets, cancels freely and heals using the caster's dressing.",
     );
   } finally {
-    await page.keyboard.press("Escape");
+    if (await page.locator("#modal-root > *").count())
+      await page.keyboard.press("Escape");
     await page.evaluate((saved) => {
       const g = window.__ddd.game;
       delete g.supplyDie;
