@@ -1,0 +1,68 @@
+{
+  "created": "2026-11-10",
+  "authoring": "Three parallel DeepSeek Flash Codex CLI workers, Blender 5.2.4 LTS; GPT organizer visual/animation review and integration; one requested zombie revision.",
+  "donor": {
+    "file": "public/assets/characters/series4/Ninja.glb",
+    "creator": "Kay Lousberg / KayKit",
+    "license": "CC0-1.0",
+    "licenseFile": "public/assets/characters/LICENSE.txt",
+    "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0"
+  },
+  "originalContributions": "Procedural stone/undead/reptilian geometry, tail, scout props, clothing and materials. Bruce Moser project assets; no new public license assigned. Donor rig preserved; original input files unchanged. No paid/cloud mesh generation.",
+  "assets": [
+    {
+      "name": "StoneKnuckle",
+      "creatureId": "creature-stone-knuckle",
+      "file": "public/assets/creatures/wave-01/StoneKnuckle.glb",
+      "sha256": "80b484390aaff842e196dd481f6a181a9ad75c5af65b13bd0f37c3e651bc3bd4",
+      "editable": "art/source/creatures/StoneKnuckle.blend",
+      "builder": "scripts/toolchain/creature-workers/stone-knuckle.py",
+      "bytes": 491288,
+      "triangles": 2940,
+      "exportedVertices": 8820,
+      "renderMeshes": 1,
+      "materials": 6,
+      "textures": 0,
+      "bones": [23],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 6
+    },
+    {
+      "name": "KoboldScout",
+      "creatureId": "creature-kobold-tunnel-scout",
+      "file": "public/assets/creatures/wave-01/KoboldScout.glb",
+      "sha256": "8ddd4f1c5e947c40aca36962a97aa807891fbe74fa2de856e1c85ad649d2bd1f",
+      "editable": "art/source/creatures/KoboldScout.blend",
+      "builder": "scripts/toolchain/creature-workers/kobold-tunnel-scout.py",
+      "bytes": 314472,
+      "triangles": 5956,
+      "exportedVertices": 5028,
+      "renderMeshes": 1,
+      "materials": 8,
+      "textures": 0,
+      "bones": [27],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 8
+    },
+    {
+      "name": "PlagueZombie",
+      "creatureId": "creature-plague-zombie",
+      "file": "public/assets/creatures/wave-01/PlagueZombie.glb",
+      "sha256": "461f86aa1654bdbec1d62ee389bc3f34111a247bb2354c7f6edc5241680b0b5a",
+      "editable": "art/source/creatures/PlagueZombie.blend",
+      "builder": "scripts/toolchain/creature-workers/plague-zombie.py",
+      "bytes": 193468,
+      "triangles": 3060,
+      "exportedVertices": 3066,
+      "renderMeshes": 1,
+      "materials": 7,
+      "textures": 0,
+      "bones": [23],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 7
+    }
+  ]
+}

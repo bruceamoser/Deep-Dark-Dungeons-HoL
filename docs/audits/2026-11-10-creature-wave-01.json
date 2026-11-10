@@ -1,0 +1,44 @@
+{
+  "gameCommit": "codex/deepseek-creature-wave-01 (base 1244c0a; accepted wave 1)",
+  "weights": [30, 15, 20, 15, 10, 10],
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "rows": [
+    {
+      "id": "creature-stone-knuckle",
+      "name": "Stone Knuckle",
+      "scores": [4, 4, 4, 5, 3, 5],
+      "raw": 83,
+      "score": 83,
+      "cap": null,
+      "before": 6,
+      "notes": "Grounded boulder core, broad blunt fists and planted stone feet replace the winged/floating proxy. Individual stones and moss are simplified; pose-tested joints remain visibly assembled."
+    },
+    {
+      "id": "creature-kobold-tunnel-scout",
+      "name": "Kobold Tunnel Scout",
+      "scores": [4, 3, 4, 4, 3, 5],
+      "raw": 77,
+      "score": 77,
+      "cap": null,
+      "before": 14,
+      "notes": "Reptilian muzzle, contrasting eyes, horns/ridges, weighted tail, claws, scout clothing, launcher, chalk/twine and ribbon replace the orc proxy. Body is chunkier than the narrow-shouldered illustration; folds, scales and grip detail remain simplified."
+    },
+    {
+      "id": "creature-plague-zombie",
+      "name": "Plague Zombie",
+      "scores": [4, 3, 3, 4, 3, 5],
+      "raw": 73,
+      "score": 73,
+      "cap": null,
+      "before": 23,
+      "notes": "Exposed corpse flesh, hooked claws, dark facial recesses, ragged partial hood and burial strips replace the healthy human costume. Revision corrected floating head and clean-mummy reading. Gauntness, organic anatomy and mottled disease detail still need refinement."
+    }
+  ]
+}

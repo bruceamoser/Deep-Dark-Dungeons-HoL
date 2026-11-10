@@ -79,7 +79,7 @@ test("bosses reference real roster entries", () => {
 });
 
 test("species casting avoids costumes, robot clay servants and monster-bodied goblin/orc casters", () => {
-  assert.equal(CREATURE_ROSTER["creature-plague-zombie"].model, "WerewolfMan");
+  assert.equal(CREATURE_ROSTER["creature-plague-zombie"].model, "PlagueZombie");
   assert.equal(CREATURE_ROSTER["creature-crypt-ghoul"].model, "WerewolfMan");
   assert.equal(CREATURE_ROSTER["creature-animated-statue"].model, "Golem");
   assert.equal(CREATURE_ROSTER["creature-clay-helper"].model, "ClayHelper");

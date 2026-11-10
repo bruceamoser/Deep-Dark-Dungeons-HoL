@@ -19,7 +19,7 @@ const rows = [
   ["goblin-rattlechanter", "OrcRaider", "goblins", 3, "spell"],
   ["goblin-boss", "OrcBrute", "goblins", 4, "melee"],
   ["kobold-trapkeeper", "OrcRaider", "kobolds", 1, "dart"],
-  ["kobold-tunnel-scout", "OrcRaider", "kobolds", 2, "dart"],
+  ["kobold-tunnel-scout", "KoboldScout", "kobolds", 2, "dart"],
   ["kobold-emberkeeper", "OrcRaider", "kobolds", 3, "spell"],
   ["orc-outrider", "OrcRaider", "warband", 2, "melee"],
   ["orc-shieldbreaker", "OrcBrute", "warband", 4, "melee"],
@@ -39,14 +39,14 @@ const rows = [
   ["werebear", "Monstrosity", "beasts", 6, "claw"],
   ["crypt-ghoul", "WerewolfMan", "dead", 3, "claw"],
   ["ghast", "Monstrosity", "dead", 5, "claw"],
-  ["plague-zombie", "WerewolfMan", "dead", 2, "claw"],
+  ["plague-zombie", "PlagueZombie", "dead", 2, "claw"],
   ["mire-ooze", "Ooze", "vermin", 2, "slam"],
   ["animated-armor", "BlackKnight", "constructs", 3, "melee", true],
   ["animated-statue", "Golem", "constructs", 4, "spear"],
   ["clay-helper", "ClayHelper", "constructs", 1, "slam"],
   ["clockwork-scout", "Clanker", "constructs", 1, "dart"],
   ["glass-sentinel", "FrostGolem", "constructs", 3, "spell"],
-  ["stone-knuckle", "Golem", "constructs", 2, "slam"],
+  ["stone-knuckle", "StoneKnuckle", "constructs", 2, "slam"],
   ["icebound-warden", "FrostGolem", "rime", 4, "slam"],
   ["air-elemental", "AirVortex", "elementals", 4, "spell"],
   ["emberling", "Demon", "infernal", 1, "slam"],
@@ -66,6 +66,9 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  PlagueZombie: "/assets/creatures/wave-01/PlagueZombie.glb",
+  StoneKnuckle: "/assets/creatures/wave-01/StoneKnuckle.glb",
+  KoboldScout: "/assets/creatures/wave-01/KoboldScout.glb",
   Wererat: "/assets/creatures/pilots/Wererat.glb",
   ClayHelper: "/assets/creatures/pilots/ClayHelper.glb",
   AirVortex: "/assets/creatures/pilots/AirVortex.glb",
@@ -106,12 +109,16 @@ export const CREATURE_MODELS = {
 };
 
 /**
- * Models loaded from the KayKit character packs. These are complete rigged characters,
+ * Models using the KayKit character rig, including authored creature replacements.
+ * These are complete rigged characters,
  * so they take the same path as the heroes (arms, shields, equipment and the shared
  * animation library). Everything else is a Quaternius animal or construct and goes
  * through the procedural creature path.
  */
 export const HUMANOID_MODELS = new Set([
+  "PlagueZombie",
+  "StoneKnuckle",
+  "KoboldScout",
   "Wererat",
   "ClayHelper",
   "SkeletonWarrior",
