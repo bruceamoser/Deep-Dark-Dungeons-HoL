@@ -4,7 +4,7 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Active feedback investigation
 
-Issue #127, active implementation branch `codex/131-route-preview`. Nine feedback requests are tracked. Turn-selection PR #129 merged after 332-test CI and native checks. HUD Speed/DR #130 merged in PR137. Route preview #131 in progress. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Accepted: ingredient-free probabilistic basic camp tasks, automatic recipients with override; level2/depth4, level3/depth7, level4/depth11 without reducing earned levels, independent of difficulty. Equipment discussion deferred. Continue independent combat/HUD/route and asset investigation.
+Issue #127, active implementation branch `codex/132-simple-camp-duties`. Nine feedback requests are tracked. Turn-selection PR #129 merged after 332-test CI and native checks. HUD Speed/DR #130 merged in PR137. Route preview #131 merged in PR138. Ingredient-free camp #132 in progress. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Accepted: ingredient-free probabilistic basic camp tasks, automatic recipients with override; level2/depth4, level3/depth7, level4/depth11 without reducing earned levels, independent of difficulty. Equipment discussion deferred. Continue independent combat/HUD/route and asset investigation.
 
 ## Delivered
 

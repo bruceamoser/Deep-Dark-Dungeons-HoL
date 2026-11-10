@@ -66,30 +66,33 @@ test("camp saves resume the next period without repeating healing or rewards, re
   assert.throws(() => copy.load(bad, { resume: false }), /camp schedule/);
 });
 
-test("general foraging finds one material per success; crafting consumes compatible materials; gathering water needs a nearby source", () => {
+test("basic food and water duties work without ingredients or a nearby source, with uncertain results", () => {
   const g = quiet(),
     h = g.party[0];
   g.startCamp(plan(g));
-  g.dice = (n = 3) => Array(n).fill(6);
-  const rng = new Random(123);
-  assert.match(g.campDutyReason(h, "cook"), /ingredients/);
-  for (let i = 0; i < 4; i++) g.campDuty(h, "forage", { int: () => 21 });
-  assert.equal(g.materialCount("food"), 16);
   const food = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-food-bundle",
   );
   h.supplies[food.instanceId] = 0;
-  g.campDuty(h, "cook", rng);
+  const t = { heroId: h.heroId, supplyId: food.instanceId };
+  assert.equal(g.campDutyReason(h, "cook", t), "");
+  g.campDuty(h, "cook", { int: () => 100 }, t);
+  assert.equal(h.supplies[food.instanceId], 0);
+  g.campDuty(h, "cook", { int: () => 1 }, t);
   assert.equal(h.supplies[food.instanceId], 4);
-  assert.equal(g.materialCount("food"), 15);
-  g.map.waterSources = [];
-  assert.match(g.campDutyReason(h, "water"), /No water/);
-  g.map.waterSources = [{ x: h.x, z: h.z }];
-  g.campDuty(h, "water", rng);
   const flask = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-water-flask",
   );
-  assert.equal(g.supplyValue(h, flask), 8);
+  h.supplies[flask.instanceId] = 4;
+  g.map.waterSources = [];
+  g.campDuty(
+    h,
+    "water",
+    { int: () => 1 },
+    { heroId: h.heroId, supplyId: flask.instanceId },
+  );
+  assert.equal(g.supplyValue(h, flask), 6);
+  assert.equal(g.materialCount("food"), 0);
 });
 
 test("wandering creatures can interrupt a cleared floor; workers detect, Guard adds a Boon, failed watch is an ambush", () => {
@@ -263,7 +266,7 @@ test("completed camp reports retain actual foraging and healing through save/loa
   assert.equal(report.end[0].hp, 13);
   assert.equal(report.healed[g.party[0].heroId], 12);
   assert.equal(
-    report.events.filter((e) => e.includes("medicinal herbs")).length,
+    report.events.filter((e) => e.includes("replenished dressings")).length,
     4,
   );
   const restored = new Game(R, C);
@@ -283,20 +286,22 @@ test("ending camp early preserves the completed-hour report and rejects corrupt 
   assert.throws(() => new Game(R, C).load(bad), /camp results/);
 });
 
-test("camp store hints identify the recipient of possible gains and update with assignments", () => {
-  const g = quiet();
-  const duties = plan(g);
-  duties[g.party[1].heroId] = ["forage", "guard"];
-  const forecast = g.campForecast(duties, 8);
-  assert.deepEqual(forecast.supplyPotential["item-material-bundle"], [
-    false,
-    true,
-    false,
-    false,
-  ]);
+test("camp store hints identify automatic recipients and disappear when work is removed", () => {
+  const g = quiet(),
+    duties = plan(g),
+    h = g.party[2];
+  const food = h.preview.inventory.items.find(
+    (i) => i.catalogId === "item-food-bundle",
+  );
+  h.supplies[food.instanceId] = 0;
+  duties[g.party[1].heroId] = ["cook", "guard"];
+  assert.deepEqual(
+    g.campForecast(duties, 8).supplyPotential["item-food-bundle"],
+    [false, false, true, false],
+  );
   duties[g.party[1].heroId] = ["guard", "guard"];
   assert.deepEqual(
-    g.campForecast(duties, 8).supplyPotential["item-material-bundle"],
+    g.campForecast(duties, 8).supplyPotential["item-food-bundle"],
     [false, false, false, false],
   );
 });

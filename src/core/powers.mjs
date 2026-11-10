@@ -635,7 +635,7 @@ power(
   2,
   "field-replenishment",
   "Field Replenishment",
-  "Greatly improves finding water, wood, food and fletching materials when foraging. At camp or in town, replenish arrows, torches or food using their recipe and materials. Basic recipes are always known; crafting time is reduced by 25%.",
+  "Greatly improves finding water, wood, food and fletching materials when foraging. At camp, improve the chance to replenish arrows, torches, food or water without ingredients. Advanced recipe crafting time is reduced by 25%.",
   {
     category: "passive",
     target: "self",

@@ -49,39 +49,36 @@ test("learned abilities expand only relevant resource bands and retain a nonzero
   assert.equal(trained.bands.at(-1).chance, 15);
   for (const b of trained.bands.slice(0, -1)) assert.ok(b.chance >= b.base);
 });
-test("general foraging grants one ingredient category, finds water, respects empty rolls, and persists results without a floor cap", () => {
+test("general foraging improves one useful supply, can find nothing, and saves actual outcomes", () => {
   const g = fresh();
   g.mode = "exploration";
   g.enemies = [];
   g.startCamp(plan(g));
   const h = g.party[0];
   for (const r of FORAGE_RESOURCES.filter((r) => r.recipe)) {
-    const band = g.campForageTable(h).bands.find((b) => b.id === r.id);
     const spec = stockForRecipe(r.recipe),
-      before = g.materialCount(spec.material);
+      band = g.campForageTable(h).bands.find((b) => b.id === r.id);
+    const before = JSON.stringify(g.party.map((h) => h.supplies));
     g.campForage(h, { int: () => band.start });
-    assert.equal(
-      g.materialCount(spec.material),
-      before + restockCost(0, spec.normal),
-    );
+    assert.notEqual(JSON.stringify(g.party.map((h) => h.supplies)), before);
+    assert.equal(g.materialCount(spec.material), 0);
   }
-  const before = g.materialCount("food");
+  const before = JSON.stringify(g.party.map((h) => h.supplies));
   g.campForage(h, { int: () => 100 });
-  assert.equal(g.materialCount("food"), before);
-  for (let i = 0; i < 6; i++) g.campForage(h, { int: () => 25 });
-  assert.ok(g.materialCount("food") > 12);
-  g.map.waterSources = [];
+  assert.equal(JSON.stringify(g.party.map((h) => h.supplies)), before);
   const flask = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-water-flask",
   );
   h.supplies[flask.instanceId] = 4;
+  g.map.waterSources = [];
   g.campForage(h, { int: () => 1 });
-  assert.equal(g.supplyValue(h, flask), 8);
-  assert.equal(g.campWaterSource(), true);
+  assert.equal(g.supplyValue(h, flask), 6);
   const copy = new Game(R, C);
   copy.load(structuredClone(g.snapshot()), { resume: false });
-  assert.equal(copy.materialCount("food"), g.materialCount("food"));
-  assert.equal(copy.map.waterSources.length, 1);
+  assert.deepEqual(
+    copy.party.map((h) => h.supplies),
+    g.party.map((h) => h.supplies),
+  );
 });
 test("old targeted forage schedules migrate to one general task and medicinal materials can make dressings", () => {
   const g = fresh();
@@ -104,7 +101,7 @@ test("old targeted forage schedules migrate to one general task and medicinal ma
   ))
     h.supplies[i.instanceId] = 0;
   copy.campDuty(h, "dressings", { int: () => 6 });
-  assert.equal(copy.materialCount("medicine"), 0);
+  assert.equal(copy.materialCount("medicine"), 1);
   assert.ok(copy.supplyItem(h, "item-field-dressing"));
 });
 

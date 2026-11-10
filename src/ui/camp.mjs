@@ -186,10 +186,7 @@ function dungeonCampScreen({
     game.party.map((h, i) => [h.heroId, [...defaults[i]]]),
   );
   let targets = Object.fromEntries(
-    game.party.map((h) => [
-      h.heroId,
-      [{ heroId: h.heroId }, { heroId: h.heroId }],
-    ]),
+    game.party.map((h) => [h.heroId, [null, null]]),
   );
   if (game.campCanResume()) {
     assignments = structuredClone(game.campaign.camp.assignments);
@@ -324,7 +321,7 @@ function dungeonCampScreen({
       )
       .join(
         "",
-      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>Enemies may interrupt the camp</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-ingredients">${MATERIAL_STOCKS.map((m) => `<span>${m.name} <b>${game.materialCount(m.id)}</b></span>`).join("")}<button id="camp-supplies" ${running ? "disabled" : ""}>Manage supplies</button></div><div class="camp-rota-heading"><span>COMPANION</span><span>FIRST TASK</span><span>SECOND TASK</span></div><div class="camp-rota">${orderedParty
+      )}</select></label><button id="camp-until-healed" ${camp ? "disabled" : ""}>Plan until HP recovered</button></div><div class="camp-danger">${fiercenessIndicator(danger)}<p><b>Enemies may interrupt the camp</b> over ${camp ? camp.total - camp.elapsed : total} ${camp ? "remaining " : ""}hours${danger.warning ? " · Leaf Listener reduces risk" : ""}. Watch duties affect ambush detection.</p></div>${supplyOverview}<div class="camp-ingredients"><span>Basic camp tasks need no ingredients. Training helps; success is uncertain.</span><button id="camp-supplies" ${running ? "disabled" : ""}>Manage supplies</button></div><div class="camp-rota-heading"><span>COMPANION</span><span>FIRST TASK</span><span>SECOND TASK</span></div><div class="camp-rota">${orderedParty
       .map((h) => {
         const i = game.party.indexOf(h);
         const activity = camp
@@ -399,13 +396,11 @@ function dungeonCampScreen({
                 : [];
             const supplySelect =
               spec && !projectPlan?.water
-                ? `<select data-supply-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} supply recipient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Lowest carried supply</option>${supplyOptions.map((r) => `<option value="${r.hero}|${r.itemId ?? "new"}" ${target?.heroId === r.hero && target?.supplyId === (r.itemId ?? "new") ? "selected" : ""}>${esc(r.name)} · ${r.missing ? "New supply" : r.before ? `d${r.before}` : "Empty"}</option>`).join("")}</select>`
+                ? `<select data-supply-target="${h.heroId}" data-target-slot="${slot}" aria-label="${esc(h.name)} supply recipient ${slot + 1}" ${running ? "disabled" : ""}><option value="">Automatic · lowest supply</option>${supplyOptions.map((r) => `<option value="${r.hero}|${r.itemId ?? "new"}" ${target?.heroId === r.hero && target?.supplyId === (r.itemId ?? "new") ? "selected" : ""}>${esc(r.name)} · ${r.missing ? "New supply" : r.before ? `d${r.before}` : "Empty"}</option>`).join("")}</select>`
                 : "";
             const preview =
               projectPlan && !projectPlan.reason
-                ? projectPlan.water
-                  ? "Fill carried flasks to at least d8."
-                  : `${projectPlan.row.name}: ${projectPlan.row.before ? `d${projectPlan.row.before}` : "Empty"} → d${projectPlan.after} · ${projectPlan.units} ${projectPlan.material.name.toLowerCase()}${projectPlan.gift ? ` · Maker’s gift preserves ${projectPlan.requiredUnits} units` : ""}${projectPlan.bulkAdded ? ` · +${projectPlan.bulkAdded} supply Bulk` : ""}.`
+                ? `May replenish ${projectPlan.row.name}'s ${projectPlan.spec.name.toLowerCase()}. No ingredients required.`
                 : "";
             return `<label class="camp-duty"><span title="${esc(desc.detail)}">Task ${slot + 1}</span><select data-camp-hero="${h.heroId}" data-camp-slot="${slot}" aria-label="${esc(h.name)} duty ${slot + 1}" ${running || h.survival.status !== "active" ? "disabled" : ""}>${CAMP_DUTIES.map((d) => `<option value="${d.id}" ${d.id === duty ? "selected" : ""}>${d.name}</option>`).join("")}</select>${patientSelect}${supplySelect}${preview ? `<small class="camp-project-preview">${esc(preview)}</small>` : ""}${warning ? `<small class="camp-duty-warning">${esc(warning)}</small>` : ""}</label>`;
           })
@@ -420,7 +415,7 @@ function dungeonCampScreen({
       .map((e) => `<p>${esc(e)}</p>`)
       .join(
         "",
-      )}</div><footer><div><small>${esc(reason || (game.campWaterSource() ? "Water source nearby · gather water is available." : "No water source nearby · carried water must last."))}</small><small>Closing pauses the camp. Completed hours, supplies and healing are saved.</small></div><button id="camp-break" ${!camp ? "disabled" : ""}>Break camp</button><button id="camp-hour" ${reason || running ? "disabled" : ""}>Advance one hour</button><button id="camp-run" class="primary" ${reason ? "disabled" : ""}>${running ? "Pause" : camp ? "Continue camp" : "Make camp"}</button></footer>`;
+      )}</div><footer><div><small>${esc(reason || "Choose tasks and companions; the company handles the rest.")}</small><small>Closing pauses the camp. Completed hours, supplies and healing are saved.</small></div><button id="camp-break" ${!camp ? "disabled" : ""}>Break camp</button><button id="camp-hour" ${reason || running ? "disabled" : ""}>Advance one hour</button><button id="camp-run" class="primary" ${reason ? "disabled" : ""}>${running ? "Pause" : camp ? "Continue camp" : "Make camp"}</button></footer>`;
     host.querySelector(".camp-stocks").ontoggle = (e) => {
       if (e.target.isConnected) storesOpen = e.target.open;
     };

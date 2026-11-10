@@ -16,9 +16,9 @@ import { CREATURE_ROSTER } from "./creature-roster.mjs";
 export const CAMP_DUTIES = Object.freeze([
   {
     id: "dressings",
-    name: "Prepare dressings",
+    name: "Make dressings",
     detail:
-      "Use shared medicinal herbs to improve carried dressings. Requires recipe knowledge.",
+      "Look for useful remedies and prepare dressings. Medicine training helps. No ingredients required.",
   },
   {
     id: "heal",
@@ -38,31 +38,33 @@ export const CAMP_DUTIES = Object.freeze([
   },
   {
     id: "arrows",
-    name: "Prepare arrows",
+    name: "Make arrows",
     detail:
-      "Use shared crafting materials and tools to improve carried arrows.",
+      "Make usable arrows. Craft and Marksmanship training help. No ingredients required.",
   },
   {
     id: "cook",
-    name: "Prepare food",
-    detail: "Cook shared food ingredients into carried provisions.",
+    name: "Find food",
+    detail:
+      "Search for food. Wilderness training helps. No ingredients required.",
   },
   {
     id: "water",
-    name: "Gather water",
-    detail: "A nearby water source and carried flasks; replenish water.",
+    name: "Find water",
+    detail:
+      "Search for clean water. Wilderness training helps; no nearby source required.",
   },
   {
     id: "torches",
-    name: "Prepare torches",
+    name: "Make torches",
     detail:
-      "Use shared crafting materials and tools to improve carried lighting supplies.",
+      "Find fuel and make torches. Craft training helps. No ingredients required.",
   },
   {
     id: "forage",
     name: "Forage",
     detail:
-      "Search for water, wood, food ingredients, fletching materials or medicinal supplies. Training helps you find useful resources.",
+      "Search for any useful supplies. Training helps; a find improves one companion’s stores.",
   },
 ]);
 const dutyIds = new Set([

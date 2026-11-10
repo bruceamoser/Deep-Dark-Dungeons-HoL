@@ -249,99 +249,71 @@ export const restockingMethods = {
       rank = Math.max(rank, 1);
     return 1 + Math.min(2, rank);
   },
+  campSupplyChance(worker, spec) {
+    const ranks =
+      {
+        food: ["wilderness"],
+        water: ["wilderness"],
+        arrows: ["craft", "marksmanship"],
+        light: ["craft"],
+        dressings: ["medicine"],
+      }[spec.id] ?? [];
+    const rank = Math.max(
+      0,
+      ...ranks.map((id) => worker.preview.state.ranks[`discipline-${id}`] ?? 0),
+    );
+    const powers = this.powerIds(worker);
+    const relevant =
+      (powers.includes("power-field-artisan") &&
+        ["arrows", "light"].includes(spec.id)) ||
+      (powers.includes("power-field-replenishment") &&
+        ["food", "water", "arrows", "light"].includes(spec.id)) ||
+      (powers.includes("power-forager-remedies") && spec.id === "dressings");
+    return Math.min(90, 50 + rank * 10 + (relevant ? 15 : 0));
+  },
   campRestockPlan(worker, duty, target) {
     const spec = BASIC_SUPPLIES.find((s) => s.duty === duty);
     if (!spec) return null;
     const fail = (reason) => ({ spec, reason });
     if (!this.canAct(worker))
       return fail("This companion cannot prepare supplies.");
-    if (spec.id === "water")
-      return {
-        spec,
-        reason:
-          target?.supplyId === "new"
-            ? "Carry a water flask for this companion first."
-            : !this.campWaterSource()
-              ? "No water source within three squares."
-              : !this.party.some((h) =>
-                    h.preview.inventory.items.some(
-                      (i) => i.carried && i.catalogId === spec.item,
-                    ),
-                  )
-                ? "The company needs a water flask."
-                : "",
-        water: true,
-        after: 8,
-      };
-    if (spec.learned && !this.knownRecipes(worker).has(spec.recipe))
-      return fail("Learn the field dressing recipe first.");
-    if (
-      spec.tool &&
-      !this.traits(worker).some((t) => t.improvise) &&
-      !this.party.some(
-        (h) =>
-          this.canAct(h) &&
-          h.preview.inventory.items.some(
-            (i) => i.carried && i.catalogId === "item-craft-tools",
-          ),
-      )
-    )
-      return fail("The company needs craft tools.");
-    let row;
-    if (target?.supplyId) {
-      const owner = this.party.find((h) => h.heroId === target.heroId);
-      row = this.supplyRows().find(
+    let rows = this.supplyRows().filter(
+      (r) =>
+        r.supply === spec.id &&
+        this.party.some((h) => h.heroId === r.hero && this.canAct(h)),
+    );
+    if (target?.supplyId)
+      rows = rows.filter(
         (r) =>
-          r.hero === owner?.heroId &&
-          r.supply === spec.id &&
-          (target.supplyId === "new" ? true : r.itemId === target.supplyId),
+          r.hero === target.heroId &&
+          (target.supplyId === "new" || r.itemId === target.supplyId),
       );
-      if (!row) return fail("Choose a carried supply or an empty supply slot.");
-    } else {
-      row =
-        this.supplyRows()
-          .filter((r) => r.supply === spec.id && !r.missing && r.before < 20)
-          .sort((a, b) => a.before - b.before)[0] ??
-        this.supplyRows().find(
-          (r) => r.supply === spec.id && r.hero === worker.heroId && r.missing,
-        );
-    }
-    if (!row) return fail("All carried supplies are already d20.");
-    if (row.before === 20) return fail("This supply is already d20.");
-    const available = this.materialCount(spec.material),
-      from = SUPPLY_LADDER.indexOf(row.before),
-      steps = this.restockSteps(worker, spec);
-    let after = row.before,
-      units = 0;
-    for (let n = 1; n <= steps && from + n < SUPPLY_LADDER.length; n++) {
-      const next = SUPPLY_LADDER[from + n],
-        cost = restockCost(row.before, next);
-      if (cost > available) break;
-      after = next;
-      units = cost;
-    }
-    const material = MATERIAL_STOCKS.find((m) => m.id === spec.material);
-    const gift =
-      after > row.before &&
-      this.traits(worker).some((t) => t.craftImprove) &&
-      worker.traitUses?.craftImprove !== this.clock().day;
+    else if (target?.heroId)
+      rows = rows.filter((r) => r.hero === target.heroId);
+    const row = rows
+      .filter((r) => r.before < 20)
+      .sort(
+        (a, b) => Number(a.missing) - Number(b.missing) || a.before - b.before,
+      )[0];
+    if (!row)
+      return fail(
+        rows.length
+          ? "These supplies are already full."
+          : "Choose a capable companion's supply.",
+      );
+    const after = SUPPLY_LADDER[SUPPLY_LADDER.indexOf(row.before) + 1];
     return {
       spec,
       row,
       after,
-      units: gift ? 0 : units,
-      requiredUnits: units,
-      gift,
-      steps,
-      material,
+      units: 0,
+      steps: 1,
+      chance: this.campSupplyChance(worker, spec),
       worker: worker.heroId,
       bulkAdded: row.missing
         ? this.C.inventory.equipment.find((i) => i.id === spec.item).bulk
         : 0,
-      reason:
-        after === row.before
-          ? `Needs ${restockCost(row.before, SUPPLY_LADDER[from + 1])} ${material.name.toLowerCase()}; the party has ${available}.`
-          : "",
+      reason: "",
     };
   },
   bestSupplyWorker(ref) {
@@ -356,7 +328,7 @@ export const restockingMethods = {
       .sort(
         (a, b) =>
           Number(!!a.plan.reason) - Number(!!b.plan.reason) ||
-          (b.plan.after ?? 0) - (a.plan.after ?? 0) ||
+          (b.plan.chance ?? 0) - (a.plan.chance ?? 0) ||
           (b.plan.steps ?? 0) - (a.plan.steps ?? 0),
       )[0];
   },
@@ -384,28 +356,23 @@ export const restockingMethods = {
       this.campEvent(`${worker.name}: ${plan.reason}`);
       return;
     }
-    if (plan.water) {
-      for (const row of this.supplyRows().filter(
-        (r) => r.supply === "water" && !r.missing && r.before < 8,
-      ))
-        this.applyRestock(row, 8);
+    const success = this.campSupplyProjection
+      ? this.campSupplyProjection === "success"
+      : rng.int(1, 100) <= plan.chance;
+    if (!success) {
       this.campEvent(
-        `${worker.name} fills the company's water flasks to at least d8.`,
+        `${worker.name} could not replenish ${plan.spec.name.toLowerCase()} this watch.`,
       );
       return;
     }
-    if (plan.gift) {
-      worker.traitUses ??= {};
-      worker.traitUses.craftImprove = this.clock().day;
-    } else this.consumeMaterialStock(plan.spec.material, plan.units);
     const made = this.applyRestock(plan.row, plan.after);
     if (plan.row.missing)
       for (const entries of Object.values(this.campaign.camp?.targets ?? {}))
-        for (const target of entries)
-          if (target?.heroId === plan.row.hero && target.supplyId === "new")
-            target.supplyId = made.instanceId;
+        for (const t of entries)
+          if (t?.heroId === plan.row.hero && t.supplyId === "new")
+            t.supplyId = made.instanceId;
     this.campEvent(
-      `${worker.name} prepares ${plan.spec.name.toLowerCase()} for ${plan.row.name}: ${plan.row.before ? `d${plan.row.before}` : "Empty"} → d${plan.after} · ${plan.units} ${plan.material.name.toLowerCase()}.`,
+      `${worker.name} replenished ${plan.spec.name.toLowerCase()} for ${plan.row.name}.`,
     );
   },
   townRestockPlan(ref, target = this.campaign.restockTarget ?? 8) {
