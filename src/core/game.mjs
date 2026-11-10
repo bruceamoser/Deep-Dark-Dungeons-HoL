@@ -1,4 +1,5 @@
 import { creatureAiMethods } from "./creature-ai.mjs";
+import { creatureCareMethods } from "./creature-care.mjs";
 import { movementSafetyMethods } from "./movement-safety.mjs";
 import { foragingMethods, migrateForagePlan } from "./foraging.mjs";
 import { provisionMethods, prepareProvisions } from "./provisions.mjs";
@@ -2068,13 +2069,29 @@ export class Game {
       e.aiState.target = h.id;
       e.aiState.action = this.enemyChooseAction(e, h)?.name;
     }
-    if (h && this.enemyCapable(e) && e.retained.includes("main")) {
+    if (
+      !this.enemyDanger(e, e) &&
+      !e.conditions?.some((c) =>
+        ["burning", "freezing", "bleeding"].includes(c.key),
+      ) &&
+      this.enemyCare(e, { othersOnly: true })
+    ) {
+      if (this.enemyTacticalManeuver(e, h)) return;
+      this.finishEnemyTurn(e);
+      return;
+    }
+    if (
+      e.hp > 0 &&
+      this.enemyCapable(e) &&
+      e.retained.length &&
+      ((h && e.retained.includes("main")) || this.enemyDanger(e, e) > 0)
+    ) {
       const points = this.enemyPlanMovement(e, h, this.creatureAction(e));
       if (
         e.conditions?.some((c) => c.key === "prone") &&
         this.provoke(e, {
           kind: "enemy-stand",
-          target: h.id,
+          target: h?.id,
           points,
           label: "standing up",
         })
@@ -2085,6 +2102,7 @@ export class Game {
     } else {
       if (!h && this.enemySearchBlood(e)) return;
       this.enemyTacticalManeuver(e, h);
+      this.enemyCare(e);
       this.finishEnemyTurn(e);
     }
   }
@@ -2120,9 +2138,14 @@ export class Game {
 
   enemyAttack(e, h) {
     if (this.enemyTacticalManeuver(e, h)) return;
+    if (this.enemyCare(e)) {
+      this.finishEnemyTurn(e);
+      return;
+    }
     const action = this.creatureAction(e);
     if (
       h &&
+      e.retained?.includes("main") &&
       this.enemyCapable(e) &&
       e.hp > 0 &&
       !this.R.conditionSummary(e.conditions ?? []).blinded.active &&
@@ -2294,6 +2317,7 @@ Object.assign(
   treasureMethods,
   bestiaryMethods,
   creatureAiMethods,
+  creatureCareMethods,
 );
 
 Object.assign(

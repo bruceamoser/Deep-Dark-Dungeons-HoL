@@ -37,7 +37,9 @@ Bruce reported field abilities from character sheets (#114), diagonal movement (
 
 #116 merged in PR #119 (`21e8945`): party-wide hazardous-route consent, movement-power/landing checks, preserved approach intent and new-hazard pauses. Eight focused safety tests, final rebuilt native field/movement regression and both CI jobs pass.
 
-Active branch: `codex/115-diagonal-occupants`, based on `21e8945`. Bruce clarified the reported diagonal was a combat mouse click. Found that one occupied side square incorrectly forced a detour. Open diagonals already worked; now one side occupant permits a one-point diagonal, while wall/obstacle corners, occupied destinations and two blocked side squares remain blocked. Unit/native checks are in progress. #117 creature self-preservation/printed ally care remains next. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
+#115 merged in PR #120 (`6eb0f66`): one-point diagonals beside a single occupied side square; solid corners, occupied destinations and two blocked sides remain blocked. Focused unit/native mouse-click checks and complete CI pass.
+
+Active branch: `codex/117-creature-self-preservation`, based on `6eb0f66`. Creatures escape harmful fields, choose budgeted safer routes, seek water while burning and spend a Main action on temporary condition care for themselves/adjacent allies. Existing printed support stays constrained. Current encounter cards have no allied HP-healing power; no new healing spell or stats/CV changes are introduced. New unit/native scenarios cover escape, water and actual ally-care actions. Full unit/native regression is running before author review/merge. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
 
 ## Transfer gaps
 

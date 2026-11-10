@@ -310,3 +310,7 @@ Fire and harmful magical traps require explicit player consent before normal mov
 ## November 9 diagonal occupancy
 
 A single actor in a side square no longer turns a one-point diagonal into a two-step detour. The destination must remain free, both blocked side squares close the gap, and either solid wall/obstacle corner still blocks diagonal passage. Difficult terrain costs remain unchanged. This refines the original geometry adaptation without adding free movement or changing opportunity reach.
+
+## November 9 creature self-preservation
+
+Hazard escape precedes attack positioning; safe detours remain within the creature’s actual movement allowance and preserve opportunity attacks. Burning creatures can seek water. The universal Main action to reduce temporary Burning/Freezing/Bleeding by one is explicitly adapted to NPC self/adjacent same-group ally care. It grants no HP or starred-condition removal. Current 58 encounter cards have no allied HP-healing ability, so none is invented. Printed support and life-taking limits remain intact; see [creature AI](creature-ai.md).

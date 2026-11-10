@@ -30,6 +30,14 @@ Mobility supports Roll Away, Stalking Step, Measured Step, Wind Step, Tunnel Sca
 
 Read the Blood Trail can direct a search toward the nearest bleeding creature without granting an unseen attack target. Cosmetic Change Guise does not change statistics and is not spent as a fake combat buff. Become Still is not preferred over the stronger available Defend; no additional stacking defensive bonus is invented. These are intentional selection policies, not claims that every narrative ability needs use every round. Unchanged reaction adapters remain in `bestiary.mjs`; this is not a full new implementation of every printed reaction.
 
+## Self-preservation and care
+
+Harmful fire/trap fields take priority over maintaining an attack position. Creatures seek safe reachable endpoints, or progress toward an exit when a field is too wide to leave this turn. A budgeted search retains safer detours without granting extra movement. Ordinary travel, printed mobility maneuvers, ally Make Room and blood-trail movement avoid hazardous routes; normal opportunities still apply unless a printed maneuver exempts them. Burning creatures favor reachable water and use the normal water-contact extinguishing rule. Resistance, weakness and Burning immunity inform danger estimates.
+
+The player’s universal Reduce a condition Main action now has an explicit NPC adaptation: capable creatures can reduce temporary Burning, Freezing or Bleeding by one on themselves or an adjacent ally in the same group. Urgent adjacent ally care happens before moving away to attack. Aid spends the Main action, preserves starred sources and does not grant HP, Grit or wound treatment. Minor nonlethal conditions may yield to an immediate attack. Printed support chooses conditions it can actually reduce, including Frightened when Dazed comes only from a starred source.
+
+Audit of all 58 current encounter cards found **no allied HP-healing ability**. Keep the Rhythm relieves Dazed/Frightened; vampire spawn's Famished bite restores only its own HP under its printed transfer limits. No creature gains an unprinted healing spell or a new encounter role from this change.
+
 ## Counterplay and saves
 
 Wolf Pinning Bite creates paired maintained Grappled contributions. Its own contribution does not repeatedly stack. Separation, holder incapacity/death or a hero's **Break free** Main Action ends the paired hold. Break free is a game-owned deterministic escape option, not an assertion about the tabletop escape procedure.
@@ -40,4 +48,4 @@ Target commitment, attack history, once-scene use, guard post and paused maneuve
 
 ## Verification
 
-Unit scenarios cover the entire roster/action list, coordination and duel targets, visibility/taunts, spacing and movement budgets, ammo/cooldowns, support, terrain lifetimes, mobility reaction exemptions, holds/escape, friendly fire, incapacity, and saved/corrupt tactical state. Native desktop checks exercise actual enemy turns, paid escape/terrain clearing, ranged movement/fire, support, alternating control attacks, and the complete bestiary display with isolated saves.
+Unit scenarios cover the entire roster/action list, coordination and duel targets, visibility/taunts, spacing and movement budgets, ammo/cooldowns, support, terrain lifetimes, mobility reaction exemptions, holds/escape, friendly fire, incapacity, safe detours within budget, hazard escape without a visible target, water extinguishing, paid ally condition care, and saved/corrupt tactical state. Native desktop checks exercise actual enemy turns, paid escape/terrain clearing, ranged movement/fire, support, alternating control attacks, and the complete bestiary display with isolated saves.

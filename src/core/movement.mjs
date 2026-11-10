@@ -134,3 +134,37 @@ export function reachableCells(
   }
   return result;
 }
+
+// Minimize exposure within a real movement budget. Keeping states by both
+// square and cost preserves safer detours without granting extra movement.
+export function safestReachableCells(map, start, budget, blocked, cost, risk) {
+  const origin = key(start.x, start.z),
+    stateKey = (p, spent) => `${key(p.x, p.z)}:${spent}`,
+    first = { x: start.x, z: start.z, cost: 0, risk: 0, previous: null },
+    open = [first],
+    states = new Map([[stateKey(start, 0), first]]),
+    result = new Map();
+  while (open.length) {
+    open.sort((a, b) => a.risk - b.risk || a.cost - b.cost);
+    const p = open.shift(),
+      k = key(p.x, p.z);
+    if (states.get(stateKey(p, p.cost)) !== p) continue;
+    if (!result.has(k)) {
+      const points = [];
+      for (let at = p; at.previous; at = at.previous)
+        points.unshift({ x: at.x, z: at.z });
+      result.set(k, { x: p.x, z: p.z, cost: p.cost, risk: p.risk, points });
+    }
+    for (const n of neighbors(map, p, blocked)) {
+      const spent = p.cost + cost(n);
+      if (spent > budget || key(n.x, n.z) === origin) continue;
+      const id = stateKey(n, spent),
+        danger = p.risk + risk(n);
+      if (danger >= (states.get(id)?.risk ?? Infinity)) continue;
+      const next = { ...n, cost: spent, risk: danger, previous: p };
+      states.set(id, next);
+      open.push(next);
+    }
+  }
+  return [...result.values()];
+}
