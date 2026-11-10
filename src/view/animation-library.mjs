@@ -26,15 +26,23 @@ const ALIASES = {
   Idle: ["Idle_A", "Idle_B", "Skeletons_Idle"],
   Walking_A: ["Walking_A", "Walking_B", "Skeletons_Walking"],
   Running_A: ["Running_A", "Running_B"],
-  "Death_A_Pose": ["Death_A_Pose", "Death_B_Pose", "Skeletons_Death_Pose"],
+  Death_A_Pose: ["Death_A_Pose", "Death_B_Pose", "Skeletons_Death_Pose"],
   Hit_A: ["Hit_A", "Hit_B"],
   "1H_Melee_Attack_Slice_Diagonal": [
     "Melee_1H_Attack_Slice_Diagonal",
     "Melee_1H_Attack_Slice_Horizontal",
     "Melee_1H_Attack_Chop",
   ],
-  "2H_Ranged_Shoot": ["Ranged_2H_Shoot", "Ranged_Bow_Release", "Ranged_1H_Shoot"],
-  Spellcast_Shoot: ["Ranged_Magic_Spellcasting", "Ranged_Magic_Shoot", "Ranged_Magic_Raise"],
+  "2H_Ranged_Shoot": [
+    "Ranged_2H_Shoot",
+    "Ranged_Bow_Release",
+    "Ranged_1H_Shoot",
+  ],
+  Spellcast_Shoot: [
+    "Ranged_Magic_Spellcasting",
+    "Ranged_Magic_Shoot",
+    "Ranged_Magic_Raise",
+  ],
   Unarmed_Melee_Attack_Punch_A: [
     "Melee_Unarmed_Attack_Punch_A",
     "Melee_Unarmed_Attack_Kick",
@@ -49,7 +57,7 @@ const ALIASES = {
 const SKELETON_OVERRIDES = {
   Idle: ["Skeletons_Idle"],
   Walking_A: ["Skeletons_Walking"],
-  "Death_A_Pose": ["Skeletons_Death_Pose", "Skeletons_Death"],
+  Death_A_Pose: ["Skeletons_Death_Pose", "Skeletons_Death"],
 };
 
 let library = new Map();
@@ -101,7 +109,11 @@ export function resolveClips(clipsByName, opts = {}) {
   for (const [gameName, candidates] of Object.entries(ALIASES)) {
     // Preferred set first (skeleton overrides), then the general candidates, so a
     // missing override never leaves a rig with no clip at all.
-    const names = [...(overrides[gameName] ?? []), ...candidates];
+    const weapon =
+      opts.spear && gameName === "1H_Melee_Attack_Slice_Diagonal"
+        ? ["Melee_1H_Attack_Stab"]
+        : [];
+    const names = [...weapon, ...(overrides[gameName] ?? []), ...candidates];
     let source = null;
     for (const n of names) {
       if (clipsByName.has(n)) {

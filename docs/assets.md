@@ -184,3 +184,7 @@ The loading screen animates independent warm glows over all four painted flames
 and a few drifting embers with CSS opacity/transform animations. Lettering stays
 still and readable; reduced-motion preferences disable the motion and embers.
 No runtime image-generation service or network request is needed.
+
+## November 10 creature pilots
+
+Five Blender-authored runtime exports and editable sources replace the Wererat, Clay Helper and Air Elemental casts and add actual spear/pan equipment. KayKit Ninja donor rig/body is CC0 with original inputs unchanged; added anatomy/construct/vortex/prop geometry and materials are Bruce Moser project contributions. No new public license is assigned. See [provenance/hashes](creature-pilots-provenance.json) and [scope, remaining gaps and verification](creature-model-pilots.md). No cloud generation or purchased source export is involved.

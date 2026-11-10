@@ -1,3 +1,4 @@
+import { verifyCreaturePilots } from "./creature-pilots-check.mjs";
 import { verifyEquipmentBonuses } from "./equipment-bonuses-check.mjs";
 import { verifyAreaArrows } from "./area-arrows-check.mjs";
 import { verifyChallenge } from "./challenge-check.mjs";
@@ -55,6 +56,7 @@ const child = spawn(
     "--",
     path.join(root, "launch-game.sh"),
     "--remote-debugging-port=0",
+    "--mute-audio",
     "--inspect=0",
   ],
   {
@@ -153,6 +155,7 @@ try {
   await runCheck(verifyEffects);
   await runCheck(verifyRecovery);
   await runCheck(verifyDungeonLoop);
+  await runCheck(verifyCreaturePilots);
   await runCheck(verifyCreatureVisuals);
   await runCheck(verifySaveSlots);
   expect(errors).toEqual([]);
@@ -163,6 +166,7 @@ try {
   const mainArgs = (
     await fs.readFile(`/proc/${child.pid}/cmdline`, "utf8")
   ).split("\0");
+  expect(mainArgs.join(" ")).toMatch(/(?:^|\s)--mute-audio(?:\s|$)/);
   expect(mainArgs.join(" ")).not.toMatch(/(?:^|\s)--no-sandbox(?:\s|$)/);
   expect(await fs.readlink(`/proc/${child.pid}/exe`)).not.toMatch(/\s/);
   expect(

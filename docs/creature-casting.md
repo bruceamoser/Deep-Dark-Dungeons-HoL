@@ -1,5 +1,7 @@
 # Creature casting audit — November 10, 2026
 
+The [first model pilots](creature-model-pilots.md) now replace the rat/clay/air casts and add spear equipment; their follow-up scores do not rewrite the historical 58-entry baseline.
+
 > **Superseded visual-fit claims:** the [complete scored render audit](audits/2026-11-10-creature-fit.md) compares all 58 current creatures with their pinned descriptions and illustrations. In particular, the Golem key renders a winged floating creature rather than the stone/clay humanoids claimed below, and the tinted human corpse proxies remain poor matches. Treat this earlier inventory/casting record as history, not visual acceptance.
 
 Inspected the full local Complete KayKit Collection v8 ZIP: Adventurers 2.0, Skeletons 1.1, Mystery Monthly series 4–6 and their character GLBs, including all fantasy and novelty bodies. Also inspected the purchased Dungeon Mason RPG Tiny Hero Wave Polyart Mesh directory: AllBodiesCloaks, humanoid head/accessory parts, weapons and the staged character catalog. It supplies humanoid customization, not authored animal/monster bodies. No new downloaded or purchased assets were committed.

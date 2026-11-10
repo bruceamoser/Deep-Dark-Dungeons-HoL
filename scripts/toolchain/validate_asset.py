@@ -20,8 +20,9 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 bpy.ops.import_scene.gltf(filepath=str(args.input.resolve()))
 meshes = []
+display_helpers = {b.custom_shape for o in bpy.context.scene.objects if o.type == "ARMATURE" for b in o.pose.bones if b.custom_shape}
 for obj in bpy.context.scene.objects:
-    if obj.type != 'MESH':
+    if obj.type != 'MESH' or obj.hide_render or obj in display_helpers:
         continue
     mesh = obj.data
     mesh.calc_loop_triangles()

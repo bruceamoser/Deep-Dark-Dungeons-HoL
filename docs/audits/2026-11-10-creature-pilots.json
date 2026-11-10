@@ -1,0 +1,54 @@
+{
+  "gameCommit": "codex/creature-model-pilots (base fea05be; pilot revision 1)",
+  "weights": [30, 15, 20, 15, 10, 10],
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "rows": [
+    {
+      "id": "creature-goblin-spearhand",
+      "name": "Goblin Spearhand",
+      "scores": [3, 3, 2, 5, 3, 5],
+      "raw": 66,
+      "score": 66,
+      "cap": null,
+      "before": 41,
+      "notes": "Spear and saucepan identify the role; the body remains an orc proxy and the hat is simple."
+    },
+    {
+      "id": "creature-wererat",
+      "name": "Wererat",
+      "scores": [4, 3, 4, 4, 3, 5],
+      "raw": 77,
+      "score": 77,
+      "cap": null,
+      "before": 19,
+      "notes": "Rat muzzle, ears, whiskers, teeth and weighted tail replace the human head; clothing reads as a thief. Fur and proportions remain stylized."
+    },
+    {
+      "id": "creature-clay-helper",
+      "name": "Clay Helper",
+      "scores": [4, 3, 3, 5, 3, 5],
+      "raw": 76,
+      "score": 76,
+      "cap": null,
+      "before": 9,
+      "notes": "Grounded clay humanoid with broad hands, a face and maker seal replaces the winged body. Smooth segmented forms still need surface and silhouette refinement."
+    },
+    {
+      "id": "creature-air-elemental",
+      "name": "Air Elemental",
+      "scores": [5, 4, 3, 5, 3, 5],
+      "raw": 85,
+      "score": 85,
+      "cap": null,
+      "before": 11,
+      "notes": "Hollow animated vortex, translucent ribbons and orbiting leaves replace the skull ghost. The swirl remains visibly ribbon-like rather than volumetric cloud."
+    }
+  ]
+}
