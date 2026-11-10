@@ -51,3 +51,7 @@ Bruce supersedes ingredient requirements for basic camp replenishment: no requir
 ## 2026-11-10 — Equipment discussion order
 
 After all eight implementation items merged, Bruce requested proceeding item type by item type with available bonuses explained first. Start with weapons, then armour, shields and accessories. Existing generated bonuses remain until agreed. Parent #127 and focused #144 track this discussion.
+
+## 2026-11-10 — Approved equipment catalogue and release
+
+Bruce completed the item-by-item discussion and approved strongest matching equipment bonuses. Implement the catalogue in [equipment-bonuses.md](../equipment-bonuses.md): accuracy/range and plain Push 1, no armour penetration, Light reduces Bulk, fuel-free toggleable equipped light sources on approved forms, discipline-wide competence rather than activated magical abilities, and Fortitude on belts. Preserve item identity/save compatibility while replacing opaque generated effects. He explicitly authorized finish, commit/push, progress documentation, author review/merge and a new patch release. This supersedes the earlier “discussion pending/no release requested” status.

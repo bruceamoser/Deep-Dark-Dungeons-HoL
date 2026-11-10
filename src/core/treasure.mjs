@@ -1,3 +1,4 @@
+import { EQUIPMENT_BONUSES, strongest } from "./equipment-bonuses.mjs";
 import { combineSupplyDice, collapseSupplyDice } from "./supply-dice.mjs";
 import { MATERIAL_STOCKS, stockForItem } from "./supply-stock.mjs";
 import { gameBulk, encumbranceFor } from "./bulk.mjs";
@@ -64,9 +65,12 @@ export const ITEM_BASES = {
     armor: "heavy",
     icon: "armor",
   },
+  cloak: { name: "Cloak", slot: "back", icon: "armor" },
+  pack: { name: "Backpack", slot: "back", icon: "pack" },
+  kit: { name: "Artisan Kit", slot: "main", hands: 1, icon: "tool" },
   belt: { name: "Belt", slot: "waist", icon: "belt" },
   boots: { name: "Boots", slot: "feet", icon: "boot" },
-  hat: { name: "Crown", slot: "head", icon: "hat" },
+  hat: { name: "Helm", slot: "head", icon: "hat" },
   ring: { name: "Ring", slot: "ring", icon: "ring" },
   brooch: { name: "Brooch", slot: "neck", icon: "necklace" },
   gloves: { name: "Gloves", slot: "hands", icon: "hand" },
@@ -111,7 +115,7 @@ export const ENCHANTMENTS = {
     stat: "heal",
     color: 0x68e0a4,
   },
-  ram: { name: "Ram’s", effect: "build", stat: "impact", color: 0xe8ad71 },
+  ram: { name: "Ram’s", effect: "push", color: 0xe8ad71 },
   stalker: {
     name: "Stalker’s",
     effect: "build",
@@ -265,6 +269,49 @@ const basesForDepth = (d) =>
     (k) => (k !== "medium" || d >= 3) && (k !== "heavy" || d >= 7),
   );
 export function magicItem(seed, depth = 1, options = {}) {
+  if ((options.revision ?? 3) === 3)
+    return approvedMagicItem(seed, depth, options);
+  const old = legacyMagicItem(seed, depth, options);
+  const alternatives = {
+    ram: ["push", "capacity", "protect-dazed", "armorward"],
+    duelist: ["attribute-agility", "accuracy", "armorward", "block"],
+    lifebloom: ["competence-life", "block-dr", "protect-bleeding"],
+    stalker: ["competence-subterfuge", "defense", "block"],
+    wardweaver: ["block-dr", "defense", "protect-frightened"],
+    might: ["might", "armorward", "block"],
+    wind: ["wind", "light", "attribute-agility"],
+    grave: ["grave", "capacity", "armorward", "light"],
+    flameward: ["flameward", "armorward", "light"],
+    frostward: ["frostward", "armorward", "light"],
+  };
+  const pool = Object.keys(EQUIPMENT_BONUSES).filter((k) =>
+    EQUIPMENT_BONUSES[k].allowed.includes(old.base),
+  );
+  const affixes = [];
+  for (const id of old.affixes) {
+    const next = [id, ...(alternatives[id] ?? []), ...pool].find(
+      (k) => pool.includes(k) && !affixes.includes(k),
+    );
+    if (next) affixes.push(next);
+  }
+  const current = approvedMagicItem(seed, depth, {
+    base: old.base,
+    power: old.power,
+    affixes,
+    relic: old.relic,
+  });
+  // Keep historical receipts, names and identity; rebuild approved mechanics on every load.
+  return {
+    ...old,
+    effects: current.effects,
+    bulk: current.bulk,
+    definition: { ...old.definition, bulk: current.definition.bulk },
+  };
+}
+function legacyMagicItem(seed, depth = 1, options = {}) {
+  if ((options.revision ?? 3) === 3)
+    return approvedMagicItem(seed, depth, options);
+
   const relic = options.relic ? RELICS[options.relic] : null;
   if (options.relic && !relic) throw new Error("Unknown relic identity.");
   if (relic)
@@ -285,7 +332,9 @@ export function magicItem(seed, depth = 1, options = {}) {
   )
     throw new Error("Invalid treasure generation receipt.");
   const rng = new Random(seed),
-    bases = basesForDepth(depth),
+    bases = basesForDepth(depth).filter(
+      (k) => !["cloak", "pack", "kit"].includes(k),
+    ),
     base = options.base ?? bases[rng.int(0, bases.length - 1)];
   if (!ITEM_BASES[base]) throw new Error("Unknown treasure form.");
   const def = ITEM_BASES[base],
@@ -327,9 +376,11 @@ export function magicItem(seed, depth = 1, options = {}) {
             ? `${e.type[0].toUpperCase() + e.type.slice(1)} resistance ${power}${e.type === "life" ? "; also reduces Life healing" : ""}.`
             : e.effect === "attribute"
               ? "+1 Brawn while equipped. Does not change creation DP, HP or eligibility."
-              : e.effect === "build"
-                ? `+${power} ${e.stat} while equipped.`
-                : "+1 Speed while worn.",
+              : e.effect === "push"
+                ? "Push 1 on a Strong hit with this weapon or Shield Bash."
+                : e.effect === "build"
+                  ? `+${power} ${e.stat} while equipped.`
+                  : "+1 Speed while worn.",
       source:
         id === "ember" && base === "blade" && power === 1
           ? "Ember Edge · book effect"
@@ -383,6 +434,107 @@ export function magicItem(seed, depth = 1, options = {}) {
     },
     hands: def.hands ?? 0,
     bulk: 1,
+    quantity: 1,
+    carried: true,
+    held: false,
+    worn: false,
+    inventoryDie: null,
+  };
+}
+function approvedMagicItem(seed, depth, options) {
+  if (
+    !Number.isSafeInteger(seed) ||
+    seed < 0 ||
+    seed > 4294967295 ||
+    !Number.isInteger(depth) ||
+    depth < 1
+  )
+    throw new Error("Invalid treasure generation receipt.");
+  const relic = options.relic ? RELICS[options.relic] : null;
+  if (options.relic && !relic) throw new Error("Unknown relic identity.");
+  const rng = new Random(seed),
+    bases = basesForDepth(depth),
+    base = relic?.base ?? options.base ?? bases[rng.int(0, bases.length - 1)],
+    def = ITEM_BASES[base];
+  if (!def) throw new Error("Unknown treasure form.");
+  const pool = Object.keys(EQUIPMENT_BONUSES).filter((k) =>
+    EQUIPMENT_BONUSES[k].allowed.includes(base),
+  );
+  const relicAffixes = {
+    "cinder-crown": ["armorward", "competence-flame"],
+    "winter-verdict": ["rime", "duelist"],
+    thunderwake: ["stormbite", "reach"],
+    "last-bastion": ["block", "block-dr"],
+    "pilgrim-step": ["wind", "surefoot"],
+    "blood-debt": ["attribute-fortitude", "protect-bleeding"],
+    "black-thread": ["accuracy", "competence-subterfuge"],
+    "dawn-chorus": ["competence-life", "illumination"],
+  };
+  const power = relic
+    ? 2
+    : (options.power ?? (depth >= 7 && rng.next() < 0.35 ? 2 : 1));
+  const first = pool[rng.int(0, pool.length - 1)],
+    rest = pool.filter((k) => k !== first);
+  const affixes = relic
+    ? relicAffixes[options.relic]
+    : (options.affixes ??
+      (depth >= 3 && rng.next() < 0.55
+        ? [first, rest[rng.int(0, rest.length - 1)]]
+        : [first]));
+  if (
+    ![1, 2].includes(power) ||
+    !Array.isArray(affixes) ||
+    affixes.length < 1 ||
+    affixes.length > 2 ||
+    new Set(affixes).size !== affixes.length ||
+    affixes.some((k) => !pool.includes(k))
+  )
+    throw new Error("Invalid enchantment for this form.");
+  const effects = affixes.map((id) => {
+    const { allowed, ...e } = EQUIPMENT_BONUSES[id];
+    return {
+      ...e,
+      text:
+        e.text +
+        (base === "kit" && e.effect === "competence"
+          ? " Hold this kit while using the ability."
+          : ""),
+      weaponOnly: ["blade", "bow"].includes(base),
+      source: "Dungeon adaptation · approved equipment catalogue",
+    };
+  });
+  const bulk = effects.some((e) => e.effect === "light") ? 0.5 : 1;
+  return {
+    instanceId: `relic-${seed}-${base}`,
+    catalogId: def.catalogId ?? `relic-${base}`,
+    base,
+    ...(def.weaponType ? { weaponType: def.weaponType } : {}),
+    slot: def.slot,
+    icon: def.icon,
+    seed,
+    depth,
+    revision: 3,
+    relic: options.relic ?? null,
+    power,
+    affixes,
+    rarity: relic
+      ? "relic"
+      : power === 2 || affixes.length > 1
+        ? "rare"
+        : "enchanted",
+    effects,
+    definition: {
+      id: `relic-${seed}-${base}`,
+      name:
+        relic?.name ??
+        `${effects.map((e) => e.name).join(" ")} ${def.name} ${names[rng.int(0, names.length - 1)]}`,
+      bulk,
+      price: 180 + power * 140,
+      handChoices: def.hands ? [def.hands] : [],
+      source: { path: "docs/equipment-bonuses.md" },
+    },
+    hands: def.hands ?? 0,
+    bulk,
     quantity: 1,
     carried: true,
     held: false,
@@ -449,8 +601,14 @@ export function effectStatus(hero, effect) {
   };
 }
 export function activeItemEffects(hero, item) {
-  if (!item.carried || !(item.hands ? item.held : item.worn)) return [];
-  return (item.effects ?? []).filter((e) => effectStatus(hero, e).active);
+  if (!item?.carried || !(item.hands ? item.held : item.worn)) return [];
+  return (item.effects ?? [])
+    .filter(
+      (e) =>
+        effectStatus(hero, e).active &&
+        (e.effect !== "illumination" || item.lightEnabled !== false),
+    )
+    .map((e) => ({ ...e, itemId: item.instanceId }));
 }
 export function gearPreview(R, C, hero, draft = hero.draft) {
   const p = R.workshopCharacter(draft, C);
@@ -518,6 +676,7 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       held: !!saved.held,
       worn: !!saved.worn,
       equippedSlot: saved.equippedSlot,
+      lightEnabled: saved.lightEnabled !== false,
     };
   });
   if (new Set(treasure.map((i) => i.instanceId)).size !== treasure.length)
@@ -555,7 +714,18 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
         { light: 1, medium: 2, heavy: 3 }[tier],
       );
   }
-  for (const e of p.equipmentEffects.filter((e) => e.effect === "resistance"))
+  const physicalBonus = strongest(
+    subject,
+    "resistance",
+    (e) => e.type === "physical",
+  );
+  p.resistances.physical = Math.min(
+    3,
+    (p.resistances.physical ?? 0) + physicalBonus,
+  );
+  for (const e of p.equipmentEffects.filter(
+    (e) => e.effect === "resistance" && e.type !== "physical",
+  ))
     p.resistances[e.type] = Math.min(
       3,
       Math.max(p.resistances[e.type] ?? 0, e.value),
@@ -565,6 +735,11 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
       (i) => i.carried && !(i.worn && i.catalogId === "item-travel-clothes"),
     )
     .reduce((n, i) => n + i.bulk, 0);
+  const stored = p.inventory.items
+    .filter((i) => i.carried && !i.held && !i.worn)
+    .reduce((n, i) => n + i.bulk, 0);
+  p.inventory.bulk -= Math.min(stored, strongest(subject, "storage"));
+  p.inventory.capacity += strongest(subject, "capacity");
   p.inventory.capacity += 3 * (p.attributes.brawn - draft.attributes.brawn);
   p.inventory.encumbrance = encumbranceFor(
     p.inventory.bulk,
@@ -604,6 +779,26 @@ export function gearPreview(R, C, hero, draft = hero.draft) {
   return p;
 }
 export const treasureMethods = {
+  setItemLight(index, id, enabled) {
+    const h = this.party[index],
+      item = h?.treasure?.find((i) => i.instanceId === id);
+    if (
+      this.busy ||
+      !h ||
+      !this.canAct(h) ||
+      !h.preview.inventory.items
+        .find((i) => i.instanceId === id)
+        ?.effects?.some((e) => e.effect === "illumination")
+    )
+      throw new Error(
+        "Choose an owned magical light source when no action is resolving.",
+      );
+    if (typeof enabled !== "boolean") throw new Error("Invalid light setting.");
+    item.lightEnabled = enabled;
+    this.refreshHero(h);
+    this.emit("party");
+    this.emit("change");
+  },
   uniqueMagic(seed, depth, options = {}) {
     this.campaign.generatedMagic ??= [];
     const seen = new Set(this.campaign.generatedMagic);

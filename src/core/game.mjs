@@ -1,3 +1,4 @@
+import { strongest, weaponBonus } from "./equipment-bonuses.mjs";
 import { creatureAiMethods } from "./creature-ai.mjs";
 import { migrateSimpleStocks } from "./supply-stock.mjs";
 import { restockingMethods } from "./restocking.mjs";
@@ -606,7 +607,15 @@ export class Game {
       );
     if (this.mode !== "combat" || this.busy)
       throw new Error("Wait for your company’s turn.");
-    const spec = ABILITIES[id],
+    const spec = ABILITIES[id] && {
+        ...ABILITIES[id],
+        id,
+        range:
+          (ABILITIES[id]?.range ?? 0) +
+          (ABILITIES[id]?.weapon === "ranged"
+            ? weaponBonus(this.active, ABILITIES[id], "range")
+            : 0),
+      },
       card = this.C.choices.find(
         (c) =>
           c.id === id &&
@@ -794,7 +803,11 @@ export class Game {
       const result = this.rollFor(h, spec.attribute, boons, banes, {
           mode: "attack",
           target,
-          spec,
+          spec: {
+            ...spec,
+            discipline: card.requirements?.find((r) => r.kind === "discipline")
+              ?.id,
+          },
         }),
         tier = ["weak", "standard", "strong"].indexOf(result.tier);
       const weapon = spec.weapon
@@ -836,10 +849,9 @@ export class Game {
       for (const [condition, rating] of [
         ...(spec.conditions?.[tier] ?? []),
         ...(tier === 2
-          ? enchantments.map((e) => [
-              e.condition,
-              1 + this.buildStat(h, e.condition),
-            ])
+          ? enchantments
+              .filter((e) => e.condition)
+              .map((e) => [e.condition, 1 + this.buildStat(h, e.condition)])
           : []),
       ].filter(
         ([k]) =>
@@ -871,11 +883,15 @@ export class Game {
       if (ammunition) {
         this.checkSupply(h, ammunition, "ammunition after shot");
       }
-      if (spec.push?.[tier] && target.hp > 0)
+      const push = Math.max(
+        spec.push?.[tier] ?? 0,
+        tier === 2 ? weaponBonus(h, spec, "push") : 0,
+      );
+      if (push && target.hp > 0)
         this.forceMove(
           target,
           { x: Math.sign(target.x - h.x), z: Math.sign(target.z - h.z) },
-          spec.push[tier],
+          push,
         );
       if (spec.pull?.[tier] && target.hp > 0)
         this.forceMove(
@@ -1064,6 +1080,12 @@ export class Game {
       mode: "defense",
       target: e,
       type: action.type,
+      spec: h.buffs.shield
+        ? { discipline: "discipline-guard", id: "ability-shield-block" }
+        : undefined,
+      condition: Object.values(action.outcomes).some((x) => /Prone/i.test(x))
+        ? "prone"
+        : null,
       projectile: !!action.ammunition,
     });
     const outcome = action.outcomes[result.tier];
@@ -1696,6 +1718,7 @@ export class Game {
         a.z === point.z &&
         a.conditions?.some((c) => c.key === "prone"),
     );
+    if (!occupant && strongest(h, "terrain")) return 1;
     if (!occupant && tile?.low && traits.some((t) => t.terrain === "low"))
       return 1;
     if (!occupant && !tile?.low && traits.some((t) => t.terrain === "rubble"))

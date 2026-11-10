@@ -10,8 +10,12 @@ const recipeIds = new Set(RECIPES.map((r) => r.id));
 // Missing fields are legitimate in pre-0.4 saves.
 export function validateGameState(campaign) {
   validateCamp(campaign);
-  if (campaign.xpCurve !== undefined && ![1,2,3].includes(campaign.xpCurve)) throw new Error("Invalid XP curve.");
-  if (campaign.challenge !== undefined && !Object.hasOwn(CHALLENGES, campaign.challenge))
+  if (campaign.xpCurve !== undefined && ![1, 2, 3].includes(campaign.xpCurve))
+    throw new Error("Invalid XP curve.");
+  if (
+    campaign.challenge !== undefined &&
+    !Object.hasOwn(CHALLENGES, campaign.challenge)
+  )
     throw new Error("Invalid encounter challenge.");
   if (
     campaign.restockTarget !== undefined &&
@@ -44,6 +48,11 @@ export function validateGameState(campaign) {
     ),
   ];
   for (const item of items) {
+    if (
+      item.lightEnabled !== undefined &&
+      typeof item.lightEnabled !== "boolean"
+    )
+      throw new Error("Invalid magical light setting.");
     if (
       item.stockUnits !== undefined &&
       (item.kind !== "ordinary" ||

@@ -1,3 +1,4 @@
+import { weaponBonus } from "./equipment-bonuses.mjs";
 import { activeItemEffects } from "./treasure.mjs";
 import { ABILITIES } from "./abilities.mjs";
 import { distance, lineOfSight, key } from "./dungeon.mjs";
@@ -245,6 +246,12 @@ export const tacticMethods = {
     this.breakConcealment(h);
     damage = this.absorbPowerDamage(e, damage, "physical");
     e.hp = Math.max(0, e.hp - damage);
+    if (r.tier === "strong" && e.hp > 0 && weaponBonus(h, spec, "push"))
+      this.forceMove(
+        e,
+        { x: Math.sign(e.x - h.x), z: Math.sign(e.z - h.z) },
+        1,
+      );
     this.buildAfterHit(h, e, spec, "physical", enchantments);
     if (r.tier === "strong")
       for (const effect of enchantments)

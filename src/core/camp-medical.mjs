@@ -165,7 +165,12 @@ export const campMedicalMethods = {
       woundApplicable: true,
     });
     const supply = this.campMedicalSupply("item-field-dressing");
-    const roll = this.heroRoll(h, card.attribute, "treatment");
+    const roll = this.heroRoll(h, card.attribute, "treatment", {
+      spec: {
+        id: card.id,
+        discipline: card.requirements?.find((r) => r.kind === "discipline")?.id,
+      },
+    });
     const settled = this.R.settleWoundTreatment({
       reservation,
       currentTreatment: reservation.treatment,

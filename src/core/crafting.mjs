@@ -155,7 +155,10 @@ export const craftingMethods = {
       recipeId === "recipe-lesser-healing-bottle";
     const roll = automatic
       ? null
-      : this.heroRoll(h, "knowledge", "craft", { recipe: recipeId });
+      : this.heroRoll(h, "knowledge", "craft", {
+          recipe: recipeId,
+          spec: { discipline: "discipline-craft" },
+        });
     if (
       roll &&
       roll.tier !== "strong" &&

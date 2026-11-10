@@ -1,3 +1,4 @@
+import { verifyEquipmentBonuses } from "./equipment-bonuses-check.mjs";
 import { verifyAreaArrows } from "./area-arrows-check.mjs";
 import { verifyChallenge } from "./challenge-check.mjs";
 import { verifyCreatureAI } from "./creature-ai-check.mjs";
@@ -107,6 +108,7 @@ try {
   const runCheck = async (fn) => {
     if (!selectedChecks || selectedChecks.includes(fn.name)) await fn(w);
   };
+  await runCheck(verifyEquipmentBonuses);
   await runCheck(verifyAreaArrows);
   await runCheck(verifyChallenge);
   await runCheck(verifyHud);

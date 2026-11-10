@@ -375,6 +375,18 @@ export function characterSheet({
               `<details class="equipment-compare"><summary>Compare equipped item</summary>${itemComparison(h, i)}</details>`,
             );
         }
+        if (i.effects?.some((e) => e.effect === "illumination")) {
+          host.insertAdjacentHTML(
+            "beforeend",
+            `<button id="item-light">${i.lightEnabled === false ? "Enable" : "Disable"} magical light</button><p class="cost-note">Fuel-free · 3 squares · active only while equipped.</p>`,
+          );
+          host.querySelector("#item-light").onclick = () =>
+            attempt(() => {
+              game.setItemLight(index, i.instanceId, i.lightEnabled === false);
+              view.update(game.party[index]);
+              draw();
+            });
+        }
         if (i.slot === "ring" && !i.worn)
           host.insertAdjacentHTML(
             "beforeend",

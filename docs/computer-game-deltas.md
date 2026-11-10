@@ -322,3 +322,7 @@ Bruce approved the simpler supplies model. Everyday supplies remain individual d
 ## November 10 ingredient-free basic camp duties
 
 Bruce explicitly supersedes the previous deterministic ingredient projects for ordinary camp supplies. Choose Make arrows/dressings/torches or Find food/water; no materials, tools, recipe or source requirements. A successful duty improves one supply step, with hidden success chance improved by relevant training and preparation abilities. Automatic lowest-stock recipients can be overridden. General forage supplies finished goods. Old ingredient inventory, advanced crafting requirements/daily Maker’s Gift, dressing-based HP boosts and once-per-day wound treatment remain intact. See supplies.md.
+
+## Approved equipment catalogue (November 10, 2026)
+
+See [equipment-bonuses.md](equipment-bonuses.md) for the complete form-specific catalogue, chosen values, strongest-matching rule, weapon scope, optional kits, magical light and legacy receipt conversion. This supersedes the older generated equipment build-stat effects and magic discipline gates. Original source cards/Foundry remain unchanged. Attribute effects do not change creation points, HP or learning eligibility; fixed effects without a roll are unaffected by discipline competence.

@@ -1,3 +1,4 @@
+import { protectCondition } from "./equipment-bonuses.mjs";
 import { challenge } from "./challenge.mjs";
 import { surfaceAt } from "./battlefield.mjs";
 import { Random, key, distance, lineOfSight } from "./dungeon.mjs";
@@ -14,7 +15,12 @@ export function encounterBudget(levels, depth, difficulty = 1) {
     target: Math.round(party * pressure * difficulty),
   };
 }
-export function populateEncounters(map, catalog, levels, challengeId = "standard") {
+export function populateEncounters(
+  map,
+  catalog,
+  levels,
+  challengeId = "standard",
+) {
   const setting = challenge(challengeId);
   const rng = new Random(map.seed + map.depth * 4373),
     records = catalog.creatures;
@@ -323,6 +329,8 @@ export const bestiaryMethods = {
     }
   },
   addCreatureCondition(h, key, rating, e) {
+    rating = protectCondition(h, key, rating);
+    if (rating <= 0) return;
     if (
       !h.survival &&
       this.creature(h)?.immunities.some((i) => i.toLowerCase() === key)
