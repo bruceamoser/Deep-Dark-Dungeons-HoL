@@ -1,4 +1,5 @@
 import { verifyCreatureAI } from "./creature-ai-check.mjs";
+import { verifyFieldAbilities } from "./field-abilities-check.mjs";
 import { verifyHud } from "./hud-check.mjs";
 import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { verifyShortcuts } from "./shortcuts-check.mjs";
@@ -111,6 +112,7 @@ try {
   await runCheck(verifyShortcuts);
   await runCheck(verifyReactiveCounters);
   await runCheck(verifyCreatureAI);
+  await runCheck(verifyFieldAbilities);
   await runCheck(verifyWeaponRoll);
   await runCheck(verifyAppearanceUX);
   await runCheck(verifyGameplayIdentity);

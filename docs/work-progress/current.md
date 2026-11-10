@@ -29,12 +29,11 @@ Earlier menu diagnosis: a user desktop entry shadowed the installed system entry
 
 Native checks run from the user systemd session then `aa-exec -p unconfined`: the agent's `NoNewPrivs=1` cannot qualify the SUID sandbox directly. Keep sandboxing enabled and the launcher’s space-free runtime staging.
 
-## Next agent
+## Current bug-fix work
 
-1. Follow `AGENTS.md` and this folder's startup process; pull before resuming and inspect local changes.
-2. Release delivery is complete; no pending publication task. Read the latest release/AI handoffs before new changes.
-3. Evaluate creature balance against the new behaviors using player feedback. Coverage and deliberate limitations are explicit in the AI doc.
-4. Private licensed exports are verified (251 nodes, 20 animations, 39 weapon grips) and ignored. Preserve finished-release staging rules; source-only CI installers are not public release candidates.
+Bruce reported field abilities from character sheets (#114), diagonal movement (#115), hazardous-route confirmation (#116) and creature self-preservation/ally care (#117). Work follows issue → branch → PR → author review/checks → merge → next issue. No new release has been published for these fixes.
+
+Active branch: `codex/114-sheet-field-abilities`, based on `23396f5`. The inspected hero now initiates their own actions; field ally powers open a validated companion picker in town and dungeon. Native verification and review are pending. Continue with #115–#117 after this PR passes and merges. See [session checkpoint](handoffs/2026-11-09-player-feedback-fixes.md).
 
 ## Transfer gaps
 
