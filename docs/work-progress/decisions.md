@@ -77,3 +77,7 @@ Wave 02 confirms the invisible bat was alpha-discarded despite valid bounds; req
 ## 2026-11-10 — Canonical rigs, rendered materials and capture state
 
 Wave 03 returned a Strider that reconstructed the rig after overlooking a supplied donor. Exact input paths/hashes and original rest/bind relationships must be verified; a guessed rig with the same names/count is not enough. Deliberate outer presentation transforms are acceptable for silhouette if documented/factored in binding checks and replayed in actual clips. Material callbacks must capture final rendered material instances after actor lighting clones them. Live Vite capture must use the same timestamped animation module as the appearance factory and fail if humanoid Idle is unavailable; no silent rest-pose evidence. Trapkeeper's one-handed ranged visual preference leaves game stats/ammo and normal bow fallback unchanged.
+
+## 2026-11-10 — Wave-04 first-pass coverage and canonical rig gate
+
+Continue roster coverage with bounded parallel DeepSeek authors; organizer returns actual exported-pose findings rather than trusting self-ratings. Werebear/Marshal/Ash fit78/83/74: below80 bear/demon are explicitly first-pass coverage, retained for later refinement, not final art approval. A reusable comparator checks named hierarchy/local rest/inverse binds for every direct canonical skin; added joints/deliberate presentation scale require explicit separate review. Actual unarmed attacks/visible pixels/costs/native final material instances remain required. See [wave-04 report](../creature-model-wave-04.md).

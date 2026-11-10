@@ -6,10 +6,10 @@ const [input, output, scaleText = "0.85", clipSource = "shared"] =
   process.argv.slice(2);
 if (!input || !output)
   throw Error(
-    "Usage: node review_asset_submission.mjs input.glb output-dir [scale] [shared|spear|dart|embedded]",
+    "Usage: node review_asset_submission.mjs input.glb output-dir [scale] [shared|spear|dart|unarmed|embedded]",
   );
 const scale = Number(scaleText);
-if (!["shared", "spear", "dart", "embedded"].includes(clipSource))
+if (!["shared", "spear", "dart", "unarmed", "embedded"].includes(clipSource))
   throw Error("Invalid clip source");
 if (!Number.isFinite(scale) || scale <= 0 || scale > 2)
   throw Error("Invalid review scale");
@@ -133,6 +133,7 @@ try {
         "Hit_A",
         "Death_A_Pose",
         ...(clipSource === "dart" ? ["2H_Ranged_Shoot"] : []),
+        ...(clipSource === "unarmed" ? ["Unarmed_Melee_Attack_Punch_A"] : []),
       ]) {
         mixer.stopAllAction();
         const clip =
@@ -254,7 +255,11 @@ try {
   if (
     result.poses.some((p) => !p.finite || p.count === 0) ||
     new Set(result.poses.map((p) => Math.round(p.fingerprint * 1000))).size <
-      (clipSource === "embedded" ? 4 : clipSource === "dart" ? 6 : 5)
+      (clipSource === "embedded"
+        ? 4
+        : ["dart", "unarmed"].includes(clipSource)
+          ? 6
+          : 5)
   )
     failures.push("Invalid or unchanged animated geometry");
   if (result.shots.some((s) => s.renderedPixels < 32))

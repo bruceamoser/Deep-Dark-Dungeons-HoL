@@ -49,6 +49,9 @@ export async function verifyCreaturePilots(page) {
         "cinder-strider",
         "kobold-trapkeeper",
         "emberling",
+        "werebear",
+        "hobgoblin-marshal",
+        "ash-demon",
       ];
       g.enemies = ids.map((id, i) => {
         const c = C.creatures.creatures.find((c) => c.id === `creature-${id}`);
@@ -58,6 +61,7 @@ export async function verifyCreaturePilots(page) {
           name: c.name,
           hp: c.hp.max,
           maxHp: c.hp.max,
+          boss: id === "ash-demon",
           cv: c.cv,
           x: 5 + (i % 4) * 2,
           z: 5 + Math.floor(i / 4) * 2,
@@ -91,9 +95,12 @@ export async function verifyCreaturePilots(page) {
             ...(e.data.type === "creature-kobold-trapkeeper"
               ? ["2H_Ranged_Shoot"]
               : []),
-            ...(["creature-cinder-strider", "creature-emberling"].includes(
-              e.data.type,
-            )
+            ...([
+              "creature-cinder-strider",
+              "creature-emberling",
+              "creature-werebear",
+              "creature-ash-demon",
+            ].includes(e.data.type)
               ? ["Unarmed_Melee_Attack_Punch_A"]
               : []),
           ];
@@ -156,9 +163,11 @@ export async function verifyCreaturePilots(page) {
             pan = e.model.getObjectByName("Saucepan helmet");
           let heatMotion = null;
           if (
-            ["creature-cinder-strider", "creature-emberling"].includes(
-              e.data.type,
-            )
+            [
+              "creature-cinder-strider",
+              "creature-emberling",
+              "creature-ash-demon",
+            ].includes(e.data.type)
           ) {
             const materials = [
               ...new Set(
@@ -189,6 +198,17 @@ export async function verifyCreaturePilots(page) {
             missing,
             poses,
             heatMotion,
+            modelScale: e.model.scale.x,
+            marshalGear:
+              e.data.type === "creature-hobgoblin-marshal"
+                ? {
+                    board: !!e.model.getObjectByName("MapBoard"),
+                    blade: !!e.model.getObjectByName("MarshalBlade"),
+                    genericWeapon: !!e.model.getObjectByName(
+                      "Readied melee weapon",
+                    ),
+                  }
+                : null,
             spear: !!spear,
             pan: !!pan,
             tail: !!(
@@ -204,7 +224,7 @@ export async function verifyCreaturePilots(page) {
           };
         });
     });
-    expect(inspection).toHaveLength(13);
+    expect(inspection).toHaveLength(16);
     for (const e of inspection) {
       expect(e.missing, e.id).toEqual([]);
       expect(e.visible, e.id + " is actually visible in the scene").toBe(true);
@@ -225,6 +245,13 @@ export async function verifyCreaturePilots(page) {
     expect(inspection[11].tail).toBe(true);
     expect(inspection[10].heatMotion).toBe(true);
     expect(inspection[12].heatMotion).toBe(true);
+    expect(inspection[15].heatMotion).toBe(true);
+    expect(inspection[15].modelScale).toBeCloseTo(0.95 * 1.12, 5);
+    expect(inspection[14].marshalGear).toEqual({
+      board: true,
+      blade: true,
+      genericWeapon: false,
+    });
     for (const pose of inspection[9].poses) {
       expect(
         Number.isFinite(pose.hangingMinY),
@@ -265,6 +292,8 @@ export async function verifyCreaturePilots(page) {
                       ![
                         "creature-cinder-strider",
                         "creature-emberling",
+                        "creature-werebear",
+                        "creature-ash-demon",
                       ].includes(e.data.type)
                     ? "Idle"
                     : name;

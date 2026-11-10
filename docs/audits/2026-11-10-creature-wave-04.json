@@ -1,0 +1,44 @@
+{
+  "gameCommit": "codex/deepseek-creature-wave-04 (base af20959; accepted wave 4)",
+  "weights": [30, 15, 20, 15, 10, 10],
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "rows": [
+    {
+      "id": "creature-werebear",
+      "name": "Werebear",
+      "scores": [4, 4, 4, 4, 3, 4],
+      "raw": 78,
+      "score": 78,
+      "cap": null,
+      "before": 23,
+      "notes": "Bear head/ears/muzzle, visible eyes/open mouth, forepaws/claws, brown fur and rustic vest replace the stitched humanoid. Returned for hidden eyes/teddy-bear face and weak claws. Still chunky segmented fur, exaggerated fangs and simplified limb/clothing junctions."
+    },
+    {
+      "id": "creature-hobgoblin-marshal",
+      "name": "Hobgoblin Marshal",
+      "scores": [4, 4, 4, 5, 3, 5],
+      "raw": 83,
+      "score": 83,
+      "cap": null,
+      "before": 24,
+      "notes": "Pointed ears/red-brown face, plain steel helmet, layered armor/green cloak, held map board and command saber replace the generic green brute. Returned for flat cap, insufficient armor and short/misaligned saber. Schematic map, rigid cloth and faceted anatomy remain first-pass."
+    },
+    {
+      "id": "creature-ash-demon",
+      "name": "Ash Demon",
+      "scores": [4, 3, 3, 5, 3, 4],
+      "raw": 74,
+      "score": 74,
+      "cap": null,
+      "before": 24,
+      "notes": "Winged charcoal demon with horns, ragged ember membranes, claws, tail, orange fissures, shoulder flames and faint soot replaces the clean imp. Returned for brown body/pale cracks and uniform wings. Solid segmented body, static tail/wing panels and weak smoke remain well short of the swirling source fire/soot anatomy."
+    }
+  ]
+}

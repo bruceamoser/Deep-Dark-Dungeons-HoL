@@ -139,7 +139,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     ranged = held("item-ordinary-ranged-weapon") || look?.weapon === "bow";
   if (
     right &&
-    !(enemy && name === "AnimatedStatue") &&
+    !(enemy && ["AnimatedStatue", "HobgoblinMarshal"].includes(name)) &&
     ((enemy &&
       !ranged &&
       ["melee", "spear", "chain"].includes(look?.weapon ?? "melee")) ||
@@ -371,6 +371,9 @@ export function equipmentAppearance(assets, hero, enemy = false) {
         b.quaternion.copy(rest).multiply(turn);
       });
   }
+  // Preserve the Ash Demon boss enlargement from its previous creature adapter.
+  if (enemy && name === "AshDemon" && hero.boss)
+    model.scale.multiplyScalar(1.12);
   if (enemy && name === "ClayHelper") model.scale.multiplyScalar(0.9);
   model.scale.multiplyScalar(
     enemy ? (["goblins", "kobolds"].includes(look?.theme) ? 0.65 : 0.95) : 0.85,
@@ -383,7 +386,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       stabilize?.();
     };
   }
-  if (enemy && ["CinderStrider", "Emberling"].includes(name))
+  if (enemy && ["CinderStrider", "Emberling", "AshDemon"].includes(name))
     model.userData.animate = elementalMotion(model);
   const clips = gameClips({
     skeleton: /^Skeleton/.test(name),

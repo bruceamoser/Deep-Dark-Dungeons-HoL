@@ -2,6 +2,16 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — creature wave 04
+
+Bruce asked to continue. Werebear, Hobgoblin Marshal and Ash Demon are integrated after three parallel DeepSeek authors and returned organizer findings for all three; one separate Werebear revision, four calls total. Branch `codex/deepseek-creature-wave-04`, base `af20959`; see actual Git/PR history for subsequent checkpoint/merge. [Report](../creature-model-wave-04.md), [provenance](../creature-wave-04-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-04.md).
+
+Fit 23→78 / 24→83 / 24→74. Bear head/eyes/claws/rustic kit, officer helmet/armor/map board/saber, charcoal winged ash/fire demon replace generic casts. Bear/demon remain below target 80: chunky fur/exaggerated fangs, solid demon anatomy/flat wings/faint smoke need later refinement. First-pass coverage, not final high-end or independent art approval. Source rules/IDs/stats/saves/original donors untouched. Cosmetic demon flicker/boss size preserved; duplicate Marshal weapon suppressed.
+
+358 tests pass. Canonical 23-bone rest/bind comparison, separate Three.js/pixel/actual attack review and rated appearance capture pass. Portable Blender rebuilds: bear/demon byte-identical; Marshal geometry/skin/JSON identical, unused UV differences <=5.96e-8. Muted native exact sandboxed launcher passes 16 visible updated creatures, actual claw attacks, props, heat and boss scale, existing checks, all 58 adapters/17 conditions and isolated save/close. Checkout launcher refreshed, label 0.8.7; installed/public release unchanged; Windows not exercised this wave.
+
+Next lowest: Hobgoblin Shieldguard, Crypt Ghoul, Ghast (26 each), checking newer work first. No pending worker/API/task-owned Blender remains. Raw jobs/rejected renders `~/.local/share/four-lanterns-workers/2026-11-10-wave-04/` local only; accepted .blend/GLBs/builders/docs travel in Git. Keep the three-worker limit, explicit donor path/hash, actual rendered acceptance and quiet testing. Full roster high-end refinement unfinished.
+
 ## Latest work — creature wave 03
 
 Bruce selected Cinder Strider, Kobold Trapkeeper and Emberling. Three parallel DeepSeek authors and one returned revision per creature completed; all three are integrated after organizer review. Fit scores 11→81, 14→78, 16→85 are scoped editorial first-pass identity scores, not final art approval. Branch `codex/deepseek-creature-wave-03`, base `50c18fe`; use Git/PR history for observed checkpoint/merge. [Wave report](../creature-model-wave-03.md), [provenance](../creature-wave-03-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-03.md).
