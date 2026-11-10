@@ -7,7 +7,7 @@ Updated: 2026-11-09 (America/New_York).
 Four Lanterns Deep **v0.8.6** is published as latest: https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.6
 Immutable source/tag `6a844f9ab017314ddc5158c8365d639dfa5dc6ab`, release PR #125. Supplies PR #123 and player-feedback PRs #118–#121 are merged. No remaining implementation work.
 
-331 tests pass; complete sandboxed native launcher regression passes. Finished licensed AppImage, installed Debian and Windows NSIS checks all pass in staged run 42753469276, which published the release. See [release handoff](handoffs/2026-11-09-v086-release.md), [supply rules](../supplies.md) and [release process](../releases.md). Author review is not independent review.
+331 tests pass; complete sandboxed native launcher regression passes. Finished licensed AppImage, installed Debian and Windows NSIS checks all pass in staged run 42753469276, which published the release. See [release handoff](handoffs/2026-11-09-v086-release.md), [supply rules](../supplies.md) and [release process](../releases.md). All ten public SHA-256 entries and both updater SHA-512 manifests pass; published 0.8.5 discovers/downloads 0.8.6 through its live feed. Author review is not independent review.
 
 ## Local state and transfer
 
