@@ -23,3 +23,5 @@ Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero 
 #130 merged in PR137 after native value/layout inspection and CI. #131 implements preview from actual movementPlan, visible route rings/line, damage and actionable opportunity markers, read-only hover. Hazard confirmation remains. Focused/unit and native risk checks pending.
 
 #131 merged PR138 after ten focused tests, native hover/risk/consent checks and CI. #132 replaces basic material projects with hidden training-based chance, one-step output, automatic/manual recipients and no ingredient/tool/recipe/source requirements; generic forage gives finished supplies. Advanced ingredients and Maker’s Gift retained, care rules unchanged. Thirty focused tests pass; full suite/native UX qualification in progress.
+
+#132 merged PR139 after 333 local tests and final CI/native UI. #133 audited full KayKit ZIP and purchased Mason Mesh inventory; eight model swaps and goblin/helper sizing improve anatomy. Exact kobold/rat-person/bear-person meshes absent; explicit limitations in docs/creature-casting.md. Creature gallery qualification in progress.

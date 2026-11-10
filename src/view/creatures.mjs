@@ -218,6 +218,7 @@ export function creatureAppearance(assets, data, bow) {
   body.scale.multiplyScalar(scale);
   body.position.y -= box.min.y * scale;
   if (look.model === "Bat" || look.model === "Ghost") body.position.y += 0.35;
+  if (data.type === "creature-clay-helper") root.scale.multiplyScalar(0.65);
   if (data.type === "creature-dire-wolf") root.scale.multiplyScalar(1.15);
   if (data.type === "creature-cinder-imp") root.scale.multiplyScalar(0.7);
   if (data.boss) root.scale.multiplyScalar(1.12);

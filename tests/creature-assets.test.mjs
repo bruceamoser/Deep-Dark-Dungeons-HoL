@@ -61,3 +61,13 @@ test("every roster row carries the fields the renderer reads", () => {
 test("bosses reference real roster entries", () => {
   for (const boss of BOSSES) assert.ok(boss in CREATURE_ROSTER, `${boss} is not a creature`);
 });
+
+
+test("species casting avoids costumes, robot clay servants and monster-bodied goblin/orc casters", () => {
+ assert.equal(CREATURE_ROSTER["creature-plague-zombie"].model,"WerewolfMan");
+ assert.equal(CREATURE_ROSTER["creature-crypt-ghoul"].model,"WerewolfMan");
+ assert.equal(CREATURE_ROSTER["creature-animated-statue"].model,"Golem");
+ assert.equal(CREATURE_ROSTER["creature-clay-helper"].model,"Golem");
+ assert.equal(CREATURE_ROSTER["creature-goblin-rattlechanter"].model,"OrcRaider");
+ assert.equal(CREATURE_ROSTER["creature-orc-warcaller"].model,"OrcBrute");
+});
