@@ -9,3 +9,9 @@ Confirmed: Game.select in src/core/game.mjs:1607 immediately begins selected her
 Pending async questions: simplify camp with automatic materials/recipients vs remove ingredient management; familiar equipment bonuses and exclusions; desired level at depth3 and area arrows as consumables/abilities. Continue independent combat/route/HUD and asset inventory work while awaiting answers. Image1 referenced but no attachment available in latest message; infer Speed/DR belongs beside party-card Grit unless clarified.
 
 Next: create focused child issues then each issue→branch→PR→author review/checks→merge. No fixes or release claimed. Preserve private exports/untracked Borin prototypes, installed game and real saves. Full previous release is verified in v086 handoff. Source book/Foundry untouched. Do not spawn agents unless explicitly authorized.
+
+## Accepted decisions and first fix
+
+Bruce confirmed no required ingredients for basic camp duties; hidden success chances use training; recipients automatic with manual override. Equipment discussion explicitly deferred until other work is resolved. Progression targets level2/depth4, level3/depth7, level4/depth11, preserving earned levels; difficulty independent. Area-arrow delivery choice remains unspecified.
+
+Child issue #128 / branch codex/128-turn-selection: removed immediate beginHero from selection; action/movement commitment already starts the turn. Added regression for switching with no turn-start effects and locking after spending. Needs focused tests and native UI qualification before PR/review/merge. All other feedback remains pending.

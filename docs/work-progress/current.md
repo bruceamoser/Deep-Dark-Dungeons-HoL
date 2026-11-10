@@ -4,7 +4,7 @@ Updated: 2026-11-09 (America/New_York).
 
 ## Active feedback investigation
 
-Issue #127, branch `codex/127-player-feedback`. Nine new feedback requests are tracked; no gameplay fixes yet. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Design questions pending for camp, equipment, difficulty/progression and archery. Continue independent combat/HUD/route and asset investigation.
+Issue #127, active implementation branch `codex/128-turn-selection`. Nine feedback requests are tracked. First turn-selection fix has nine focused tests passing; native qualification/PR review remains. See [feedback handoff](handoffs/2026-11-09-player-feedback.md). Accepted: ingredient-free probabilistic basic camp tasks, automatic recipients with override; level2/depth4, level3/depth7, level4/depth11 without reducing earned levels, independent of difficulty. Equipment discussion deferred. Continue independent combat/HUD/route and asset investigation.
 
 ## Delivered
 
