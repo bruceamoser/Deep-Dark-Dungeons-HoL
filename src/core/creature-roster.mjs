@@ -18,7 +18,7 @@ const rows = [
   ["goblin-firestarter", "OrcRaider", "goblins", 2, "spell"],
   ["goblin-rattlechanter", "OrcRaider", "goblins", 3, "spell"],
   ["goblin-boss", "OrcBrute", "goblins", 4, "melee"],
-  ["kobold-trapkeeper", "OrcRaider", "kobolds", 1, "dart"],
+  ["kobold-trapkeeper", "KoboldTrapkeeper", "kobolds", 1, "dart"],
   ["kobold-tunnel-scout", "KoboldScout", "kobolds", 2, "dart"],
   ["kobold-emberkeeper", "KoboldEmberkeeper", "kobolds", 3, "spell"],
   ["orc-outrider", "OrcRaider", "warband", 2, "melee"],
@@ -49,8 +49,8 @@ const rows = [
   ["stone-knuckle", "StoneKnuckle", "constructs", 2, "slam"],
   ["icebound-warden", "FrostGolem", "rime", 4, "slam"],
   ["air-elemental", "AirVortex", "elementals", 4, "spell"],
-  ["emberling", "Demon", "infernal", 1, "slam"],
-  ["cinder-strider", "Demon", "infernal", 3, "claw"],
+  ["emberling", "Emberling", "infernal", 1, "slam"],
+  ["cinder-strider", "CinderStrider", "infernal", 3, "claw"],
   ["cinder-imp", "Demon", "infernal", 1, "claw"],
   ["ash-demon", "Demon", "infernal", 7, "claw"],
   ["horned-devil", "Demon", "infernal", 10, "chain"],
@@ -66,6 +66,9 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  CinderStrider: "/assets/creatures/wave-03/CinderStrider.glb",
+  KoboldTrapkeeper: "/assets/creatures/wave-03/KoboldTrapkeeper.glb",
+  Emberling: "/assets/creatures/wave-03/Emberling.glb",
   KoboldEmberkeeper: "/assets/creatures/wave-02/KoboldEmberkeeper.glb",
   CaveBat: "/assets/creatures/wave-02/CaveBat.glb",
   AnimatedStatue: "/assets/creatures/wave-02/AnimatedStatue.glb",
@@ -119,6 +122,9 @@ export const CREATURE_MODELS = {
  * through the procedural creature path.
  */
 export const HUMANOID_MODELS = new Set([
+  "CinderStrider",
+  "KoboldTrapkeeper",
+  "Emberling",
   "KoboldEmberkeeper",
   "AnimatedStatue",
   "PlagueZombie",

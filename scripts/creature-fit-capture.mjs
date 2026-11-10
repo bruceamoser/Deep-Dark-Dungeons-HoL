@@ -107,13 +107,24 @@ try {
     if (m.type() === "error") console.error(m.text());
   });
   const rendered = await page.evaluate(async (rows) => {
-    const T = await import("/node_modules/three/build/three.module.js");
+    // Vite can timestamp changed dependencies. Import the same module instances
+    // as the appearance factory, otherwise a second animation library stays empty.
+    const compiled = await (await fetch("/src/view/appearance.mjs")).text();
+    const threeURL = compiled.match(/import \* as T from "([^"]+)"/)?.[1];
+    const catalogURL = compiled.match(
+      /from "([^"]*creature-roster\.mjs[^"]*)"/,
+    )?.[1];
+    const animationURL = compiled.match(
+      /from "([^"]*animation-library\.mjs[^"]*)"/,
+    )?.[1];
+    if (!threeURL || !catalogURL || !animationURL)
+      throw Error("Cannot resolve live appearance dependencies");
+    const T = await import(threeURL);
     const { GLTFLoader } =
       await import("/node_modules/three/examples/jsm/loaders/GLTFLoader.js");
-    const { CREATURE_MODELS } = await import("/src/core/creature-roster.mjs");
+    const { CREATURE_MODELS, HUMANOID_MODELS } = await import(catalogURL);
     const { equipmentAppearance } = await import("/src/view/appearance.mjs");
-    const { loadAnimationLibrary } =
-      await import("/src/view/animation-library.mjs");
+    const { loadAnimationLibrary } = await import(animationURL);
     const loader = new GLTFLoader();
     await loadAnimationLibrary(loader);
     const urls = {
@@ -158,6 +169,11 @@ try {
         { type: row.id },
         true,
       );
+      if (
+        HUMANOID_MODELS.has(row.casting.model) &&
+        !clips.some((c) => c.name === "Idle")
+      )
+        throw Error("Missing actual idle animation for " + row.id);
       model.traverse((o) => {
         if (o.isMesh) o.frustumCulled = false;
       });

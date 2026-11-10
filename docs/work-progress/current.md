@@ -2,6 +2,16 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — creature wave 03
+
+Bruce selected Cinder Strider, Kobold Trapkeeper and Emberling. Three parallel DeepSeek authors and one returned revision per creature completed; all three are integrated after organizer review. Fit scores 11→81, 14→78, 16→85 are scoped editorial first-pass identity scores, not final art approval. Branch `codex/deepseek-creature-wave-03`, base `50c18fe`; use Git/PR history for observed checkpoint/merge. [Wave report](../creature-model-wave-03.md), [provenance](../creature-wave-03-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-03.md).
+
+Strider is tall/narrow with charcoal/fire/smoke and a directly imported canonical rig, replacing a rejected guessed-rig submission. Trapkeeper has clearer marked cords/tools/apron and 16 draw calls instead of 56, plus a one-handed ranged animation preference. Emberling has a visible orange flame crown and dark coal/crack contrast. Both elementals have subtle material flicker, with no new gameplay light. Rules, source files, stats, creature IDs and saves unchanged.
+
+358 tests, three byte-identical portable Blender rebuilds, rig/bind and source/output hash checks, separate Three.js views/pixels/poses and muted native checks pass. Native scope: 13 visible updated creatures, baseline states, Trapkeeper ranged and both actual elemental unarmed attacks, real rendered-material variation, prior brazier/spell checks, all 58 adapters/17 conditions, exact sandboxed launcher/save/close. Fixed a material-cloning integration bug and a Vite capture module-instance mismatch; final native/capture reruns pass. Checkout launcher refreshed (0.8.7 label), installed/public release unchanged. Windows packaging/interaction not run for this wave.
+
+Next lowest remaining: Werebear (23), Hobgoblin Marshal (24), Ash Demon (24); check newer scores/work before another batch. Keep three-worker cap, canonical input verification, actual rendered-pose/cost review and quiet testing. Raw jobs/rejected drafts `~/.local/share/four-lanterns-workers/2026-11-10-wave-03/` remain local; no API worker/task-owned Blender remains. Accepted GLBs, editable `.blend`, portable builders/provenance and progress records travel in Git. Full-roster high-end refinement remains unfinished.
+
 ## Latest work — lowest-rated creature wave 02
 
 Bruce requested another parallel DeepSeek batch from the lowest remaining fit scores. Cave Bat (0→78), Animated Statue (2→80) and Kobold Emberkeeper (9→80) are integrated after organizer review and four requested revision jobs. Three authoring jobs ran concurrently; the exact bounded runner now passes live authoring and revision paths. Branch `codex/deepseek-creature-wave-02`, base `4f52b62`; see Git/PR history for checkpoint/merge. [Wave report](../creature-model-wave-02.md), [provenance](../creature-wave-02-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-02.md).
