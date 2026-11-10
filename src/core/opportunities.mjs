@@ -1,3 +1,4 @@
+import { weaponBonus } from "./equipment-bonuses.mjs";
 import { activeItemEffects } from "./treasure.mjs";
 import { distance, lineOfSight } from "./dungeon.mjs";
 export const opportunityMethods = {
@@ -237,6 +238,12 @@ export const opportunityMethods = {
       this.breakConcealment(h);
       damage.total = this.absorbPowerDamage(e, damage.total, "physical");
       e.hp = Math.max(0, e.hp - damage.total);
+      if (result.tier === "strong" && e.hp > 0 && weaponBonus(h, spec, "push"))
+        this.forceMove(
+          e,
+          { x: Math.sign(e.x - h.x), z: Math.sign(e.z - h.z) },
+          1,
+        );
       this.buildAfterHit(h, e, spec, "physical", effects);
       if (result.tier === "strong")
         for (const effect of effects)

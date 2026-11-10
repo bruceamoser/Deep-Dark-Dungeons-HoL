@@ -288,25 +288,22 @@ test("named magical finds and boss relics never repeat within a saved run", () =
   assert.equal(seen.has(copy.uniqueMagic(42, 5).definition.name), false);
   assert.equal(copy.uniqueMagic(99, 5, { boss: true }).relic, null);
 });
-test("relic effects require disciplines, survive reload, and modify build statistics", () => {
+test("legacy relic receipts preserve identity and rebuild approved equipment effects through reload", () => {
   const g = fresh(),
     h = g.active,
-    i = magicItem(123, 5, { relic: "cinder-crown" });
+    i = magicItem(123, 5, { revision: 2, relic: "cinder-crown" });
   i.worn = true;
   (h.treasure ??= []).push(i);
   g.refreshHero(h);
   assert.equal(g.buildStat(h, "wildfire"), 0);
-  h.preview.state.ranks["discipline-flame"] = 1;
-  // Refreshing acquisition effects follows the same discipline gates as ordinary enchantments.
-  h.draft.purchases[1].push({ id: "discipline-flame", rank: 1 });
-  // A deliberately full example draft may not have DP; use a clean creation pool.
-  h.draft.purchases[1] = [{ id: "discipline-flame", rank: 1 }];
-  g.refreshHero(h);
-  assert.equal(h.preview.valid, true);
-  assert.equal(g.buildStat(h, "wildfire"), 1);
+  assert.equal(h.preview.resistances.physical, 1);
+  assert.ok(h.preview.equipmentEffects.some((e) => e.competence === "flame"));
   const copy = fresh();
   copy.load(deserialize(serialize(g.snapshot())), { resume: false });
-  assert.equal(copy.buildStat(copy.active, "wildfire"), 1);
+  assert.equal(copy.active.treasure[0].instanceId, i.instanceId);
+  assert.equal(copy.active.treasure[0].revision, 2);
+  assert.equal(copy.active.preview.resistances.physical, 1);
+  assert.equal(copy.buildStat(copy.active, "wildfire"), 0);
 });
 test("earned levels can actually be committed, unlock mastery, and preserve missing HP", () => {
   const g = fresh(),
@@ -328,7 +325,7 @@ test("earned levels can actually be committed, unlock mastery, and preserve miss
   const copy = fresh();
   copy.load(saved, { resume: false });
   assert.ok(copy.party[0].xp >= xpForLevel(4));
-  assert.equal(copy.campaign.xpCurve,3);
+  assert.equal(copy.campaign.xpCurve, 3);
   assert.ok(copy.party[0].earnedLevel > 2);
 });
 
@@ -383,7 +380,7 @@ test("every offered specialization changes playable effects, not just its action
     }
 });
 
-test("elemental bows amplify their enchantment and conduct on basic and learned weapon attacks", () => {
+test("legacy elemental bows retain identity, use approved damage and conduct on weapon attacks", () => {
   for (const action of ["ability-basic-ranged", "power-leg-shot"]) {
     const g = arena(),
       h = g.active,
@@ -391,7 +388,7 @@ test("elemental bows amplify their enchantment and conduct on basic and learned 
     g.mode = "town";
     for (const i of [...h.preview.inventory.items].filter((i) => i.held))
       g.equip(0, i.instanceId, "stow");
-    const bow = magicItem(50500, 5, { relic: "thunderwake" });
+    const bow = magicItem(50500, 5, { revision: 2, relic: "thunderwake" });
     h.treasure ??= [];
     h.treasure.push(
       bow,
@@ -404,7 +401,7 @@ test("elemental bows amplify their enchantment and conduct on basic and learned 
     h.preview.equipmentEffects = bow.effects;
     h.preview.state.abilities.push(action);
     h.build = { talents: { voltage: 1 }, specializations: {} };
-    assert.equal(g.enchantmentDamage(h, bow.effects[0], "physical"), 4);
+    assert.equal(g.enchantmentDamage(h, bow.effects[0], "physical"), 2);
     const second = { ...e, id: "wet-neighbor", x: 3, conditions: [] };
     g.enemies.push(second);
     g.encounter.roster.push({
@@ -416,6 +413,10 @@ test("elemental bows amplify their enchantment and conduct on basic and learned 
     g.mode = "combat";
     g.useAbility(action, e.id);
     assert.ok(e.hp < 100, action);
-    assert.equal(second.hp, 95, `${action} must conduct 2 + relic chain 3`);
+    assert.equal(
+      second.hp,
+      98,
+      `${action} conducts base 2 without obsolete relic build stats`,
+    );
   }
 });

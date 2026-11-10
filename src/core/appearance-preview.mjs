@@ -11,7 +11,9 @@ export function appearanceEquipment(hero = {}) {
     two: ordinary("item-ordinary-melee-weapon", 2),
     bow: ordinary("item-ordinary-ranged-weapon"),
     shield: carried.some((i) => i.catalogId === "item-ordinary-shield"),
-    backpack: carried.some((i) => i.catalogId === "item-travel-pack"),
+    backpack: carried.some(
+      (i) => i.catalogId === "item-travel-pack" || i.base === "pack",
+    ),
   };
 }
 export function appearancePreviewHero(hero, key) {
@@ -37,7 +39,7 @@ export function appearancePreviewHero(hero, key) {
           : group === "shield"
             ? i.catalogId === "item-ordinary-shield"
             : group === "backpack"
-              ? i.catalogId === "item-travel-pack"
+              ? i.catalogId === "item-travel-pack" || i.base === "pack"
               : false),
   );
   let caption = "Equipped gear";

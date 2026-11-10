@@ -1,3 +1,4 @@
+import { equipmentLight } from "./equipment-bonuses.mjs";
 import { surfaceAt } from "./battlefield.mjs";
 import { traitsOf } from "./ancestry-game.mjs";
 import { distance, lineOfSight } from "./dungeon.mjs";
@@ -47,7 +48,7 @@ export function magicallyLit(map, party, p) {
     surfaceAt(map, p, "fire") ||
     party.some(
       (h) =>
-        h.lantern &&
+        (h.lantern || equipmentLight(h)) &&
         h.survival.status === "active" &&
         distance(h, p) <= 3 &&
         lineOfSight(map, h, p),

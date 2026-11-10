@@ -1,3 +1,4 @@
+import { equipmentLight } from "../core/equipment-bonuses.mjs";
 import { MASON_URL } from "./mason-heroes.mjs";
 import { HERO_MODELS } from "../core/hero-avatars.mjs";
 import { tacticalViewMethods } from "./tactical-grid.mjs";
@@ -930,8 +931,9 @@ export class Scene {
           e.torchFlame.getWorldPosition(e.torchLight.position);
           e.group.worldToLocal(e.torchLight.position);
         } else e.torchLight.position.set(0, 1.65, 0);
+        e.torchLight.distance = (e.data.torch?.lit ? 5.8 : 3.4) * TILE;
         e.torchLight.intensity =
-          e.data.torch?.lit || e.data.lantern
+          e.data.torch?.lit || e.data.lantern || equipmentLight(e.data)
             ? 24 + Math.sin(t * 11) * 2 + Math.sin(t * 17)
             : 0;
         e.model.userData.setTorchLit?.(!!e.data.torch?.lit);

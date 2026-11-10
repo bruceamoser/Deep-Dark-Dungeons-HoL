@@ -63,7 +63,13 @@ function fresh() {
 function fight(index = 0, type = null) {
   const g = fresh();
   g.selected = index;
-  g.map = { ...g.map, tiles: {}, obstacles: {}, chests: [], lights:[{x:4,z:4,radius:9}] };
+  g.map = {
+    ...g.map,
+    tiles: {},
+    obstacles: {},
+    chests: [],
+    lights: [{ x: 4, z: 4, radius: 9 }],
+  };
   for (let x = 0; x < 12; x++)
     for (let z = 0; z < 12; z++) g.map.tiles[key(x, z)] = { x, z };
   g.party.forEach((h, i) => Object.assign(h, { x: 3 + i, z: 6 }));
@@ -231,21 +237,27 @@ test("every requested equipment form generates deterministically with distinct r
     assert.ok(item.effects.length);
     assert.ok(item.definition.name.includes(ITEM_BASES[base].name));
   }
-  assert.throws(() => magicItem(1, 1, { base: "ring", affixes: ["ember"] }));
+  assert.throws(() =>
+    magicItem(1, 1, { revision: 2, base: "ring", affixes: ["ember"] }),
+  );
 });
-test("discipline gates disable only magic; qualified weapon adds printed elemental damage and rider", () => {
+test("legacy elemental receipts use approved weapon damage without a discipline gate", () => {
   for (const index of [0, 3]) {
     const g = fight(index),
       h = g.active,
       item = give(
         g,
         index,
-        magicItem(100 + index, 1, { base: "blade", affixes: ["ember"] }),
+        magicItem(100 + index, 1, {
+          revision: 2,
+          base: "blade",
+          affixes: ["ember"],
+        }),
       );
     g.mode = "town";
     g.equip(index, item.instanceId, "ready");
     g.mode = "combat";
-    const unlocked = index === 3;
+    const unlocked = true;
     assert.equal(effectStatus(h, item.effects[0]).active, unlocked);
     g.useAbility("ability-basic-melee", "foe");
     assert.equal(60 - g.enemies[0].hp, unlocked ? 5 : 4);
@@ -261,10 +273,18 @@ test("wearables replace only matching slots, support two rings and use highest b
   const belt = give(
       g,
       0,
-      magicItem(1, 1, { base: "belt", affixes: ["might"] }),
+      magicItem(1, 1, { revision: 2, base: "belt", affixes: ["might"] }),
     ),
-    left = give(g, 0, magicItem(2, 1, { base: "ring", affixes: ["might"] })),
-    right = give(g, 0, magicItem(3, 1, { base: "ring", affixes: ["grave"] }));
+    left = give(
+      g,
+      0,
+      magicItem(2, 1, { revision: 2, base: "ring", affixes: ["might"] }),
+    ),
+    right = give(
+      g,
+      0,
+      magicItem(3, 1, { revision: 2, base: "ring", affixes: ["grave"] }),
+    );
   const baseBrawn = h.draft.attributes.brawn,
     dp = h.preview.summary.creationDp;
   g.equip(0, belt.instanceId, "wear");
@@ -273,7 +293,7 @@ test("wearables replace only matching slots, support two rings and use highest b
   assert.equal(g.attribute(h, "brawn"), baseBrawn + 1);
   assert.equal(h.draft.attributes.brawn, baseBrawn);
   assert.equal(h.preview.summary.creationDp, dp);
-  assert.equal(h.preview.resistances.life, 1);
+  assert.equal(h.preview.resistances.life, 2);
   assert.equal(
     h.preview.inventory.items.filter((i) => i.base && i.worn).length,
     3,
@@ -281,7 +301,7 @@ test("wearables replace only matching slots, support two rings and use highest b
   const newer = give(
     g,
     0,
-    magicItem(4, 1, { base: "belt", affixes: ["grave"] }),
+    magicItem(4, 1, { revision: 2, base: "belt", affixes: ["grave"] }),
   );
   g.equip(0, newer.instanceId, "wear");
   assert.equal(
@@ -289,7 +309,7 @@ test("wearables replace only matching slots, support two rings and use highest b
       .worn,
     false,
   );
-  assert.equal(h.preview.resistances.life, 1);
+  assert.equal(h.preview.resistances.life, 2);
   assert.equal(
     R.healingPlan({
       amount: 6,
@@ -297,7 +317,7 @@ test("wearables replace only matching slots, support two rings and use highest b
       max: 20,
       lifeResistances: [h.preview.resistances.life],
     }).restored,
-    5,
+    4,
   );
   g.transferTreasure(0, left.instanceId, 1);
   assert.equal(g.attribute(h, "brawn"), baseBrawn);
@@ -311,8 +331,8 @@ test("wearables replace only matching slots, support two rings and use highest b
 test("magical bow uses ordinary ammunition and two hands; shield swaps cleanly", () => {
   const g = fresh(),
     h = g.party[0],
-    bow = give(g, 0, magicItem(40, 1, { base: "bow" })),
-    shield = give(g, 0, magicItem(41, 1, { base: "shield" }));
+    bow = give(g, 0, magicItem(40, 1, { revision: 2, base: "bow" })),
+    shield = give(g, 0, magicItem(41, 1, { revision: 2, base: "shield" }));
   g.equip(0, bow.instanceId, "ready");
   assert.equal(g.held(h, "item-ordinary-ranged-weapon").hands, 2);
   g.equip(0, shield.instanceId, "ready");

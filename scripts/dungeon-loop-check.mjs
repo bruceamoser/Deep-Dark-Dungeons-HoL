@@ -40,7 +40,7 @@ export async function verifyDungeonLoop(page) {
   const items = [
     magicItem(4400, 1, { base: "blade", affixes: ["ember"] }),
     magicItem(4401, 1, { base: "ring", affixes: ["might"] }),
-    magicItem(4402, 1, { base: "boots", affixes: ["frostward"] }),
+    magicItem(4402, 1, { base: "boots", affixes: ["protect-freezing"] }),
     recallScroll(4403),
   ];
   await page.evaluate((items) => {
@@ -101,7 +101,9 @@ export async function verifyDungeonLoop(page) {
   await expect(page.locator(".gear-slot")).toHaveCount(11);
   await page.locator('[data-filter="relics"]').click();
   await page.locator(`[data-item="${items[0].instanceId}"]`).click();
-  await expect(page.locator(".item-inspector")).toContainText("DORMANT");
+  await expect(page.locator(".item-inspector")).toContainText(
+    "+1 fire damage with this weapon",
+  );
   await page.locator('[data-gear="ready"]').click();
   await expect(page.locator("#hero-preview")).toHaveAttribute(
     "data-weapon",

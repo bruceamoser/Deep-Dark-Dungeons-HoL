@@ -1,3 +1,4 @@
+import { equipmentRollBonus } from "./equipment-bonuses.mjs";
 import { ancestryTraitIds } from "../../public/vendor/hol/rules/ancestry.mjs";
 import { distance } from "./dungeon.mjs";
 export const traitIds = (h) => ancestryTraitIds(h.draft);
@@ -276,7 +277,7 @@ export const ancestryGameMethods = {
     if (["attack", "defense"].includes(mode))
       banes += this.visionPenalty(h, target ?? h);
     h.traitUses ??= {};
-    let bonus = 0;
+    let bonus = equipmentRollBonus(h, context);
     if (mode !== "death" && traits.some((t) => t.poisonTolerance))
       banes = Math.max(
         0,

@@ -1,3 +1,4 @@
+import { strongest, weaponBonus } from "./equipment-bonuses.mjs";
 import { forgePower, forgePowerText } from "./forge.mjs";
 import { POWERS } from "./powers.mjs";
 import { distance } from "./dungeon.mjs";
@@ -360,9 +361,7 @@ export const buildMethods = {
     if (h.draft.forge)
       return (
         (h.preview.forge?.stats[key] ?? 0) +
-        (h.preview.equipmentEffects ?? [])
-          .filter((e) => e.effect === "build" && e.stat === key)
-          .reduce((n, e) => n + e.value, 0)
+        strongest(h, "build", (e) => e.stat === key)
       );
     const talents = Object.entries(h.build?.talents ?? {}).reduce(
       (n, [id, rank]) => n + (TALENTS[id]?.stats[key] ?? 0) * rank,
@@ -372,9 +371,7 @@ export const buildMethods = {
     const values = this.powerIds(h).map(
       (id) => POWERS[id]?.buildStats?.[key] ?? 0,
     );
-    const equipment = (h.preview.equipmentEffects ?? [])
-      .filter((e) => e.effect === "build" && e.stat === key)
-      .reduce((n, e) => n + e.value, 0);
+    const equipment = strongest(h, "build", (e) => e.stat === key);
     return (
       talents + equipment + Math.max(0, ...values) + Math.min(0, ...values)
     );
@@ -418,9 +415,12 @@ export const buildMethods = {
     if (!p) return p;
     if (h?.draft?.forge) {
       const result = forgePower(p, h);
+      if (result.weapon === "ranged")
+        result.range += weaponBonus(h, result, "range");
       result.description = forgePowerText(result);
       return result;
     }
+    if (p.weapon === "ranged") p.range += weaponBonus(h, p, "range");
     const augment = h?.build?.specializations?.[id];
     const add = (value, n) =>
       Array.isArray(value)
@@ -512,8 +512,10 @@ export const buildMethods = {
       this.buildStat(h, type) +
       (spec?.damageModifier ?? 0);
     if (spec?.spell) n += this.buildStat(h, "spell");
-    if (tier === 2) n += this.buildStat(h, "critical");
-    if (hidden) n += this.buildStat(h, "ambush");
+    if (tier === 2)
+      n += this.buildStat(h, "critical") + weaponBonus(h, spec, "strongDamage");
+    if (hidden)
+      n += this.buildStat(h, "ambush") + weaponBonus(h, spec, "hiddenDamage");
     if (this.budgets?.[h.id]?.movementSpent > 0)
       n += this.buildStat(h, "moveDamage");
     if (

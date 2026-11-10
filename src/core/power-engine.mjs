@@ -1,3 +1,8 @@
+import {
+  strongest,
+  weaponBonus,
+  protectCondition,
+} from "./equipment-bonuses.mjs";
 import { POWERS, mappedPower } from "./powers.mjs";
 import { distance, key, lineOfSight, pathfind } from "./dungeon.mjs";
 import { surfaceAt, wallAt } from "./battlefield.mjs";
@@ -127,6 +132,8 @@ export const powerMethods = {
         ))
     )
       return;
+    rating = protectCondition(target, condition, rating);
+    if (rating <= 0) return;
     target.conditions ??= [];
     const id = `power-condition-${source}-${condition}`;
     const previous = target.conditions.find((c) => c.id === id);
@@ -162,7 +169,9 @@ export const powerMethods = {
     return healed;
   },
   powerResistances(target, base) {
-    const delta = this.powerStat(target, "dr");
+    const delta =
+      this.powerStat(target, "dr") +
+      (target.buffs?.shield ? strongest(target, "blockDR") : 0);
     if (!delta) return base;
     const physical = Math.max(
       0,
@@ -621,6 +630,21 @@ export const powerMethods = {
                   h.id,
                 );
             }
+            if (
+              tier === 2 &&
+              recipient.hp > 0 &&
+              weaponBonus(h, spec, "push") &&
+              !spec.effects.some((e) => e.kind === "push" && e.amount >= 1)
+            )
+              this.powerForceMove(
+                recipient,
+                {
+                  x: Math.sign(recipient.x - h.x),
+                  z: Math.sign(recipient.z - h.z),
+                },
+                1,
+                h,
+              );
             this.buildAfterHit(h, recipient, spec, effect.type, enchantments);
             this.emit("attack", {
               attacker: h.id,
@@ -637,7 +661,7 @@ export const powerMethods = {
           case "heal": {
             const tier = spec.attribute
               ? ["weak", "standard", "strong"].indexOf(
-                  this.heroRoll(h, spec.attribute).tier,
+                  this.heroRoll(h, spec.attribute, "attribute", { spec }).tier,
                 )
               : 1;
             this.powerHeal(

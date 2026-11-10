@@ -59,7 +59,15 @@ export const recoveryMethods = {
       return;
     h.survival.hp -= spec.hpCost ?? 0;
     const rolled = spec.attribute
-        ? this.heroRoll(h, spec.attribute)
+        ? this.heroRoll(h, spec.attribute, "attribute", {
+            spec: {
+              ...spec,
+              id,
+              discipline: this.C.choices
+                .find((c) => c.id === id)
+                ?.requirements?.find((r) => r.kind === "discipline")?.id,
+            },
+          })
         : { tier: "standard" },
       tier = ["weak", "standard", "strong"].indexOf(rolled.tier);
     if (spec.healing) {
@@ -585,7 +593,12 @@ export const recoveryMethods = {
       },
       woundApplicable: true,
     });
-    const result = this.heroRoll(healer, card.attribute, "treatment");
+    const result = this.heroRoll(healer, card.attribute, "treatment", {
+      spec: {
+        id: card.id,
+        discipline: card.requirements?.find((r) => r.kind === "discipline")?.id,
+      },
+    });
     const settled = this.R.settleWoundTreatment({
       reservation,
       currentTreatment: reservation.treatment,

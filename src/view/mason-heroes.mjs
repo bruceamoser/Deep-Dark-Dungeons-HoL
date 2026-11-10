@@ -26,7 +26,10 @@ export function masonAppearance(asset, hero, assets) {
   const shield = held("item-ordinary-shield");
   const helm = items.some((i) => i.carried && i.worn && i.slot === "head");
   const backpack = items.some(
-    (i) => i.carried && i.worn && i.catalogId === "item-travel-pack",
+    (i) =>
+      i.carried &&
+      i.worn &&
+      (i.catalogId === "item-travel-pack" || i.base === "pack"),
   );
   const armor = items.find(
     (i) =>
