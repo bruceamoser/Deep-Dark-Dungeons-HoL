@@ -23,7 +23,7 @@ Linux sandbox checks must preserve sandboxing and match the ordinary terminal Ap
 
 Checkout: `/home/bruce/Projects/Deep-Dark-Dungeons-HoL`; conversation placeholder `/home/bruce/Documents/ChatGPT/Deep-dark-dungons` is not the code repo. Node 22.22.1. Personal `gh` identity verified as `bruceamoser`; the other machine's `gh-project`/`gh-personal` helper paths are absent. No global authentication switch.
 
-Network/Git metadata/desktop checks require the environment's approved escalated execution. Actual `launch-game.sh` through `aa-exec -p unconfined` qualifies sandboxing here. Source changes require deliberate `npm run package:dir`; pulling does not replace the installed package. Installed package remains 0.8.5; the rebuilt checkout includes the unreleased player-feedback fixes. Preserve ignored licensed exports and untracked superseded Borin prototypes.
+Network/Git metadata/desktop checks require the environment's approved escalated execution. Actual `launch-game.sh` through `aa-exec -p unconfined` qualifies sandboxing here. Source changes require deliberate `npm run package:dir`; pulling does not replace the installed package. On November 10, installed Debian was verified at 0.8.6 and left unchanged; public 0.8.7 is available through Settings → Updates. Checkout runtime/builds are 0.8.7. Use TMPDIR="$PWD/release/qa-tmp" for builds/QA because /tmp is nearly full; the main-disk retry resolved Debian packaging failure. Preserve ignored licensed exports and untracked superseded Borin prototypes.
 
 ## Not synced by this process
 
