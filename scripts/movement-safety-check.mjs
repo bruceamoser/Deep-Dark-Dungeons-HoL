@@ -70,6 +70,14 @@ export async function verifyMovementSafety(page) {
     s.focusOn(g.active);
   });
   try {
+    const turnsBefore = await page.evaluate(() => window.__ddd.game.party.map(h => h.survival.ownTurn));
+    await page.locator('[data-select="1"]').click();
+    await page.locator('[data-select="2"]').click();
+    expect(await page.evaluate(() => window.__ddd.game.selected)).toBe(2);
+    expect(await page.evaluate(() => window.__ddd.game.encounter.current)).toBeNull();
+    expect(await page.evaluate(() => window.__ddd.game.party.map(h => h.survival.ownTurn))).toEqual(turnsBefore);
+    await page.locator('[data-select="0"]').click();
+    console.log("Ready hero selection remains reversible without starting turns.");
     await page.waitForFunction(
       () =>
         window.__ddd.scene.focus.distanceTo(window.__ddd.scene.targetFocus) <
