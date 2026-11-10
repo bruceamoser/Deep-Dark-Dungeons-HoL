@@ -2,12 +2,18 @@ import { validateCamp } from "./camp.mjs";
 import { RECIPES } from "./recipes.mjs";
 import { SURFACE_COLORS } from "./battlefield.mjs";
 import { validateBuild } from "./builds.mjs";
+import { stockForRecipe, SUPPLY_TARGETS } from "./supply-stock.mjs";
 const nonnegative = (n) => Number.isSafeInteger(n) && n >= 0;
 const recipeIds = new Set(RECIPES.map((r) => r.id));
 // Validate optional game-owned additions before a save replaces the live run.
 // Missing fields are legitimate in pre-0.4 saves.
 export function validateGameState(campaign) {
   validateCamp(campaign);
+  if (
+    campaign.restockTarget !== undefined &&
+    !SUPPLY_TARGETS.includes(campaign.restockTarget)
+  )
+    throw new Error("Invalid departure supply target.");
   const heroes = [
     ...campaign.party,
     ...(campaign.reserve ?? []),
@@ -34,6 +40,17 @@ export function validateGameState(campaign) {
     ),
   ];
   for (const item of items) {
+    if (
+      item.stockUnits !== undefined &&
+      (item.kind !== "ordinary" ||
+        item.catalogId !== "item-material-bundle" ||
+        !stockForRecipe(item.materialType) ||
+        !nonnegative(item.stockUnits) ||
+        !Number.isFinite(item.stockBulk) ||
+        item.stockBulk < 0 ||
+        item.stockBulk > Number.MAX_SAFE_INTEGER)
+    )
+      throw new Error("Invalid saved ingredient stock.");
     if (
       item.reserveDice !== undefined &&
       (item.kind !== "ordinary" ||

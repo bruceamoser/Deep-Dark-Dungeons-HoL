@@ -1,5 +1,6 @@
 import { POWERS } from "./powers.mjs";
 import { ABILITIES } from "./abilities.mjs";
+import { stockForItem, materialUnits } from "./supply-stock.mjs";
 const treatmentCards = {
   Bone: "treat-bone",
   Elemental: "treat-elemental-injury",
@@ -204,18 +205,29 @@ export const campMedicalMethods = {
           heroRoll: () => ({ tier: favorable ? "strong" : "weak" }),
         },
       );
+      const projects = {};
+      const prepare = copy.performCampRestock;
+      copy.performCampRestock = function (h, duty, rng, target) {
+        const slot = Math.floor(this.campaign.camp.elapsed / 4) % 2;
+        projects[`${h.heroId}:${slot}`] ??= structuredClone(
+          this.campRestockPlan(h, duty, target),
+        );
+        return prepare.call(this, h, duty, rng, target);
+      };
       copy.campaign.supplyNotices = [];
       if (!this.campCanResume())
         copy.startCamp(assignments, total, targets, order);
       // Forecasts bound all supply/treatment rolls, with no wandering interruption.
       let count = 0;
       while (copy.campCanResume() && count++ < 96) copy.campHour();
-      return copy.party;
+      return { heroes: copy.party, projects };
     };
-    const low = run(false, "nothing");
-    const possible = ["water", "wood", "food", "fletching", "herbs"].map((id) =>
-      run(true, id),
+    const lowRun = run(false, "nothing"),
+      low = lowRun.heroes;
+    const possibleRuns = ["water", "wood", "food", "fletching", "herbs"].map(
+      (id) => run(true, id),
     );
+    const possible = possibleRuns.map((r) => r.heroes);
     const high = this.party.map(
       (_, i) =>
         possible
@@ -245,7 +257,10 @@ export const campMedicalMethods = {
                 0,
               ) +
             (id === "item-material-bundle"
-              ? Object.values(h.recipeMaterials ?? {}).reduce(
+              ? h.preview.inventory.items
+                  .filter((i) => i.carried && stockForItem(i))
+                  .reduce((n, i) => n + materialUnits(i), 0) +
+                Object.values(h.recipeMaterials ?? {}).reduce(
                   (n, v) => n + v,
                   0,
                 )
@@ -259,6 +274,14 @@ export const campMedicalMethods = {
       supplyLow[key] = sorted[0];
       supplyHigh[key] = sorted.at(-1);
     }
-    return { low, high, supplyLow, supplyHigh, supplyPotential };
+    return {
+      low,
+      high,
+      supplyLow,
+      supplyHigh,
+      supplyPotential,
+      projectLow: lowRun.projects,
+      projectPossible: possibleRuns.map((r) => r.projects),
+    };
   },
 };

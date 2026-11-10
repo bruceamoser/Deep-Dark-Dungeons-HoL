@@ -7,6 +7,7 @@ import { forgeCatalog } from "./core/forge.mjs";
 import { forgeStartingDrafts } from "./core/forge-presets.mjs";
 import { POWERS } from "./core/powers.mjs";
 import { workshopScreen } from "./ui/workshop.mjs";
+import { suppliesScreen } from "./ui/supplies.mjs";
 import { campScreen } from "./ui/camp.mjs";
 import { SaveLibrary, browserSaveStorage } from "./core/save-library.mjs";
 import { runsScreen } from "./ui/runs.mjs";
@@ -586,7 +587,7 @@ function render() {
     h = game.active,
     c = game.campaign;
   const clock = game.clock();
-  const header = `<div class="topbar"><div class="brand"><img src="/art/four-lanterns-icon-v2.png" alt="Four Lanterns Deep seal"><span class="brand-title">Four Lanterns<br>Deep</span><small>HEROES OF LEGEND</small></div><div class="header-center"><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2>${town ? "" : fiercenessIndicator(game.locationFierceness())}</div><div class="header-clock"><span>Day ${clock.day}</span><b>${String(clock.hour).padStart(2, "0")}:${String(clock.minute).padStart(2, "0")}</b></div></div><div class="top-tools"><button data-action="settings" class="settings-gear icon-button" aria-label="Settings" aria-expanded="${settingsOpen}" aria-controls="settings-menu">${icon("settings")}${updateStatus?.phase === "downloaded" ? '<i class="update-dot"></i>' : ""}</button><nav id="settings-menu" aria-label="Game settings" ${settingsOpen ? "" : "hidden"}>${button("Camp & supplies", "camp")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button("Sound", "sound")}${button("Help", "help")}${!town ? button(`${mapVisible ? "Hide" : "Show"} map · Tab`, "toggle-map") + button(`${journalVisible ? "Hide" : "Show"} journal · J`, "toggle-journal") : ""}</nav></div></div>`;
+  const header = `<div class="topbar"><div class="brand"><img src="/art/four-lanterns-icon-v2.png" alt="Four Lanterns Deep seal"><span class="brand-title">Four Lanterns<br>Deep</span><small>HEROES OF LEGEND</small></div><div class="header-center"><div class="location"><div class="eyebrow">${town ? "THE LAST LIGHT ABOVE" : "THE DROWNED RELIQUARY"}</div><h2>${town ? "Greyhaven" : `Depth ${c.depth} · ${c.depth % 5 === 0 ? "Guardian’s Domain" : "The Old Crypt"}`}</h2>${town ? "" : fiercenessIndicator(game.locationFierceness())}</div><div class="header-clock"><span>Day ${clock.day}</span><b>${String(clock.hour).padStart(2, "0")}:${String(clock.minute).padStart(2, "0")}</b></div></div><div class="top-tools">${["town", "exploration"].includes(game.mode) ? button("Supplies", "supplies") : ""}<button data-action="settings" class="settings-gear icon-button" aria-label="Settings" aria-expanded="${settingsOpen}" aria-controls="settings-menu">${icon("settings")}${updateStatus?.phase === "downloaded" ? '<i class="update-dot"></i>' : ""}</button><nav id="settings-menu" aria-label="Game settings" ${settingsOpen ? "" : "hidden"}>${button("Camp & supplies", "camp")}${button("Bestiary", "bestiary")}${button("Save", "save")}${button("Runs", "runs")}${window.desktop?.updates ? button(updateStatus?.phase === "downloaded" ? "Update ready" : "Updates", "updates") : ""}${button("Sound", "sound")}${button("Help", "help")}${!town ? button(`${mapVisible ? "Hide" : "Show"} map · Tab`, "toggle-map") + button(`${journalVisible ? "Hide" : "Show"} journal · J`, "toggle-journal") : ""}</nav></div></div>`;
   townView.setActive(town, game.party);
   townView.party.visible = game.mode === "town";
   scene.renderEnabled = !town;
@@ -625,7 +626,7 @@ function render() {
         .map((l) => `<p>${esc(l)}</p>`)
         .join(
           "",
-        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Recipes", "workshop", "CRAFT & REPLENISH") + button("Make camp", "camp", "SLEEP & RECOVER") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Tab map · J journal · Formation sets marching order"}</div></div>`;
+        )}</aside><div class="bottom ${combat ? "combat-bottom" : ""}"><div class="phase ${combat ? "combat" : ""}">${phase}</div>${combat ? combatDock() : ""}<div class="actionbar">${button("Character", "sheet", "ABILITIES & GEAR")}${button("Formation", "formation", esc(FORMATIONS[c.formation].name))}${combat ? button("Actions", "actions", "CARDS & TARGETS") + button("Move farther", "convert", "MANEUVER → MOVE") + button("End turn", "end", b ? `${b.remaining.main} MAIN · ${b.remaining.maneuver} MANEUVER · ${game.movementLeft()} MOVE` : "SPACE", true) : button("Supplies", "supplies", "STOCKS & PREPARATION") + button("Make camp", "camp", "SLEEP & RECOVER") + button("Return", "extract", "ENTRANCE STAIRS") + button("Descend", "deeper", "FAR STAIRS", true)}</div><div class="hint">${combat ? (selectedAction ? `TARGETING: ${esc(C.choices.find((c) => c.id === selectedAction.id).name)} · Click a target · Esc cancels` : `${esc(h.name)} acts alone · Teal squares: movement range · Gold: last movement · Right-drag pans`) : "Right-drag to pan · Wheel to zoom · Q / E rotate · F follow · G grid · Tab map · J journal · Formation sets marching order"}</div></div>`;
     drawMap();
   }
   bind();
@@ -731,24 +732,25 @@ function action(a, arrived = false) {
       modal.querySelector('[data-tab="build"]')?.click();
       break;
     case "workshop":
+    case "supplies":
+      openSupplies();
+      break;
+    case "advanced-recipes":
       closeModal();
-      workshopScreen({ root: modal, game, close: closeModal, attempt });
+      workshopScreen({
+        root: modal,
+        game,
+        close: closeModal,
+        attempt,
+        supplies: openSupplies,
+      });
       break;
     case "infirmary":
       sheet(game.selected);
       modal.querySelector('[data-tab="journey"]')?.click();
       break;
     case "camp":
-      closeModal();
-      scene.clearFloatingText();
-      modalCleanup = campScreen({
-        root: modal,
-        game,
-        close: closeModal,
-        attempt,
-        assets: scene.assets,
-        portrait: (hero) => hudArt.portrait(hero),
-      });
+      openCamp();
       break;
     case "shop":
       shop();
@@ -1057,6 +1059,7 @@ function sheet(index) {
     attempt,
     activate: activateAction,
     shortcuts: openShortcuts,
+    supplies: openSupplies,
     train: (i) => workshop(i, true),
     respec: respecHero,
     treat: (i, woundId, method) => {
@@ -1384,6 +1387,32 @@ function drawUpdateStatus() {
     install.onclick = () => attempt(() => window.desktop.updates.install());
   modal.querySelector("#release-page").onclick = () =>
     attempt(() => window.desktop.updates.releases());
+}
+function openSupplies() {
+  cancelTargeting();
+  closeModal();
+  suppliesScreen({
+    root: modal,
+    game,
+    close: closeModal,
+    attempt,
+    camp: openCamp,
+    recipes: () => action("advanced-recipes", true),
+  });
+}
+function openCamp(project) {
+  closeModal();
+  scene.clearFloatingText();
+  modalCleanup = campScreen({
+    root: modal,
+    game,
+    close: closeModal,
+    attempt,
+    assets: scene.assets,
+    portrait: (hero) => hudArt.portrait(hero),
+    project,
+    supplies: openSupplies,
+  });
 }
 function shop() {
   closeModal();

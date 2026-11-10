@@ -1,5 +1,6 @@
 import { ordinaryItem } from "./treasure.mjs";
 import { POWERS } from "./powers.mjs";
+import { MATERIAL_ITEMS } from "./supply-stock.mjs";
 const recipe = (
   id,
   name,
@@ -144,22 +145,25 @@ export const RECIPES = Object.freeze([
   ),
 ]);
 export const RECIPE_ITEMS = [
-  ["item-field-dressing", "Field Dressing", 12],
-  ["item-flash-powder", "Flash Powder", 25],
-  ["item-restoration-draught", "Restoration Draught", 120],
-  ["item-ward-charm", "Ward Charm", 35],
-].map(([id, name, price]) => ({
-  id,
-  name,
-  price,
-  bulk: 0,
-  inventoryDie: 4,
-  handChoices: [],
-  specialOrder: false,
-  grantOnly: false,
-  source: { path: "game/recipes" },
-  kind: "consumable",
-}));
+  ...[
+    ["item-field-dressing", "Field Dressing", 12],
+    ["item-flash-powder", "Flash Powder", 25],
+    ["item-restoration-draught", "Restoration Draught", 120],
+    ["item-ward-charm", "Ward Charm", 35],
+  ].map(([id, name, price]) => ({
+    id,
+    name,
+    price,
+    bulk: 0,
+    inventoryDie: 4,
+    handChoices: [],
+    specialOrder: false,
+    grantOnly: false,
+    source: { path: "game/recipes" },
+    kind: "consumable",
+  })),
+  ...MATERIAL_ITEMS,
+];
 export const recipeMethods = {
   knownRecipes(h) {
     return new Set([

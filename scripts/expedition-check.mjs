@@ -57,8 +57,11 @@ export async function verifyExpeditionUI(page) {
     g.emit("change");
   });
   await page.locator('[data-action="workshop"]').click();
+  await page.locator("#supplies-recipes").click();
   await expect(page.getByRole("dialog", { name: "Recipe book" })).toBeVisible();
-  await page.locator('[data-recipe="recipe-bound-torches"]').first().click();
+  await page.locator('[data-filter="all"]').click();
+  await page.locator('[data-recipe="recipe-twisted-cord"]').first().click();
+  await page.locator("#learn-recipe").click();
   await page.locator("#recipe-materials").click();
   await page.locator("#craft-recipe").click();
   expect(await page.evaluate(() => window.__ddd.game.clock().seconds)).toBe(
@@ -66,7 +69,7 @@ export async function verifyExpeditionUI(page) {
       (await page.evaluate(
         () =>
           window.__ddd.game.recipeTime(window.__ddd.game.active, {
-            minutes: 30,
+            minutes: 45,
           }) * 60,
       )),
   );

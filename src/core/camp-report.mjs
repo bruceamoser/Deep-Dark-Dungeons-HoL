@@ -1,10 +1,26 @@
+import { MATERIAL_STOCKS, stockForRecipe } from "./supply-stock.mjs";
 export function campSnapshot(game) {
   return game.party.map((h) => ({
     id: h.heroId,
     name: h.name,
     hp: h.survival.hp,
     wounds: h.wounds.filter((w) => !w.treatment?.completed).length,
-    materials: { ...h.recipeMaterials },
+    materials: {
+      ...Object.fromEntries(
+        Object.entries(h.recipeMaterials ?? {}).filter(
+          ([id]) => !stockForRecipe(id),
+        ),
+      ),
+      ...Object.fromEntries(
+        MATERIAL_STOCKS.map((s) => [
+          s.id,
+          game
+            .materialSources(s.id)
+            .filter((r) => r.hero.heroId === h.heroId)
+            .reduce((n, r) => n + r.units, 0),
+        ]),
+      ),
+    },
     supplies: h.preview.inventory.items
       .filter((i) => i.inventoryDie)
       .map((i) => ({ name: i.definition.name, die: game.supplyValue(h, i) })),

@@ -39,3 +39,7 @@ Bruce needs varied enemy behavior to assess balance. Assign identity-driven goal
 Player fire/trap routes require explicit consent before cost, including formation followers, approaches, movement powers and dangerous landings. New hazards pause travel; already-paid travel does not pay twice. Normal walking consent is not saved; in-flight casting options retain receipts scoped to that paid action.
 
 A single occupied side square permits a one-point diagonal. Solid terrain corners, occupied destinations and two blocked side squares still block it. Creature escape takes priority over holding an attack; safer paths retain actual movement budgets and normal reactions. NPCs may spend the universal Main-action temporary-condition reduction on themselves/adjacent allies; starred remedies and HP-healing limits stay intact. Current encounter cards have no allied HP-healing ability. See the feature docs and PRs #118–#121.
+
+## 2026-11-09 — Direct restocking and camp preparation
+
+Bruce approved the simpler supply design: individual carried consumable dice; one party overview; exact before/after preview and a reviewable Greyhaven restock to a preferred target; deterministic camp projects; shared food/crafting/medicinal ingredients; advanced recipes kept separate. Depletion and one-step combining remain. Ingredient scarcity, paid work periods and camp interruption supply the tension. Relevant specialists improve more tiers while paying every tier's ingredients. See `docs/supplies.md` for chosen costs, migration and source adaptations.

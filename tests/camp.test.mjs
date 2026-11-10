@@ -72,16 +72,16 @@ test("general foraging finds one material per success; crafting consumes compati
   g.startCamp(plan(g));
   g.dice = (n = 3) => Array(n).fill(6);
   const rng = new Random(123);
-  assert.match(g.campDutyReason(h, "cook"), /material/);
+  assert.match(g.campDutyReason(h, "cook"), /ingredients/);
   for (let i = 0; i < 4; i++) g.campDuty(h, "forage", { int: () => 21 });
-  assert.equal(h.recipeMaterials["recipe-travel-food"], 4);
+  assert.equal(g.materialCount("food"), 16);
   const food = h.preview.inventory.items.find(
     (i) => i.catalogId === "item-food-bundle",
   );
   h.supplies[food.instanceId] = 0;
   g.campDuty(h, "cook", rng);
-  assert.equal(h.supplies[food.instanceId], 8);
-  assert.equal(h.recipeMaterials["recipe-travel-food"], 3);
+  assert.equal(h.supplies[food.instanceId], 4);
+  assert.equal(g.materialCount("food"), 15);
   g.map.waterSources = [];
   assert.match(g.campDutyReason(h, "water"), /No water/);
   g.map.waterSources = [{ x: h.x, z: h.z }];
@@ -263,7 +263,7 @@ test("completed camp reports retain actual foraging and healing through save/loa
   assert.equal(report.end[0].hp, 13);
   assert.equal(report.healed[g.party[0].heroId], 12);
   assert.equal(
-    report.events.filter((e) => e.includes("found medicinal materials")).length,
+    report.events.filter((e) => e.includes("medicinal herbs")).length,
     4,
   );
   const restored = new Game(R, C);

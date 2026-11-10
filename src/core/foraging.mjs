@@ -1,3 +1,8 @@
+import {
+  stockForRecipe,
+  restockCost,
+  MATERIAL_STOCKS,
+} from "./supply-stock.mjs";
 import { DISCIPLINE_FORAGING } from "./discipline-benefits.mjs";
 import { distance, key, lineOfSight } from "./dungeon.mjs";
 export const FORAGE_RESOURCES = Object.freeze([
@@ -158,9 +163,11 @@ export const foragingMethods = {
       this.emit("party");
       return;
     }
-    h.recipeMaterials ??= {};
-    h.recipeMaterials[outcome.recipe] =
-      (h.recipeMaterials[outcome.recipe] ?? 0) + 1;
-    this.campEvent(`${h.name} found ${outcome.name.toLowerCase()}.`);
+    const spec = stockForRecipe(outcome.recipe),
+      units = restockCost(0, spec.normal);
+    this.addMaterialStock(h, spec.material, units);
+    this.campEvent(
+      `${h.name} found ${units} ${MATERIAL_STOCKS.find((m) => m.id === spec.material).name.toLowerCase()} · ${spec.name.toLowerCase()} preparation available.`,
+    );
   },
 };
