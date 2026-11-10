@@ -48,3 +48,7 @@ The new local runner requires Python 3.11+ (`tomllib`), Linux `/proc`/`fcntl`, t
 ## bmoser wave-03 checkpoint — November 10
 
 Three completed authoring plus three completed revision jobs under `~/.local/share/four-lanterns-workers/2026-11-10-wave-03/`, all exit zero without timeout or remaining task-owned Blender. Accepted sources/models/builders are versioned; raw transcripts/rejected rig drafts remain local. All three builders rerun byte-identically with Blender 5.2.4 LTS. Checkout launcher includes wave 03, labeled 0.8.7; installed/public release unchanged. Native testing is muted/isolated; Windows packaging/interaction not run. The development capture tool now resolves Vite's timestamped dependency instances so long-running inspection servers do not silently produce rest-pose captures. Stop the task-owned 5187 server during delivery cleanup.
+
+## bmoser wave-04 checkpoint — November 10
+
+Four successful DeepSeek calls under `~/.local/share/four-lanterns-workers/2026-11-10-wave-04/`: three parallel authors; Marshal/Ash incorporated live returned findings, Werebear one separate revision. No timeout/task-owned Blender remains. Accepted models/.blend/builders/provenance are versioned; rejected renders/transcripts local only. Muted native 16-actor/58-adapter/17-condition/launcher/save checks pass; checkout 0.8.7 refreshed, installed/public unchanged. Windows not exercised. Task-owned5187 inspection server stopped during deliverycleanup. Git does not transfer Blender/profile/credentials/private assets.

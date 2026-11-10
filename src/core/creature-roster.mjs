@@ -26,7 +26,7 @@ const rows = [
   ["orc-warcaller", "OrcBrute", "warband", 4, "staff"],
   ["hobgoblin-longbow", "OrcRaider", "warband", 3, "bow"],
   ["hobgoblin-shieldguard", "OrcBrute", "warband", 4, "spear", true],
-  ["hobgoblin-marshal", "OrcBrute", "warband", 6, "melee"],
+  ["hobgoblin-marshal", "HobgoblinMarshal", "warband", 6, "melee"],
   ["cave-bat", "CaveBat", "vermin", 1, "bite"],
   ["giant-rat", "Rat", "vermin", 1, "bite"],
   ["giant-spider", "Spider", "vermin", 2, "bite"],
@@ -36,7 +36,7 @@ const rows = [
   ["winter-wolf", "Wolf", "rime", 9, "spell"],
   ["wererat", "Wererat", "beasts", 3, "melee"],
   ["werewolf", "WerewolfWolf", "beasts", 5, "claw"],
-  ["werebear", "Monstrosity", "beasts", 6, "claw"],
+  ["werebear", "Werebear", "beasts", 6, "claw"],
   ["crypt-ghoul", "WerewolfMan", "dead", 3, "claw"],
   ["ghast", "Monstrosity", "dead", 5, "claw"],
   ["plague-zombie", "PlagueZombie", "dead", 2, "claw"],
@@ -52,7 +52,7 @@ const rows = [
   ["emberling", "Emberling", "infernal", 1, "slam"],
   ["cinder-strider", "CinderStrider", "infernal", 3, "claw"],
   ["cinder-imp", "Demon", "infernal", 1, "claw"],
-  ["ash-demon", "Demon", "infernal", 7, "claw"],
+  ["ash-demon", "AshDemon", "infernal", 7, "claw"],
   ["horned-devil", "Demon", "infernal", 10, "chain"],
   ["grave-wisp", "Ghost", "haunted", 1, "spell"],
   ["shadow", "Ghost", "haunted", 4, "claw"],
@@ -66,6 +66,9 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  HobgoblinMarshal: "/assets/creatures/wave-04/HobgoblinMarshal.glb",
+  AshDemon: "/assets/creatures/wave-04/AshDemon.glb",
+  Werebear: "/assets/creatures/wave-04/Werebear.glb",
   CinderStrider: "/assets/creatures/wave-03/CinderStrider.glb",
   KoboldTrapkeeper: "/assets/creatures/wave-03/KoboldTrapkeeper.glb",
   Emberling: "/assets/creatures/wave-03/Emberling.glb",
@@ -122,6 +125,9 @@ export const CREATURE_MODELS = {
  * through the procedural creature path.
  */
 export const HUMANOID_MODELS = new Set([
+  "HobgoblinMarshal",
+  "AshDemon",
+  "Werebear",
   "CinderStrider",
   "KoboldTrapkeeper",
   "Emberling",

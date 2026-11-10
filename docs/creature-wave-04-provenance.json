@@ -1,0 +1,155 @@
+{
+  "created": "2026-11-10",
+  "authoring": "Three concurrent DeepSeek Flash CLI authors. GPT organizer returned findings for all three. Marshal and Ash Demon addressed review during their original bounded jobs; Werebear completed a separate revision call. Four model calls total. GPT reviewed actual exports and integrated; not independent art review.",
+  "donors": [
+    {
+      "file": "public/assets/characters/series4/Ninja.glb",
+      "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0",
+      "licenseFile": "public/assets/characters/LICENSE.txt",
+      "license": "CC0-1.0"
+    }
+  ],
+  "originalContributions": "New creature geometry, clothing, gear, map linework and materials are project-authored contributions; no new public license assigned. Original donor and source book untouched. No downloads/paid generation.",
+  "assets": [
+    {
+      "name": "Werebear",
+      "creatureId": "creature-werebear",
+      "file": "public/assets/creatures/wave-04/Werebear.glb",
+      "sha256": "0ba5e65a73bd29bb223a2dec2b2c61683ec0912be67fcb2d8c9a7dd45908e6bc",
+      "editable": "art/source/creatures/Werebear.blend",
+      "builder": "scripts/toolchain/creature-workers/werebear.py",
+      "bytes": 310692,
+      "triangles": 4520,
+      "materials": 8,
+      "meshCount": 1,
+      "threeRenderMeshes": 8,
+      "drawCalls": 8,
+      "textures": 0,
+      "embeddedImages": 0,
+      "skinnedVertices": 5119,
+      "bones": [23],
+      "maxWeightInfluences": 1,
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "bindVerification": [
+        {
+          "skin": "Rig_Medium",
+          "bones": 23,
+          "missing": [],
+          "extra": [],
+          "parentMismatches": [],
+          "maxLocalRestDelta": 1.0952353477478027e-5,
+          "maxInverseBindDelta": 8.344650268554688e-7,
+          "pass": true
+        }
+      ],
+      "reproducibility": "Byte-identical Blender 5.2.4 LTS rebuild",
+      "reviewViews": [
+        "front",
+        "side",
+        "back",
+        "three-quarter",
+        "idle",
+        "walk",
+        "slash",
+        "hit",
+        "death",
+        "unarmed punch"
+      ],
+      "limitations": "Bear head/ears/muzzle, visible eyes/open mouth, forepaws/claws, brown fur and rustic vest replace the stitched humanoid. Returned for hidden eyes/teddy-bear face and weak claws. Still chunky segmented fur, exaggerated fangs and simplified limb/clothing junctions."
+    },
+    {
+      "name": "HobgoblinMarshal",
+      "creatureId": "creature-hobgoblin-marshal",
+      "file": "public/assets/creatures/wave-04/HobgoblinMarshal.glb",
+      "sha256": "a5d271716a712f9117dd9be66d4b8e88d70464d3015140183c64233d34eda749",
+      "editable": "art/source/creatures/HobgoblinMarshal.blend",
+      "builder": "scripts/toolchain/creature-workers/hobgoblin-marshal.py",
+      "bytes": 379580,
+      "triangles": 2916,
+      "materials": 7,
+      "meshCount": 3,
+      "threeRenderMeshes": 12,
+      "drawCalls": 12,
+      "textures": 0,
+      "embeddedImages": 0,
+      "skinnedVertices": 6548,
+      "bones": [23],
+      "maxWeightInfluences": 1,
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "bindVerification": [
+        {
+          "skin": "Rig_Medium",
+          "bones": 23,
+          "missing": [],
+          "extra": [],
+          "parentMismatches": [],
+          "maxLocalRestDelta": 1.0952353477478027e-5,
+          "maxInverseBindDelta": 8.344650268554688e-7,
+          "pass": true
+        }
+      ],
+      "reproducibility": "JSON, indices, positions, normals, joints, weights and binds identical. Two unused TEXCOORD_0 accessors vary by at most 5.96e-8; no texture images. Not byte-identical.",
+      "reviewViews": [
+        "front",
+        "side",
+        "back",
+        "three-quarter",
+        "idle",
+        "walk",
+        "slash",
+        "hit",
+        "death"
+      ],
+      "limitations": "Pointed ears/red-brown face, plain steel helmet, layered armor/green cloak, held map board and command saber replace the generic green brute. Returned for flat cap, insufficient armor and short/misaligned saber. Schematic map, rigid cloth and faceted anatomy remain first-pass."
+    },
+    {
+      "name": "AshDemon",
+      "creatureId": "creature-ash-demon",
+      "file": "public/assets/creatures/wave-04/AshDemon.glb",
+      "sha256": "dbddf03c175aa259a1ab784f6e173c8c92a3f1fe464d435832bfa82c1d61b805",
+      "editable": "art/source/creatures/AshDemon.blend",
+      "builder": "scripts/toolchain/creature-workers/ash-demon.py",
+      "bytes": 243796,
+      "triangles": 3268,
+      "materials": 7,
+      "meshCount": 8,
+      "threeRenderMeshes": 8,
+      "drawCalls": 10,
+      "textures": 0,
+      "embeddedImages": 0,
+      "skinnedVertices": 3995,
+      "bones": [23],
+      "maxWeightInfluences": 1,
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "bindVerification": [
+        {
+          "skin": "Rig_Medium",
+          "bones": 23,
+          "missing": [],
+          "extra": [],
+          "parentMismatches": [],
+          "maxLocalRestDelta": 1.0952353477478027e-5,
+          "maxInverseBindDelta": 8.344650268554688e-7,
+          "pass": true
+        }
+      ],
+      "reproducibility": "Byte-identical Blender 5.2.4 LTS rebuild",
+      "reviewViews": [
+        "front",
+        "side",
+        "back",
+        "three-quarter",
+        "idle",
+        "walk",
+        "slash",
+        "hit",
+        "death",
+        "unarmed punch"
+      ],
+      "limitations": "Winged charcoal demon with horns, ragged ember membranes, claws, tail, orange fissures, shoulder flames and faint soot replaces the clean imp. Returned for brown body/pale cracks and uniform wings. Solid segmented body, static tail/wing panels and weak smoke remain well short of the swirling source fire/soot anatomy."
+    }
+  ]
+}

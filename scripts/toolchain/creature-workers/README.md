@@ -35,3 +35,13 @@ timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 -
 ```
 
 All three rebuild byte-identically with Blender 5.2.4 LTS. Strider and Emberling directly import the supplied Ninja; Strider's deliberate outer presentation scale preserves a tall silhouette without a guessed skeleton. Trapkeeper uses the accepted Scout. See `docs/creature-model-wave-03.md` and `docs/creature-wave-03-provenance.json` for the returned rig/palette/crown/prop-cost revisions, measured binding differences and actual renderer costs. Raw worker logs/rejected drafts are not part of these accepted builders.
+
+## Wave 04
+
+```sh
+timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 --python scripts/toolchain/creature-workers/werebear.py
+timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 --python scripts/toolchain/creature-workers/hobgoblin-marshal.py
+timeout --kill-after=3s 45s blender --background --factory-startup --threads 4 --python scripts/toolchain/creature-workers/ash-demon.py
+```
+
+All use the unchanged Ninja donor. Werebear/Ash Demon rebuild byte-identically; Marshal matches JSON/indices/positions/normals/joints/weights/binds with two unused UV accessors differing by at most 5.96e-8 (no texture images). See [wave-04 report](../../../docs/creature-model-wave-04.md) and provenance for returned face/claw, helm/armor/saber and ash/fire/wing revisions, costs and explicit first-pass gaps. The reusable `compare_asset_rig.py` validates direct canonical rest/bind preservation; actual Three.js/native poses remain required.
