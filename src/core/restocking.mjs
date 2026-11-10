@@ -61,7 +61,34 @@ export const restockingMethods = {
       return "Acknowledge the supply notice first.";
     if ([...this.paths.values()].some((p) => p.length))
       return "Wait until movement finishes.";
+    if (!this.party.some((h) => this.canAct(h)))
+      return "A capable companion must prepare the company.";
     return "";
+  },
+  supplyBuyingRate() {
+    return Math.max(
+      0.25,
+      Math.min(
+        1,
+        ...this.party
+          .filter((h) => this.canAct(h))
+          .flatMap((h) => this.traits(h).map((t) => t.buyRate ?? 1)),
+      ),
+    );
+  },
+  ingredientPurchasePrice(kind, units = 4) {
+    const spec = MATERIAL_STOCKS.find((s) => s.id === kind);
+    if (!spec || !Number.isInteger(units) || units < 1 || units > 50)
+      throw new Error("Buy between 1 and 50 ingredient units.");
+    const rates = this.party
+      .filter((h) => this.canAct(h))
+      .map(
+        (h) =>
+          (1 - Math.min(0.75, this.buildStat(h, "craftDiscount"))) *
+          Math.min(1, ...this.traits(h).map((t) => t.buyRate ?? 1)) *
+          (this.traits(h).some((t) => t.salvage) ? 0.75 : 1),
+      );
+    return Math.max(1, Math.ceil(spec.price * units * Math.min(1, ...rates)));
   },
   materialSources(kind) {
     const rows = [];
@@ -182,7 +209,7 @@ export const restockingMethods = {
     const heroes = this.party.filter((h) => this.canAct(h));
     if (!heroes.length)
       throw new Error("A capable companion must carry the ingredients.");
-    const price = spec.price * units;
+    const price = this.ingredientPurchasePrice(kind, units);
     if (this.campaign.bank < price) throw new Error("Not enough vault coins.");
     const carrier = heroes.sort(
       (a, b) =>
@@ -392,7 +419,7 @@ export const restockingMethods = {
       ...ref,
       before,
       after,
-      price,
+      price: Math.ceil(price * this.supplyBuyingRate()),
       bulkAdded: item ? 0 : base.bulk,
       reason:
         this.mode !== "town"

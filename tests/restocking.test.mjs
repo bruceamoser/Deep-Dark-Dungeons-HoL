@@ -242,3 +242,25 @@ test("invalid ingredient receipts, project targets and departure preferences rej
   };
   assert.throws(() => c.load(camp), /camp schedule/);
 });
+
+test("automatic procurement honors the best capable buying/crafting discount", () => {
+  const g = fresh(),
+    row = arrows(g),
+    h = g.party.find((h) => h.heroId === row.hero);
+  h.supplies[row.itemId] = 4;
+  const price = g.townRestockPlan(row, 8).price,
+    ingredients = g.ingredientPurchasePrice("craft", 4);
+  const original = g.traits.bind(g);
+  g.traits = (hero) =>
+    hero === g.party[0]
+      ? [...original(hero), { buyRate: 0.5 }]
+      : original(hero);
+  assert.equal(g.townRestockPlan(row, 8).price, Math.ceil(price * 0.5));
+  assert.equal(
+    g.ingredientPurchasePrice("craft", 4),
+    Math.ceil(ingredients * 0.5),
+  );
+  g.party[0].survival.status = "dead";
+  assert.equal(g.townRestockPlan(row, 8).price, price);
+  assert.equal(g.ingredientPurchasePrice("craft", 4), ingredients);
+});

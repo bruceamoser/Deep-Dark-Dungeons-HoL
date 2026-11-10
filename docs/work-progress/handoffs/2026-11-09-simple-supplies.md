@@ -34,3 +34,7 @@ Paid Dungeon Mason runtime exports and rebuilt runtime are ignored. Installed ga
 ## Sync status
 
 This source/docs checkpoint is being pushed to `codex/122-simple-supplies`. Verify remote head before calling it synced. Do not merge an unfinished checkpoint.
+
+## Qualification checkpoint
+
+All 329 unit tests pass (`/tmp/fld-supplies-unit-final.log`). Final focused regression after procurement-rate coverage passes 35 tests; it now verifies the best capable buyer/crafting discount automatically applies, and dead heroes cannot supply that bonus. Compacted the stock overview, collapsed camp supply details while preserving work-order controls, added task portraits and a reduced-motion-aware die-growth animation. Full final native regression is running in `/tmp/fld-supplies-native-final.log`. Draft PR #123 tracks this complete feature; no merge before final qualification/review.
