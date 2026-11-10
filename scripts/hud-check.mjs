@@ -65,6 +65,14 @@ export async function verifyHud(page) {
     g.emit("party");
     g.emit("change");
   });
+  for (let i = 0; i < 4; i++) {
+    const expected = await page.evaluate(i => {
+      const g=window.__ddd.game,h=g.party[i];
+      return { speed:g.speed(h), dr:h.preview.resistances.physical ?? 0 };
+    },i);
+    await expect(page.locator('.hero-card .vitals').nth(i)).toContainText(`${expected.speed} SPEED`);
+    await expect(page.locator('.hero-card .vitals').nth(i)).toContainText(`${expected.dr} DR`);
+  }
   await expect(page.locator(".minimap")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(page.locator(".minimap")).toBeHidden();
