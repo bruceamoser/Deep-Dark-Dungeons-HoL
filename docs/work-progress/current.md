@@ -14,13 +14,13 @@ Bruce approved the direct-restocking + camp-project design. Issue [#122](https:/
 
 Implemented: a party Supplies overview, reviewed Greyhaven restock to a preferred die, shared carried ingredient stocks, deterministic specialist camp projects with work-order previews and recipient selection, compatible migration preserving old materials' value/Bulk, and advanced-recipe separation. See [feature rules](../supplies.md) and [session handoff](handoffs/2026-11-09-simple-supplies.md).
 
-Implementation is complete in [PR #123](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/123), with final verification/review under way. The overview and camp layout are compact; later-task shortages use work-order projections. Best capable buying/crafting discounts apply automatically. Maker’s Gift retains its shared once-per-day receipt and requires real ingredients. No new release or system installation requested.
+Implementation and verification are complete in [PR #123](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/123). Author review is recorded; this completion checkpoint precedes the final documentation-head CI and merge gate. The overview and camp layout are compact; later-task shortages use work-order projections. Best capable buying/crafting discounts apply automatically. Maker’s Gift retains its shared once-per-day receipt and requires real ingredients. No new release or system installation requested.
 
 ## Verification
 
-- Local full suite passes 329 tests before the final procurement/Maker’s Gift additions; dedicated final restocking suite passes 11 and the final supply/camp/foraging suite passes 30. Gameplay-head CI at `768229f` passes 330 tests/build; the final head includes the additional daily-gift regression and must pass CI before merge.
+- Final gameplay head `fd36d5387e2b009239ead304826659d735afbd97` passes all **331 tests and the build** in both CI runs (42749647417 and 42749653758). Local full suite passed 329 before the final procurement/Maker’s Gift additions; dedicated final restocking suite passes 11 and the final supply/camp/foraging suite passes 30. Only completion documentation changes follow that qualified gameplay head; latest-head CI remains required before merging.
 - Rebuilt licensed checkout; actual `launch-game.sh` native checks pass HUD, the new Supplies screen, reviewed/free-cancel/exact-cost restocking, shared ingredients and Bulk, compact 1100×800 bounds, specialist projects and paused camp save/reload, camp medical/resting/animation/order, advanced rope crafting, combined supply preservation, provision movement, character/roster and named/pending-reaction saves. Sandbox, renderer seccomp, terminal AppArmor context and window-close disk save pass.
-- Final incremental desktop pass checks projected shortages and the finished project/recipe UI. See the session handoff for logs and qualification status; any failure must be resolved before merging.
+- Final incremental desktop pass also succeeds for projected shortages and the finished Supplies/camp/advanced-recipe UI, save/reload, sandboxing and window-close saves. See the session handoff for exact logs and resolved fixture failures.
 - Historical release qualification remains in [v0.8.5 handoff](handoffs/2026-11-09-v085-release.md). No new installers/publication in this task.
 
 ## Local machine and next agent
