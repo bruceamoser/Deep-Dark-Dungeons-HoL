@@ -105,7 +105,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
           m.color.set(
             /^.*(armor|helmet|metal).*$/i.test(o.name)
               ? theme.metal
-              : (theme.skin ?? theme.cloth),
+              : /_(Head|ArmLeft|ArmRight)$/.test(o.name) ? (theme.skin ?? theme.cloth) : theme.cloth,
           );
         if (look.theme === "dead" && /_(Head|ArmLeft|ArmRight|LegLeft|LegRight)$/.test(o.name) && m.color)
           m.color.set(theme.skin);
