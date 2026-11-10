@@ -1,0 +1,99 @@
+{
+  "created": "2026-11-10",
+  "authoring": "Three parallel DeepSeek Flash CLI authors; GPT organizer review/integration; one requested bat palette revision, one statue spear revision, two emberkeeper gear/wing/chain revisions.",
+  "donors": [
+    {
+      "file": "public/assets/characters/series4/Ninja.glb",
+      "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0",
+      "licenseFile": "public/assets/characters/LICENSE.txt",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "public/assets/creatures/bat.glb",
+      "sha256": "31a98ca03f60e5d702e654b3471c0948cb17a7358ce744849fe14e3b410fe1fc",
+      "licenseFile": "public/assets/creatures/LICENSE.txt",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "public/assets/creatures/wave-01/KoboldScout.glb",
+      "sha256": "8ddd4f1c5e947c40aca36962a97aa807891fbe74fa2de856e1c85ad649d2bd1f",
+      "licenseFile": "docs/creature-wave-01-provenance.json",
+      "license": "Project-authored CC0-derived asset; see prior provenance"
+    }
+  ],
+  "originalContributions": "Statue geometry/materials, emberkeeper anatomy/gear/wings and bat palette repair/recolor. Bruce Moser project contributions; no new public license assigned. Original inputs unchanged, no paid cloud generation.",
+  "assets": [
+    {
+      "name": "CaveBat",
+      "creatureId": "creature-cave-bat",
+      "file": "public/assets/creatures/wave-02/CaveBat.glb",
+      "sha256": "f7636bf62287053ec3ad7bf176c6390ea4cafdcb3344d907d4539d6d4e687a3e",
+      "editable": "art/source/creatures/CaveBat.blend",
+      "builder": "scripts/toolchain/creature-workers/cave-bat.py",
+      "bytes": 244272,
+      "triangles": 1038,
+      "exportedVertices": 2294,
+      "materials": 1,
+      "textures": 1,
+      "bones": [28],
+      "unweightedVertices": 0,
+      "unskinnedMeshCount": 1,
+      "zeroAreaFaces": 0,
+      "drawCalls": 5,
+      "embeddedClips": 5,
+      "blenderMeshObjects": 2,
+      "gltfMeshes": 2,
+      "threeRenderMeshes": 5,
+      "skinnedVertices": 1654,
+      "maxWeightInfluences": 4
+    },
+    {
+      "name": "AnimatedStatue",
+      "creatureId": "creature-animated-statue",
+      "file": "public/assets/creatures/wave-02/AnimatedStatue.glb",
+      "sha256": "028afee7c31123b6e9f35fec2aff7103d0e0ab8cb064d0690dde854c70057474",
+      "editable": "art/source/creatures/AnimatedStatue.blend",
+      "builder": "scripts/toolchain/creature-workers/animated-statue.py",
+      "bytes": 543600,
+      "triangles": 11060,
+      "exportedVertices": 8841,
+      "materials": 8,
+      "textures": 0,
+      "bones": [23],
+      "unweightedVertices": 0,
+      "unskinnedMeshCount": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 8,
+      "embeddedClips": 0,
+      "blenderMeshObjects": 1,
+      "gltfMeshes": 1,
+      "threeRenderMeshes": 8,
+      "skinnedVertices": 8841,
+      "maxWeightInfluences": 2
+    },
+    {
+      "name": "KoboldEmberkeeper",
+      "creatureId": "creature-kobold-emberkeeper",
+      "file": "public/assets/creatures/wave-02/KoboldEmberkeeper.glb",
+      "sha256": "822c367325c724bbc84744eee964f4ab9c0ac6046632a3a03ce27c3648e7a93d",
+      "editable": "art/source/creatures/KoboldEmberkeeper.blend",
+      "builder": "scripts/toolchain/creature-workers/kobold-emberkeeper.py",
+      "bytes": 534344,
+      "triangles": 10234,
+      "exportedVertices": 8930,
+      "materials": 8,
+      "textures": 0,
+      "bones": [29],
+      "unweightedVertices": 0,
+      "unskinnedMeshCount": 1,
+      "zeroAreaFaces": 0,
+      "drawCalls": 11,
+      "embeddedClips": 0,
+      "blenderMeshObjects": 2,
+      "gltfMeshes": 2,
+      "threeRenderMeshes": 11,
+      "skinnedVertices": 8317,
+      "maxWeightInfluences": 4
+    }
+  ]
+}

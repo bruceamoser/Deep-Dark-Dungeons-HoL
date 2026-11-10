@@ -20,14 +20,14 @@ const rows = [
   ["goblin-boss", "OrcBrute", "goblins", 4, "melee"],
   ["kobold-trapkeeper", "OrcRaider", "kobolds", 1, "dart"],
   ["kobold-tunnel-scout", "KoboldScout", "kobolds", 2, "dart"],
-  ["kobold-emberkeeper", "OrcRaider", "kobolds", 3, "spell"],
+  ["kobold-emberkeeper", "KoboldEmberkeeper", "kobolds", 3, "spell"],
   ["orc-outrider", "OrcRaider", "warband", 2, "melee"],
   ["orc-shieldbreaker", "OrcBrute", "warband", 4, "melee"],
   ["orc-warcaller", "OrcBrute", "warband", 4, "staff"],
   ["hobgoblin-longbow", "OrcRaider", "warband", 3, "bow"],
   ["hobgoblin-shieldguard", "OrcBrute", "warband", 4, "spear", true],
   ["hobgoblin-marshal", "OrcBrute", "warband", 6, "melee"],
-  ["cave-bat", "Bat", "vermin", 1, "bite"],
+  ["cave-bat", "CaveBat", "vermin", 1, "bite"],
   ["giant-rat", "Rat", "vermin", 1, "bite"],
   ["giant-spider", "Spider", "vermin", 2, "bite"],
   ["wolf", "Wolf", "beasts", 1, "bite"],
@@ -42,7 +42,7 @@ const rows = [
   ["plague-zombie", "PlagueZombie", "dead", 2, "claw"],
   ["mire-ooze", "Ooze", "vermin", 2, "slam"],
   ["animated-armor", "BlackKnight", "constructs", 3, "melee", true],
-  ["animated-statue", "Golem", "constructs", 4, "spear"],
+  ["animated-statue", "AnimatedStatue", "constructs", 4, "spear"],
   ["clay-helper", "ClayHelper", "constructs", 1, "slam"],
   ["clockwork-scout", "Clanker", "constructs", 1, "dart"],
   ["glass-sentinel", "FrostGolem", "constructs", 3, "spell"],
@@ -66,6 +66,9 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  KoboldEmberkeeper: "/assets/creatures/wave-02/KoboldEmberkeeper.glb",
+  CaveBat: "/assets/creatures/wave-02/CaveBat.glb",
+  AnimatedStatue: "/assets/creatures/wave-02/AnimatedStatue.glb",
   PlagueZombie: "/assets/creatures/wave-01/PlagueZombie.glb",
   StoneKnuckle: "/assets/creatures/wave-01/StoneKnuckle.glb",
   KoboldScout: "/assets/creatures/wave-01/KoboldScout.glb",
@@ -116,6 +119,8 @@ export const CREATURE_MODELS = {
  * through the procedural creature path.
  */
 export const HUMANOID_MODELS = new Set([
+  "KoboldEmberkeeper",
+  "AnimatedStatue",
   "PlagueZombie",
   "StoneKnuckle",
   "KoboldScout",

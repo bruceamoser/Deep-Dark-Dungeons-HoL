@@ -1,0 +1,44 @@
+{
+  "gameCommit": "codex/deepseek-creature-wave-02 (base 4f52b62; accepted wave 2)",
+  "weights": [30, 15, 20, 15, 10, 10],
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "rows": [
+    {
+      "id": "creature-cave-bat",
+      "name": "Cave Bat",
+      "scores": [4, 3, 3, 5, 4, 5],
+      "raw": 78,
+      "score": 78,
+      "cap": null,
+      "before": 0,
+      "notes": "Repaired fully transparent palette restores the actual bat body and all embedded clips. Natural fur/chest/membrane colors replace purple/yellow. Large ears, wing panels and feet read as a bat; anatomy remains very angular without fur detail or convincing hooked claws."
+    },
+    {
+      "id": "creature-animated-statue",
+      "name": "Animated Statue",
+      "scores": [4, 3, 4, 5, 3, 5],
+      "raw": 80,
+      "score": 80,
+      "cap": null,
+      "before": 2,
+      "notes": "A carved civic guardian with face, laurel, mantle, ceremonial spear and decorated shield replaces the floating winged proxy. Revised spear points upright and has a leaf-shaped leading tip. Anatomy, cloak folds and weathering remain simplified."
+    },
+    {
+      "id": "creature-kobold-emberkeeper",
+      "name": "Kobold Emberkeeper",
+      "scores": [4, 3, 4, 5, 3, 5],
+      "raw": 80,
+      "score": 80,
+      "cap": null,
+      "before": 9,
+      "notes": "Copper reptilian head/tail, ceremonial clothing, ribbed scalloped wings and a suspended coal/flame brazier replace the orc. Two revisions corrected sideways gear, glider wings and excessive chain drop. Chunky anatomy, flat materials and extreme-pose tail clipping remain."
+    }
+  ]
+}

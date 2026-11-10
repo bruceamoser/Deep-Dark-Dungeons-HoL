@@ -2,12 +2,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "@playwright/test";
-const [input, output, scaleText = "0.85"] = process.argv.slice(2);
+const [input, output, scaleText = "0.85", clipSource = "shared"] =
+  process.argv.slice(2);
 if (!input || !output)
   throw Error(
-    "Usage: node review_asset_submission.mjs input.glb output-dir [scale]",
+    "Usage: node review_asset_submission.mjs input.glb output-dir [scale] [shared|spear|embedded]",
   );
 const scale = Number(scaleText);
+if (!["shared", "spear", "embedded"].includes(clipSource))
+  throw Error("Invalid clip source");
 if (!Number.isFinite(scale) || scale <= 0 || scale > 2)
   throw Error("Invalid review scale");
 const bytes = await fs.readFile(input);
@@ -43,107 +46,177 @@ try {
   await page.goto(
     (process.env.AUDIT_URL ?? "http://127.0.0.1:5187") + "/__asset_review__",
   );
-  const result = await page.evaluate(async (scale) => {
-    const source = await (await fetch("/src/view/appearance.mjs")).text();
-    const threeURL = source.match(/import \* as T from "([^"]+)"/)?.[1];
-    if (!threeURL) throw Error("Cannot locate the game Three.js module");
-    const T = await import(threeURL);
-    const { GLTFLoader } =
-      await import("/node_modules/three/examples/jsm/loaders/GLTFLoader.js");
-    const { loadAnimationLibrary, gameClips } =
-      await import("/src/view/animation-library.mjs");
-    const loader = new GLTFLoader();
-    await loadAnimationLibrary(loader);
-    const asset = await loader.loadAsync("/__worker.glb"),
-      model = asset.scene;
-    model.scale.multiplyScalar(scale);
-    model.traverse((o) => {
-      if (o.isMesh) o.frustumCulled = false;
-    });
-    const scene = new T.Scene();
-    scene.background = new T.Color("#252d33");
-    scene.add(model, new T.HemisphereLight(0xffffff, 0x586575, 2.2));
-    const key = new T.DirectionalLight(0xffe4c6, 3);
-    key.position.set(3, 6, 4);
-    scene.add(key);
-    const renderer = new T.WebGLRenderer({
-      antialias: true,
-      preserveDrawingBuffer: true,
-    });
-    renderer.setSize(512, 512);
-    renderer.toneMapping = T.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
-    const camera = new T.OrthographicCamera(-1.6, 1.6, 1.6, -1.6, 0.1, 50),
-      mixer = new T.AnimationMixer(model),
-      clips = gameClips();
-    const poses = [],
-      shots = [];
-    function sample() {
-      model.updateMatrixWorld(true);
-      let finite = true,
-        fingerprint = 0,
-        count = 0;
-      const bounds = new T.Box3();
+  const result = await page.evaluate(
+    async ({ scale, clipSource }) => {
+      const source = await (await fetch("/src/view/appearance.mjs")).text();
+      const threeURL = source.match(/import \* as T from "([^"]+)"/)?.[1];
+      if (!threeURL) throw Error("Cannot locate the game Three.js module");
+      const T = await import(threeURL);
+      const { GLTFLoader } =
+        await import("/node_modules/three/examples/jsm/loaders/GLTFLoader.js");
+      const { loadAnimationLibrary, gameClips } =
+        await import("/src/view/animation-library.mjs");
+      const loader = new GLTFLoader();
+      if (clipSource !== "embedded") await loadAnimationLibrary(loader);
+      const asset = await loader.loadAsync("/__worker.glb"),
+        model = asset.scene;
+      const { hangingItemStabilizer } =
+        await import("/src/view/hanging-equipment.mjs");
+      const stabilize = hangingItemStabilizer(model);
+      model.scale.multiplyScalar(scale);
       model.traverse((o) => {
-        if (!o.isMesh) return;
-        o.skeleton?.update();
-        for (let i = 0; i < o.geometry.attributes.position.count; i++) {
-          const v = new T.Vector3();
-          o.getVertexPosition(i, v);
-          v.applyMatrix4(o.matrixWorld);
-          finite &&= [v.x, v.y, v.z].every(Number.isFinite);
-          bounds.expandByPoint(v);
-          fingerprint += v.x * 0.31 + v.y * 0.73 + v.z * 0.29;
-          count++;
-        }
+        if (o.isMesh) o.frustumCulled = false;
       });
-      return {
-        finite,
-        fingerprint,
-        count,
-        min: bounds.min.toArray(),
-        max: bounds.max.toArray(),
+      const scene = new T.Scene();
+      scene.background = new T.Color("#252d33");
+      scene.add(model, new T.HemisphereLight(0xffffff, 0x586575, 2.2));
+      const key = new T.DirectionalLight(0xffe4c6, 3);
+      key.position.set(3, 6, 4);
+      scene.add(key);
+      const renderer = new T.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      renderer.setSize(512, 512);
+      renderer.toneMapping = T.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.35;
+      const camera = new T.OrthographicCamera(-1.6, 1.6, 1.6, -1.6, 0.1, 50),
+        mixer = new T.AnimationMixer(model),
+        clips =
+          clipSource !== "embedded"
+            ? gameClips({ spear: clipSource === "spear" })
+            : asset.animations;
+      const aliases = {
+        Idle: /^(Idle|Flying_Idle)$|Bat_Flying$/,
+        Walking_A: /^(Walk|Run|Fast_Flying)$|Bat_Flying$/,
+        "1H_Melee_Attack_Slice_Diagonal":
+          /Weapon|Punch|Headbutt|Bite_Front|Bat_Attack$/,
+        Hit_A: /Hit/,
+        Death_A_Pose: /Death/,
       };
-    }
-    for (const name of [
-      "Idle",
-      "Walking_A",
-      "1H_Melee_Attack_Slice_Diagonal",
-      "Hit_A",
-      "Death_A_Pose",
-    ]) {
-      mixer.stopAllAction();
-      const clip = clips.find((c) => c.name === name);
-      if (!clip) throw Error("Missing shared clip " + name);
-      mixer.clipAction(clip).play();
-      mixer.update(Math.min(0.3, clip.duration * 0.4));
-      poses.push({ name, ...sample() });
-      for (const [view, position] of name === "Idle"
-        ? [
-            ["front", [0, 2, 5]],
-            ["side", [5, 2, 0]],
-            ["back", [0, 2, -5]],
-            ["three-quarter", [4, 3.5, 5]],
-          ]
-        : [[name, [4, 3.5, 5]]]) {
-        camera.position.set(...position);
-        camera.lookAt(0, 1.1, 0);
-        renderer.render(scene, camera);
-        shots.push({
-          name: view,
-          png: renderer.domElement.toDataURL("image/png"),
+      const poses = [],
+        shots = [];
+      function sample() {
+        model.updateMatrixWorld(true);
+        let finite = true,
+          fingerprint = 0,
+          count = 0;
+        const bounds = new T.Box3();
+        model.traverse((o) => {
+          if (!o.isMesh) return;
+          o.skeleton?.update();
+          for (let i = 0; i < o.geometry.attributes.position.count; i++) {
+            const v = new T.Vector3();
+            o.getVertexPosition(i, v);
+            v.applyMatrix4(o.matrixWorld);
+            finite &&= [v.x, v.y, v.z].every(Number.isFinite);
+            bounds.expandByPoint(v);
+            fingerprint += v.x * 0.31 + v.y * 0.73 + v.z * 0.29;
+            count++;
+          }
         });
+        return {
+          finite,
+          fingerprint,
+          count,
+          min: bounds.min.toArray(),
+          max: bounds.max.toArray(),
+        };
       }
-    }
-    const drawCalls = renderer.info.render.calls;
-    renderer.dispose();
-    return {
-      poses,
-      shots,
-      drawCalls,
-      boneNames: model.getObjectsByProperty("isBone", true).map((b) => b.name),
-    };
-  }, scale);
+      for (const name of [
+        "Idle",
+        "Walking_A",
+        "1H_Melee_Attack_Slice_Diagonal",
+        "Hit_A",
+        "Death_A_Pose",
+      ]) {
+        mixer.stopAllAction();
+        const clip =
+          clips.find((c) => c.name === name) ??
+          (clipSource === "embedded"
+            ? clips.find((c) => aliases[name].test(c.name))
+            : null);
+        if (!clip) throw Error("Missing " + clipSource + " clip " + name);
+        mixer.clipAction(clip).play();
+        mixer.update(Math.min(0.3, clip.duration * 0.4));
+        stabilize?.();
+        const pose = { name, sourceClip: clip.name, ...sample() };
+        if (name === "Idle") {
+          const mesh = model.getObjectsByProperty("isSkinnedMesh", true)[0];
+          const index = mesh?.skeleton.bones.findIndex(
+            (b) => b.name === "handr",
+          );
+          if (index >= 0) {
+            const deformation = new T.Matrix4().multiplyMatrices(
+              mesh.skeleton.bones[index].matrixWorld,
+              mesh.skeleton.boneInverses[index],
+            );
+            const axis = new T.Vector3(0, 1, 0).transformDirection(
+              deformation.invert(),
+            );
+            pose.uprightHandRestAxis = {
+              gltf: axis.toArray(),
+              blender: [axis.x, -axis.z, axis.y],
+            };
+          }
+        }
+        poses.push(pose);
+        for (const [view, position] of name === "Idle"
+          ? [
+              ["front", [0, 2, 5]],
+              ["side", [5, 2, 0]],
+              ["back", [0, 2, -5]],
+              ["three-quarter", [4, 3.5, 5]],
+            ]
+          : [[name, [4, 3.5, 5]]]) {
+          camera.position.set(...position);
+          camera.lookAt(0, 1.1, 0);
+          renderer.render(scene, camera);
+          shots.push({
+            name: view,
+            png: renderer.domElement.toDataURL("image/png"),
+          });
+        }
+      }
+      const drawCalls = renderer.info.render.calls;
+      renderer.dispose();
+      return {
+        poses,
+        shots,
+        drawCalls,
+        threeRenderMeshes: model.getObjectsByProperty("isMesh", true).length,
+        boneNames: model
+          .getObjectsByProperty("isBone", true)
+          .map((b) => b.name),
+      };
+    },
+    { scale, clipSource },
+  );
+  // Geometry bounds can be valid while alpha discards every body fragment.
+  // Count rendered pixels as separate evidence; this does not judge anatomy.
+  for (const shot of result.shots) {
+    shot.renderedPixels = await page.evaluate(async (png) => {
+      const img = new Image();
+      img.src = png;
+      await img.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const p = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      let count = 0;
+      for (let i = 0; i < p.length; i += 4)
+        if (
+          Math.abs(p[i] - p[0]) +
+            Math.abs(p[i + 1] - p[1]) +
+            Math.abs(p[i + 2] - p[2]) >
+          20
+        )
+          count++;
+      return count;
+    }, shot.png);
+  }
   for (const s of result.shots)
     await fs.writeFile(
       path.join(output, s.name + ".png"),
@@ -155,6 +228,11 @@ try {
     textures: manifest.textures?.length ?? 0,
     embeddedImages: manifest.images?.length ?? 0,
     scale,
+    clipSource,
+    raster: result.shots.map(({ name, renderedPixels }) => ({
+      name,
+      renderedPixels,
+    })),
     materials: manifest.materials?.length ?? 0,
     meshCount: manifest.meshes?.length ?? 0,
     triangles: (manifest.meshes ?? [])
@@ -168,18 +246,22 @@ try {
     warnings,
   };
   delete report.shots;
+  const failures = [];
   if (
     result.poses.some((p) => !p.finite || p.count === 0) ||
-    new Set(result.poses.map((p) => Math.round(p.fingerprint * 1000))).size !==
-      5
+    new Set(result.poses.map((p) => Math.round(p.fingerprint * 1000))).size <
+      (clipSource === "embedded" ? 4 : 5)
   )
-    throw Error("Invalid or unchanged animated geometry");
+    failures.push("Invalid or unchanged animated geometry");
+  if (result.shots.some((s) => s.renderedPixels < 32))
+    failures.push("Missing or tiny rendered model silhouette");
   if (
     warnings.some((w) =>
       /PropertyBinding|No target node|couldn.t bind/i.test(w),
     )
   )
-    throw Error("Animation binding warning: " + warnings.join("\n"));
+    failures.push("Animation binding warning: " + warnings.join("\n"));
+  report.failures = failures;
   await fs.writeFile(
     path.join(output, "review.json"),
     JSON.stringify(report, null, 2) + "\n",
@@ -209,6 +291,7 @@ try {
       })),
     }),
   );
+  if (failures.length) throw Error(failures.join("; "));
 } finally {
   await browser.close();
 }

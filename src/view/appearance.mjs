@@ -1,4 +1,5 @@
 import { colorGoblinFace } from "./goblin-face.mjs";
+import { hangingItemStabilizer } from "./hanging-equipment.mjs";
 import { masonAppearance } from "./mason-heroes.mjs";
 import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
@@ -137,6 +138,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
     ranged = held("item-ordinary-ranged-weapon") || look?.weapon === "bow";
   if (
     right &&
+    !(enemy && name === "AnimatedStatue") &&
     ((enemy &&
       !ranged &&
       ["melee", "spear", "chain"].includes(look?.weapon ?? "melee")) ||
@@ -345,7 +347,7 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       head.add(pan);
     }
   }
-  if (enemy && ["Wererat", "KoboldScout"].includes(name)) {
+  if (enemy && ["Wererat", "KoboldScout", "KoboldEmberkeeper"].includes(name)) {
     const tails = [...bones.values()]
       .filter((b) => /^tail(?:_|[1-4]$)/.test(b.name))
       .map((b) => ({ b, rest: b.quaternion.clone() }));
@@ -364,6 +366,14 @@ export function equipmentAppearance(assets, hero, enemy = false) {
   model.scale.multiplyScalar(
     enemy ? (["goblins", "kobolds"].includes(look?.theme) ? 0.65 : 0.95) : 0.85,
   );
+  if (enemy && name === "KoboldEmberkeeper") {
+    const stabilize = hangingItemStabilizer(model),
+      previous = model.userData.animate;
+    model.userData.animate = (...args) => {
+      previous?.(...args);
+      stabilize?.();
+    };
+  }
   const clips = gameClips({
     skeleton: /^Skeleton/.test(name),
     spear: enemy && look?.weapon === "spear",
