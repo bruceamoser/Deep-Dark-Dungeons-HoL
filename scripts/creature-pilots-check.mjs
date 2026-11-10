@@ -52,6 +52,9 @@ export async function verifyCreaturePilots(page) {
         "werebear",
         "hobgoblin-marshal",
         "ash-demon",
+        "hobgoblin-shieldguard",
+        "crypt-ghoul",
+        "ghast",
       ];
       g.enemies = ids.map((id, i) => {
         const c = C.creatures.creatures.find((c) => c.id === `creature-${id}`);
@@ -63,19 +66,19 @@ export async function verifyCreaturePilots(page) {
           maxHp: c.hp.max,
           boss: id === "ash-demon",
           cv: c.cv,
-          x: 5 + (i % 4) * 2,
-          z: 5 + Math.floor(i / 4) * 2,
+          x: 3 + (i % 5) * 2,
+          z: 5 + Math.floor(i / 5) * 2,
           conditions: [],
         };
       });
       g.emit("floor");
       g.emit("party");
       g.emit("change");
-      s.zoom = 26;
+      s.zoom = 28;
       s.angle = Math.PI / 4;
       s.resize();
       s.follow = false;
-      s.focusOn({ x: 8, z: 8.5 }, false);
+      s.focusOn({ x: 7, z: 8.5 }, false);
     });
     await page.waitForTimeout(1000);
     const inspection = await page.evaluate(() => {
@@ -100,6 +103,8 @@ export async function verifyCreaturePilots(page) {
               "creature-emberling",
               "creature-werebear",
               "creature-ash-demon",
+              "creature-crypt-ghoul",
+              "creature-ghast",
             ].includes(e.data.type)
               ? ["Unarmed_Melee_Attack_Punch_A"]
               : []),
@@ -209,6 +214,15 @@ export async function verifyCreaturePilots(page) {
                     ),
                   }
                 : null,
+            shieldguardGear:
+              e.data.type === "creature-hobgoblin-shieldguard"
+                ? {
+                    wall: !!e.model.getObjectByName("RegimentWall"),
+                    spear: !!e.model.getObjectByName("RankedSpear"),
+                    genericWeapon: !!e.model.getObjectByName("Readied spear"),
+                    genericShield: !!e.model.getObjectByName("Readied shield"),
+                  }
+                : null,
             spear: !!spear,
             pan: !!pan,
             tail: !!(
@@ -224,7 +238,7 @@ export async function verifyCreaturePilots(page) {
           };
         });
     });
-    expect(inspection).toHaveLength(16);
+    expect(inspection).toHaveLength(19);
     for (const e of inspection) {
       expect(e.missing, e.id).toEqual([]);
       expect(e.visible, e.id + " is actually visible in the scene").toBe(true);
@@ -251,6 +265,12 @@ export async function verifyCreaturePilots(page) {
       board: true,
       blade: true,
       genericWeapon: false,
+    });
+    expect(inspection[16].shieldguardGear).toEqual({
+      wall: true,
+      spear: true,
+      genericWeapon: false,
+      genericShield: false,
     });
     for (const pose of inspection[9].poses) {
       expect(
@@ -294,6 +314,8 @@ export async function verifyCreaturePilots(page) {
                         "creature-emberling",
                         "creature-werebear",
                         "creature-ash-demon",
+                        "creature-crypt-ghoul",
+                        "creature-ghast",
                       ].includes(e.data.type)
                     ? "Idle"
                     : name;

@@ -33,6 +33,11 @@ export async function verifyBestiaryPreview(page) {
         .evaluate((img) => img.complete && img.naturalWidth > 0),
     ).toBe(true);
   }
+  await guide
+    .locator('button[data-creature="creature-hobgoblin-shieldguard"]')
+    .click();
+  await expect(canvas).toHaveAttribute("data-rendered", "true");
+  await page.screenshot({ path: "test-results/bestiary-shieldguard.png" });
   await guide.locator('button[data-creature="creature-ash-demon"]').click();
   const header = await guide.locator("header").elementHandle();
   await canvas.click();

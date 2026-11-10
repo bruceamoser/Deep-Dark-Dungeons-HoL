@@ -66,3 +66,11 @@ The separate Three.js reviewer supports `unarmed` in addition to shared/spear/da
 ## Wave-04 result
 
 Werebear, Hobgoblin Marshal and Ash Demon were the next lowest casts. Three parallel authors and one separate Werebear revision call completed (four calls total); Marshal/Ash incorporated returned findings while their original author jobs remained open. All three received organizer corrections based on actual exported pose sheets. [Report](creature-model-wave-04.md): fit 78/83/74, with bear/demon explicitly below the 80 target and retained for later refinement. Canonical rig comparison, rendered pixels/actual attacks/costs and 16-actor muted native checks passed. Preserve this distinction between recognizable first-pass acceptance and final high-end art approval.
+
+## Wave-05 result
+
+Six bounded calls: three parallel authors, two Shieldguard revision calls, one Ghast revision; Ghoul addressed live feedback in its author job. Returned wrong species, shield orientation, overly clean skeletal anatomy, detached limbs and an invented embedded animation. Final fit 81/78/78 is first-pass coverage, not final approval; see [report](creature-model-wave-05.md). All three portable rebuilds byte-identical. New renderer reports include exact input hashes, preventing acceptance of a worker's later-changed file under an earlier screenshot.
+
+The rig comparator now supports an explicitly reviewed outer scale: `--presentation-scale X Y Z` factors `inverseBind * presentationScale` and reports both raw/factored differences. Default remains strict/unscaled; never infer a correction from a failure. Ghoul uses 1.16 uniformly; its local rest relationships are canonical while raw binds intentionally differ. Matching bone data/finite vertices still do not prove attached limbs—actual Ghast poses exposed geometry authored against the wrong rest positions.
+
+Use literal, tested Blender command examples and exact donor paths. Avoid reading a worker's own JSONL history as context: nested tool output increases cached context without helping model construction. Keep background flags, successful flush/exit, one active Blender per job and kill-after limits explicit.

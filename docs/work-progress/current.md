@@ -2,6 +2,16 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — creature wave 05 and installed menu build
+
+Shieldguard, Crypt Ghoul and Ghast integrated after three parallel DeepSeek authors, two Shieldguard revisions and one Ghast revision (six calls total); Ghoul incorporated live feedback. Fit 26→81/78/78: tall shield/spear hobgoblin, bare hunched corpse, clothed white-haired ghast. First-pass limitations remain; undead below 80, no final/independent art approval. Branch `codex/deepseek-creature-wave-05`, base `428eae9`; see actual Git/PR history for subsequent checkpoint/merge. [Report](../creature-model-wave-05.md), [provenance](../creature-wave-05-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-05.md).
+
+358 tests pass after updating superseded ghoul cast assertion. Byte-identical portable rebuilds, actual render hashes/poses/pixels and factored canonical rig checks pass (Ghoul 1.16 scale explicitly recorded). Muted exact checkout launcher passes 19 updated actors, all 58 adapters/17conditions and58 bestiary comparisons, isolated save/close and sandbox. No rules/stats/IDs/save changes.
+
+**Installed menu corrected:** latest licensed local AppImage now at `~/.local/share/deep-dark-dungeons-hol/Deep-Dark-Dungeons-HoL.AppImage`; normal menu no longer points to old `/opt`. That exact installed executable passes 19 actor and58 bestiary/controls/context checks plus sandbox/save/close. Built Debian too, but system package unchanged; saved original menu backup outside Git. Real saves/sound settings untouched. Local label 0.8.7, public release unchanged; Windows not exercised.
+
+Next requested work: test a local generation/rigging pipeline (Modly/TRELLIS.2, Mesh2Motion and other suggested tools). Bruce explicitly said finish this wave first. Preliminary references only; no experimental installs/weights/generation yet. Verify primary sources/licenses/automation, then one isolated creature pilot. No pending DeepSeek job. Other lowest casts remain Grave Wisp 33, Goblin Firestarter 35, Goblin Rattlechanter 35; check newer scores before assignment.
+
 ## Latest work — bestiary model comparison
 
 Bruce requested actual models beside book pictures for local art review. Implemented for all 58 creatures through the real game factory, neutral inspection lighting, fitted framing, drag/wheel/keyboard rotation and zoom, reset, supported animation previews and retained list position. One canvas/context per open guide with model switching and full close cleanup. Both Settings and enemy inspection entry points wired. Branch `codex/bestiary-model-preview`, base `b13e448` after merged wave-04 PR #157; consult Git/PR history for subsequent checkpoint/merge. [Feature](../bestiary-model-review.md), [handoff](handoffs/2026-11-10-bestiary-model-preview.md).

@@ -1,0 +1,44 @@
+{
+  "gameCommit": "codex/deepseek-creature-wave-05 (base 428eae9)",
+  "weights": [30, 15, 20, 15, 10, 10],
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "rows": [
+    {
+      "id": "creature-hobgoblin-shieldguard",
+      "name": "Hobgoblin Shieldguard",
+      "before": 26,
+      "scores": [4, 4, 4, 5, 3, 4],
+      "raw": 81,
+      "score": 81,
+      "cap": null,
+      "notes": "Established red-brown hobgoblin face/armor, burgundy tabard, tall regiment-marked red shield and ranked spear replace the green brute. Returned Ninja-faced first draft and landscape shield; final uses Marshal family body. Gear follows actual spear-stab clips; marks/armor/grip remain simplified."
+    },
+    {
+      "id": "creature-crypt-ghoul",
+      "name": "Crypt Ghoul",
+      "before": 26,
+      "scores": [4, 4, 4, 4, 3, 4],
+      "raw": 78,
+      "score": 78,
+      "cap": null,
+      "notes": "Bare emaciated green-gray corpse, curved thorax/head, ribs, sunken amber eyes, projecting toothy mouth, long hooked fingers, sparse dark hair and loincloth replace a hairy werewolf proxy. Returned clean straight skeleton-like first draft. Ribs/skin/hair remain schematic and anatomy needs later refinement."
+    },
+    {
+      "id": "creature-ghast",
+      "name": "Ghast",
+      "before": 26,
+      "scores": [4, 3, 4, 5, 3, 4],
+      "raw": 78,
+      "score": 78,
+      "cap": null,
+      "notes": "Pale corpse aristocrat in ragged green/cream/gold ceremonial clothing, dirty white hair, brooch, open teeth and red talons replaces stitched Monstrosity. Returned detached hands/wrong rest geometry and cone-like crown. Canonical-rest limbs now stay attached through shared clips; rigid cloth, large skull and weak hunch remain first-pass."
+    }
+  ]
+}

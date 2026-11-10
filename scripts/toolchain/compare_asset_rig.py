@@ -1,8 +1,8 @@
 """Compare directly preserved GLB skins with their canonical donor (no repairs).
 
 Usage: python3 compare_asset_rig.py donor.glb submission.glb [--tolerance 0.00002]
-Deliberately rescaled outer presentation rigs need a separate factored comparison;
-this gate is for submissions claiming unchanged canonical rest/bind transforms.
+Direct canonical preservation is the default. A reviewed outer presentation scale
+can be factored explicitly with --presentation-scale X Y Z; it is never inferred.
 """
 import argparse
 import json
@@ -52,7 +52,9 @@ def describe(doc, binary, skin):
     } for j, i in enumerate(skin['joints'])}
 
 
-def compare(donor, candidate, tolerance):
+def compare(donor, candidate, tolerance, presentation_scale=(1.0, 1.0, 1.0)):
+    if len(presentation_scale) != 3 or not all(math.isfinite(v) and v > 0 for v in presentation_scale):
+        raise ValueError("Presentation scale must contain three finite positive values")
     source_doc, source_bin = read_glb(donor)
     target_doc, target_bin = read_glb(candidate)
     source = describe(source_doc, source_bin, source_doc['skins'][0])
@@ -62,7 +64,7 @@ def compare(donor, candidate, tolerance):
         missing = sorted(set(source) - set(target))
         extra = sorted(set(target) - set(source))
         parent_mismatches = []
-        rest_delta = bind_delta = 0
+        rest_delta = bind_delta = raw_bind_delta = 0
         for name in source.keys() & target.keys():
             a, b = source[name], target[name]
             if a['parent'] != b['parent']:
@@ -76,17 +78,22 @@ def compare(donor, candidate, tolerance):
                 if key == 'rotation':
                     delta = min(delta, max(abs(x + y) for x, y in zip(a[key], b[key])))
                 if key == 'inverseBind':
-                    bind_delta = max(bind_delta, delta)
+                    raw_bind_delta = max(raw_bind_delta, delta)
+                    # Column-major glTF: inverseBind * presentationScale.
+                    factored = [v * presentation_scale[i // 4] if i < 12 else v
+                                for i, v in enumerate(b[key])]
+                    bind_delta = max(bind_delta, max(abs(x - y) for x, y in zip(a[key], factored)))
                 else:
                     rest_delta = max(rest_delta, delta)
         results.append({'skin': skin.get('name'), 'bones': len(target),
                         'missing': missing, 'extra': extra,
                         'parentMismatches': parent_mismatches,
                         'maxLocalRestDelta': rest_delta, 'maxInverseBindDelta': bind_delta,
+                        'rawMaxInverseBindDelta': raw_bind_delta,
                         'pass': not missing and not extra and not parent_mismatches
                         and rest_delta <= tolerance and bind_delta <= tolerance})
     return {'donor': str(donor), 'candidate': str(candidate), 'tolerance': tolerance,
-            'skins': results, 'pass': bool(results) and all(r['pass'] for r in results)}
+            'presentationScale': list(presentation_scale), 'skins': results, 'pass': bool(results) and all(r['pass'] for r in results)}
 
 
 if __name__ == '__main__':
@@ -94,9 +101,10 @@ if __name__ == '__main__':
     parser.add_argument('donor', type=Path)
     parser.add_argument('candidate', type=Path)
     parser.add_argument('--tolerance', type=float, default=0.00002)
+    parser.add_argument('--presentation-scale', nargs=3, type=float, default=(1.0, 1.0, 1.0))
     args = parser.parse_args()
     if not math.isfinite(args.tolerance) or args.tolerance <= 0:
         parser.error('tolerance must be finite and positive')
-    result = compare(args.donor, args.candidate, args.tolerance)
+    result = compare(args.donor, args.candidate, args.tolerance, args.presentation_scale)
     print(json.dumps(result, indent=2))
     raise SystemExit(0 if result['pass'] else 1)

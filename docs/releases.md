@@ -60,3 +60,17 @@ timing/diagnostic fixes without rebuilding or replacing game binaries. Both
 Linux installers run in independent jobs, and all assertions must pass before
 publishing. Entry clicks and readiness checks allow 90 seconds on software-rendered
 runners; the installed game is unchanged by these QA timeouts.
+
+## Current local review installation (bmoser, November 10)
+
+A refreshed checkout does not update an installed package. Bruce's older menu target `/opt/deep-dark-dungeons-hol` was superseded by a per-user current-source AppImage using the existing checksum-verifying `install-linux.sh`. The normal menu points to `~/.local/share/deep-dark-dungeons-hol/Deep-Dark-Dungeons-HoL.AppImage`; original menu backup is outside Git under `~/.local/share/four-lanterns-install-backups/2026-11-10-wave-05/`. The system Debian package and real saves are untouched.
+
+Both local AppImage and Debian artifacts are built under ignored `release/`. These unpublished review builds retain the source 0.8.7 label; they are not replacements uploaded over public 0.8.7. Use the actual menu executable for acceptance, not just the checkout launcher:
+
+```sh
+DDD_NATIVE_EXECUTABLE=/absolute/menu-target.AppImage \
+DDD_NATIVE_CHECKS=verifyBestiaryPreview,verifyCreaturePilots \
+node scripts/native-check.mjs
+```
+
+On this desktop run the QA command via the existing user-systemd procedure to match the normal terminal SUID/AppArmor context. The default harness still uses `launch-game.sh`. Both modes use isolated saves and silent audio; record which target passed. Installed-target QA verifies actual browser process sandboxing even when the AppImage runtime forks. Refresh the per-user review installation after accepted local art batches so Bruce can review the delivered models from the menu.
