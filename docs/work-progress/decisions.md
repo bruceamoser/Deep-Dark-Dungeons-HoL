@@ -81,3 +81,7 @@ Wave 03 returned a Strider that reconstructed the rig after overlooking a suppli
 ## 2026-11-10 — Wave-04 first-pass coverage and canonical rig gate
 
 Continue roster coverage with bounded parallel DeepSeek authors; organizer returns actual exported-pose findings rather than trusting self-ratings. Werebear/Marshal/Ash fit78/83/74: below80 bear/demon are explicitly first-pass coverage, retained for later refinement, not final art approval. A reusable comparator checks named hierarchy/local rest/inverse binds for every direct canonical skin; added joints/deliberate presentation scale require explicit separate review. Actual unarmed attacks/visible pixels/costs/native final material instances remain required. See [wave-04 report](../creature-model-wave-04.md).
+
+## 2026-11-10 — Bestiary as local art review
+
+Bruce wants the model beside its creature illustration to review locally. Use the actual appearance factory and gear, neutral inspection lighting, manual rotation/zoom and supported animation previews. Keep one context across selections and dispose copied resources on switch/close; never substitute a separate approved-looking render for the real game model. Preview availability does not change fit ratings or imply art approval. See [bestiary comparison](../bestiary-model-review.md).

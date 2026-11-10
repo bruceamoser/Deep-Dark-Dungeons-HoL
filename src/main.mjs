@@ -743,7 +743,12 @@ function action(a, arrived = false) {
       break;
     case "bestiary":
       closeModal();
-      bestiaryScreen({ root: modal, game, close: closeModal });
+      modalCleanup = bestiaryScreen({
+        root: modal,
+        game,
+        close: closeModal,
+        assets: scene.assets,
+      });
       break;
     case "training":
       sheet(game.selected);
@@ -854,7 +859,8 @@ function clickTile(p, interactionId, event) {
     );
     if (enemy && event?.shiftKey) {
       closeModal();
-      bestiaryScreen({
+      modalCleanup = bestiaryScreen({
+        assets: scene.assets,
         root: modal,
         game,
         close: closeModal,

@@ -3333,8 +3333,8 @@ p {
   font: 600 14px Cinzel;
 }
 .bestiary-window {
-  width: min(1000px, 96vw);
-  height: min(820px, 92vh);
+  width: min(1220px, 96vw);
+  height: min(880px, 92vh);
   background: linear-gradient(120deg, #1b2e32, #091318 70%);
   border: 1px solid #9d8353;
   display: flex;
@@ -3362,7 +3362,7 @@ p {
 }
 .bestiary-body {
   display: grid;
-  grid-template-columns: 310px 1fr;
+  grid-template-columns: 260px minmax(0, 1fr);
   min-height: 0;
   flex: 1;
 }
@@ -3421,15 +3421,77 @@ p {
   overflow: auto;
   padding: 26px 32px;
 }
-.creature-portrait {
-  height: 200px;
+.creature-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.creature-comparison figure {
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #9d835344;
+  background: radial-gradient(ellipse at center, #4d69612b, #09131888 80%);
+}
+.creature-comparison figcaption {
+  color: #c8ad74;
+  font: 10px Cinzel;
+  letter-spacing: 1.2px;
+  text-align: center;
+  padding-bottom: 8px;
+}
+.creature-portrait,
+.creature-model-stage {
+  height: 300px;
   position: relative;
-  background: radial-gradient(ellipse at center, #5e74642b, transparent 70%);
 }
 .creature-portrait img {
   height: 100%;
   width: 100%;
   object-fit: contain;
+}
+.creature-model-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+  border-radius: 2px;
+}
+.creature-model-canvas:active { cursor: grabbing; }
+.creature-model-canvas:focus-visible { outline: 1px solid #d7bc80; }
+.creature-model-tools {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.creature-model-tools[hidden] { display: none; }
+.creature-model-tools select,
+.creature-model-tools button {
+  margin: 0;
+  padding: 8px;
+  font-size: 11px;
+  min-width: 0;
+}
+.creature-model-hint {
+  display: block;
+  color: #9caea6;
+  font: 10px/1.6 Arial;
+  text-align: center;
+  margin-top: 8px;
+}
+@media (max-width: 900px) {
+  .bestiary-body { grid-template-columns: 210px minmax(0, 1fr); }
+  .bestiary-body main { padding: 18px; }
+  .creature-comparison { gap: 10px; }
+  .creature-comparison figure { padding: 8px; }
+  .creature-portrait, .creature-model-stage { height: 240px; }
+}
+@media (max-width: 650px) {
+  .bestiary-body { grid-template-columns: 150px minmax(0, 1fr); }
+  .creature-comparison { grid-template-columns: 1fr; }
 }
 .creature-cv {
   position: absolute;

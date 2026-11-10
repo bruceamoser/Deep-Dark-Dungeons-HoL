@@ -1,3 +1,4 @@
+import { verifyBestiaryPreview } from "./bestiary-preview-check.mjs";
 import { verifyCreaturePilots } from "./creature-pilots-check.mjs";
 import { verifyEquipmentBonuses } from "./equipment-bonuses-check.mjs";
 import { verifyAreaArrows } from "./area-arrows-check.mjs";
@@ -114,6 +115,7 @@ try {
   await runCheck(verifyAreaArrows);
   await runCheck(verifyChallenge);
   await runCheck(verifyHud);
+  await runCheck(verifyBestiaryPreview);
   await runCheck(verifyMusic);
   await runCheck(verifyTownNavigation);
   await runCheck(verifyRespec);

@@ -52,3 +52,7 @@ Three completed authoring plus three completed revision jobs under `~/.local/sha
 ## bmoser wave-04 checkpoint — November 10
 
 Four successful DeepSeek calls under `~/.local/share/four-lanterns-workers/2026-11-10-wave-04/`: three parallel authors; Marshal/Ash incorporated live returned findings, Werebear one separate revision. No timeout/task-owned Blender remains. Accepted models/.blend/builders/provenance are versioned; rejected renders/transcripts local only. Muted native 16-actor/58-adapter/17-condition/launcher/save checks pass; checkout 0.8.7 refreshed, installed/public unchanged. Windows not exercised. Task-owned5187 inspection server stopped during deliverycleanup. Git does not transfer Blender/profile/credentials/private assets.
+
+## bmoser bestiary viewer checkpoint — November 10
+
+Checkout launcher includes the live book/model comparison for all 58 entries after a package rebuild, still labeled 0.8.7. Final muted native comparison/control/context-cleanup and exact sandboxed launcher/save checks pass. Installed/public release unchanged; Windows not exercised. Test screenshots/logs stay local; code/docs transfer through Git. Task-owned Vite5187 stopped during delivery cleanup. No pending API/Blender worker.
