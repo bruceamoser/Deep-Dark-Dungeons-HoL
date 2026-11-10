@@ -1,0 +1,2180 @@
+{
+  "date": "2026-11-10",
+  "gameCommit": "a56aacc824a0376774c08c4d435247731c73826b",
+  "sourceCommit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "weights": [
+    30,
+    15,
+    20,
+    15,
+    10,
+    10
+  ],
+  "rows": [
+    {
+      "id": "creature-bone-sentry",
+      "name": "Skeleton Sentry",
+      "model": "SkeletonWarrior",
+      "scores": [
+        5,
+        4,
+        3,
+        3,
+        3,
+        3
+      ],
+      "raw": 75,
+      "cap": null,
+      "score": 75,
+      "notes": "Correct skeleton and sword; horned helmet replaces exposed skull, uniform tatters and the illustrated shield are missing.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*An articulated skeleton armed with a rusted sword and remnants of an old uniform. No appetite or fatigue distracts it from the narrow command that holds its bones together.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-bone-sentry.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/bone-sentry.md",
+          "sha256": "e600e2b29eff1109577fe42e80ba3ce043f9db6f59678a98e51f5960312dc225"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-bone-sentry.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/skeletons/Skeleton_Warrior.glb",
+        "sha256": "c6a9a2b90423651ba9c4c83e9270d6fba11faf033f83e1c30d0c05f263c3bc39"
+      },
+      "evidence": {
+        "front": "creature-bone-sentry-0.png",
+        "rear": "creature-bone-sentry-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-bone-archer",
+      "name": "Skeleton Archer",
+      "model": "SkeletonRogue",
+      "scores": [
+        5,
+        4,
+        4,
+        4,
+        3,
+        4
+      ],
+      "raw": 84,
+      "cap": null,
+      "score": 84,
+      "notes": "Clearly a skeleton archer with bow; hood obscures skull, quiver and ragged uniform are missing.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A dry skeleton equipped with a maintained bow and a small bundle of arrows. Its stillness is absolute until an intruder crosses the lane it was ordered to watch.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-bone-archer.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/bone-archer.md",
+          "sha256": "247e30fe7c1b4410e950d651af705f3ce14b7d6592c4f8ba12b23848c1262b6e"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-bone-archer.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/skeletons/Skeleton_Rogue.glb",
+        "sha256": "846d1a30461ac542a7dcf9ab814732235c01d01f2c6fcccc4bbebfcb6aebe9ab"
+      },
+      "evidence": {
+        "front": "creature-bone-archer-0.png",
+        "rear": "creature-bone-archer-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-skeleton-champion",
+      "name": "Skeleton Champion",
+      "model": "SkeletonWarrior",
+      "scores": [
+        5,
+        4,
+        2,
+        3,
+        3,
+        1
+      ],
+      "raw": 67,
+      "cap": null,
+      "score": 67,
+      "notes": "Same horned warrior body as sentry; shield helps but crooked crown and veteran regalia are absent.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A crowned helm sits crookedly on this skeleton, but its sword follows the patient lines of a practiced duelist.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-skeleton-champion.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/skeleton-champion.md",
+          "sha256": "c1448111b660f38d7e05dd90f79c8156c2a4f76f442a3568053b6547e1b549f8"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-skeleton-champion.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/skeletons/Skeleton_Warrior.glb",
+        "sha256": "c6a9a2b90423651ba9c4c83e9270d6fba11faf033f83e1c30d0c05f263c3bc39"
+      },
+      "evidence": {
+        "front": "creature-skeleton-champion-0.png",
+        "rear": "creature-skeleton-champion-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-barrow-guard",
+      "name": "Barrow Guard",
+      "model": "SkeletonGolem",
+      "scores": [
+        3,
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "raw": 53,
+      "cap": null,
+      "score": 53,
+      "notes": "Oversized bare skeletal brute rather than an armoured burial guardian; sword/shield only partly convey the role.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*An armed burial guardian in tarnished armor, with turf caught in its shield and remnants of an oath worked into its clothing. It remembers its duty more clearly than its life.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-barrow-guard.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/barrow-guard.md",
+          "sha256": "e35be3da89e1d10743d976086527b8c3498ba811e80c070f481465825a21aaf2"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-barrow-guard.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/skeletons/Skeleton_Golem.glb",
+        "sha256": "5012c8a8c3483c12ff9231ae8d03449e0d6dabe542967e2cb4d4ba9fb4234870"
+      },
+      "evidence": {
+        "front": "creature-barrow-guard-0.png",
+        "rear": "creature-barrow-guard-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-wight",
+      "name": "Wight",
+      "model": "Vampire",
+      "scores": [
+        2,
+        3,
+        1,
+        1,
+        1,
+        4
+      ],
+      "raw": 38,
+      "cap": null,
+      "score": 38,
+      "notes": "Healthy-looking moustached vampire in a red coat; no armoured corpse, decay or ancient lord's regalia.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*An armored corpse watches with the offended dignity of a lord whose court has forgotten to die.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-wight.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/wight.md",
+          "sha256": "d7d513311c7699d72210e7a806a90d12fe2495989cd0e84f3cc140c277cb64d2"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-wight.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/Vampire.glb",
+        "sha256": "53843b4310ddc4abaf719f8f33dd988b72f9c8b71f89764c0abbd38649295448"
+      },
+      "evidence": {
+        "front": "creature-wight-0.png",
+        "rear": "creature-wight-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-death-knight",
+      "name": "Death Knight",
+      "model": "BlackKnight",
+      "scores": [
+        5,
+        4,
+        3,
+        3,
+        3,
+        1
+      ],
+      "raw": 71,
+      "cap": null,
+      "score": 71,
+      "notes": "Armoured closed-helm knight reads correctly; bright plume and generic sword/shield lack burned heraldry and spectral menace; same body as animated armour.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*Burned heraldry marks a knight whose armor has become a walking tomb. Every salute is exact, every promise remembered.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-death-knight.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/death-knight.md",
+          "sha256": "d01cbf5d4cebd2e2532a0a1afc25a1e994655e1c3f77f23c1c2eab0dea613ad5"
+        },
+        "portraitSource": "design/bestiary/art/creatures/death-knight.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/BlackKnight.glb",
+        "sha256": "91cfdbfc7d9b8f541c5d50716eca8d4edae3dcda9b78c07422a9c0ac4919019d"
+      },
+      "evidence": {
+        "front": "creature-death-knight-0.png",
+        "rear": "creature-death-knight-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-road-bandit",
+      "name": "Road Bandit",
+      "model": "Survivalist",
+      "scores": [
+        5,
+        4,
+        3,
+        4,
+        4,
+        5
+      ],
+      "raw": 84,
+      "cap": null,
+      "score": 84,
+      "notes": "Human survivalist, practical clothes, belt gear and blade communicate robber well; missing ragged cloak/pack detail.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A lightly equipped roadside robber carrying a practical weapon and a pack of mismatched necessities. Hunger, debt or coercion often explains the occupation better than loyalty to the gang.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-road-bandit.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/road-bandit.md",
+          "sha256": "3a074e5d0d5eda3fa1a34d36d05732abac44a7de9dbe72e4d2e5de5df36a5603"
+        },
+        "portraitSource": "design/bestiary/art/creatures/road-bandit.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Survivalist.glb",
+        "sha256": "d1a28187cdaea1c497ba80d92bd3f4142a69439bb4fc0abb270fed757ae27b43"
+      },
+      "evidence": {
+        "front": "creature-road-bandit-0.png",
+        "rear": "creature-road-bandit-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-bandit-bow",
+      "name": "Bandit Bow",
+      "model": "Ninja",
+      "scores": [
+        5,
+        4,
+        2,
+        4,
+        2,
+        4
+      ],
+      "raw": 74,
+      "cap": null,
+      "score": 74,
+      "notes": "Human and bow are correct, but black/red ninja mask and topknot replace camouflaged roadside archer.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A lightly armored robber with a hunting bow, spare string and clothing chosen to blend into roadside cover. Their confidence depends on distance and a prepared exit.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-bandit-bow.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/bandit-bow.md",
+          "sha256": "a2a673efa0e3702bf6751b7ba1dc88923115540b7d2e69718da9e9460e29a236"
+        },
+        "portraitSource": "design/bestiary/art/creatures/bandit-bow.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Ninja.glb",
+        "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0"
+      },
+      "evidence": {
+        "front": "creature-bandit-bow-0.png",
+        "rear": "creature-bandit-bow-1.png",
+        "sheet": "sheet-01.png"
+      }
+    },
+    {
+      "id": "creature-shield-soldier",
+      "name": "Shield Soldier",
+      "model": "Paladin",
+      "scores": [
+        5,
+        4,
+        3,
+        4,
+        2,
+        5
+      ],
+      "raw": 80,
+      "cap": null,
+      "score": 80,
+      "notes": "Human armour, sword and shield read as soldier; blue heroic cape and bright heraldry replace weathered service gear.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*A professional guard in serviceable armor, carrying a scarred shield and an ordinary sidearm. Training and trust in the squad make this soldier more dangerous than their equipment alone suggests.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-shield-soldier.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/shield-soldier.md",
+          "sha256": "9514d25b5ef446aa5fe02d2ec48da8ec0a0d7d9996dec0141a649311a469f534"
+        },
+        "portraitSource": "design/bestiary/art/creatures/shield-soldier.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Paladin.glb",
+        "sha256": "2513ec020fab4973b1cf35fd7e3618265cabbc8eee7315cc20292a97ab30c28c"
+      },
+      "evidence": {
+        "front": "creature-shield-soldier-0.png",
+        "rear": "creature-shield-soldier-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-masked-duelist",
+      "name": "Masked Duelist",
+      "model": "Ninja",
+      "scores": [
+        5,
+        4,
+        3,
+        3,
+        2,
+        4
+      ],
+      "raw": 75,
+      "cap": null,
+      "score": 75,
+      "notes": "Masked sword-user reads, but ninja topknot/face covering replace distinctive duelling mask, light coat and fine blade.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*An accomplished swordsman in light dueling clothes and a distinctive mask, carrying a finely balanced ordinary blade. Reputation, precision and control of distance define the threat.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-masked-duelist.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/masked-duelist.md",
+          "sha256": "d7dcd5225261e45145da5606930247c362814c12e4d54fea1159da1e9887e5b4"
+        },
+        "portraitSource": "design/bestiary/art/creatures/masked-duelist.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Ninja.glb",
+        "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0"
+      },
+      "evidence": {
+        "front": "creature-masked-duelist-0.png",
+        "rear": "creature-masked-duelist-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-grave-cultist",
+      "name": "Grave Cultist",
+      "model": "Witch",
+      "scores": [
+        5,
+        2,
+        1,
+        1,
+        1,
+        0
+      ],
+      "raw": 45,
+      "cap": null,
+      "score": 45,
+      "notes": "Cheerful orange-hatted witch, glasses and skirt; no ash robes, burial tokens or ritual relic; identical to hedge sorcerer.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A mortal initiate in ash-stained ritual clothing, carrying burial tokens and a personal relic. The promise of reunion with the dead may make this person desperate rather than fearless.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-grave-cultist.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/grave-cultist.md",
+          "sha256": "c8fa38105c5a95ada8f4af77ff23298c094daba484ef7a8b6e361115a5b3b6cf"
+        },
+        "portraitSource": "design/bestiary/art/creatures/grave-cultist.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/Witch.glb",
+        "sha256": "25a0435e34f76d9d13d56bbb01d8fb1d7b8b1be5eba596ef30799f1e1f40f54a"
+      },
+      "evidence": {
+        "front": "creature-grave-cultist-0.png",
+        "rear": "creature-grave-cultist-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-hedge-sorcerer",
+      "name": "Hedge Sorcerer",
+      "model": "Witch",
+      "scores": [
+        5,
+        3,
+        3,
+        2,
+        2,
+        0
+      ],
+      "raw": 61,
+      "cap": null,
+      "score": 61,
+      "notes": "Witch silhouette implies caster, but no visible focus/charms; identical to cultist and markedly brighter than reference.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A self-taught caster with scorched cuffs, an improvised focus and an uneven collection of protective charms. Talent is real; discipline and confidence are less reliable.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-hedge-sorcerer.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/hedge-sorcerer.md",
+          "sha256": "5a8d396041294837bd87916662e5066d08bb53988fbc214359013313f263966f"
+        },
+        "portraitSource": "design/bestiary/art/creatures/hedge-sorcerer-v2.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/Witch.glb",
+        "sha256": "25a0435e34f76d9d13d56bbb01d8fb1d7b8b1be5eba596ef30799f1e1f40f54a"
+      },
+      "evidence": {
+        "front": "creature-hedge-sorcerer-0.png",
+        "rear": "creature-hedge-sorcerer-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-goblin-scrapper",
+      "name": "Goblin Scrapper",
+      "model": "OrcRaider",
+      "scores": [
+        3,
+        3,
+        2,
+        3,
+        3,
+        1
+      ],
+      "raw": 52,
+      "cap": null,
+      "score": 52,
+      "notes": "Small green orc proxy reads broadly goblinoid; broad head/short ears miss wiry goblin anatomy and scavenger pockets.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A small, wiry goblin salvager with keen eyes, patched work clothes and pockets full of useful scraps. Quick hands and knowledge of the ruins compensate for modest reach.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-goblin-scrapper.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/goblin-scrapper.md",
+          "sha256": "47ef4163c610f70b6d9f809123f0bdecc43e065c3d183c936c3b49457fbee1fa"
+        },
+        "portraitSource": "design/bestiary/art/creatures/goblin-scrapper.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-goblin-scrapper-0.png",
+        "rear": "creature-goblin-scrapper-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-goblin-spearhand",
+      "name": "Goblin Spearhand",
+      "model": "OrcRaider",
+      "scores": [
+        3,
+        3,
+        2,
+        0,
+        3,
+        0
+      ],
+      "raw": 41,
+      "cap": null,
+      "score": 41,
+      "notes": "Exactly the scrapper body with a sword; neither spear nor saucepan helmet is rendered.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A goblin braces a spear assembled from several broken weapons, wearing a saucepan polished like a badge of office.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-goblin-spearhand.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/goblin-spearhand.md",
+          "sha256": "7be8dd0bd20b0697925e2d0d13b6c746e84afbd8ed895e7406dfbd39d3604e92"
+        },
+        "portraitSource": "design/bestiary/art/creatures/goblin-spearhand.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-goblin-spearhand-0.png",
+        "rear": "creature-goblin-spearhand-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-goblin-smoke-slinger",
+      "name": "Goblin Smoke Slinger",
+      "model": "OrcRaider",
+      "scores": [
+        3,
+        3,
+        2,
+        0,
+        3,
+        0
+      ],
+      "raw": 41,
+      "cap": null,
+      "score": 41,
+      "notes": "Barehanded orc proxy; no sling, pots or mouth scarf; visually duplicates the other goblin specialists.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A nimble goblin carrying a sling and clay smoke pots in padded loops. Soot-stained fingers and a scarf over the mouth mark a specialist in covering a crew’s retreat.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-goblin-smoke-slinger.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/goblin-smoke-slinger.md",
+          "sha256": "d1b67246cc0d8d06a468d139e20f7ca28690d3f62342b027e61aaede50532e14"
+        },
+        "portraitSource": "design/bestiary/art/creatures/goblin-smoke-slinger.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-goblin-smoke-slinger-0.png",
+        "rear": "creature-goblin-smoke-slinger-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-goblin-firestarter",
+      "name": "Goblin Firestarter",
+      "model": "OrcRaider",
+      "scores": [
+        3,
+        3,
+        1,
+        0,
+        2,
+        0
+      ],
+      "raw": 35,
+      "cap": null,
+      "score": 35,
+      "notes": "Barehanded orc proxy; goggles, bottles and fire-bearing equipment absent; indistinguishable from rattlechanter.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*Soot-dark goggles and carefully stoppered clay bottles distinguish this goblin artisan from the rest of the work crew.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-goblin-firestarter.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/goblin-firestarter.md",
+          "sha256": "b880b6944de6c299d26231fe1be774ffc0d1eb83a912513e0edbe8f0a735fe5d"
+        },
+        "portraitSource": "design/bestiary/art/creatures/goblin-firestarter.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-goblin-firestarter-0.png",
+        "rear": "creature-goblin-firestarter-1.png",
+        "sheet": "sheet-02.png"
+      }
+    },
+    {
+      "id": "creature-goblin-rattlechanter",
+      "name": "Goblin Rattlechanter",
+      "model": "OrcRaider",
+      "scores": [
+        3,
+        3,
+        1,
+        0,
+        2,
+        0
+      ],
+      "raw": 35,
+      "cap": null,
+      "score": 35,
+      "notes": "Barehanded orc proxy; no bells, pans or rhythm gear to communicate its support role.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*This goblin carries a rack of tiny bells and battered pans, using rhythm to keep a frightened crew moving together.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-goblin-rattlechanter.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/goblin-rattlechanter.md",
+          "sha256": "b4da00dac38597fb0775008f3e6fc0cc49a0eb918b477a9ca3ca78b2bbe194a4"
+        },
+        "portraitSource": "design/bestiary/art/creatures/goblin-rattlechanter.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-goblin-rattlechanter-0.png",
+        "rear": "creature-goblin-rattlechanter-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-goblin-boss",
+      "name": "Goblin Boss",
+      "model": "OrcBrute",
+      "scores": [
+        3,
+        2,
+        2,
+        2,
+        3,
+        1
+      ],
+      "raw": 46,
+      "cap": null,
+      "score": 46,
+      "notes": "Small-scale heavily armoured orc brute with trophies, not a goblin officer in an oversized pocketed coat.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*An oversized officer's coat hangs from a goblin who has altered every pocket to hold maps, snacks and emergency bribes.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-goblin-boss.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/goblin-boss.md",
+          "sha256": "8dcb39a80eb498c36fc7e14471f854ef24c65395226dab8d184092a056949ac1"
+        },
+        "portraitSource": "design/bestiary/art/creatures/goblin-boss.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/OrcBrute.glb",
+        "sha256": "ee4aecd0c60d72ab49e4028dc4a30b8445a00f8401988463bab5589f4be27c94"
+      },
+      "evidence": {
+        "front": "creature-goblin-boss-0.png",
+        "rear": "creature-goblin-boss-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-kobold-trapkeeper",
+      "name": "Kobold Trapkeeper",
+      "model": "OrcRaider",
+      "scores": [
+        1,
+        2,
+        0,
+        0,
+        1,
+        0
+      ],
+      "raw": 14,
+      "cap": 39,
+      "score": 14,
+      "notes": "Green orc humanoid has no reptile muzzle, scales, tail or clawed feet; dart case and tools absent.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A small, lightly built kobold with a dart case, tool belt and marked cords identifying safe routes. Careful preparation lets the trapkeeper defend a home against much larger intruders.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-kobold-trapkeeper.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/kobold-trapkeeper.md",
+          "sha256": "6af12e09cdfa5a12d1ca81ef458c92d4057975969d8a0a4865731a78456511c6"
+        },
+        "portraitSource": "design/bestiary/art/creatures/kobold-trapkeeper.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-kobold-trapkeeper-0.png",
+        "rear": "creature-kobold-trapkeeper-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-kobold-tunnel-scout",
+      "name": "Kobold Tunnel Scout",
+      "model": "OrcRaider",
+      "scores": [
+        1,
+        2,
+        0,
+        0,
+        1,
+        0
+      ],
+      "raw": 14,
+      "cap": 39,
+      "score": 14,
+      "notes": "Same tailless green orc as trapkeeper; no reptilian head, dart launcher, ribbon, chalk or twine.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A narrow-shouldered kobold carries chalk, twine and a small dart launcher, pausing to feel air currents with a ribbon.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-kobold-tunnel-scout.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/kobold-tunnel-scout.md",
+          "sha256": "e1dd79ec1921494be9934cab981e6215c10e3da36a64154d652cec18f620e905"
+        },
+        "portraitSource": "design/bestiary/art/creatures/kobold-tunnel-scout.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-kobold-tunnel-scout-0.png",
+        "rear": "creature-kobold-tunnel-scout-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-kobold-emberkeeper",
+      "name": "Kobold Emberkeeper",
+      "model": "OrcRaider",
+      "scores": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "raw": 9,
+      "cap": 39,
+      "score": 9,
+      "notes": "Green orc lacks copper scales, dragon head, tail and illustrated wings; no travelling brazier.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*Copper scales gleam around the smoke-stained hands of a keeper who tends a community's sacred travelling brazier.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-kobold-emberkeeper.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/kobold-emberkeeper.md",
+          "sha256": "4b0df86f3d8ec3693380528e5147d6089fad817357948cebcfffa310e4e0033b"
+        },
+        "portraitSource": "design/bestiary/art/creatures/kobold-emberkeeper.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-kobold-emberkeeper-0.png",
+        "rear": "creature-kobold-emberkeeper-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-orc-outrider",
+      "name": "Orc Outrider",
+      "model": "OrcRaider",
+      "scores": [
+        4,
+        3,
+        3,
+        4,
+        3,
+        3
+      ],
+      "raw": 69,
+      "cap": null,
+      "score": 69,
+      "notes": "Orc species and blade are recognizable; squat chibi proportions and sparse travel gear miss the long-legged scout.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A strong, long-legged orc scout with weathered travel gear and a well-kept blade. This profile represents an outrider on foot, accustomed to protecting a moving caravan or border patrol.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-orc-outrider.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/orc-outrider.md",
+          "sha256": "770e3d58e8e5af34808d624da9ceee2ab9e4429436cbd9f99f995ef068214352"
+        },
+        "portraitSource": "design/bestiary/art/creatures/orc-outrider.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-orc-outrider-0.png",
+        "rear": "creature-orc-outrider-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-orc-shieldbreaker",
+      "name": "Orc Shieldbreaker",
+      "model": "OrcBrute",
+      "scores": [
+        4,
+        2,
+        3,
+        1,
+        3,
+        1
+      ],
+      "raw": 53,
+      "cap": null,
+      "score": 53,
+      "notes": "Armoured orc brute fits strength but has sword instead of hooked axe; excessive shoulders/trophies, no shield-boss belt.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*An orc veteran carries a heavy hooked axe and a belt of cracked shield bosses taken as proof of hard fights.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-orc-shieldbreaker.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/orc-shieldbreaker.md",
+          "sha256": "31f11128afeeea7c112d6362d0181b734a93ec5133efb7de71313a4cbbddbfe1"
+        },
+        "portraitSource": "design/bestiary/art/creatures/orc-shieldbreaker.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/OrcBrute.glb",
+        "sha256": "ee4aecd0c60d72ab49e4028dc4a30b8445a00f8401988463bab5589f4be27c94"
+      },
+      "evidence": {
+        "front": "creature-orc-shieldbreaker-0.png",
+        "rear": "creature-orc-shieldbreaker-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-orc-warcaller",
+      "name": "Orc Warcaller",
+      "model": "OrcBrute",
+      "scores": [
+        4,
+        2,
+        2,
+        0,
+        3,
+        0
+      ],
+      "raw": 44,
+      "cap": null,
+      "score": 44,
+      "notes": "Same armoured brute as shieldbreaker; no drum or staff, with a visible sword-like prop instead.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A scarred warcaller beats a hide drum against the haft of a staff, measuring the fight by the breaths of the injured.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-orc-warcaller.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/orc-warcaller.md",
+          "sha256": "060ce7e914be600f8e717659d3f8ccdff7472c221a80df19a5eaf721084030c9"
+        },
+        "portraitSource": "design/bestiary/art/creatures/orc-warcaller.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/OrcBrute.glb",
+        "sha256": "ee4aecd0c60d72ab49e4028dc4a30b8445a00f8401988463bab5589f4be27c94"
+      },
+      "evidence": {
+        "front": "creature-orc-warcaller-0.png",
+        "rear": "creature-orc-warcaller-1.png",
+        "sheet": "sheet-03.png"
+      }
+    },
+    {
+      "id": "creature-hobgoblin-longbow",
+      "name": "Hobgoblin Longbow",
+      "model": "OrcRaider",
+      "scores": [
+        2,
+        2,
+        1,
+        4,
+        1,
+        3
+      ],
+      "raw": 42,
+      "cap": null,
+      "score": 42,
+      "notes": "Bow is present, but green lightly clothed orc replaces reddish disciplined armoured hobgoblin; quiver/bowcase absent.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A weatherproof bowcase and neatly bundled arrows mark a soldier accustomed to waiting out bad weather and worse orders.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-hobgoblin-longbow.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/hobgoblin-longbow.md",
+          "sha256": "c4fa29c7a92fce0522b78984ccae847ca60a80b99f04bfdb335ed7093ba22050"
+        },
+        "portraitSource": "design/bestiary/art/creatures/hobgoblin-longbow.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/OrcRaider.glb",
+        "sha256": "be86374970e9f89fdc75ac1049fd1c58ebdfef3de2e03869e4b714f1b4fe0528"
+      },
+      "evidence": {
+        "front": "creature-hobgoblin-longbow-0.png",
+        "rear": "creature-hobgoblin-longbow-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-hobgoblin-shieldguard",
+      "name": "Hobgoblin Shieldguard",
+      "model": "OrcBrute",
+      "scores": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "raw": 26,
+      "cap": null,
+      "score": 26,
+      "notes": "Orc brute instead of disciplined hobgoblin; sword and small round shield replace spear and rectangular shield.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A disciplined soldier carries a rectangular shield painted with the names of former squadmates.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-hobgoblin-shieldguard.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/hobgoblin-shieldguard.md",
+          "sha256": "9159ea327c4df676d1c9c53c62495c1fa9140f945b9f35072995d592932ba209"
+        },
+        "portraitSource": "design/bestiary/art/creatures/hobgoblin-shieldguard.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/OrcBrute.glb",
+        "sha256": "ee4aecd0c60d72ab49e4028dc4a30b8445a00f8401988463bab5589f4be27c94"
+      },
+      "evidence": {
+        "front": "creature-hobgoblin-shieldguard-0.png",
+        "rear": "creature-hobgoblin-shieldguard-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-hobgoblin-marshal",
+      "name": "Hobgoblin Marshal",
+      "model": "OrcBrute",
+      "scores": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "raw": 24,
+      "cap": null,
+      "score": 24,
+      "notes": "Same green brute as warband melee units; no officer's helm/map board or readable marshal identity.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A field officer wears an undecorated helm and carries a map board scored with years of revised plans.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-hobgoblin-marshal.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/hobgoblin-marshal.md",
+          "sha256": "34b25a4e1fe972635f12bdd372b4b94297cb5531ed37d6a264c1c31b4ff5f90c"
+        },
+        "portraitSource": "design/bestiary/art/creatures/hobgoblin-marshal.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/OrcBrute.glb",
+        "sha256": "ee4aecd0c60d72ab49e4028dc4a30b8445a00f8401988463bab5589f4be27c94"
+      },
+      "evidence": {
+        "front": "creature-hobgoblin-marshal-0.png",
+        "rear": "creature-hobgoblin-marshal-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-cave-bat",
+      "name": "Cave Bat",
+      "model": "Bat",
+      "scores": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "raw": 0,
+      "cap": 0,
+      "score": 0,
+      "notes": "No visible bat body in either neutral capture or a focused actual-game browser scene on this machine, despite visible entity/valid mesh bounds. Do not award an anatomy score from the filename. Packaged/native reproduction still needed.",
+      "remedy": "rendering",
+      "reference": {
+        "flavor": "*A small cave-dwelling bat with oversized ears, thin dark wings and tiny hooked feet. Sound guides it through darkness, while bright light and loud disturbances unsettle its roost.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-cave-bat.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/cave-bat.md",
+          "sha256": "77b00be66aaee92e8897313220bed2abcb94c7583d2a57c68a8936ee6ac3aec7"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-cave-bat.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/bat.glb",
+        "sha256": "31a98ca03f60e5d702e654b3471c0948cb17a7358ce744849fe14e3b410fe1fc"
+      },
+      "evidence": {
+        "front": "creature-cave-bat-0.png",
+        "rear": "creature-cave-bat-1.png",
+        "sheet": "sheet-04.png",
+        "focusedGame": "bat-game.png"
+      }
+    },
+    {
+      "id": "creature-giant-rat",
+      "name": "Giant Rat",
+      "model": "Rat",
+      "scores": [
+        4,
+        4,
+        3,
+        5,
+        3,
+        5
+      ],
+      "raw": 79,
+      "cap": null,
+      "score": 79,
+      "notes": "Rat body, four legs, rounded ears and long tail read; smooth primitives lack fur, scars and thick tail.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A dog-sized rat has a blunt scarred muzzle, bright eyes and a tail thick enough to sweep loose gravel.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-giant-rat.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/giant-rat.md",
+          "sha256": "13ab616d1ae80485cbbb8dfcef8a5349e4cc0a93d3efbcb694ddfd975da355e4"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-giant-rat.png"
+      },
+      "asset": {
+        "path": "src/view/creatures.mjs",
+        "kind": "procedural"
+      },
+      "evidence": {
+        "front": "creature-giant-rat-0.png",
+        "rear": "creature-giant-rat-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-giant-spider",
+      "name": "Giant Spider",
+      "model": "Spider",
+      "scores": [
+        5,
+        4,
+        4,
+        5,
+        3,
+        5
+      ],
+      "raw": 89,
+      "cap": null,
+      "score": 89,
+      "notes": "Eight legs, segmented abdomen, clustered eyes and fangs read clearly; simple legs lack hooked feet and silk glands.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A dog-sized hunting spider with a swollen abdomen, hooked feet and pale silk glands beneath its jaws. Its web is both a trap and an extension of its senses.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-giant-spider.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/giant-spider.md",
+          "sha256": "18e29491bea76f1bfb6bd57f042714af35970c129c21d5e68a0284fcb4afa446"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-giant-spider.png"
+      },
+      "asset": {
+        "path": "src/view/creatures.mjs",
+        "kind": "procedural"
+      },
+      "evidence": {
+        "front": "creature-giant-spider-0.png",
+        "rear": "creature-giant-spider-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-wolf",
+      "name": "Wolf",
+      "model": "Wolf",
+      "scores": [
+        4,
+        3,
+        2,
+        5,
+        2,
+        1
+      ],
+      "raw": 62,
+      "cap": null,
+      "score": 62,
+      "notes": "Recognizable quadruped canine but extremely blocky, short-legged and without dense fur/long muzzle; shares all wolf variants.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A rangy predator with dense gray fur, a narrow muzzle and long legs built for patient pursuit. Wolves live and hunt as a pack, protecting the den before risking a disabling fight.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-wolf.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/wolf.md",
+          "sha256": "9aea450040a4544db5cb22ae111badb9d64d5a5270d1c510af8beabc1536db02"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-wolf.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Wolf.glb",
+        "sha256": "e107d64fbd4baad9dbbb5895bd8410eb077d9c8f021ead35c87165a2ece680eb"
+      },
+      "evidence": {
+        "front": "creature-wolf-0.png",
+        "rear": "creature-wolf-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-dire-wolf",
+      "name": "Dire Wolf",
+      "model": "Wolf",
+      "scores": [
+        4,
+        2,
+        1,
+        5,
+        2,
+        1
+      ],
+      "raw": 55,
+      "cap": null,
+      "score": 55,
+      "notes": "Only 15% larger than wolf; no broad muzzle, winter ruff or distinct heavy build.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A heavy winter wolf has a broad muzzle, a pale ruff and the confidence of a hunter accustomed to bringing down elk.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-dire-wolf.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/dire-wolf.md",
+          "sha256": "42cbd696c5f0b6fd979381be380bedaeaa664c66b22f087e9d5e8678da577bb6"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-dire-wolf.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Wolf.glb",
+        "sha256": "e107d64fbd4baad9dbbb5895bd8410eb077d9c8f021ead35c87165a2ece680eb"
+      },
+      "evidence": {
+        "front": "creature-dire-wolf-0.png",
+        "rear": "creature-dire-wolf-1.png",
+        "sheet": "sheet-04.png"
+      }
+    },
+    {
+      "id": "creature-hell-hound",
+      "name": "Hell Hound",
+      "model": "Wolf",
+      "scores": [
+        4,
+        3,
+        1,
+        5,
+        1,
+        1
+      ],
+      "raw": 56,
+      "cap": null,
+      "score": 56,
+      "notes": "Brown/red version of blocky wolf, without black coat, furnace mouth or convincing flame; not a distinct infernal body.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*A black hound carries furnace light behind its teeth and leaves warm pawprints on cold stone.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-hell-hound.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/hell-hound.md",
+          "sha256": "a328945867275d44aa475207fb29fd8fb7dcf0ade6733b86445619e3e5766306"
+        },
+        "portraitSource": "design/bestiary/art/creatures/hell-hound.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Wolf.glb",
+        "sha256": "e107d64fbd4baad9dbbb5895bd8410eb077d9c8f021ead35c87165a2ece680eb"
+      },
+      "evidence": {
+        "front": "creature-hell-hound-0.png",
+        "rear": "creature-hell-hound-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-winter-wolf",
+      "name": "Winter Wolf",
+      "model": "Wolf",
+      "scores": [
+        4,
+        3,
+        2,
+        5,
+        2,
+        1
+      ],
+      "raw": 62,
+      "cap": null,
+      "score": 62,
+      "notes": "Blue-grey version of wolf; lacks white fur, pronounced mane and visible icy mouth; distinction is mainly tint.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*A white wolf speaks through teeth furred with frost and leaves no melted prints even on sunlit snow.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-winter-wolf.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/winter-wolf.md",
+          "sha256": "2bf5a99ad276946fd64a9b44d9e4da6954015906005b47e4461da5059382608a"
+        },
+        "portraitSource": "design/bestiary/art/creatures/winter-wolf.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Wolf.glb",
+        "sha256": "e107d64fbd4baad9dbbb5895bd8410eb077d9c8f021ead35c87165a2ece680eb"
+      },
+      "evidence": {
+        "front": "creature-winter-wolf-0.png",
+        "rear": "creature-winter-wolf-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-wererat",
+      "name": "Wererat",
+      "model": "WerewolfMan",
+      "scores": [
+        1,
+        2,
+        0,
+        1,
+        1,
+        1
+      ],
+      "raw": 19,
+      "cap": 39,
+      "score": 19,
+      "notes": "Human lumberjack with sword; no rat head, tail, digitigrade legs, thief coat or small knife.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A rat-faced runner wears a thief's coat carefully altered around the tail, keeping gloved hands close to a hidden knife.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-wererat.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/wererat.md",
+          "sha256": "154ccb7b5f5009afd174120f8b572988db1d0eeb3c398235c5a40198385679c6"
+        },
+        "portraitSource": "design/bestiary/art/creatures/wererat.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Werewolf_Man.glb",
+        "sha256": "d4b3701a3dc2e419050f59e5b9e9035978787b07746b5ce1b918e9ada9b916b5"
+      },
+      "evidence": {
+        "front": "creature-wererat-0.png",
+        "rear": "creature-wererat-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-werewolf",
+      "name": "Werewolf",
+      "model": "WerewolfWolf",
+      "scores": [
+        4,
+        3,
+        3,
+        4,
+        3,
+        4
+      ],
+      "raw": 71,
+      "cap": null,
+      "score": 71,
+      "notes": "Wolf-headed humanoid with claws reads; tidy red lumberjack shirt and modest arms miss torn cuffs and powerful hybrid bulk.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A wolf-headed figure carries the posture of a person trying to remember how to stand still, with torn cuffs hanging from powerful arms.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-werewolf.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/werewolf.md",
+          "sha256": "8e20812728392159454d92485b8bf8c3d643312ae3fe3cfa6b2c4207db2259ce"
+        },
+        "portraitSource": "design/bestiary/art/creatures/werewolf.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Werewolf_Wolf.glb",
+        "sha256": "71f92d89576403b10db38a572e86e54af09738147a096443bde6c1c932ea6ec3"
+      },
+      "evidence": {
+        "front": "creature-werewolf-0.png",
+        "rear": "creature-werewolf-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-werebear",
+      "name": "Werebear",
+      "model": "Monstrosity",
+      "scores": [
+        1,
+        2,
+        0,
+        3,
+        1,
+        0
+      ],
+      "raw": 23,
+      "cap": 39,
+      "score": 23,
+      "notes": "Stitched hooded humanoid monstrosity has neither bear head nor bear paws/fur; not recognizable as a werebear.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A broad bear-headed guardian has a woodcutter's patient stance and a voice that grows rough whenever fear takes over.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-werebear.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/werebear.md",
+          "sha256": "689cf5efa39c7199d5aa381d869f3fade18cb1627c38354d94234534c15b9739"
+        },
+        "portraitSource": "design/bestiary/art/creatures/werebear.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/Monstrosity.glb",
+        "sha256": "612439d9496d1008abe2abf3b5f609fd3be59c00958def4f1b59adfcabb0d51f"
+      },
+      "evidence": {
+        "front": "creature-werebear-0.png",
+        "rear": "creature-werebear-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-crypt-ghoul",
+      "name": "Crypt Ghoul",
+      "model": "WerewolfMan",
+      "scores": [
+        2,
+        2,
+        0,
+        2,
+        1,
+        0
+      ],
+      "raw": 26,
+      "cap": null,
+      "score": 26,
+      "notes": "Healthy lumberjack proportions in red shirt with brown/green tint; no gaunt corpse anatomy, stretched lips or long nails.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A gaunt, corpse-eating undead with stretched lips, long nails and flesh drawn tight over its joints. It retains enough cunning to seek an isolated victim and avoid a determined group.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-crypt-ghoul.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/crypt-ghoul.md",
+          "sha256": "52b129b7e466b6f66814d58d2b965b3c73a0dbf49c9ca29f0b6a61b6cabd1733"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-crypt-ghoul.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Werewolf_Man.glb",
+        "sha256": "d4b3701a3dc2e419050f59e5b9e9035978787b07746b5ce1b918e9ada9b916b5"
+      },
+      "evidence": {
+        "front": "creature-crypt-ghoul-0.png",
+        "rear": "creature-crypt-ghoul-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-ghast",
+      "name": "Ghast",
+      "model": "Monstrosity",
+      "scores": [
+        2,
+        1,
+        1,
+        1,
+        2,
+        0
+      ],
+      "raw": 26,
+      "cap": null,
+      "score": 26,
+      "notes": "Broad stitched hooded monster instead of taut, long-nailed undead in stolen finery; same body as werebear.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A ghast wears stolen finery over a taut, hungry body. Its breath announces it before its careful footsteps do.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-ghast.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/ghast.md",
+          "sha256": "fe4122eeb157fbc61242c8417dd87315dfed588f18a36581c903faa9dcc7802d"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-ghast.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series6/Monstrosity.glb",
+        "sha256": "612439d9496d1008abe2abf3b5f609fd3be59c00958def4f1b59adfcabb0d51f"
+      },
+      "evidence": {
+        "front": "creature-ghast-0.png",
+        "rear": "creature-ghast-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-plague-zombie",
+      "name": "Plague Zombie",
+      "model": "WerewolfMan",
+      "scores": [
+        2,
+        2,
+        0,
+        1,
+        1,
+        0
+      ],
+      "raw": 23,
+      "cap": null,
+      "score": 23,
+      "notes": "Same tinted lumberjack as ghoul; no burial wrapping, swelling, decomposition or grave flies.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*Wet burial cloth clings to a swollen corpse, and clouds of grave flies escape whenever its jaw falls open.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-plague-zombie.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/plague-zombie.md",
+          "sha256": "040169bdef07831587a5eb2bacfb94eedd9938be9fc9c9d6e8d3da8a8a97f799"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-plague-zombie.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series4/Werewolf_Man.glb",
+        "sha256": "d4b3701a3dc2e419050f59e5b9e9035978787b07746b5ce1b918e9ada9b916b5"
+      },
+      "evidence": {
+        "front": "creature-plague-zombie-0.png",
+        "rear": "creature-plague-zombie-1.png",
+        "sheet": "sheet-05.png"
+      }
+    },
+    {
+      "id": "creature-mire-ooze",
+      "name": "Mire Ooze",
+      "model": "Ooze",
+      "scores": [
+        3,
+        2,
+        1,
+        5,
+        2,
+        5
+      ],
+      "raw": 57,
+      "cap": null,
+      "score": 57,
+      "notes": "Blob communicates slime, but the prominent cartoon eye contradicts eyelessness; lacks mud texture and suspended scraps.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A creeping mass of mud-colored digestive slime, with partly dissolved scraps suspended inside. It has no eyes or clear front, sensing contact and nearby ground vibration instead.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-mire-ooze.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/mire-ooze.md",
+          "sha256": "9c48b087324ee91672c3f4d2ac27386fa22bfa8a833dd974c3d7ac49af77fee0"
+        },
+        "portraitSource": "design/bestiary/art/creatures/mire-ooze.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/GreenBlob.glb",
+        "sha256": "7411ce7ca14556e8941bf49c5329678b9dbc47f5020113ae2d5f3f7b12e72d44"
+      },
+      "evidence": {
+        "front": "creature-mire-ooze-0.png",
+        "rear": "creature-mire-ooze-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-animated-armor",
+      "name": "Animated Armor",
+      "model": "BlackKnight",
+      "scores": [
+        5,
+        4,
+        3,
+        4,
+        3,
+        1
+      ],
+      "raw": 74,
+      "cap": null,
+      "score": 74,
+      "notes": "Closed armour, sword and shield fit; emptiness is not demonstrated, bright plume/cape match death knight exactly.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*An empty suit of plate animated around a command plate, carrying a shield and no living occupant. The apparent knight is a literal-minded guardian, not a trained person inside armor.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-animated-armor.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/animated-armor.md",
+          "sha256": "387611c49525f8bf0bdb5d3efd389ae3d8e77f14d5c81a0632be477509bc478f"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-animated-armor.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/BlackKnight.glb",
+        "sha256": "91cfdbfc7d9b8f541c5d50716eca8d4edae3dcda9b78c07422a9c0ac4919019d"
+      },
+      "evidence": {
+        "front": "creature-animated-armor-0.png",
+        "rear": "creature-animated-armor-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-animated-statue",
+      "name": "Animated Statue",
+      "model": "Golem",
+      "scores": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "raw": 2,
+      "cap": 39,
+      "score": 2,
+      "notes": "Golem key loads a floating winged green creature, not a humanoid civic statue; no stone figure, spear or planted feet.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A civic statue has climbed down from its pedestal, leaving a clean pair of footprints in old soot.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-animated-statue.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/animated-statue.md",
+          "sha256": "42b1cdf0bec74b95dd7fb92d350e70279db3efad31deeb88ad3ad20d6c4876a5"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-animated-statue.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Goleling.glb",
+        "sha256": "78c8603e951ba02ae817476c10f2e7787f60be6293a08026cbf3455d64d95402"
+      },
+      "evidence": {
+        "front": "creature-animated-statue-0.png",
+        "rear": "creature-animated-statue-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-clay-helper",
+      "name": "Clay Helper",
+      "model": "Golem",
+      "scores": [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0
+      ],
+      "raw": 9,
+      "cap": 39,
+      "score": 9,
+      "notes": "Smaller floating winged Goleling has no clay humanoid body, broad hands, feet or maker marks.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A rough humanoid of fired and unfired clay, with broad hands and the maker’s thumbprints still visible. It understands simple work instructions but has no independent craft training.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-clay-helper.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/clay-helper.md",
+          "sha256": "58d0001c1f7a45c633e24ad1b38274cf7b7e3351e886bb6eb3af1fb34daa44f4"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-clay-helper.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Goleling.glb",
+        "sha256": "78c8603e951ba02ae817476c10f2e7787f60be6293a08026cbf3455d64d95402"
+      },
+      "evidence": {
+        "front": "creature-clay-helper-0.png",
+        "rear": "creature-clay-helper-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-clockwork-scout",
+      "name": "Clockwork Scout",
+      "model": "Clanker",
+      "scores": [
+        3,
+        2,
+        2,
+        1,
+        3,
+        5
+      ],
+      "raw": 51,
+      "cap": null,
+      "score": 51,
+      "notes": "Mechanical robot is recognizable, but large barrel torso/twin exhausts and arms replace small brass surveying device with lens and jointed feet.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A small brass surveying machine with jointed feet, a glass lens and a speaking grille. Its precise movements serve observation and reporting rather than a sustained fight.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-clockwork-scout.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/clockwork-scout.md",
+          "sha256": "7682b7cf79e6a4d8333934a30d0545021a22b76c38ab7b7c57854203f37fad17"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-clockwork-scout.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/Clanker.glb",
+        "sha256": "c345c3895d2693fb1cab15c17cccfdd4e4ae7d8889f0624199a65617fd1091c1"
+      },
+      "evidence": {
+        "front": "creature-clockwork-scout-0.png",
+        "rear": "creature-clockwork-scout-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-glass-sentinel",
+      "name": "Glass Sentinel",
+      "model": "FrostGolem",
+      "scores": [
+        3,
+        2,
+        1,
+        4,
+        1,
+        0
+      ],
+      "raw": 42,
+      "cap": null,
+      "score": 42,
+      "notes": "Opaque icy crystal brute rather than a clear reflective glass humanoid with coloured seams; identical to ice warden.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*A clear humanoid construct filled with shifting reflections and seams of colored glass. It was made to watch magical boundaries and protect a specific object.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-glass-sentinel.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/glass-sentinel.md",
+          "sha256": "f740a65fc9719f258c2aa56be81c381c42ba182fe5fcf7433630e02939b04d86"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-glass-sentinel.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/FrostGolem.glb",
+        "sha256": "4fe720a98d9a8f048a0aa16b2e81ec77dff8a5ed3ef5e67d02976dfcf5209a53"
+      },
+      "evidence": {
+        "front": "creature-glass-sentinel-0.png",
+        "rear": "creature-glass-sentinel-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-stone-knuckle",
+      "name": "Stone Knuckle",
+      "model": "Golem",
+      "scores": [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      "raw": 6,
+      "cap": 39,
+      "score": 6,
+      "notes": "Floating winged Goleling is not a planted pebble elemental; no dense stone core or blunt hands.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A squat elemental assembled from pebbles and rough stones around a dense central core. Its blunt hands and planted feet suit it to guarding a small patch of ground.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-stone-knuckle.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/stone-knuckle.md",
+          "sha256": "57c2258a6cb0bec393babdaa9185c51ff558ad37f85769b454794c7399e02be4"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-stone-knuckle.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/Goleling.glb",
+        "sha256": "78c8603e951ba02ae817476c10f2e7787f60be6293a08026cbf3455d64d95402"
+      },
+      "evidence": {
+        "front": "creature-stone-knuckle-0.png",
+        "rear": "creature-stone-knuckle-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-icebound-warden",
+      "name": "Icebound Warden",
+      "model": "FrostGolem",
+      "scores": [
+        5,
+        4,
+        4,
+        5,
+        4,
+        1
+      ],
+      "raw": 83,
+      "cap": null,
+      "score": 83,
+      "notes": "Broad ice/crystal humanoid with blunt fists is a good semantic fit; crystalline spikes replace layered lake ice and bubble eyes.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*A broad elemental body of layered lake ice, with trapped bubbles for eyes and thick, blunt hands. It exists to preserve something beneath the cold rather than to spread winter indiscriminately.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-icebound-warden.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/icebound-warden.md",
+          "sha256": "f6107c2689bad565f8149b2c95306948466e3c46f1875ed8fcd22483432dee6d"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-icebound-warden.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/series5/FrostGolem.glb",
+        "sha256": "4fe720a98d9a8f048a0aa16b2e81ec77dff8a5ed3ef5e67d02976dfcf5209a53"
+      },
+      "evidence": {
+        "front": "creature-icebound-warden-0.png",
+        "rear": "creature-icebound-warden-1.png",
+        "sheet": "sheet-06.png"
+      }
+    },
+    {
+      "id": "creature-air-elemental",
+      "name": "Air Elemental",
+      "model": "Ghost",
+      "scores": [
+        0,
+        1,
+        0,
+        2,
+        1,
+        0
+      ],
+      "raw": 11,
+      "cap": 39,
+      "score": 11,
+      "notes": "Skull-faced floating ghost replaces a hollow vortex of dust, leaves and cloud; transparency alone does not supply wind anatomy.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*Dust, leaves and scraps of cloud circle an empty center that turns toward every change in pressure.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-air-elemental.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/air-elemental.md",
+          "sha256": "3cc176f007fb53888a65531baa729e36a0d73d57cdeef75318d0f5caae864b3c"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-air-elemental.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/ghost.glb",
+        "sha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4"
+      },
+      "evidence": {
+        "front": "creature-air-elemental-0.png",
+        "rear": "creature-air-elemental-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-emberling",
+      "name": "Emberling",
+      "model": "Demon",
+      "scores": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "raw": 16,
+      "cap": 39,
+      "score": 16,
+      "notes": "Red winged imp with horns and pitchfork rather than a small body of coals and flame.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A small elemental made of glowing coals and flickering flame, with bright cracks for eyes. Warmth draws it; uncontrolled curiosity makes it dangerous around dry fuel.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-emberling.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/emberling.md",
+          "sha256": "e25aa7b00bb9ce91d3f5378dc56b7d1fbb16f71ed46010ec1be6b8eefd42f1d2"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-emberling.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/demon.glb",
+        "sha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487"
+      },
+      "evidence": {
+        "front": "creature-emberling-0.png",
+        "rear": "creature-emberling-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-cinder-strider",
+      "name": "Cinder Strider",
+      "model": "Demon",
+      "scores": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "raw": 11,
+      "cap": 39,
+      "score": 11,
+      "notes": "Same squat winged imp; no tall narrow flame body, long ember limbs or trailing smoke.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A tall, narrow fire elemental with ember-bright joints and smoke trailing from its shoulders. Its long limbs and hot surface make close pursuit dangerous.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-cinder-strider.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/cinder-strider.md",
+          "sha256": "76457f9d898d9975b443b9512bdea13d9204914702e8348d4e69d63c9a368326"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-cinder-strider.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/demon.glb",
+        "sha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487"
+      },
+      "evidence": {
+        "front": "creature-cinder-strider-0.png",
+        "rear": "creature-cinder-strider-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-cinder-imp",
+      "name": "Cinder Imp",
+      "model": "Demon",
+      "scores": [
+        4,
+        4,
+        3,
+        2,
+        2,
+        3
+      ],
+      "raw": 64,
+      "cap": null,
+      "score": 64,
+      "notes": "Small horned winged fiend fits; flat red body/pitchfork miss coal skin, grasping claws and a clearly readable barbed tail.",
+      "remedy": "materials",
+      "reference": {
+        "flavor": "*A small winged fiend with coal-dark skin, a barbed tail and quick, grasping hands. It thrives on impulsive bargains and the ordinary disasters they cause.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-cinder-imp.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/cinder-imp.md",
+          "sha256": "1a3e09707e96fbf5334383eb889bafa9bc991c0d90b3a87807643ef643a0be3a"
+        },
+        "portraitSource": "design/bestiary/art/creatures/cinder-imp.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/demon.glb",
+        "sha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487"
+      },
+      "evidence": {
+        "front": "creature-cinder-imp-0.png",
+        "rear": "creature-cinder-imp-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-ash-demon",
+      "name": "Ash Demon",
+      "model": "Demon",
+      "scores": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "raw": 24,
+      "cap": null,
+      "score": 24,
+      "notes": "Same solid cartoon imp, without animal-like smoke/fire body or soot; not distinct from other Demon-key creatures.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A restless demon sheds soot from a body shaped like a fire struggling to remember an animal.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-ash-demon.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/ash-demon.md",
+          "sha256": "15c6f36ace676ad5bc914776e7bbaf4472dc1cb0f329032ed99b9f50aa7a109f"
+        },
+        "portraitSource": "design/bestiary/art/creatures/ash-demon.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/demon.glb",
+        "sha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487"
+      },
+      "evidence": {
+        "front": "creature-ash-demon-0.png",
+        "rear": "creature-ash-demon-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-horned-devil",
+      "name": "Horned Devil",
+      "model": "Demon",
+      "scores": [
+        4,
+        2,
+        2,
+        0,
+        2,
+        0
+      ],
+      "raw": 42,
+      "cap": null,
+      "score": 42,
+      "notes": "Horns/wings read as generic devil; pitchfork replaces chains and ledger, no enforcer regalia or rank silhouette.",
+      "remedy": "equipment",
+      "reference": {
+        "flavor": "*A horned enforcer wears chains arranged like official regalia and carries a ledger protected from every spark.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-horned-devil.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/horned-devil.md",
+          "sha256": "1da1cb6378fa41a91e33893b6f60114d6151b58966606c5b79e6efd02f83c9e4"
+        },
+        "portraitSource": "design/bestiary/art/creatures/horned-devil.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/demon.glb",
+        "sha256": "3ed33ef522b40b3dcee0a5d6790cc243779b573ed1d79134ad834bf92e0f9487"
+      },
+      "evidence": {
+        "front": "creature-horned-devil-0.png",
+        "rear": "creature-horned-devil-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-grave-wisp",
+      "name": "Grave Wisp",
+      "model": "Ghost",
+      "scores": [
+        2,
+        1,
+        1,
+        4,
+        1,
+        0
+      ],
+      "raw": 33,
+      "cap": null,
+      "score": 33,
+      "notes": "Dark skull-faced ghost is not a pale drifting light with an indistinct inner face; same Ghost body as shadow/wraith.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A pale drifting light with the faint suggestion of a face deep inside it. The wisp is a dead person’s lingering need for a witness, not a source of useful flame.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-grave-wisp.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/grave-wisp.md",
+          "sha256": "b973502a2dba730412591603d55151692175331e81eb664c7d3f31b2ff7c28fa"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-grave-wisp.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/ghost.glb",
+        "sha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4"
+      },
+      "evidence": {
+        "front": "creature-grave-wisp-0.png",
+        "rear": "creature-grave-wisp-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-shadow",
+      "name": "Shadow",
+      "model": "Ghost",
+      "scores": [
+        2,
+        2,
+        1,
+        3,
+        2,
+        0
+      ],
+      "raw": 35,
+      "cap": null,
+      "score": 35,
+      "notes": "Volumetric skull-faced ghost, not a person's moving shadow; shared blue tint does not establish shadow material.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A person's shadow moves without a person, lengthening toward warm hands and uncovered lanterns.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-shadow.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/shadow.md",
+          "sha256": "cfc4d47f1c6b984e673f6085906040322704f5eac729de92154c791ab66f42d6"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-shadow.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/ghost.glb",
+        "sha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4"
+      },
+      "evidence": {
+        "front": "creature-shadow-0.png",
+        "rear": "creature-shadow-1.png",
+        "sheet": "sheet-07.png"
+      }
+    },
+    {
+      "id": "creature-wraith",
+      "name": "Wraith",
+      "model": "Ghost",
+      "scores": [
+        3,
+        3,
+        2,
+        3,
+        2,
+        0
+      ],
+      "raw": 48,
+      "cap": null,
+      "score": 48,
+      "notes": "Floating ghost silhouette broadly works; large skull replaces torn robe/two pale sparks; no distinction from other Ghost entries.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A torn silhouette hangs in the air around two pale sparks, trailing the sound of someone trying to breathe underwater.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-wraith.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/wraith.md",
+          "sha256": "45900f6528b39bcdf6a489d279611ebea8f4287836c0870332c284be78d3132f"
+        },
+        "portraitSource": "design/player-book/art/interior/summon-wraith.png"
+      },
+      "asset": {
+        "path": "public/assets/creatures/ghost.glb",
+        "sha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4"
+      },
+      "evidence": {
+        "front": "creature-wraith-0.png",
+        "rear": "creature-wraith-1.png",
+        "sheet": "sheet-08.png"
+      }
+    },
+    {
+      "id": "creature-tomb-sage",
+      "name": "Lich — Tomb Sage",
+      "model": "Necromancer",
+      "scores": [
+        3,
+        3,
+        2,
+        1,
+        2,
+        4
+      ],
+      "raw": 50,
+      "cap": null,
+      "score": 50,
+      "notes": "Necromancer mage reads as caster, but living-looking face, neat outfit and no books miss preserved undead scholar/blackened bones.",
+      "remedy": "body",
+      "reference": {
+        "flavor": "*A preserved undead scholar with ink-blackened bones, ancient robes and books maintained with obsessive care. Centuries of unfinished research have worn away concern for the living.*",
+        "portrait": "public/vendor/hol/assets/bestiary/creature-tomb-sage.webp",
+        "source": {
+          "commit": "24e545e6d860e8c1b03a21356fd22cae1c039785",
+          "path": "design/bestiary/creatures/tomb-sage.md",
+          "sha256": "5d13a715f2937515a531189de84c78f06f978476cb13bbafc3d0f01755aa07b4"
+        },
+        "portraitSource": "design/bestiary/art/creatures/tomb-sage.png"
+      },
+      "asset": {
+        "path": "public/assets/characters/skeletons/Necromancer.glb",
+        "sha256": "625bab7ea54ab1ae831b73e7dcd1eb05fdf1702a30d06a42be49d33c7aaf7942"
+      },
+      "evidence": {
+        "front": "creature-tomb-sage-0.png",
+        "rear": "creature-tomb-sage-1.png",
+        "sheet": "sheet-08.png"
+      }
+    }
+  ],
+  "rubricVersion": 1,
+  "reviewType": "Single-agent editorial visual assessment; not independent or player-tested.",
+  "scope": {
+    "sourceCreatures": 192,
+    "runtimeCreatures": 58,
+    "notInRuntime": 134,
+    "assignedBaseKeys": 25,
+    "glbBases": 23,
+    "proceduralBases": 2
+  }
+}
