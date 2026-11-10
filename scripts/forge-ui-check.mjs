@@ -168,7 +168,7 @@ export async function verifyForgeUI(page) {
     await page.locator(".forge-close").click();
     await page.keyboard.press("Escape");
     await page.evaluate(() =>
-      window.__ddd.game.awardXP("forge-native", 975, "Forge trial"),
+      window.__ddd.game.awardXP("forge-native", 32500, "Forge trial"),
     );
     await page.locator('[data-hero="0"]').click();
     await page.locator("#sheet-training").click();

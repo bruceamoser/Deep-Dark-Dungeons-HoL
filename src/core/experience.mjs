@@ -1,20 +1,21 @@
 export const XP_RULES = Object.freeze({
-  firstLevel: 400,
-  levelGrowth: 175,
+  firstLevel: 10000,
   room: 60,
   roomDepth: 10,
   enemy: 100,
   enemyDepth: 20,
   coin: 5,
 });
-export function xpForLevel(level) {
-  const n = Math.max(0, Math.min(30, level) - 1);
-  return n * XP_RULES.firstLevel + (n * (n - 1) * XP_RULES.levelGrowth) / 2;
-}
-export function levelForXP(xp) {
-  let level = 1;
-  while (level < 30 && xp >= xpForLevel(level + 1)) level++;
-  return level;
+export const XP_THRESHOLDS = (() => {
+  const result=[0,0,10000,32500,85000];
+  let gap=52500;
+  for(let level=5;level<=30;level++) { gap=Math.round(gap*1.55/500)*500;result[level]=result[level-1]+gap; }
+  return Object.freeze(result);
+})();
+export function xpForLevel(level) { return XP_THRESHOLDS[Math.max(1,Math.min(30,level))]; }
+export function legacyXPForLevel(level) { const n=Math.max(0,Math.min(30,level)-1);return n*400+n*(n-1)*175/2; }
+export function levelForXP(xp, threshold=xpForLevel) {
+  let level=1;while(level<30 && xp>=threshold(level+1)) level++;return level;
 }
 export function xpProgress(hero) {
   const level = Math.max(hero.earnedLevel, levelForXP(hero.xp ?? 0));
