@@ -1,4 +1,4 @@
-import { xpForLevel, levelForXP } from "./experience.mjs";
+import { xpForLevel, levelForXP, legacyXPForLevel } from "./experience.mjs";
 
 export function storedHero(hero) {
   const { preview, ...record } = hero;
@@ -15,22 +15,25 @@ export function prepareRoster(campaign) {
     campaign.pendingTreasureXP < 0
   )
     throw new Error("Invalid saved hero repository.");
-  for (const h of [...campaign.party, ...campaign.reserve]) {
+  const oldCurve=(campaign.xpCurve ?? 1)<3;
+  const heroes=[...campaign.party,...campaign.reserve,...campaign.fallenHeroes.map(f=>f.hero)];
+  for(const h of heroes) {
     h.heroId ??= crypto.randomUUID();
-    h.xp ??= xpForLevel(h.earnedLevel ?? h.draft.progression?.level ?? 1);
-    h.xpHistory ??= [];
-  }
-  if ((campaign.xpCurve ?? 1) < 2) {
-    for (const h of [
-      ...campaign.party,
-      ...campaign.reserve,
-      ...campaign.fallenHeroes.map((f) => f.hero),
-    ]) {
-      if (Number.isSafeInteger(h.xp) && h.xp >= 0)
-        h.earnedLevel = Math.max(h.earnedLevel ?? 1, levelForXP(h.xp));
+    const earned=h.earnedLevel ?? h.draft.progression?.level ?? 1;
+    h.xp ??= (oldCurve?legacyXPForLevel:xpForLevel)(earned);
+    h.xpHistory ??=[];
+    if(oldCurve && Number.isSafeInteger(h.xp) && h.xp>=0) {
+      const oldLevel=levelForXP(h.xp,legacyXPForLevel);
+      if(campaign.xpCurve===2 && (oldLevel!==earned || h.xp<legacyXPForLevel(earned)))
+        throw new Error("Invalid hero identity or experience.");
+      const level=Math.max(earned,oldLevel);
+      const fraction=level>=30?0:Math.max(0,Math.min(0.999999,(h.xp-legacyXPForLevel(level))/(legacyXPForLevel(level+1)-legacyXPForLevel(level))));
+      h.earnedLevel=level;
+      h.xp=xpForLevel(level)+(level<30?Math.floor(fraction*(xpForLevel(level+1)-xpForLevel(level))):0);
     }
-    campaign.xpCurve = 2; // Existing XP is retained; the faster curve grants any newly earned levels.
   }
+  campaign.xpCurve=3;
+
 }
 export function validateRoster(campaign) {
   const heroes = [...campaign.party, ...campaign.reserve];

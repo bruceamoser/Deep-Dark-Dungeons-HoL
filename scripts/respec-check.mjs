@@ -8,7 +8,7 @@ export async function verifyRespec(page) {
   try {
     const before = await page.evaluate(() => {
       const g = window.__ddd.game;
-      g.awardXP("respec-trial", 5025, "Trial");
+      g.awardXP("respec-trial", 489000, "Trial");
       g.trainForge(0);
       const h = g.active;
       h.survival.hp = 7;

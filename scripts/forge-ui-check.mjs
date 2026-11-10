@@ -1,3 +1,4 @@
+import { xpForLevel } from "../src/core/experience.mjs";
 import { settingsAction, waitForGame } from "./ui-session.mjs";
 import { expect } from "@playwright/test";
 import { learn, drafts } from "../tests/forge-fixture.mjs";
@@ -168,7 +169,7 @@ export async function verifyForgeUI(page) {
     await page.locator(".forge-close").click();
     await page.keyboard.press("Escape");
     await page.evaluate(() =>
-      window.__ddd.game.awardXP("forge-native", 975, "Forge trial"),
+      window.__ddd.game.awardXP("forge-native", 32500, "Forge trial"),
     );
     await page.locator('[data-hero="0"]').click();
     await page.locator("#sheet-training").click();
@@ -198,11 +199,11 @@ export async function verifyForgeUI(page) {
     d.forge.nodes = d.forge.nodes.filter(
       (id) => !["intersection:cinder-tempest", "storm:0:3"].includes(id),
     );
-    await page.evaluate((d) => {
+    await page.evaluate(({d,xp}) => {
       const g = window.__ddd.game;
-      g.awardXP("forge-gate", 10000000, "Gate trial");
+      g.awardXP("forge-gate", xp, "Gate trial");
       g.forgeCommit(0, d);
-    }, d);
+    }, {d,xp:xpForLevel(30)});
     await page.locator('[data-hero="0"]').click();
     await page.locator("#sheet-training").click();
     await chooseNode(page, "intersection:cinder-tempest", { buy: false });

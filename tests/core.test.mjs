@@ -1165,21 +1165,21 @@ test("legacy saves migrate earned milestone levels without erasing heroes or inv
 });
 
 test("XP thresholds unlock multiple levels but do not spend training points or heal", () => {
-  assert.deepEqual([1, 2, 3, 4].map(xpForLevel), [0, 400, 975, 1725]);
-  assert.equal(levelForXP(399), 1);
-  assert.equal(levelForXP(400), 2);
+  assert.deepEqual([1, 2, 3, 4].map(xpForLevel), [0, 10000, 32500, 85000]);
+  assert.equal(levelForXP(9999), 1);
+  assert.equal(levelForXP(10000), 2);
   const g = fresh(),
     h = g.party[0],
     level = h.preview.state.level;
   h.survival.hp = 3;
   h.survival.gritAvailable = 0;
-  g.awardXP("test-journey", 1725, "A long expedition");
+  g.awardXP("test-journey", 85000, "A long expedition");
   assert.equal(h.earnedLevel, 4);
   assert.equal(h.preview.state.level, level);
   assert.equal(h.survival.hp, 3);
   assert.equal(h.survival.gritAvailable, 0);
-  g.awardXP("test-journey", 1725, "Duplicate event");
-  assert.equal(h.xp, 1725);
+  g.awardXP("test-journey", 85000, "Duplicate event");
+  assert.equal(h.xp, 85000);
 });
 
 test("discovery XP is shared by survivors, excludes reserves and persists its once-only claim", () => {

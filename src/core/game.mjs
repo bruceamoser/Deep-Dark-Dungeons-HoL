@@ -186,6 +186,7 @@ export class Game {
       seed: Math.floor(Math.random() * 2147483647),
       depth: 1,
       challenge: "standard",
+      xpCurve: 3,
       bank: 0,
       haul: 0,
       expeditions: 0,

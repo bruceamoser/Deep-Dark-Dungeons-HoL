@@ -10,6 +10,7 @@ const recipeIds = new Set(RECIPES.map((r) => r.id));
 // Missing fields are legitimate in pre-0.4 saves.
 export function validateGameState(campaign) {
   validateCamp(campaign);
+  if (campaign.xpCurve !== undefined && ![1,2,3].includes(campaign.xpCurve)) throw new Error("Invalid XP curve.");
   if (campaign.challenge !== undefined && !Object.hasOwn(CHALLENGES, campaign.challenge))
     throw new Error("Invalid encounter challenge.");
   if (

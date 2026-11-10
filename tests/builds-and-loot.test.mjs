@@ -327,7 +327,8 @@ test("earned levels can actually be committed, unlock mastery, and preserve miss
   saved.party[0].xp = 2250;
   const copy = fresh();
   copy.load(saved, { resume: false });
-  assert.equal(copy.party[0].xp, 2250);
+  assert.ok(copy.party[0].xp >= xpForLevel(4));
+  assert.equal(copy.campaign.xpCurve,3);
   assert.ok(copy.party[0].earnedLevel > 2);
 });
 
