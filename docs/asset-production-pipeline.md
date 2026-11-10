@@ -98,3 +98,7 @@ Target a clear improvement toward at least 80/100 semantic fit with no wrong-bod
 ## Does Blender need to stay open?
 
 Interactive MCP requires a running Blender instance with its add-on/server active. Closing Blender ends that bridge. Background inspection and exports launch their own Blender process and do not require a window left open. The isolated setup-test window can be closed; start a new task-owned workspace for actual modeling.
+
+## Local image-to-3D experiment
+
+The [Crypt Ghoul pipeline pilot](local-mesh-pipeline-pilot.md) records successful local Modly/TRELLIS.2 geometry/textures and the failed first Mesh2Motion deformation gate. Tools are now installed on bmoser; earlier optional/deferred setup notes do not describe this completed experiment. Production models remain unchanged.

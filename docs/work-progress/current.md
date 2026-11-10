@@ -2,6 +2,12 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — local mesh pipeline pilot
+
+Bounded Crypt Ghoul pilot completed on `codex/local-mesh-pipeline-pilot`, base `de652e6f5d1231e6efb915f5e0010f60a316f012`. Modly/TRELLIS.2 produced a detailed local raw mesh and textured source; Bruce saw the actual renders and welcomed the result. Mesh2Motion exported a 28-bone/five-clip proxy and real Three.js playback was tested. Initial uniform reduction/auto-weights fail: fragile topology and severe stretching. Promising source generation, **not** a game-ready replacement. Existing wave-05 fit78/current install remain unchanged.
+
+See [pilot report](../local-mesh-pipeline-pilot.md), [pins/hashes](../audits/2026-11-10-local-mesh-pilot.json), [handoff](handoffs/2026-11-10-local-mesh-pipeline-pilot.md). All models/tools/weights/renders are private local files under `~/.local/share/four-lanterns-pipeline-pilot/2026-11-10`; Git transfers documentation only. Next: neutral rest-pose preparation, selective low-poly topology and detail baking, weight cleanup and five-pose review before adopting. No release or production asset changed.
+
 ## Latest work — creature wave 05 and installed menu build
 
 Shieldguard, Crypt Ghoul and Ghast integrated after three parallel DeepSeek authors, two Shieldguard revisions and one Ghast revision (six calls total); Ghoul incorporated live feedback. Fit 26→81/78/78: tall shield/spear hobgoblin, bare hunched corpse, clothed white-haired ghast. First-pass limitations remain; undead below 80, no final/independent art approval. Branch `codex/deepseek-creature-wave-05`, base `428eae9`; see actual Git/PR history for subsequent checkpoint/merge. [Report](../creature-model-wave-05.md), [provenance](../creature-wave-05-provenance.json), [handoff](handoffs/2026-11-10-creature-wave-05.md).
