@@ -101,6 +101,7 @@ export function libraryClipNames() {
  *
  * @param {object} [opts]
  * @param {boolean} [opts.skeleton] prefer the skeleton-specific clip set
+ * @param {boolean} [opts.dart] prefer one-handed shooting for a held dart
  * @returns {Array} AnimationClip list, safe to hand to an AnimationMixer
  */
 export function resolveClips(clipsByName, opts = {}) {
@@ -112,7 +113,9 @@ export function resolveClips(clipsByName, opts = {}) {
     const weapon =
       opts.spear && gameName === "1H_Melee_Attack_Slice_Diagonal"
         ? ["Melee_1H_Attack_Stab"]
-        : [];
+        : opts.dart && gameName === "2H_Ranged_Shoot"
+          ? ["Ranged_1H_Shoot", "Ranged_1H_Shooting"]
+          : [];
     const names = [...weapon, ...(overrides[gameName] ?? []), ...candidates];
     let source = null;
     for (const n of names) {

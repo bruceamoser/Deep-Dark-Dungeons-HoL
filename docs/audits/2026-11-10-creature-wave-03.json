@@ -1,0 +1,44 @@
+{
+  "gameCommit": "codex/deepseek-creature-wave-03 (base 50c18fe; accepted wave 3)",
+  "weights": [30, 15, 20, 15, 10, 10],
+  "criteria": [
+    "anatomy",
+    "silhouette",
+    "signature",
+    "equipment",
+    "material",
+    "distinction"
+  ],
+  "rows": [
+    {
+      "id": "creature-cinder-strider",
+      "name": "Cinder Strider",
+      "scores": [4, 4, 3, 5, 4, 5],
+      "raw": 81,
+      "score": 81,
+      "cap": null,
+      "before": 11,
+      "notes": "Tall narrow charcoal/fire anatomy and long heated limbs replace a squat winged imp. Imported canonical rig replaces rejected guessed rig; outer presentation scale preserves long silhouette. Orange fissures/flame crest and shoulder smoke read clearly, though smoke is thin and plates/flames remain angular."
+    },
+    {
+      "id": "creature-kobold-trapkeeper",
+      "name": "Kobold Trapkeeper",
+      "scores": [4, 3, 4, 5, 3, 4],
+      "raw": 78,
+      "score": 78,
+      "cap": null,
+      "before": 14,
+      "notes": "Reptilian face/tail, readied dart, back dart case, tool roll/pliers, marked cord bundle and patched tan apron replace the orc proxy. Props consolidated from 56 to 16 draw calls. Still shares chunky Scout proportions and simplified mitten grips, so species coverage exceeds unique-body refinement."
+    },
+    {
+      "id": "creature-emberling",
+      "name": "Emberling",
+      "scores": [4, 4, 4, 5, 4, 5],
+      "raw": 85,
+      "score": 85,
+      "cap": null,
+      "before": 16,
+      "notes": "Compact charcoal body, bright crack eyes, orange fissures and visible layered fire crown replace the winged pitchfork imp. Revised crown/palette fix occluded flames and washed-out heat. Coal plates and opaque fire shells remain faceted, with a visible rear orange seam."
+    }
+  ]
+}

@@ -6,10 +6,10 @@ const [input, output, scaleText = "0.85", clipSource = "shared"] =
   process.argv.slice(2);
 if (!input || !output)
   throw Error(
-    "Usage: node review_asset_submission.mjs input.glb output-dir [scale] [shared|spear|embedded]",
+    "Usage: node review_asset_submission.mjs input.glb output-dir [scale] [shared|spear|dart|embedded]",
   );
 const scale = Number(scaleText);
-if (!["shared", "spear", "embedded"].includes(clipSource))
+if (!["shared", "spear", "dart", "embedded"].includes(clipSource))
   throw Error("Invalid clip source");
 if (!Number.isFinite(scale) || scale <= 0 || scale > 2)
   throw Error("Invalid review scale");
@@ -84,7 +84,10 @@ try {
         mixer = new T.AnimationMixer(model),
         clips =
           clipSource !== "embedded"
-            ? gameClips({ spear: clipSource === "spear" })
+            ? gameClips({
+                spear: clipSource === "spear",
+                dart: clipSource === "dart",
+              })
             : asset.animations;
       const aliases = {
         Idle: /^(Idle|Flying_Idle)$|Bat_Flying$/,
@@ -129,6 +132,7 @@ try {
         "1H_Melee_Attack_Slice_Diagonal",
         "Hit_A",
         "Death_A_Pose",
+        ...(clipSource === "dart" ? ["2H_Ranged_Shoot"] : []),
       ]) {
         mixer.stopAllAction();
         const clip =
@@ -250,7 +254,7 @@ try {
   if (
     result.poses.some((p) => !p.finite || p.count === 0) ||
     new Set(result.poses.map((p) => Math.round(p.fingerprint * 1000))).size <
-      (clipSource === "embedded" ? 4 : 5)
+      (clipSource === "embedded" ? 4 : clipSource === "dart" ? 6 : 5)
   )
     failures.push("Invalid or unchanged animated geometry");
   if (result.shots.some((s) => s.renderedPixels < 32))

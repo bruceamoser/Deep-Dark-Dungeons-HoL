@@ -1,0 +1,107 @@
+{
+  "created": "2026-11-10",
+  "authoring": "Three concurrent DeepSeek Flash CLI authors; GPT organizer review/integration; one requested revision per model.",
+  "donors": [
+    {
+      "file": "public/assets/characters/series4/Ninja.glb",
+      "sha256": "5e7fc34eef2011f4d4cf534acad039f2edc18be42d4542cc7c776a62142129e0",
+      "licenseFile": "public/assets/characters/LICENSE.txt",
+      "license": "CC0-1.0"
+    },
+    {
+      "file": "public/assets/creatures/wave-01/KoboldScout.glb",
+      "sha256": "8ddd4f1c5e947c40aca36962a97aa807891fbe74fa2de856e1c85ad649d2bd1f",
+      "licenseFile": "docs/creature-wave-01-provenance.json",
+      "license": "Project-authored CC0-derived art; see prior provenance"
+    }
+  ],
+  "originalContributions": "Coal/fire/smoke geometry and palettes, trap tools/cords/apron, adapted project Scout body. Bruce Moser project contributions; no new public license assigned. Original donors unchanged, no paid generation.",
+  "assets": [
+    {
+      "name": "CinderStrider",
+      "creatureId": "creature-cinder-strider",
+      "file": "public/assets/creatures/wave-03/CinderStrider.glb",
+      "sha256": "6f899bbbd9e0e275ba5fa74693e30c836507a650eef96e91bd2057e785361920",
+      "editable": "art/source/creatures/CinderStrider.blend",
+      "builder": "scripts/toolchain/creature-workers/cinder-strider.py",
+      "bytes": 253904,
+      "triangles": 2036,
+      "exportedVertices": 5070,
+      "skinnedVertices": 5070,
+      "maxWeightInfluences": 1,
+      "blenderMeshObjects": 4,
+      "gltfMeshes": 4,
+      "threeRenderMeshes": 9,
+      "materials": 7,
+      "textures": 0,
+      "bones": [23],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 12,
+      "embeddedClips": 0,
+      "bindVerification": {
+        "kind": "canonical source after factoring outer glTF presentation scale",
+        "presentationScale": [
+          0.7200000286102295, 1.5499999523162842, 0.7200000286102295
+        ],
+        "maxInverseBindErrorAfterFactoring": 7.152557373046875e-7,
+        "maxNamedLocalRestComponentError": 1.0952353477478027e-5,
+        "localRestTolerance": 2e-5
+      }
+    },
+    {
+      "name": "KoboldTrapkeeper",
+      "creatureId": "creature-kobold-trapkeeper",
+      "file": "public/assets/creatures/wave-03/KoboldTrapkeeper.glb",
+      "sha256": "79fa27814db5e4c0dac486885bccc3da733e17b85c68a98dbdfcec22e7186a1f",
+      "editable": "art/source/creatures/KoboldTrapkeeper.blend",
+      "builder": "scripts/toolchain/creature-workers/kobold-trapkeeper.py",
+      "bytes": 415504,
+      "triangles": 7739,
+      "exportedVertices": 6599,
+      "skinnedVertices": 6599,
+      "maxWeightInfluences": 4,
+      "blenderMeshObjects": 2,
+      "gltfMeshes": 2,
+      "threeRenderMeshes": 16,
+      "materials": 8,
+      "textures": 0,
+      "bones": [27],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 16,
+      "embeddedClips": 0,
+      "bindVerification": {
+        "kind": "original 27 Scout inverse binds",
+        "maxInverseBindError": 5.81145342515299e-7
+      }
+    },
+    {
+      "name": "Emberling",
+      "creatureId": "creature-emberling",
+      "file": "public/assets/creatures/wave-03/Emberling.glb",
+      "sha256": "4315e6e9f1ba4b4c01b9cfd77018a3b30efe4500b366aa2992fe31ace0b3f0e1",
+      "editable": "art/source/creatures/Emberling.blend",
+      "builder": "scripts/toolchain/creature-workers/emberling.py",
+      "bytes": 361088,
+      "triangles": 3104,
+      "exportedVertices": 6152,
+      "skinnedVertices": 6152,
+      "maxWeightInfluences": 1,
+      "blenderMeshObjects": 13,
+      "gltfMeshes": 13,
+      "threeRenderMeshes": 17,
+      "materials": 7,
+      "textures": 0,
+      "bones": [23],
+      "unweightedVertices": 0,
+      "zeroAreaFaces": 0,
+      "drawCalls": 17,
+      "embeddedClips": 0,
+      "bindVerification": {
+        "kind": "original 23 Ninja inverse binds",
+        "maxInverseBindError": 8.344650268554688e-7
+      }
+    }
+  ]
+}

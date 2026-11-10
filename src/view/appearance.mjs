@@ -1,5 +1,6 @@
 import { colorGoblinFace } from "./goblin-face.mjs";
 import { hangingItemStabilizer } from "./hanging-equipment.mjs";
+import { elementalMotion } from "./elemental-motion.mjs";
 import { masonAppearance } from "./mason-heroes.mjs";
 import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
@@ -347,7 +348,15 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       head.add(pan);
     }
   }
-  if (enemy && ["Wererat", "KoboldScout", "KoboldEmberkeeper"].includes(name)) {
+  if (
+    enemy &&
+    [
+      "Wererat",
+      "KoboldScout",
+      "KoboldEmberkeeper",
+      "KoboldTrapkeeper",
+    ].includes(name)
+  ) {
     const tails = [...bones.values()]
       .filter((b) => /^tail(?:_|[1-4]$)/.test(b.name))
       .map((b) => ({ b, rest: b.quaternion.clone() }));
@@ -374,9 +383,12 @@ export function equipmentAppearance(assets, hero, enemy = false) {
       stabilize?.();
     };
   }
+  if (enemy && ["CinderStrider", "Emberling"].includes(name))
+    model.userData.animate = elementalMotion(model);
   const clips = gameClips({
     skeleton: /^Skeleton/.test(name),
     spear: enemy && look?.weapon === "spear",
+    dart: enemy && name === "KoboldTrapkeeper",
   });
   return {
     model,
