@@ -2,9 +2,11 @@
 
 Updated: 2026-11-10 (America/New_York).
 
-## Active — equipment implementation and v0.8.7 release
+## Active — v0.8.7 release qualification
 
-Bruce approved the complete equipment catalogue and strongest-matching stacking, and requested finishing, commit/push, updated docs, review/merge and a new patch release. Work is on `codex/144-equipment-bonuses` from `f667041`, implementation [PR146](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/146). Both CI rules/build checks passed; full native sweep is running. Release issue #147 tracks v0.8.7. See [equipment catalogue](../equipment-bonuses.md) and [current handoff](handoffs/2026-11-10-equipment-release.md). Implementing/qualifying #144 closes the remaining work in #127. Do not restart the design discussion.
+Equipment [PR146](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/146) is author-reviewed and merged at `db741592f50931557ee6c1304297f3f7e38c5442`; #127 and #144 closed. All nine feedback items are implemented. Full 357-test suite, final 45 focused tests, both CI checks and the complete sandboxed native launcher sweep passed. See [catalogue](../equipment-bonuses.md) and [handoff](handoffs/2026-11-10-equipment-release.md).
+
+Release issue #147; branch `codex/v087-release` from `db741592`. Package and notes are prepared for 0.8.7. Build/installer/updater qualification, release PR review/merge, tag, licensed draft upload, staged verification/publication and public download/live-feed checks remain. Do not claim published until the workflow and public checks pass.
 
 ## Completed verification
 
