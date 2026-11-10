@@ -192,10 +192,18 @@ p {
   margin: 5px 0 8px;
 }
 .hero-card .vitals {
+  flex-wrap: wrap;
+  gap: 4px 10px;
   font: 11px Arial;
   color: #c1d0c9;
   display: flex;
   justify-content: space-between;
+}
+.hero-card .vitals span {
+  white-space: nowrap;
+}
+.hero-card .vitals span:first-child {
+  flex-basis: 100%;
 }
 .bar {
   height: 3px;
