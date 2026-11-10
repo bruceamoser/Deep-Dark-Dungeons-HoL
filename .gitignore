@@ -20,3 +20,6 @@ shot_q.mjs
 
 # Purchased Dungeon Mason exports are staged locally; never redistribute source assets.
 public/assets/licensed/
+
+# Local Python toolchain bytecode
+__pycache__/

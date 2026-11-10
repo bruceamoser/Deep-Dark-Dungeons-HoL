@@ -2,6 +2,14 @@
 
 Updated: 2026-11-10 (America/New_York).
 
+## Latest work — asset-production toolchain prepared
+
+Bruce requested Blender/tools, a usable DeepSeek worker and review of the supplied generation/conditioning blueprint. Blender 5.2.4 LTS, bundled Rigify and MCP for Blender 2.2.7 are installed/enabled on this bmoser machine. Official archive checksum verified; live scene inspection and a real skinned/animated GLB round trip pass. Meshy was explicitly clarified as optional and is deferred, with no account, server or paid generation created.
+
+DeepSeek `deepseek-flash` works through a separate Codex profile with local helper-backed credentials. Live Responses, Codex output and a read-only Blender tool call pass; GPT remains default. Native mixed-provider picker/built-in collaboration support is not claimed. See [pipeline/tool setup](../asset-production-pipeline.md), [reusable skill](../../.agents/skills/fld-game-assets/SKILL.md) and [handoff](handoffs/2026-11-10-asset-production-toolchain.md).
+
+Reviewed workflow replaces destructive blanket welding, purging, decimation, origin/transform changes and bounding-box-only rigging with selective, validated operations. Core assets/gameplay are unchanged. Next work is the four pilot creatures, not a completed art overhaul. Existing local launcher/install versions remain as noted below.
+
 ## Latest work — complete visual-fit survey
 
 Bruce requested an honest scored comparison of current creatures to source descriptions and illustrations. [The full audit](../audits/2026-11-10-creature-fit.md), JSON and CSV cover all 58 runtime entries, with six explicit criteria, per-entry rationale, source/asset provenance and reproducible side-by-side captures. Source baseline `a56aacc`; 134 other source creatures are outside the runtime roster. Mean 44.8/100: 5 strong, 9 usable, 12 approximate, 14 weak, 18 failing. Scores are editorial judgments, not measured similarity percentages.
