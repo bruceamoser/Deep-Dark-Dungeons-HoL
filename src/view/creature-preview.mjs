@@ -1,4 +1,8 @@
 import * as T from "three";
+import {
+  visibleModelBounds,
+  animationPreviewBounds,
+} from "./preview-bounds.mjs";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { equipmentAppearance } from "./appearance.mjs";
 import { CREATURE_ROSTER } from "../core/creature-roster.mjs";
@@ -78,16 +82,34 @@ export function creaturePreview(canvas, assets, creatureId) {
       ]),
     );
   };
+  const poseBounds = new Map();
   const play = (name) => {
     const clip = poses()[name];
     if (!clip && !["idle", "walk"].includes(name)) return;
     pose = name;
     canvas.dataset.pose = pose;
     canvas.dataset.clip = clip?.name ?? "";
+    if (!poseBounds.has(name))
+      poseBounds.set(name, animationPreviewBounds(current, mixer, clip));
+    const bounds = poseBounds.get(name);
+    bounds.getCenter(center);
+    bounds.getSize(extent);
+    radius = Math.max(0.3, extent.length() / 2);
     mixer.stopAllAction();
-    if (clip) mixer.clipAction(clip).reset().play();
+    if (clip) {
+      const action = mixer.clipAction(clip);
+      action
+        .reset()
+        .setLoop(
+          name === "death" ? T.LoopOnce : T.LoopRepeat,
+          name === "death" ? 1 : Infinity,
+        )
+        .play();
+      action.clampWhenFinished = name === "death";
+    }
     mixer.update(0.1);
     current.userData.animate?.(elapsed, pose === "walk");
+    reset();
   };
   const reset = () => {
     controls.target.copy(center);
@@ -135,6 +157,7 @@ export function creaturePreview(canvas, assets, creatureId) {
   };
   const update = (id) => {
     dropModel();
+    poseBounds.clear();
     canvas.dataset.rendered = "false";
     canvas.dataset.creature = id;
     canvas.dataset.model = CREATURE_ROSTER[id].model;
@@ -152,28 +175,15 @@ export function creaturePreview(canvas, assets, creatureId) {
     lighting = lightActor(current, environment.texture);
     mixer = new T.AnimationMixer(current);
     play("idle");
-    current.updateMatrixWorld(true);
-    const bounds = new T.Box3();
-    current.traverse((o) => {
-      if (!o.isMesh) return;
-      for (let parent = o; parent; parent = parent.parent)
-        if (!parent.visible) return;
-      o.skeleton?.update();
-      for (let i = 0; i < o.geometry.attributes.position.count; i++) {
-        const p = new T.Vector3();
-        o.getVertexPosition(i, p);
-        bounds.expandByPoint(p.applyMatrix4(o.matrixWorld));
-      }
-    });
-    bounds.getCenter(center);
-    const size = bounds.getSize(extent);
-    radius = Math.max(0.3, size.length() / 2);
+    const bounds = visibleModelBounds(current);
+    const size = bounds.getSize(new T.Vector3());
     base.scale.set(
       Math.max(0.4, size.x * 0.6),
       1,
       Math.max(0.4, size.z * 0.65),
     );
-    base.position.set(center.x, bounds.min.y - 0.04, center.z);
+    const baseCenter = bounds.getCenter(new T.Vector3());
+    base.position.set(baseCenter.x, bounds.min.y - 0.04, baseCenter.z);
     reset();
   };
   const onChange = () => {

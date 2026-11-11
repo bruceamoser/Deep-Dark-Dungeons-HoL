@@ -67,6 +67,10 @@ Bruce explicitly requires deliberate color and color schemes when adapting owned
 - Preserve material identity: steel, brass, leather, cloth, skin, stone, fur and elemental effects should read appropriately. Use contrast and selective accents to direct attention; do not make every surface metallic, emissive or uniformly dull. Retain the approved approximately 0.3 polished finish where appropriate, with purposeful material exceptions.
 - Review the full palette from front/side/back, in motion and under actual dungeon lighting alongside party characters and nearby creature roles. Check readable light/dark contrast as well as hue; a nameplate or color alone must not carry identity. Record palette revisions in the report/spec and preserve source colors in untouched originals.
 
+## Efficient private visual checks
+
+`review-equipped-creature.mjs PRIVATE.glb REVIEW_DIR [SCALE] [full|stills]` defaults to full motion capture. Use `stills` during bounded fit/color iterations to inspect front/side/back and a wide final death pose quickly; it writes separate `capture-stills.json` and does not overwrite the full-motion evidence. Stills alone never pass the motion gate. The final reviewed export must match the full capture hash. `check-equipped-ground.py` samples every integer source frame, including frame0 clips, and supplements visual inspection; it does not prove body/gear collision correctness.
+
 ## Gates for each creature
 
 | Gate | Required work and evidence |

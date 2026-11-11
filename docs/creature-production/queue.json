@@ -368,9 +368,16 @@
       "name": "Skeleton Sentry",
       "order": 22,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/bone-sentry.md",
+        "model": "docs/creature-production/bone-sentry.md",
+        "motion": "docs/creature-production/bone-sentry.md",
+        "game-view": "docs/creature-production/bone-sentry.md",
+        "integration": "docs/creature-production/bone-sentry.md"
+      },
+      "approvedAsset": "SkeletonSentry"
     },
     {
       "id": "creature-bone-archer",

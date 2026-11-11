@@ -1,0 +1,127 @@
+{
+  "id": "bone-sentry",
+  "body": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/characters/gltf/Skeleton_Minion.glb",
+  "cloth": {
+    "Skeleton_Minion_Cloak": "#4f7561"
+  },
+  "eyes": "#94cbb0",
+  "parts": [
+    {
+      "name": "Sentry rusted sword",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/sword_1handed.gltf",
+      "bone": "handslot.r",
+      "scale": 0.85,
+      "tag": "melee",
+      "paintBands": [
+        {
+          "name": "rusted blade",
+          "min": 0.25,
+          "max": 2,
+          "color": "#727c7a",
+          "roughness": 0.42,
+          "metallic": 0.6
+        },
+        {
+          "name": "oxidized blade root",
+          "min": 0.25,
+          "max": 0.45,
+          "color": "#805b42",
+          "roughness": 0.7,
+          "metallic": 0.1
+        },
+        {
+          "name": "worn cutting edge",
+          "min": 0.25,
+          "max": 2,
+          "color": "#a0a49a",
+          "roughness": 0.35,
+          "metallic": 0.65,
+          "edgeOnly": true
+        }
+      ],
+      "fitIdle": true,
+      "tiltX": 12
+    },
+    {
+      "name": "Sentry worn shield",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/assets/gltf/Skeleton_Shield_Small_A.gltf",
+      "bone": "handslot.l",
+      "scale": 0.8,
+      "woodColor": "#4f6650",
+      "fitIdle": true,
+      "worldOffset": [
+        0,
+        -0.09,
+        0
+      ],
+      "reviewAxis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Sentry duty key",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/key_A.gltf",
+      "bone": "hips",
+      "scale": 0.3,
+      "offset": [
+        0.32,
+        0.05,
+        0.1
+      ]
+    }
+  ],
+  "clips": {
+    "Idle": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Idle"
+    },
+    "Walking_A": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Walking"
+    },
+    "1H_Melee_Attack_Slice_Diagonal": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatMelee.glb",
+      "name": "Melee_1H_Attack_Slice_Diagonal"
+    },
+    "Hit_A": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb",
+      "name": "Hit_A"
+    },
+    "Death_A_Pose": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Death"
+    }
+  },
+  "groundContactClips": [
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.18
+    }
+  ],
+  "fallWrists": [
+    {
+      "part": "Sentry rusted sword",
+      "hand": "hand.r",
+      "start": 12,
+      "end": 40,
+      "direction": [
+        -1,
+        -0.1,
+        0
+      ]
+    },
+    {
+      "part": "Sentry worn shield",
+      "hand": "hand.l",
+      "start": 12,
+      "end": 40,
+      "direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  ]
+}
