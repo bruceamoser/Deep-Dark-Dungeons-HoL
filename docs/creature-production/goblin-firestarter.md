@@ -16,7 +16,7 @@ Required checks: front/side/back, goggle/nose clearance, grip and throw/release,
 
 ## Model and source-motion review
 
-29,368 triangles, 43 bones, six source clips. GLB reimport reports zero degenerate faces/unweighted vertices. Front/side/back and 284-frame source-motion capture reviewed. Fitted brass goggles retain round dark lenses; close face fit corrected after first preview. The small potion was rejected because its shape read poorly in the mitten hand; selected the larger corked Dungeon bottle for the hand too. Plain pack and two belt reserves remain clear in reviewed poses.
+29,368 triangles, 43 bones, six source clips. GLB reimport reports zero degenerate faces/unweighted vertices. Front/side/back and 314-frame source-motion capture (including the separate melee clip) reviewed. Fitted brass goggles retain round dark lenses; close face fit corrected after first preview. The small potion was rejected because its shape read poorly in the mitten hand; selected the larger corked Dungeon bottle for the hand too. Plain pack and two belt reserves remain clear in reviewed poses.
 
 Corrected grip fitting to use the actual NLA track action: appending the approved head also loaded old dependency actions with duplicate names. Looking up global `Idle` fitted to the old spear stance; selecting this creature's track fixes the upright bottle. No source clips were retargeted or topology repaired.
 
