@@ -17,3 +17,7 @@ Actual development-game projectile sampling passes: nock/hand gap.022–.033 wor
 The first dungeon flight capture exposed an oversized standard projectile (2.08 units versus the1.06-unit held arrow). Added a per-attack projectile scale: .84 gives1.06 units, with.54 nock-to-center offset. Repeat the actual shot capture after this visual correction; source held arrow/rig is unchanged.
 
 Corrected-size projectile recapture passes and is visually reviewed. All371 tests and required-private-assets build passed before the final projectile scale correction; focused effect tests and actual game capture pass afterward. No installer/performance update. Review capture now clears its generated frame directory first so rejected longer captures cannot leave stale tail frames.
+
+## Clearance revision — supersedes original fit above
+
+A later full-frame ground inspection caught bow tips below the floor and backpack/hood penetration on the backward fall, missed by the earlier coarse screenshots. Reopened this creature. Current bow cant60°/height.77 and arrow length.75 preserve source rigs; use forward Die02 with bounded assembled root contact (maximum.1121 units). New307-frame review and every-frame ground audit pass: equipment clears ground; original sole contact is within.017 units. Reimport and finite checks pass. Current projectile scale.63/launch offset.398 match the revised.795-unit held arrow. Actual dungeon shot and bestiary recaptured; user/performance/delivery still deferred.

@@ -301,6 +301,18 @@
         "game-view": "docs/creature-production/bandit-bow.md",
         "integration": "docs/creature-production/bandit-bow.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/bandit-bow.md",
+            "model": "docs/creature-production/bandit-bow.md",
+            "motion": "docs/creature-production/bandit-bow.md",
+            "game-view": "docs/creature-production/bandit-bow.md",
+            "integration": "docs/creature-production/bandit-bow.md"
+          },
+          "approvedAsset": "BanditBow"
+        }
+      ],
       "approvedAsset": "BanditBow"
     },
     {

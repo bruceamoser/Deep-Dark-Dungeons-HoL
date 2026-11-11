@@ -39,7 +39,7 @@
     "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
     "2H_Ranged_Shoot": "BowAndArrow/Attack01_BowAndArrow.fbx",
     "Hit_A": "BowAndArrow/GetHit01_BowAndArrow.fbx",
-    "Death_A_Pose": "BowAndArrow/Die01_BowAndArrow.fbx"
+    "Death_A_Pose": "BowAndArrow/Die02_BowAndArrow.fbx"
   },
   "palette": {
     "1": "#735335",
@@ -85,7 +85,13 @@
       "idle": "Animation/BowAndArrow/BowAnim/Idle_Bow.fbx",
       "attack": "Animation/BowAndArrow/BowAnim/Attack01_Combo0102_Bow.fbx",
       "fitClip": "2H_Ranged_Shoot",
-      "fitFrame": 9
+      "fitFrame": 9,
+      "cantDegrees": 60,
+      "dimensionsScale": [
+        1,
+        1,
+        0.77
+      ]
     },
     {
       "name": "Nocked arrow",
@@ -95,7 +101,12 @@
       "idle": "Animation/BowAndArrow/ArrowAnim/Idle_Arrow.fbx",
       "attack": "Animation/BowAndArrow/ArrowAnim/Attack01_Combo0102_Arrow.fbx",
       "fitClip": "2H_Ranged_Shoot",
-      "fitFrame": 9
+      "fitFrame": 9,
+      "dimensionsScale": [
+        1,
+        0.75,
+        1
+      ]
     }
   ],
   "externalParts": [
@@ -121,6 +132,13 @@
         -0.12,
         0.05
       ]
+    }
+  ],
+  "groundContactClips": [
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.12,
+      "margin": 0.002
     }
   ]
 }

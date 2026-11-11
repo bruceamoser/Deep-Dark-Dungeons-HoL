@@ -345,7 +345,7 @@
       "creatureId": "creature-bandit-bow",
       "model": "BanditBow",
       "path": "/assets/licensed/creatures/BanditBow.glb",
-      "sha256": "6af9f496865e9464cd1347aca1dc917d21bfe972624d3cdd5f5ef4a53955efb5",
+      "sha256": "12fb4330276d49b806741d53974b37f21f545c5e61cd1078a515e3db6bb5f2fb",
       "approvedOn": "2026-11-11",
       "method": "owned-humanoid",
       "review": "Author model/motion review; bulk user review deferred",
@@ -362,13 +362,13 @@
           "clip": "2H_Ranged_Shoot",
           "release": 0.43333333333333335,
           "nockBone": "BowJoint05",
-          "launchOffset": 0.54,
+          "launchOffset": 0.398,
           "melee": {
             "kind": "unarmed",
             "clip": "1H_Melee_Attack_Slice_Diagonal",
             "contact": 0.2
           },
-          "projectileScale": 0.84
+          "projectileScale": 0.63
         }
       }
     },
