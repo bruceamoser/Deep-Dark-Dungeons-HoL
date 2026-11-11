@@ -155,3 +155,7 @@ Bruce explicitly requires an item created by modifying an existing item to join 
 ## 2026-11-11 — Complete roster before next installed build and user review
 
 Bruce explicitly asks to stop updating the installed game per creature, complete the creature roster, then review models in bulk and identify tweaks. Retain author model/motion/runtime visual checks and source commits; defer packaging/installation and performance to the final bulk checkpoint. Continue without per-creature approval prompts.
+
+## 2026-11-11 — Continue across creature/source checkpoints
+
+Bruce explicitly corrected stopping at 15/58: continue the roster without ending at arbitrary batch/PR boundaries. Preserve sequential review gates and commits, but only pause for a significant unresolved error or a problem requiring his decision. Keep installed delivery, performance and user art review deferred to the full roster.

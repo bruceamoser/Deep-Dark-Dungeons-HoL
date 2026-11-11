@@ -260,9 +260,16 @@
       "name": "Orc Warcaller",
       "order": 16,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/orc-warcaller.md",
+        "model": "docs/creature-production/orc-warcaller.md",
+        "motion": "docs/creature-production/orc-warcaller.md",
+        "game-view": "docs/creature-production/orc-warcaller.md",
+        "integration": "docs/creature-production/orc-warcaller.md"
+      },
+      "approvedAsset": "OrcWarcaller"
     },
     {
       "id": "creature-tomb-sage",

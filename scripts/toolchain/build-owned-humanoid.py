@@ -167,8 +167,22 @@ for cfg in spec.get('externalParts',[]):
  for obj in added:
   if obj.type!='MESH':continue
   world=obj.matrix_world.copy();obj.parent=None
+  if cfg.get('sourceCap'):
+   cap=cfg['sourceCap']
+   bpy.ops.mesh.primitive_cylinder_add(vertices=32,radius=cap['radius'],depth=cap['depth'],location=(0,0,cap['z']))
+   cover=bpy.context.object;cover.data.materials.append(mat(cap['color']))
+   bpy.ops.object.select_all(action='DESELECT');cover.select_set(True);obj.select_set(True);bpy.context.view_layer.objects.active=obj;bpy.ops.object.join()
+   modifications.append({'part':cfg['name'],'purpose':'Thin hide membrane over adapted owned barrel; preserve supplied rim/staves','recipe':cap})
   bone=cfg['bone'];anchor=rig.matrix_world@rig.data.bones[bone].head_local
-  transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateX',0)),4,'X')@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Rotation(math.radians(cfg.get('rotateZ',0)),4,'Z')@Matrix.Diagonal((*([cfg['scale']]*3),1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
+  scale=cfg['scale'] if isinstance(cfg['scale'],list) else [cfg['scale']]*3
+  for band in cfg.get('sourcePaintBands',[]):
+   slot=len(obj.data.materials);obj.data.materials.append(mat(band['color']));count=0
+   for face in obj.data.polygons:
+    center=sum((world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
+    if band['minZ']<=center.z<=band['maxZ']:face.material_index=slot;count+=1
+   assert count>0,('External paint band missed',cfg['name'])
+   modifications.append({'part':cfg['name'],'paintedFaces':count,'recipe':band})
+  transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateX',0)),4,'X')@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Rotation(math.radians(cfg.get('rotateZ',0)),4,'Z')@Matrix.Diagonal((*scale,1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
   obj.matrix_world=transform@world;obj.name=cfg['name']
   group=obj.vertex_groups.new(name=bone);group.add(list(range(len(obj.data.vertices))),1,'REPLACE');obj.modifiers.new('Owned prop socket','ARMATURE').object=rig
   if cfg.get('tag'):obj['equipmentPart']=cfg['tag']
