@@ -29,3 +29,24 @@ test("equipped creatures preserve authored materials and clips while isolating d
   material.dispose();
   b.model.userData.dispose();
 });
+
+import { attackPresentation } from "../src/view/combat-effects.mjs";
+test("authored melee contact follows the reviewed thrust while ranged actions retain their projectile", () => {
+  const from = {
+    data: {},
+    isEnemy: true,
+    model: {
+      userData: {
+        authoredEquippedCreature: true,
+        attackPresentation: {
+          kind: "thrust",
+          clip: "1H_Melee_Attack_Slice_Diagonal",
+          contact: 8 / 30,
+        },
+      },
+    },
+  };
+  assert.equal(attackPresentation(from, {}).contact, 8 / 30);
+  assert.equal(attackPresentation(from, {}).kind, "thrust");
+  assert.equal(attackPresentation(from, { ranged: true }).kind, "arrow");
+});

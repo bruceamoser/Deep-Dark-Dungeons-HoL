@@ -1,0 +1,97 @@
+{
+  "id": "shield-soldier",
+  "body": "Body13",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow01",
+      "head"
+    ],
+    [
+      "Weapons",
+      "OHS03_Sword",
+      "weapon_r"
+    ],
+    [
+      "Weapons",
+      "Shield08",
+      "weapon_l"
+    ],
+    [
+      "HeadParts",
+      "Hat02",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack03_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#344d47",
+    "2": "#375848",
+    "3": "#345b50",
+    "4": "#ad925c",
+    "5": "#4e514d",
+    "6": "#345b50",
+    "7": "#684b34",
+    "8": "#8b9ca0"
+  },
+  "partPalette": {
+    "Shield08": {
+      "2": "#315d47",
+      "4": "#a6b0ac",
+      "7": "#426b50"
+    },
+    "OHS03_Sword": {
+      "3": "#554434",
+      "5": "#9d8c67",
+      "8": "#b5c3c8"
+    },
+    "Hat02": {
+      "1": "#345b50",
+      "2": "#345b50",
+      "3": "#637b80",
+      "4": "#a99768",
+      "5": "#345b50",
+      "7": "#526467",
+      "8": "#8e9fa3"
+    }
+  },
+  "solid": {
+    "Eyebrow01": "#45352b"
+  },
+  "fitShield": {
+    "part": "Shield08",
+    "frame": 6
+  },
+  "fitThrust": {
+    "part": "OHS03_Sword",
+    "frame": 9
+  },
+  "partModifications": {
+    "Hat02": {
+      "removeComponentsAbove": 0.6,
+      "expectedComponents": 2,
+      "purpose": "Remove only the two disconnected horns; preserve supplied fitted shell, rim, crest, nose and cheek guards"
+    }
+  }
+}

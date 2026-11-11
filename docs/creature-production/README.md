@@ -30,6 +30,10 @@ node scripts/creature-production.mjs assets
 
 `start` refuses a second active creature or skipping the documented order. `record` requires an existing repository report and ordered gates. The final gate also requires a matching approved manifest entry and the exact asset bytes locally. Evidence content must be reviewed by the author; a command succeeding does not establish visual quality. No new permission is required for each routine refinement within Bruce's authorized direction.
 
+## Reuse before new geometry
+
+Bruce explicitly corrected the shallow authored headwear: use the bundle’s helmets, caps, hoods and accessories first, modifying the owned copy to fit the creature. Preserve the source item’s rounded volume, side/back coverage and finished silhouette. Remove ornaments only after inspecting component topology (e.g. the Soldier’s two separate Hat02 horns); recolor or refit rather than replacing the whole item with a primitive. New geometry is for a demonstrated missing part, not a shortcut around inspecting the bundle.
+
 ## Gates for each creature
 
 | Gate | Required work and evidence |

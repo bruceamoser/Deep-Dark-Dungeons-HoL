@@ -88,9 +88,16 @@
       "name": "Shield Soldier",
       "order": 6,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/shield-soldier.md",
+        "model": "docs/creature-production/shield-soldier.md",
+        "motion": "docs/creature-production/shield-soldier.md",
+        "game-view": "docs/creature-production/shield-soldier.md",
+        "integration": "docs/creature-production/shield-soldier.md"
+      },
+      "approvedAsset": "ShieldSoldier"
     },
     {
       "id": "creature-goblin-firestarter",

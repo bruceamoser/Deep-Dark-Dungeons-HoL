@@ -22,6 +22,7 @@ export function equippedCreatureAppearance(asset, spec) {
     authoredEquippedCreature: true,
     height: spec.height,
     playFullDeath: true,
+    attackPresentation: spec.attack,
     equipment: { weapon: spec.weapon, shield: !!spec.shield },
     dispose: () => materials.forEach((material) => material.dispose()),
   });

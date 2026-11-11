@@ -135,3 +135,7 @@ Use `docs/creature-production/README.md`, queue.json and the pinned approved ass
 ## 2026-11-11 — Final bulk performance pass, per-creature visual gates
 
 Bruce explicitly deferred performance testing until the full roster is complete. Replace the per-creature encounter benchmark gate with `game-view`: actual game appearance/bestiary routing and game-scale look, alongside model/gear and five-animation review. Preserve all existing evidence. Queue records performance as deferred; do not infer new FPS results from old anchors. Commit each source integration before proceeding; installed builds/PR merges occur at delivery checkpoints. This reduces repeated packaging/benchmarking without dropping visual checks.
+
+## 2026-11-11 — Modify owned headpieces; reject shallow primitive caps
+
+Bruce rejected the authored shallow Scrapper cap and Soldier helmet and explicitly directed reuse/modification of existing bundle items. Use supplied helmet/cap/hood volume and fit as the baseline. Soldier now uses Hat02 with only its two disconnected horns removed, preserving shell/rim/crest/guards. Revise Scrapper’s headwear next before new roster work. Do not treat successful mesh/animation checks as overriding the user’s visual correction.
