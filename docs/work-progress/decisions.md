@@ -139,3 +139,11 @@ Bruce explicitly deferred performance testing until the full roster is complete.
 ## 2026-11-11 — Modify owned headpieces; reject shallow primitive caps
 
 Bruce rejected the authored shallow Scrapper cap and Soldier helmet and explicitly directed reuse/modification of existing bundle items. Use supplied helmet/cap/hood volume and fit as the baseline. Soldier now uses Hat02 with only its two disconnected horns removed, preserving shell/rim/crest/guards. Revise Scrapper’s headwear next before new roster work. Do not treat successful mesh/animation checks as overriding the user’s visual correction.
+
+## 2026-11-11 — Deliberate creature palettes and recolored owned items
+
+Bruce explicitly requires color schemes when modifying supplied assets to give creatures distinct looks and feels. Each role brief/spec must name dominant/secondary/accent colors and material colors, coordinate outfit/gear, preserve facial/weapon detail, and verify readability in dungeon lighting. Palette design complements silhouette/gear; it does not replace them. Related factions can share colors with role accents, while ordinary animals keep appropriate coats. See the active production workflow’s color-scheme section.
+
+## 2026-11-11 — Mandatory creative owned-prop search for every creature
+
+Bruce explicitly requires the pipeline to always search what we own for items to add to creatures, including nonweapon tools, bottles, books, rope, traps, containers and lights. Every brief must record inspected candidate parts, selected role/personality props, planned modifications/colors/attachments and any remaining gap. Reuse/modify first; avoid random clutter and do not equip ordinary animals without a creature-specific reason. The workflow’s required brief gate now spells this out.
