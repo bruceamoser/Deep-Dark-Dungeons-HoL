@@ -2,7 +2,13 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Goblin Spearhand integrated and tested
+### Latest — Air Elemental pilot and existing Tripo reference sheets
+
+Bruce selected **Air Elemental, then Wolf** as the next bounded tests. An original procedural wind pilot has been built privately; its first version failed author review as too coil-like. V2 rendered at 25,736 triangles/9 primitives with five adapter motion states, but is **not accepted, integrated, or dungeon-tested**. Scripts and unused `src/view/air-elemental.mjs` are WIP only; the installed Spearhand build remains unchanged. Wolf work remains pending.
+
+Bruce also wants to try Tripo and requested the **existing** Air Elemental and Goblin Smoke Slinger multiview sheets. The agent initially regenerated an unnecessary Air Elemental sheet; Bruce corrected this. **Retrieve existing references before creating new ones.** Located the prior meeple sheets, inspected them, and copied 15 existing PNGs byte-for-byte (three sheets plus separate front/back/left/right images) into `~/Downloads/Tripo-Reference-Sheets`, with a ZIP and source/hash manifest; project copy under ignored `test-results/tripo-reference-sheets`. Includes original Air Elemental, its later solid-body variant, and stylized equipped Slinger. No new Slinger image, Tripo account setup, upload, generation, purchase or installation performed. See [handoff](handoffs/2026-11-11-air-pilot-tripo-references.md). Next: use these existing inputs for the Tripo comparison, qualify the Air Elemental candidate, then Wolf. No batch restart.
+
+### Previous — Goblin Spearhand integrated and tested
 
 Bruce approved the authored head/source-rig preview. The private Goblin Spearhand is now routed into the dungeon with its source thrust, authored materials, fixed goblin scale and full hit/death playback. **Six Spearhands + four heroes passed the native Linux encounter check:** 59.75 FPS average at 1600×1000 on RTX 3090; p95 16.8 ms, all five animation states, no JS errors. The updated **normal menu AppImage** also passed separately (59.80 FPS); restart the game to load it. Version label remains 0.8.7, no public release or system Debian replacement. Local AppImage and `.deb` rebuilt. All 358 tests and the staged-index build pass.
 

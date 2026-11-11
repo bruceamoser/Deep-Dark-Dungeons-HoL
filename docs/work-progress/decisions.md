@@ -109,3 +109,7 @@ Bruce accepted the source spear test and required a point-first stab. The source
 ## 2026-11-11 — Approve Spearhand for the dungeon pilot
 
 Bruce approved the owned-source Goblin Spearhand preview and requested six opponents plus four heroes in the actual dungeon. Promote that exact private GLB through a dedicated conditional model route; preserve its source skeleton/materials/thrust and avoid legacy gear attachments. Reuse existing approach-before-impact/full-death handling. Normal installed-menu review must match the checkout, so update the per-user AppImage with a backup, then test it independently using temporary saves and muted audio. This one-role qualification does not authorize resuming the abandoned whole-roster generator. See [native encounter report](../goblin-spearhand-dungeon.md).
+
+## 2026-11-11 — Existing reference sheets for Tripo
+
+Bruce selected Air Elemental then Wolf for the next tests, and wants a Tripo comparison using existing multiview sheets. Find and reuse the earlier references; do not regenerate them just because they are absent from the immediate chat. An unnecessary new Air Elemental image was generated before this correction, and is excluded from the supplied reference bundle. The original Air Elemental and later solid-body variant are separate designs, clearly labeled. Goblin Smoke Slinger uses the prior stylized equipped A-pose sheet. No Tripo spending or generation has occurred.
