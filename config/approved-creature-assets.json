@@ -284,6 +284,62 @@
         "height": 1.3,
         "weapon": "melee"
       }
+    },
+    {
+      "creatureId": "creature-orc-warcaller",
+      "model": "OrcWarcaller",
+      "path": "/assets/licensed/creatures/OrcWarcaller.glb",
+      "sha256": "63b9cb10197074322b79262eb7e4d6c067c1914e2beea5480fea1dcb2cf89d6c",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/orc-warcaller.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.05,
+        "height": 1.45,
+        "weapon": "staff",
+        "attack": {
+          "kind": "lightning",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.3,
+          "melee": {
+            "kind": "staff",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.3
+          }
+        }
+      }
+    },
+    {
+      "creatureId": "creature-tomb-sage",
+      "model": "TombSage",
+      "path": "/assets/licensed/creatures/TombSage.glb",
+      "sha256": "d48f7072bd38b6ef30413d5612e8556606ff0d539cf42abe220ee7bd3bf80992",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/tomb-sage.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "spell",
+        "attack": {
+          "kind": "shadow",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.3,
+          "melee": {
+            "kind": "unarmed",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.2
+          }
+        }
+      }
     }
   ]
 }

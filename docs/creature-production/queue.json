@@ -260,18 +260,32 @@
       "name": "Orc Warcaller",
       "order": 16,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/orc-warcaller.md",
+        "model": "docs/creature-production/orc-warcaller.md",
+        "motion": "docs/creature-production/orc-warcaller.md",
+        "game-view": "docs/creature-production/orc-warcaller.md",
+        "integration": "docs/creature-production/orc-warcaller.md"
+      },
+      "approvedAsset": "OrcWarcaller"
     },
     {
       "id": "creature-tomb-sage",
       "name": "Lich — Tomb Sage",
       "order": 17,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/tomb-sage.md",
+        "model": "docs/creature-production/tomb-sage.md",
+        "motion": "docs/creature-production/tomb-sage.md",
+        "game-view": "docs/creature-production/tomb-sage.md",
+        "integration": "docs/creature-production/tomb-sage.md"
+      },
+      "approvedAsset": "TombSage"
     },
     {
       "id": "creature-bandit-bow",

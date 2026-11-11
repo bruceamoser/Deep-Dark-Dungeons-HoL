@@ -90,3 +90,5 @@ After completing one creature, commit/push its progress and verify the remote ha
 ## Bulk delivery and user review
 
 Bruce’s latest November 11 instruction: get through the creatures, then deliver the updated game for bulk review and a targeted tweak pass. Keep author visual/motion/runtime checks and source checkpoints per creature. Do not pause for user approval per model, rebuild installers, reinstall the game or repeat native package checks after every creature. Leave the currently installed seven-creature build alone until the roster delivery checkpoint. Performance also remains a final bulk pass.
+
+Bruce further directs continuing across commits/PR checkpoints without stopping. A checkpoint preserves progress; it is not a stopping condition. Continue until the roster is complete unless a significant unresolved failure or decision genuinely requires user input.

@@ -1,0 +1,191 @@
+{
+  "id": "tomb-sage",
+  "body": "Body11",
+  "parts": [
+    [
+      "HeadParts",
+      "Hat05",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "MagicWand/Idle_Battle_MagicWand.fbx",
+    "Walking_A": "MagicWand/InPlace/MoveFWD_Battle_InPlace_MagicWand.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
+    "Spellcast_Shoot": "MagicWand/Attack01_MagicWand.fbx",
+    "Hit_A": "MagicWand/GetHit01_MagicWand.fbx",
+    "Death_A_Pose": "MagicWand/Die01_MagicWand.fbx"
+  },
+  "palette": {
+    "1": "#263f3a",
+    "2": "#2d5046",
+    "3": "#c8bc92",
+    "4": "#b49a5c",
+    "5": "#c8bc92",
+    "6": "#27443b",
+    "7": "#493a2e",
+    "8": "#b49a5c",
+    "9": "#57584e"
+  },
+  "partPalette": {
+    "Hat05": {
+      "2": "#2d5046",
+      "3": "#2d5046",
+      "4": "#b49a5c",
+      "8": "#b49a5c"
+    }
+  },
+  "solid": {},
+  "externalParts": [
+    {
+      "name": "Sage skull",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/skull.gltf",
+      "bone": "head",
+      "scale": 0.7,
+      "origin": [
+        0,
+        0,
+        0.45
+      ],
+      "offset": [
+        0,
+        -0.08,
+        0.08
+      ],
+      "sourceColors": [
+        {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            1,
+            1,
+            1
+          ],
+          "color": "#73766b"
+        }
+      ],
+      "sourceRegions": [
+        {
+          "centers": [
+            [
+              -0.2,
+              0,
+              0.4
+            ],
+            [
+              0.2,
+              0,
+              0.4
+            ]
+          ],
+          "radius": 0.14,
+          "frontY": 0.05,
+          "color": "#20251f"
+        }
+      ]
+    },
+    {
+      "name": "Sage open tome",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/spellbook_open.gltf",
+      "bone": "weapon_r",
+      "scale": 0.68,
+      "offset": [
+        0,
+        0.1,
+        0.18
+      ],
+      "sourceColors": [
+        {
+          "min": [
+            0.4,
+            0,
+            0.25
+          ],
+          "max": [
+            1,
+            0.2,
+            0.7
+          ],
+          "color": "#664137"
+        },
+        {
+          "min": [
+            0.9,
+            0.9,
+            0.9
+          ],
+          "max": [
+            1,
+            1,
+            1
+          ],
+          "color": "#d9ceaa"
+        }
+      ]
+    },
+    {
+      "name": "Sage belt volume",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/journal_closed.gltf",
+      "bone": "pelvis",
+      "scale": 0.34,
+      "offset": [
+        0.24,
+        -0.13,
+        0.1
+      ]
+    }
+  ],
+  "fitShield": {
+    "part": "Sage open tome",
+    "bone": "weapon_r",
+    "frame": 6,
+    "front": [
+      0,
+      1,
+      0
+    ]
+  },
+  "inscriptions": [
+    {
+      "part": "Sage open tome",
+      "bone": "weapon_r",
+      "size": 0.022,
+      "color": "#4d4939",
+      "rows": [
+        {
+          "text": "MEMORIA",
+          "x": -0.13,
+          "z": 0.28
+        },
+        {
+          "text": "UMBRA",
+          "x": -0.13,
+          "z": 0.21
+        },
+        {
+          "text": "AETHER",
+          "x": -0.13,
+          "z": 0.14
+        },
+        {
+          "text": "VITA",
+          "x": 0.13,
+          "z": 0.28
+        },
+        {
+          "text": "IN UMBRA",
+          "x": 0.13,
+          "z": 0.21
+        },
+        {
+          "text": "MORTIS",
+          "x": 0.13,
+          "z": 0.14
+        }
+      ]
+    }
+  ]
+}

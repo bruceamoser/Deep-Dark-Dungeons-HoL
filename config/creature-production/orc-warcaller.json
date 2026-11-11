@@ -1,0 +1,185 @@
+{
+  "id": "orc-warcaller",
+  "body": "Body07",
+  "additionalBodies": [
+    "Cloak03"
+  ],
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth06",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "AC04_ShortEars",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hair12",
+      "head"
+    ],
+    [
+      "Weapons",
+      "Wand07",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "MagicWand/Idle_Battle_MagicWand.fbx",
+    "Walking_A": "MagicWand/InPlace/MoveFWD_Battle_InPlace_MagicWand.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SingleSword/Attack01_SingleSword.fbx",
+    "Spellcast_Shoot": "MagicWand/Attack01_MagicWand.fbx",
+    "Hit_A": "MagicWand/GetHit01_MagicWand.fbx",
+    "Death_A_Pose": "MagicWand/Die01_MagicWand.fbx"
+  },
+  "palette": {
+    "1": "#4f4031",
+    "2": "#56392d",
+    "3": "#8b3b32",
+    "4": "#b5a27b",
+    "5": "#615340",
+    "6": "#8b3b32",
+    "7": "#59412d",
+    "8": "#b6aa87",
+    "9": "#7c864d"
+  },
+  "partPalette": {
+    "Wand07": {
+      "4": "#b29d75",
+      "8": "#d3c7a7"
+    },
+    "Body07": {
+      "2": "#8b3b32",
+      "3": "#8b3b32",
+      "4": "#b5a27b",
+      "5": "#8b3b32",
+      "6": "#8b3b32"
+    },
+    "Cloak03": {
+      "1": "#8b3b32",
+      "2": "#8b3b32",
+      "3": "#8b3b32",
+      "4": "#8b3b32",
+      "5": "#8b3b32",
+      "6": "#8b3b32",
+      "7": "#8b3b32",
+      "8": "#8b3b32"
+    }
+  },
+  "solid": {
+    "Head01_Male": "#7c864d",
+    "AC04_ShortEars": "#7c864d",
+    "Eyebrow02": "#303626",
+    "Hair12": "#352f27"
+  },
+  "symmetricFits": [
+    {
+      "part": "AC04_ShortEars",
+      "pivot": [
+        0.22,
+        -0.05,
+        1.24
+      ],
+      "angleY": 55,
+      "scale": 0.85,
+      "offset": [
+        0.06,
+        0.04,
+        -0.28
+      ],
+      "purpose": "Refit supplied top-mounted animal ears as compact lateral orc ears, preserving source folds"
+    }
+  ],
+  "partModifications": {
+    "Head01_Male": {
+      "removeComponentsOutsideX": 0.27,
+      "expectedComponents": 2,
+      "purpose": "Replace the two inspected detached round ears (73 vertices each) with refitted supplied pointed ears"
+    }
+  },
+  "fitUpright": [
+    {
+      "part": "Wand07",
+      "bone": "weapon_r",
+      "frame": 6
+    },
+    {
+      "part": "Warcaller drum mallet",
+      "bone": "weapon_l",
+      "frame": 6
+    }
+  ],
+  "paintBands": [
+    {
+      "part": "Wand07",
+      "minZ": 0,
+      "maxZ": 1.36,
+      "color": "#54402e",
+      "purpose": "Wood shaft distinct from retained aged-bone skull"
+    }
+  ],
+  "externalParts": [
+    {
+      "name": "Warcaller drum mallet",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/mallet.gltf",
+      "bone": "weapon_l",
+      "scale": 0.38,
+      "offset": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "Warcaller hide drum",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/barrel_small.gltf",
+      "bone": "spine_02",
+      "scale": [
+        0.65,
+        0.65,
+        0.32
+      ],
+      "rotateX": 90,
+      "origin": [
+        0,
+        0,
+        0.5
+      ],
+      "offset": [
+        0,
+        -0.34,
+        0
+      ],
+      "sourcePaintBands": [
+        {
+          "minZ": 0.9,
+          "maxZ": 1.03,
+          "color": "#dfc99b"
+        }
+      ],
+      "sourceCap": {
+        "radius": 0.375,
+        "depth": 0.012,
+        "z": 1.015,
+        "color": "#dfc99b"
+      }
+    }
+  ]
+}

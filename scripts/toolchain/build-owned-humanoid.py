@@ -167,8 +167,44 @@ for cfg in spec.get('externalParts',[]):
  for obj in added:
   if obj.type!='MESH':continue
   world=obj.matrix_world.copy();obj.parent=None
+  if cfg.get('sourceColors'):
+   uv=obj.data.uv_layers.active;assert uv,('Expected source UVs',cfg['name'])
+   original_materials=list(obj.data.materials);images={};painted=0
+   for rule in cfg['sourceColors']:
+    slot=len(obj.data.materials);obj.data.materials.append(mat(rule['color']))
+    for face in obj.data.polygons:
+     if face.material_index>=len(original_materials):continue
+     material=original_materials[face.material_index]
+     image=next(n.image for n in material.node_tree.nodes if n.type=='TEX_IMAGE')
+     if image.name not in images:images[image.name]=(list(image.pixels),*image.size)
+     pixels,w,h=images[image.name];center=sum((uv.data[i].uv for i in face.loop_indices),Vector((0,0)))/len(face.loop_indices)
+     k=(min(h-1,max(0,int(center.y*h)))*w+min(w-1,max(0,int(center.x*w))))*4;color=pixels[k:k+3]
+     if all(lo<=v<=hi for lo,v,hi in zip(rule['min'],color,rule['max'])):face.material_index=slot;painted+=1
+   assert painted>0,('Source palette selection missed',cfg['name'])
+   modifications.append({'part':cfg['name'],'paintedFaces':painted,'recipe':cfg['sourceColors']})
+  for region in cfg.get('sourceRegions',[]):
+   slot=len(obj.data.materials);obj.data.materials.append(mat(region['color']));count=0
+   for face in obj.data.polygons:
+    center=sum((world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
+    if any(sum((center[i]-c[i])**2 for i in [0,2])<region['radius']**2 and center.y<region['frontY'] for c in region['centers']):face.material_index=slot;count+=1
+   assert count>0,('External paint region missed',cfg['name'])
+   modifications.append({'part':cfg['name'],'paintedFaces':count,'recipe':region})
+  if cfg.get('sourceCap'):
+   cap=cfg['sourceCap']
+   bpy.ops.mesh.primitive_cylinder_add(vertices=32,radius=cap['radius'],depth=cap['depth'],location=(0,0,cap['z']))
+   cover=bpy.context.object;cover.data.materials.append(mat(cap['color']))
+   bpy.ops.object.select_all(action='DESELECT');cover.select_set(True);obj.select_set(True);bpy.context.view_layer.objects.active=obj;bpy.ops.object.join()
+   modifications.append({'part':cfg['name'],'purpose':'Thin hide membrane over adapted owned barrel; preserve supplied rim/staves','recipe':cap})
   bone=cfg['bone'];anchor=rig.matrix_world@rig.data.bones[bone].head_local
-  transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateX',0)),4,'X')@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Rotation(math.radians(cfg.get('rotateZ',0)),4,'Z')@Matrix.Diagonal((*([cfg['scale']]*3),1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
+  scale=cfg['scale'] if isinstance(cfg['scale'],list) else [cfg['scale']]*3
+  for band in cfg.get('sourcePaintBands',[]):
+   slot=len(obj.data.materials);obj.data.materials.append(mat(band['color']));count=0
+   for face in obj.data.polygons:
+    center=sum((world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
+    if band['minZ']<=center.z<=band['maxZ']:face.material_index=slot;count+=1
+   assert count>0,('External paint band missed',cfg['name'])
+   modifications.append({'part':cfg['name'],'paintedFaces':count,'recipe':band})
+  transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateX',0)),4,'X')@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Rotation(math.radians(cfg.get('rotateZ',0)),4,'Z')@Matrix.Diagonal((*scale,1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
   obj.matrix_world=transform@world;obj.name=cfg['name']
   group=obj.vertex_groups.new(name=bone);group.add(list(range(len(obj.data.vertices))),1,'REPLACE');obj.modifiers.new('Owned prop socket','ARMATURE').object=rig
   if cfg.get('tag'):obj['equipmentPart']=cfg['tag']
@@ -208,7 +244,7 @@ for cfg in spec.get('inscriptions',[]):
    vertex.co=inverse@(surface+Vector((0,-.001,0)))
   group=label.vertex_groups.new(name=bone);group.add(list(range(len(label.data.vertices))),1,'REPLACE')
   obj.select_set(True);bpy.context.view_layer.objects.active=obj;bpy.ops.object.join()
- modifications.append({'part':cfg['part'],'purpose':'Painted memorial names on owned shield; baked into the same skinned part','recipe':cfg})
+ modifications.append({'part':cfg['part'],'purpose':'Painted inscriptions conformed to owned surface; baked into the same skinned part','recipe':cfg})
 
 checks=[]
 for name,rel in spec['clips'].items():
@@ -232,8 +268,8 @@ for f in spec.get('fitUpright',[]):
  delta=pose_delta(f['bone'],'Idle',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,0,1));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix();rotate_part(f['part'],f['bone'],rotation)
  fits[f['part']]={'frame':f['frame'],'alignment':(delta@rotation@Vector((0,0,1))).normalized().dot(Vector((0,0,1))),'method':'constant socket rotation, upright at inspected idle grip'}
 if spec.get('fitShield'):
- f=spec['fitShield'];delta=pose_delta('weapon_l','Idle',f['frame']).to_3x3();front=Vector((.15,-1,0)).normalized();up=Vector((0,0,1));right=up.cross(front).normalized();desired=Matrix((right,-front,up)).transposed();rotation=delta.inverted()@desired
- for name in [f['part'],*f.get('attachments',[])]:rotate_part(name,'weapon_l',rotation)
+ f=spec['fitShield'];bone=f.get('bone','weapon_l');delta=pose_delta(bone,'Idle',f['frame']).to_3x3();front=Vector(f.get('front',[.15,-1,0])).normalized();up=Vector((0,0,1));right=up.cross(front).normalized();desired=Matrix((right,-front,up)).transposed();rotation=delta.inverted()@desired
+ for name in [f['part'],*f.get('attachments',[])]:rotate_part(name,bone,rotation)
  fits['shield']={'frame':f['frame'],'worldNormal':list(front),'method':'constant bind rotation; no sliding'}
 if spec.get('fitThrust'):
  f=spec['fitThrust'];delta=pose_delta('weapon_r','1H_Melee_Attack_Slice_Diagonal',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,-1,0));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix();rotate_part(f['part'],'weapon_r',rotation)
