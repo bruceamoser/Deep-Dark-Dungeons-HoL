@@ -1,0 +1,15 @@
+# Hobgoblin Longbow — sequential production
+
+Status: brief/candidate. Pinned source24e545e6d860e8c1b03a21356fd22cae1c039785, textSHAc4fa29c7a92fce0522b78984ccae847ca60a80b99f04bfdb335ed7093ba22050. Disciplined rust-skinned armored soldier with weatherproof bowcase and neatly bundled arrows; portrait green/bronze layered armor, dark hair, practical longbow.
+
+Owned search: reuse reviewed hobgoblin lateral-ear/head assembly, Body13 plate/Cloak02, Hair02 short dark hair; Hair04 spiked silhouette rejected. Bow03 from inspected supplied bow set is a longer reinforced military form; preserve the same8/1-bone bow/arrow deformation pipeline and source draw/release. KayKit Adventurers quiver carries orderly arrows. No bowcase by name in inventory: inspected Mixed Bag2 guitarcase (separate fitted lid/body), narrow its width and lengthen upright profile into a closed weather case, preserving hinges/lid; this is an owned-item adaptation, not new primitive geometry. Fit opposite the quiver and check scalp/cloth/shoulder clearance. Reuse rust head/green-bronze palette, dark hair, brown case and readable skin/metal distinctions. Existing original sources unchanged.
+
+## Model and motion review
+
+8,149 triangles,52bones,six merged clips,12materials/three textures,23draw calls. Zero degenerate faces/unweighted vertices on GLB reimport; all sampled Three.js poses finite. Front/side/back and307 motion frames reviewed. The case's shared width profile reshapes the original guitar body and lid into a tapered military weather case, retaining hinges/handle/UVs. No original assets changed.
+
+Full-frame clearance inspection rejected the first upright bow, long arrow and backward fall. Bow cant60 degrees and source-height scale.77 preserve the deformation rig and nock line; arrow source-length scale.75 clears the preparation motion and remains longer than the full draw. Forward source Die02 avoids falling onto the carried case. A bounded root contact correction (maximum.092 source units) grounds the assembled forward fall without altering relative joint motion. Every-frame check now finds bow/arrow/case above ground; small original sole/cloak contacts remain within.022 units. This is a visual/contact check, not a performance benchmark.
+
+Fit A5/S4/F4/G5/M4/D4 =89/100. Rust ears/skin, green-bronze plate, military bow, orderly quiver and adapted weather case communicate the role. Chibi hair/face and clean short cloak remain stylized differences; the longbow is proportioned to this short body. Basic close combat uses the held arrow as an improvised stab. User bulk approval remains pending.
+
+Actual development-game bestiary/five-state and six-creature/four-hero visual checks pass, no JS errors.45 sampled shot frames verify draw-string contact, hidden/recovered held arrow and finite flying shaft. Projectile scale.697 matches the shortened held arrow (.879 world units); launch offset.44. Eleven focused tests pass. Source integrated; installed delivery, user bulk review and performance remain deferred.

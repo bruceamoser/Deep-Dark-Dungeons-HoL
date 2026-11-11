@@ -172,9 +172,34 @@ if spec.get('headFixture'):
 # rigidly skin to an existing socket. No source changes or mesh repair.
 for cfg in spec.get('externalParts',[]):
  file=Path(cfg['path']).expanduser();before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(file));added=set(bpy.data.objects)-before
+ envelope=[];width_cache={}
+ if cfg.get('sourceWidthProfile'):
+  for source_obj in added:
+   if source_obj.type=='MESH':
+    points=[source_obj.matrix_world@v.co for v in source_obj.data.vertices]
+    envelope.extend((points[e.vertices[0]],points[e.vertices[1]]) for e in source_obj.data.edges)
  for obj in added:
   if obj.type!='MESH':continue
   world=obj.matrix_world.copy();obj.parent=None
+  if cfg.get('sourceWidthProfile'):
+   profile=cfg['sourceWidthProfile'];inverse=world.inverted()
+   for vertex in obj.data.vertices:
+    point=world@vertex.co;z=point.z
+    if z not in width_cache:
+     xs=[]
+     for p1,p2 in envelope:
+      if min(p1.z,p2.z)-1e-6<=z<=max(p1.z,p2.z)+1e-6:
+       if abs(p2.z-p1.z)<1e-6:xs.extend([p1.x,p2.x])
+       else:xs.append(p1.x+(p2.x-p1.x)*(z-p1.z)/(p2.z-p1.z))
+     radius=max(abs(x) for x in xs)
+     if radius<=1e-5:
+      assert abs(point.x)<1e-5; width_cache[z]=1;continue
+     target=profile[0][1] if z<=profile[0][0] else profile[-1][1]
+     for (z1,w1),(z2,w2) in zip(profile,profile[1:]):
+      if z1<=z<=z2:target=w1+(w2-w1)*(z-z1)/(z2-z1);break
+     width_cache[z]=target/radius
+    point.x*=width_cache[z];vertex.co=inverse@point
+   modifications.append({'part':cfg['name'],'purpose':'Reshape copied case width envelope; preserve fitted lid/body and fittings','recipe':profile})
   if cfg.get('sourceColors'):
    uv=obj.data.uv_layers.active;assert uv,('Expected source UVs',cfg['name'])
    original_materials=list(obj.data.materials);images={};painted=0
@@ -290,7 +315,8 @@ for cfg,wr in weapon_rigs:
  delta=pose_delta(cfg['bone'],cfg['fitClip'],cfg['fitFrame'])
  forward=(rig.matrix_world@rig.pose.bones['weapon_l'].head)-(rig.matrix_world@rig.pose.bones['weapon_r'].head);forward.z=0;forward.normalize()
  up=Vector((0,0,1));right=up.cross(forward).normalized();desired=Matrix((right,-forward,up)).transposed()
- world=Matrix.Translation(rig.matrix_world@rig.data.bones[cfg['bone']].head_local)@delta.to_3x3().inverted().to_4x4()@desired.to_4x4()@wr.matrix_world
+ desired=Matrix.Rotation(math.radians(cfg.get('cantDegrees',0)),3,forward)@desired
+ world=Matrix.Translation(rig.matrix_world@rig.data.bones[cfg['bone']].head_local)@delta.to_3x3().inverted().to_4x4()@desired.to_4x4()@Matrix.Diagonal((*cfg.get('dimensionsScale',[1,1,1]),1))@wr.matrix_world
  rig.animation_data.action=None
  for b in rig.pose.bones:b.matrix_basis.identity()
  bpy.context.view_layer.update();wr.parent=rig;wr.parent_type='BONE';wr.parent_bone=cfg['bone'];wr.matrix_world=world
@@ -306,6 +332,33 @@ for cfg,wr in weapon_rigs:
   for obj in added:bpy.data.objects.remove(obj,do_unlink=True)
   extra_sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
  fits[cfg['name']]={'method':'Owned deformation rig, synchronized clips and constant socket fit','frame':cfg['fitFrame'],'forward':list(forward)}
+# Bounded per-clip contact correction for reviewed forward falls. Sample the
+# assembled silhouette before writing keys; preserve all relative joint motion.
+# Large penetrations fail instead of lifting an unsuitable pose into the air.
+for contact in spec.get('groundContactClips',[]):
+ clip=contact['clip'];all_rigs=[rig,*[wr for _,wr in weapon_rigs]]
+ for current in all_rigs:
+  for track in current.animation_data.nla_tracks:track.mute=True
+  track=next(t for t in current.animation_data.nla_tracks if t.name==clip)
+  current.animation_data.action=track.strips[0].action;current.animation_data.action_slot=current.animation_data.action.slots[0]
+ end=int(rig.animation_data.action.frame_range[1]);root=rig.pose.bones['root'];samples=[]
+ inverse=(rig.matrix_world@rig.data.bones['root'].matrix_local).to_3x3().inverted()
+ for frame in range(1,end+1):
+  bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();graph=bpy.context.evaluated_depsgraph_get();minimum=999
+  for obj in bpy.context.scene.objects:
+   if obj.type!='MESH':continue
+   evaluated=obj.evaluated_get(graph)
+   minimum=min(minimum,min((evaluated.matrix_world@v.co).z for v in evaluated.data.vertices))
+  lift=max(0,-minimum+contact.get('margin',.002))
+  assert lift<=contact['maxCorrection'],('Fall needs pose/gear repair, not a large root lift',clip,frame,lift)
+  samples.append((frame,root.location.copy()+inverse@Vector((0,0,lift)),lift))
+ for frame,location,lift in samples:
+  root.location=location;root.keyframe_insert(data_path='location',frame=frame,group='Reviewed ground contact')
+ modifications.append({'part':'root','purpose':'Bounded assembled fall contact, relative pose preserved','clip':clip,'maxCorrection':max(row[2] for row in samples)})
+ for current in all_rigs:
+  current.animation_data.action=None
+  for bone in current.pose.bones:bone.matrix_basis.identity()
+  for track in current.animation_data.nla_tracks:track.mute=False
 rig.animation_data.action=None
 for b in rig.pose.bones:b.matrix_basis.identity()
 for t in rig.animation_data.nla_tracks:t.mute=False

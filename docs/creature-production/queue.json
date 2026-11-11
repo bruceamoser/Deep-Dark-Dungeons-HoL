@@ -308,9 +308,16 @@
       "name": "Hobgoblin Longbow",
       "order": 19,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hobgoblin-longbow.md",
+        "model": "docs/creature-production/hobgoblin-longbow.md",
+        "motion": "docs/creature-production/hobgoblin-longbow.md",
+        "game-view": "docs/creature-production/hobgoblin-longbow.md",
+        "integration": "docs/creature-production/hobgoblin-longbow.md"
+      },
+      "approvedAsset": "HobgoblinLongbow"
     },
     {
       "id": "creature-goblin-rattlechanter",
