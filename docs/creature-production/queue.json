@@ -14,8 +14,8 @@
         "brief": "docs/goblin-spearhand-dungeon.md",
         "model": "docs/goblin-spearhand-dungeon.md",
         "motion": "docs/goblin-spearhand-dungeon.md",
-        "encounter": "docs/goblin-spearhand-dungeon.md",
-        "integration": "docs/goblin-spearhand-dungeon.md"
+        "integration": "docs/goblin-spearhand-dungeon.md",
+        "game-view": "docs/goblin-spearhand-dungeon.md"
       },
       "approvedAsset": "GoblinSpearhand"
     },
@@ -30,8 +30,8 @@
         "brief": "docs/air-elemental-dungeon-pilot.md",
         "model": "docs/air-elemental-dungeon-pilot.md",
         "motion": "docs/air-elemental-dungeon-pilot.md",
-        "encounter": "docs/air-elemental-dungeon-pilot.md",
-        "integration": "docs/air-elemental-dungeon-pilot.md"
+        "integration": "docs/air-elemental-dungeon-pilot.md",
+        "game-view": "docs/air-elemental-dungeon-pilot.md"
       },
       "approvedAsset": "AirElementalSculpted"
     },
@@ -46,8 +46,8 @@
         "brief": "docs/wolf-pilot.md",
         "model": "docs/wolf-pilot.md",
         "motion": "docs/wolf-pilot.md",
-        "encounter": "docs/wolf-pilot.md",
-        "integration": "docs/wolf-pilot.md"
+        "integration": "docs/wolf-pilot.md",
+        "game-view": "docs/wolf-pilot.md"
       },
       "approvedAsset": "WolfPilot"
     },
@@ -56,11 +56,16 @@
       "name": "Goblin Scrapper",
       "order": 4,
       "family": "humanoid-equipment",
-      "status": "active",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
       "gates": {
-        "brief": "docs/creature-production/goblin-scrapper.md"
-      }
+        "brief": "docs/creature-production/goblin-scrapper.md",
+        "model": "docs/creature-production/goblin-scrapper.md",
+        "motion": "docs/creature-production/goblin-scrapper.md",
+        "game-view": "docs/creature-production/goblin-scrapper.md",
+        "integration": "docs/creature-production/goblin-scrapper.md"
+      },
+      "approvedAsset": "GoblinScrapper"
     },
     {
       "id": "creature-road-bandit",
@@ -548,5 +553,9 @@
       "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
       "gates": {}
     }
-  ]
+  ],
+  "performance": {
+    "status": "deferred",
+    "scope": "Final bulk roster pass after all remaining creature model/look/motion integrations; user instruction November 11, 2026"
+  }
 }

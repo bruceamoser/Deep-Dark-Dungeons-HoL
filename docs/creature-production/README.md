@@ -23,7 +23,7 @@ node scripts/creature-production.mjs status
 node scripts/creature-production.mjs next
 node scripts/creature-production.mjs start goblin-scrapper
 node scripts/creature-production.mjs record goblin-scrapper brief docs/creature-production/goblin-scrapper.md
-# Record the subsequent gates in order: model, motion, encounter, integration.
+# Record the subsequent gates in order: model, motion, game-view, integration.
 node scripts/creature-production.mjs validate
 node scripts/creature-production.mjs assets
 ```
@@ -37,8 +37,8 @@ node scripts/creature-production.mjs assets
 | brief | Read pinned book text/image, existing references and source inventory. Record silhouette, anatomy, signature, equipment, palette, donor/license and cost. Reuse existing reference sheets before generating any. |
 | model | Preserve original sources; create an editable task-owned copy. Correct body/head/gear and paint. Review front/side/back at game scale. Record source/output hashes, actual triangles, materials, textures and preliminary six-part fit. No automatic welding, hidden-face deletion or topology reduction. |
 | motion | Pose for creature identity, then verify idle, locomotion, correct attack, hit and full death. Check grip, weapon travel, eyes/jaw, joints, foot contact and cloth at multiple frames. Export/reimport, compare bones/clips/materials and test actual Three.js skinning. Return failures to the same creature. |
-| encounter | Six target creatures plus four heroes in a generated dungeon, meaningful AI turns, attacks and death. Muted native launcher through ordinary terminal AppArmor context, temporary saves, no sandbox bypass. Measure after warmup and record video separately. Aim for 60 FPS here, require above 30 FPS on this machine; report viewport/GPU/sample and limitations. Do not hide prompts, errors or failed animations to obtain a pass. |
-| integration | Author-review the actual evidence. Pin the exact GLB/hash/model route and source/license record; add role-specific factory/attack handling where needed. Verify bestiary and combat use the same asset. Run applicable tests, update report/queue/handoff, self-review and merge a passing PR. Update the installed local review build and verify it before calling the creature delivered. |
+| game-view | Verify actual game appearance factory, equipped identity, all five animation states and game-scale readability. Check the bestiary uses the same asset. No per-creature FPS benchmark: Bruce explicitly deferred performance testing to a final bulk roster pass on November 11. |
+| integration | Author-review the actual evidence. Pin the exact GLB/hash/model route and source/license record; add role-specific factory/attack handling where needed. Verify bestiary and combat use the same asset. Run applicable tests, update report/queue/handoff and commit the checkpoint. Self-review and merge passing changes; update and verify the installed review build at delivery checkpoints. Distinguish source integration from installed delivery. |
 
 Bruce's three approved anchors establish the direction. Keep further creatures cohesive: deliberate sculpted forms, clean readable colors, fitted equipment and polished materials. Triangle count is a measured cost, not a universal target. The wolf's larger mesh passed its actual encounter. Known minor limitations stay visible in the report; passing FPS alone does not satisfy the art gate. New paid services and broad style changes are outside this no-additional-cost workflow.
 
@@ -48,4 +48,4 @@ Private sources/exports stay out of Git. The manifest records paths, hashes, app
 
 Use a clean committed/index checkout for packaging while unrelated experimental edits exist. Stage Dungeon Mason inputs and only the approved creature exports. Preserve saves/audio settings; back up the old per-user AppImage before using the supported installer. Build both AppImage and `.deb`. No public release containing private exports is implied by local installation.
 
-After completing one creature, commit/push its progress and verify the remote hash before starting the next. Do not silently skip broken work or leave progress only in chat. Keep rejected attempts separate and explain the remaining failure if work stops.
+After completing one creature, commit/push its progress and verify the remote hash before starting the next. Performance remains pending until the final bulk roster pass; never infer FPS from polygon counts or static captures. Do not silently skip broken work or leave progress only in chat. Keep rejected attempts separate and explain the remaining failure if work stops.

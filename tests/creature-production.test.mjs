@@ -36,7 +36,7 @@ test("production queue covers the bestiary and permits only one active creature"
     /Only one/,
   );
 });
-test("integration cannot skip motion/encounter evidence or register an unapproved model", () => {
+test("integration cannot skip motion/game-view evidence or register an unapproved model", () => {
   const q = structuredClone(queue),
     row = q.creatures.find((c) => c.status === "queued");
   row.gates.motion = "docs/wolf-pilot.md";

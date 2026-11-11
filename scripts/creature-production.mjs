@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CREATURE_ROSTER } from "../src/core/creature-roster.mjs";
 import { resolveApprovedCreatureAssets } from "./approved-creature-assets.mjs";
-export const GATES = ["brief", "model", "motion", "encounter", "integration"];
+export const GATES = ["brief", "model", "motion", "game-view", "integration"];
 export function validateQueue(queue, ids, approved) {
   const rows = queue.creatures;
   if (

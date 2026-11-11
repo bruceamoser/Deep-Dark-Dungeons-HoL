@@ -2,7 +2,13 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Three approved anchors; sequential humanoid-first production
+### Latest — Sequential creature production underway
+
+Active clean worktree: `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/sequential-creature-production`, base `fca55f7` (PR161). Main checkout’s historical dirty experiments are preserved. Bruce deferred performance benchmarks to one final bulk roster pass; per-creature model/look/gear/five-animation and actual game-view checks remain required.
+
+Goblin Scrapper is source-integrated after reviewed authored cloth/pouches/knife, matching SingleSword clips and actual bestiary/dungeon routing. Final 32,858 triangles/43 bones/five clips; no degenerate faces or unweighted vertices. Installed game remains the three-anchor build until the delivery checkpoint. See [Scrapper report](../creature-production/goblin-scrapper.md) and tracked queue. Next creature after checkpoint: Road Bandit. No performance claim for new creatures.
+
+### Previous — Three approved anchors; sequential humanoid-first production
 
 Bruce approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private GLBs are now pinned and enabled by default when installed; no Air/Wolf environment flag is required. [Production queue](../creature-production/README.md) covers **58 creatures: three integrated, 55 remaining**, with one active creature and ordered review gates. **Goblin Scrapper brief is complete; modeling is next.** Existing reference/body/rig reuse precedes new generation. Earlier unattended batch plans are superseded.
 

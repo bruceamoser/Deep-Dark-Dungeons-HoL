@@ -30,6 +30,23 @@
       "method": "existing-multiview-animal",
       "report": "docs/wolf-pilot.md",
       "distribution": "private-local-build"
+    },
+    {
+      "creatureId": "creature-goblin-scrapper",
+      "model": "GoblinScrapper",
+      "path": "/assets/licensed/creatures/GoblinScrapper.glb",
+      "sha256": "76d0d95becca2c72e751681d10a6c1e051c89a845c04245452d6cc9614fd3e17",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "author review under delegated production direction; not separate user approval",
+      "report": "docs/creature-production/goblin-scrapper.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.9,
+        "height": 1.2,
+        "weapon": "melee"
+      }
     }
   ]
 }

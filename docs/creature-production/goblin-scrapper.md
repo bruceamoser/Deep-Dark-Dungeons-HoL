@@ -1,6 +1,6 @@
 # Goblin Scrapper — production brief
 
-Status: **brief complete; modeling has not started**. First remaining creature in the sequential queue. No raw mesh, animation or integration is claimed by this report.
+Status: **model, motion and game-view reviewed; source integration complete**. Installed delivery follows at the next checkpoint. Performance is explicitly deferred to the final roster pass per Bruce’s updated instruction.
 
 ## Verified reference
 
@@ -20,4 +20,14 @@ Source character pipeline: `scripts/toolchain/build-goblin-spearhand-pilot.py`, 
 4. Test six Scrappers/four heroes with normal creature AI, including its movement/retreat behavior. Maintain existing combat rules.
 5. Promote only the reviewed export, update manifest/queue, merge and update the installed review build.
 
-Model, motion, encounter and integration evidence: **pending**. Next session should resume here, not start another creature.
+## November 11 production result
+
+Preserved the approved authored goblin head and Dungeon Mason Body08/rest rig. Replaced the pot/spear with a fitted ochre head wrap, stitched patch, teal clothing, asymmetric belt pouches/tool scraps, knee patch and a short notched knife. Used actual SingleSword idle/walk/Attack01/hit/death sources, with exact matching rest matrices and hierarchy; no renamed spear motion. The original purchased inputs remain untouched; derivative GLB stays private.
+
+Final export: **32,858 triangles, 43 bones, five clips, 18 materials, 22 rendered primitives, no textures**. Reimport reports **zero zero-area faces, zero unweighted vertices**. An initial cap pole and thin bevel produced degenerate faces; the builder was corrected before acceptance. Open cloth-band edges are intentional. Source knife grip is rigid to `weapon_r`; pouches follow pelvis, wrap follows head.
+
+Author visually inspected front/side/back, game-scale dungeon, attack draw/swing/recovery, walk, hit and full death. A 242-frame/30fps review captures all five states; raw Three.js validation found finite deformed vertices and no binding failures. Both bestiary and dungeon instantiate `GoblinScrapper`, with all five actual clip selections and no JavaScript errors. A stale development-server manifest initially showed the fallback; restarting after manifest changes resolved it, and the repeated game check passed. No FPS measurement or combat-balance claim.
+
+Author six-part fit: A4/S4/F4/G4/M4/D5 = **82/100**. Readable small goblin salvager with knife/tools, distinct from saucepan Spearhand. Limitations: deliberately broad chibi proportions and chunky gloves; less ragged cloth/weathering than book art, no individual finger animation or facial performance. These are explicit stylization differences, not a claim of exact illustration reproduction.
+
+Private evidence: `~/.local/share/four-lanterns-creature-production/goblin-scrapper/`: editable Blender, GLB, provenance with source animation hashes, roundtrip report, `review/` frames/turnarounds, `validation/`, and `game-view/` bestiary/dungeon/results. Builder: `scripts/toolchain/build-goblin-scrapper.py`. Runtime hash is pinned in the approved manifest. Review is by the author under Bruce’s delegated production direction, not separate user or independent reviewer approval.
