@@ -185,6 +185,15 @@ export function attackPresentation(from, data) {
   const melee = items.find(
     (i) => i.carried && i.held && i.catalogId === "item-ordinary-melee-weapon",
   );
+  if (from.model.userData.wolfPilot)
+    return { kind: "unarmed", clip: "Bite_Front", contact: 13 / 24 };
+  if (from.model.userData.airElemental)
+    return {
+      kind: "wind",
+      clip: "Spellcast_Shoot",
+      release: 0.52,
+      contact: 0.52,
+    };
   if (data.spell)
     return {
       kind: data.element ?? "fire",
@@ -193,6 +202,12 @@ export function attackPresentation(from, data) {
     };
   if (data.ranged)
     return { kind: "arrow", clip: "2H_Ranged_Shoot", release: 0.28 };
+  if (from.model.userData.goblinSpearhand)
+    return {
+      kind: "spear",
+      clip: "1H_Melee_Attack_Slice_Diagonal",
+      contact: 8 / 30,
+    };
   if (data.ability === "ability-rim-strike")
     return { kind: "shield", clip: "Block_Attack", contact: 0.43 };
   if (
@@ -239,7 +254,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
     .add(v(0, 1.05, 0))
     .addScaledVector(direction, -0.23);
   let start, projectile, ribbon, weapon;
-  const isProjectile = !!(data.spell || data.ranged);
+  const isProjectile = !!(data.spell || data.ranged || spec.kind === "wind");
   const restingPosition = from.model.position.clone();
   const lunge = isProjectile
     ? 0
@@ -277,6 +292,19 @@ export function createAttackEffect(host, data, callbacks = {}) {
     wrapper.add(projectile);
     projectile = wrapper;
     projectile.name = "Arrow flight";
+  } else if (spec.kind === "wind") {
+    projectile = new T.Group();
+    projectile.name = "Flying pressure wave";
+    for (let i = 0; i < 3; i++) {
+      const ring = owned.mesh(
+        new T.TorusGeometry(0.25 + i * 0.1, 0.024, 5, 24, Math.PI * 1.65),
+        glow(0xc8ecff, 0.65),
+      );
+      ring.rotation.x = Math.PI / 2;
+      ring.rotation.z = i * 1.1;
+      ring.position.y = -0.2 * i;
+      projectile.add(ring);
+    }
   } else if (isProjectile) projectile = magicMissile(owned, spec.kind).group;
   if (projectile) root.add(projectile);
   if (spec.kind === "sword") {
@@ -341,13 +369,15 @@ export function createAttackEffect(host, data, callbacks = {}) {
     : 0;
   const contact = isProjectile ? spec.release + flight : spec.contact;
   const color =
-    spec.kind === "cold"
-      ? 0xa3e4ff
-      : spec.kind === "life"
-        ? 0x91e6ba
-        : data.spell
-          ? 0xffa153
-          : 0xffda96;
+    spec.kind === "wind"
+      ? 0xc8ecff
+      : spec.kind === "cold"
+        ? 0xa3e4ff
+        : spec.kind === "life"
+          ? 0x91e6ba
+          : data.spell
+            ? 0xffa153
+            : 0xffda96;
   const burst = impactBurst(owned, color, spec.kind);
   burst.group.position.copy(end);
   root.add(burst.group);

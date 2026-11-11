@@ -95,3 +95,39 @@ Bruce proposed Modly plus local rigging/motion tools, then explicitly prioritize
 ## 2026-11-10 — Local generation pilot result
 
 The Crypt Ghoul experiment establishes a promising local source-generation route: Modly/TRELLIS.2 produces a much closer static shape and textured illustration match. Keep the successful source private and preserve the production baseline. The first reduced proxy/Mesh2Motion skin fails actual deformation; do not bulk-convert the roster or call it game-ready. Prioritize neutral pose preparation, selective topology/texture baking and fitted weights; require actual five-clip Three.js review before adoption. User approval of the static image does not establish motion acceptance. See [pilot report](../local-mesh-pipeline-pilot.md).
+
+## 2026-11-11 — Reuse owned sources before more generation
+
+Bruce prioritizes minimal/no additional cost and a cohesive high-quality result, allows a style change, and wants the actual KayKit/Dungeon Mason inventory established first. Unity installation is authorized as an asset import/inspection utility; it does not migrate the game. User supplied KayKit v8, matching the already documented version. Retrieve the purchased Unity package through the signed-in owner account; no new purchase needed.
+
+Do not resume unattended full-roster generation based on static mesh success. A bounded reused-body/attached-head experiment is only an assembly test; its visible neck, paint and equipment problems prevent promotion. Choose authored source parts after full inventory and pass one equipped creature through real motion/dungeon review before scaling. See [inventory and acceptance gaps](../owned-assets-pilot.md).
+
+## 2026-11-11 — Goblin preview before dungeon integration
+
+Bruce accepted the source spear test and required a point-first stab. The source Attack02 hand motion needed a constant socket rotation for the separate spear mesh; this is now validated. Bruce then requested a clean goblin head, skin/outfit colours and gear/animation preview before integration. The authored-head/saucepan candidate reuses the exact source rig/body/spear/clips, with green skin/rust cloth/brown leather and a bare scalp under removable headgear. This is a candidate for review, not approval of the full roster's style. See [preview report](../goblin-spearhand-owned-pilot.md). No new purchase, cloud generation, game replacement or batch restart.
+
+## 2026-11-11 — Approve Spearhand for the dungeon pilot
+
+Bruce approved the owned-source Goblin Spearhand preview and requested six opponents plus four heroes in the actual dungeon. Promote that exact private GLB through a dedicated conditional model route; preserve its source skeleton/materials/thrust and avoid legacy gear attachments. Reuse existing approach-before-impact/full-death handling. Normal installed-menu review must match the checkout, so update the per-user AppImage with a backup, then test it independently using temporary saves and muted audio. This one-role qualification does not authorize resuming the abandoned whole-roster generator. See [native encounter report](../goblin-spearhand-dungeon.md).
+
+## 2026-11-11 — Existing reference sheets for Tripo
+
+Bruce selected Air Elemental then Wolf for the next tests, and wants a Tripo comparison using existing multiview sheets. Find and reuse the earlier references; do not regenerate them just because they are absent from the immediate chat. An unnecessary new Air Elemental image was generated before this correction, and is excluded from the supplied reference bundle. The original Air Elemental and later solid-body variant are separate designs, clearly labeled. Goblin Smoke Slinger uses the prior stylized equipped A-pose sheet. No Tripo spending or generation has occurred.
+
+## 2026-11-11 — Air pilot and local Hunyuan research
+
+Keep the Air Elemental candidate behind `FLD_AIR_PILOT=1` while reviewing its appearance. Native six-plus-four technical checks pass, but that does not authorize automatic roster promotion or a new installed release. Runtime object animation is appropriate for this wind creature; do not claim the static GLB contains a humanoid skeleton or embedded clips. Wolf remains the next planned pilot.
+
+Bruce reports Tripo's extra cost did not produce a worthwhile improvement and asks about local Hunyuan multiview. Research confirms technical feasibility on a 3090, but the current 2mv license explicitly restricts generated outputs in EU/UK/South Korea. No installation or generation occurred. Resolve that production-use issue before adopting it; judge any bounded experiment by total correction time through animation, not static generation speed. See [research](../hunyuan-local-feasibility.md).
+
+Bruce then asked to continue the existing workflow and called the Air Elemental fantastic. Defer Hunyuan; proceed to the already planned Wolf pilot using existing owned/free sources.
+
+## 2026-11-11 — Bounded Wolf reuse pilot
+
+Reuse the already generated multiview wolf mesh and fitted rig, preserving originals; no new image generation or whole-roster job. The Quaternius source is useful as a comparison, but too blocky for this target and lacks a hit clip. Candidate refinements include coat, fitted eyes and a real opening jaw. Its 118,007 triangles are qualified by an actual six-wolf/four-hero encounter, not by a fixed triangle-budget promise. Keep the candidate opt-in until visual review. Remaining foot/gait/mouth polish is explicit in the report; passing FPS and clip assertions is not final art approval.
+
+## 2026-11-11 — Promote all three anchors; humanoids first, sequential production
+
+Bruce explicitly approves the Goblin Spearhand, Air Elemental and Wolf results for the game. Promote the exact reviewed exports as defaults, update the local installed review build, and follow a tracked queue for all 55 remaining creatures. This supersedes prior pilot-only/no-roster-work constraints, while retaining one active creature at a time rather than the failed unattended generation batch. Humanoids go first to reuse fitted bodies, heads, held gear and authored clips; specialized grips/anatomy get their own reviews. No requirement to ask Bruce for routine per-creature permission within this approved direction.
+
+Use `docs/creature-production/README.md`, queue.json and the pinned approved asset manifest. Status/gates/evidence must travel through Git. Goblin Scrapper is first; its brief is complete, modeling remains next. Private assets stay outside Git; missing-input fallback must not be confused with a complete delivery build. No Hunyuan, Tripo spending or parallel creature workers authorized by this workflow change.

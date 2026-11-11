@@ -424,7 +424,8 @@ export class Scene {
             if (o.isMesh) {
               o.castShadow = true;
               o.receiveShadow = true;
-              o.material.roughness = 0.88;
+              if (o.material.userData.preserveAuthoredRoughness !== true)
+                o.material.roughness = 0.88;
             }
           });
           this.assets.set(name, g);
@@ -760,9 +761,18 @@ export class Scene {
       e.clips.find((c) => c.name === name) ??
       e.clips.find((c) => c.name === "Idle");
     if (!clip || (!once && e.action?.getClip() === clip)) return;
+    const fullDeath = name === "Death_A_Pose" && e.model.userData.playFullDeath;
+    const singlePlay = once || fullDeath;
+    if (fullDeath)
+      e.deathGrace = Math.max(e.deathGrace ?? 0, clip.duration + 0.18);
     const next = e.mixer.clipAction(clip);
-    next.reset().setLoop(once ? T.LoopOnce : T.LoopRepeat, once ? 1 : Infinity);
-    next.clampWhenFinished = once;
+    next
+      .reset()
+      .setLoop(
+        singlePlay ? T.LoopOnce : T.LoopRepeat,
+        singlePlay ? 1 : Infinity,
+      );
+    next.clampWhenFinished = singlePlay;
     next.play();
     if (e.action && e.action !== next) e.action.fadeOut(0.18);
     next.fadeIn(0.18);
@@ -809,11 +819,25 @@ export class Scene {
     }
   }
   attackEffect(data, callbacks) {
+    const actor = this.entities.get(data.attacker);
+    const target = this.entities.get(data.target);
+    if (actor?.model.userData.playFullDeath && actor.travel?.length && target) {
+      // Rules resolve immediately. Let this creature finish its approach
+      // before presenting the strike and applying the impact pose.
+      target.pendingImpacts = (target.pendingImpacts ?? 0) + 1;
+      (actor.queuedAttacks ??= []).push({ data, callbacks, target });
+      return;
+    }
     const effect = createAttackEffect(this, data, callbacks);
     if (effect) this.effects.push(effect);
     return effect;
   }
   clearEffects() {
+    for (const actor of this.entities.values()) {
+      for (const { target } of actor.queuedAttacks ?? [])
+        target.pendingImpacts = Math.max(0, target.pendingImpacts - 1);
+      actor.queuedAttacks = [];
+    }
     for (const effect of this.effects) effect.dispose();
     this.effects.length = 0;
   }
@@ -967,6 +991,12 @@ export class Scene {
       }
       if (e.travel?.length && e.group.position.distanceTo(target) <= 0.02)
         e.travel.shift();
+      if (!e.travel?.length && e.queuedAttacks?.length) {
+        for (const { data, callbacks, target } of e.queuedAttacks.splice(0)) {
+          target.pendingImpacts = Math.max(0, target.pendingImpacts - 1);
+          this.attackEffect(data, callbacks);
+        }
+      }
       if (!e.lock && !e.pendingImpacts) {
         const dead = e.isEnemy
           ? e.data.hp <= 0

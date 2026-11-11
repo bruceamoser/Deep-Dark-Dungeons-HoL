@@ -1,3 +1,6 @@
+import { wolfPilotAppearance } from "./wolf-pilot.mjs";
+import { airElementalAppearance } from "./air-elemental.mjs";
+import { goblinSpearhandAppearance } from "./goblin-spearhand.mjs";
 import { colorGoblinFace } from "./goblin-face.mjs";
 import { hangingItemStabilizer } from "./hanging-equipment.mjs";
 import { elementalMotion } from "./elemental-motion.mjs";
@@ -13,8 +16,22 @@ import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 export function equipmentAppearance(assets, hero, enemy = false) {
+  if (enemy && hero.type === "creature-wolf" && assets.has("WolfPilot"))
+    return wolfPilotAppearance(assets.get("WolfPilot"));
+  if (
+    enemy &&
+    hero.type === "creature-air-elemental" &&
+    assets.has("AirElementalSculpted")
+  )
+    return airElementalAppearance(assets.get("AirElementalSculpted"));
   if (!enemy && assets.has("DungeonMason"))
     return masonAppearance(assets.get("DungeonMason"), hero, assets);
+  if (
+    enemy &&
+    hero.type === "creature-goblin-spearhand" &&
+    assets.has("GoblinSpearhand")
+  )
+    return goblinSpearhandAppearance(assets.get("GoblinSpearhand"));
   const look = enemy ? CREATURE_ROSTER[hero.type] : null;
   // KayKit character models are complete rigged humanoids and take this path; the
   // Quaternius animals and constructs go to the procedural creature path.

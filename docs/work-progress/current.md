@@ -1,5 +1,43 @@
 # Current working progress
 
+## Active work — owned assets and no-cost modular pilot (November 11)
+
+### Latest — Three approved anchors; sequential humanoid-first production
+
+Bruce approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private GLBs are now pinned and enabled by default when installed; no Air/Wolf environment flag is required. [Production queue](../creature-production/README.md) covers **58 creatures: three integrated, 55 remaining**, with one active creature and ordered review gates. **Goblin Scrapper brief is complete; modeling is next.** Existing reference/body/rig reuse precedes new generation. Earlier unattended batch plans are superseded.
+
+Clean-index Linux AppImage and Debian builds pass; all 363 tests pass. Normal menu AppImage is updated and passed the full bestiary plus six-wolf/four-hero installed check; all three launcher encounter tests passed. Restart the game to load this local build. See [delivery report](../creature-production/2026-11-11-approved-anchors.md). The private assets are not part of Git. Preserve unrelated historical dirty generator files. No new generator/tool installation, public release or all-roster background job.
+
+### Previous — Wolf pilot adapted and dungeon-tested
+
+Bruce asked to continue the current workflow and called the Air Elemental fantastic; Hunyuan is deferred. The Wolf pilot reuses the existing private multiview/CuMesh body and fitted rig, with new slate/ivory vertex paint, fitted amber eyes, an actual opening jaw/teeth and revised five-state animation. No new generation, purchase or roster batch. **Six wolves plus four heroes passed the native dungeon check: 59.90 FPS, p95 16.8 ms, all five states, zero JS errors.** All 360 tests pass. Read [wolf report](../wolf-pilot.md) and [handoff](handoffs/2026-11-11-wolf-pilot.md).
+
+Wolf remains a review candidate: coarse fur ridges, gait/ground contact and mouth corners need player review. Source and media are private; Git carries the builder/adapter/test. It is opt-in through `FLD_WOLF_PILOT=1`; the installed Spearhand AppImage is unchanged. Normal checkout packaging is restored after the test. Next: Bruce reviews the silent comparison/dungeon captures, then decide whether to promote/refine these pilots. Do not restart a batch or replace unrelated creatures.
+
+### Previous — Air Elemental native test complete; Hunyuan feasibility reviewed
+
+The opt-in Air Elemental v3 passed a real native dungeon encounter with six elementals and four heroes: **59.50 FPS average, p95 16.8 ms at 1600×1000**, five animation states, no JS errors. Transported sweep frames remove the earlier geometry flips; idle/walk loops now close. Dedicated pale pressure waves replace generic fire projectiles. This is a technical pilot, not final art acceptance: the shape still reads as sculpted ribbons. Normal checkout packaging was restored without `FLD_AIR_PILOT`; the installed Spearhand AppImage was not replaced. All 360 tests pass. See [test report](../air-elemental-dungeon-pilot.md) and [handoff](handoffs/2026-11-11-air-elemental-dungeon-test.md).
+
+Bruce likes the first Air Elemental and reports Tripo adds cost without improvement. He asks whether local Hunyuan multiview could shorten base mesh work. Primary-source review confirms Hunyuan3D-2mv fits the hardware and accepts four separate views, but its current license explicitly restricts outputs in EU/UK/South Korea. No installation or generation performed. See [feasibility and license findings](../hunyuan-local-feasibility.md). Wolf remains next after this bounded Air review; no roster batch restart.
+
+### Previous — Air Elemental pilot and existing Tripo reference sheets
+
+Bruce selected **Air Elemental, then Wolf** as the next bounded tests. An original procedural wind pilot has been built privately; its first version failed author review as too coil-like. V2 rendered at 25,736 triangles/9 primitives with five adapter motion states; it was then an unintegrated WIP. The latest v3 native result above supersedes that technical status; final art acceptance remains open. The installed Spearhand build remains unchanged. Wolf work remains pending.
+
+Bruce also wants to try Tripo and requested the **existing** Air Elemental and Goblin Smoke Slinger multiview sheets. The agent initially regenerated an unnecessary Air Elemental sheet; Bruce corrected this. **Retrieve existing references before creating new ones.** Located the prior meeple sheets, inspected them, and copied 15 existing PNGs byte-for-byte (three sheets plus separate front/back/left/right images) into `~/Downloads/Tripo-Reference-Sheets`, with a ZIP and source/hash manifest; project copy under ignored `test-results/tripo-reference-sheets`. Includes original Air Elemental, its later solid-body variant, and stylized equipped Slinger. No new Slinger image, Tripo account setup, upload, generation, purchase or installation performed. See [handoff](handoffs/2026-11-11-air-pilot-tripo-references.md). Next: use these existing inputs for the Tripo comparison, qualify the Air Elemental candidate, then Wolf. No batch restart.
+
+### Previous — Goblin Spearhand integrated and tested
+
+Bruce approved the authored head/source-rig preview. The private Goblin Spearhand is now routed into the dungeon with its source thrust, authored materials, fixed goblin scale and full hit/death playback. **Six Spearhands + four heroes passed the native Linux encounter check:** 59.75 FPS average at 1600×1000 on RTX 3090; p95 16.8 ms, all five animation states, no JS errors. The updated **normal menu AppImage** also passed separately (59.80 FPS); restart the game to load it. Version label remains 0.8.7, no public release or system Debian replacement. Local AppImage and `.deb` rebuilt. All 358 tests and the staged-index build pass.
+
+[Dungeon report](../goblin-spearhand-dungeon.md) and [handoff](handoffs/2026-11-11-goblin-spearhand-dungeon.md) record reproducible test scope, private asset transfer and evidence. `test-results/goblin-spearhand-dungeon/dungeon-motion.mp4` is actual silent native dungeon capture, recorded after benchmarking. Test heroes have boosted HP and pass turns; this validates presentation/performance, not combat balance. Broader pipeline remains WIP; other dirty creature work stays separate. Next: Bruce's in-dungeon review, then choose another bounded owned-source creature; do not restart the roster batch automatically.
+
+Bruce is reassessing the generation workflow and wants to reuse KayKit/Dungeon Mason before spending more. No creature batch is running. See [verified inventory and pilot review](../owned-assets-pilot.md); the historical production notes below are not a directive to restart the batch.
+
+On bmoser, KayKit v8 is extracted (24 packs, 132 editable Blender sources). Unity Hub 3.22.6 and Editor 6000.3.28f1 are installed/licensed. Bruce imported the full Dungeon Mason package into `~/Setup Guide In-Editor Tutorial`; all 1,024 files match the archive. Private source copies are under the workshop. The package has 598 animation FBXs (including variants); existing runtime export already covers the head parts and handheld weapon designs. URP/HDRP ZIPs add no models. Unity and Hub can be closed during Blender/Three.js work.
+
+The earlier generated-head attachment failed visual acceptance. A new authored human-body/spear test verifies five source clips against the identical rest rig and renders at 5,354 triangles with one texture and seven draw calls. Captured 120 motion frames. Bruce approved the source test as a test; corrected its basic spear attack to Attack02 thrust with a constant socket rotation. Point-first 0.681-unit extension is measured/guarded and visually reviewed. See [thrust correction](handoffs/2026-11-11-mason-spear-thrust.md). Dungeon-scale grip/ground clearance and performance remain unapproved. Next: use these sources for one coherent equipped creature before any batch. No production replacement or release. Branch `codex/modular-owned-assets-pilot`; [latest handoff](handoffs/2026-11-11-mason-source-inventory.md). Older dirty creature work remains local and excluded from this checkpoint.
+
 Updated: 2026-11-10 (America/New_York).
 
 ## Latest work — local mesh pipeline pilot

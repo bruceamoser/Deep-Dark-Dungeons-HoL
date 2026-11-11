@@ -22,6 +22,10 @@ During implementation, record meaningful decisions and unresolved failures. Befo
 
 Never commit credentials, purchased source/export assets, real saves, generated installers, caches or local chat databases. Record private transfer requirements and machine-specific paths, but do not assume Git synchronizes them. Use `docs/work-progress/README.md` for the complete procedure.
 
+## Creature production
+
+For creature asset work, read `docs/creature-production/README.md` and run `node scripts/creature-production.mjs status`. The approved anchors are Goblin Spearhand, Air Elemental and Wolf. Work through the tracked humanoid-first queue one creature at a time; finish and record its model, motion, encounter and integration gates before starting another. This supersedes earlier full-roster generation batches. Use the approved asset manifest for delivery builds and preserve private inputs outside Git. Continue the recorded active creature rather than restarting from chat-only assumptions.
+
 ## Quiet local testing
 
 Bruce requests low-volume local testing. Launch automated game instances with `--mute-audio` (or an isolated silent audio sink), including music tests; assess their internal audio signals without audible desktop playback. Leave personal game sound preferences and the desktop master volume unchanged.

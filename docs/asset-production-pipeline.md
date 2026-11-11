@@ -1,5 +1,7 @@
 # Game-ready creature production
 
+**Active workflow:** [One-creature-at-a-time production](creature-production/README.md) and its tracked queue supersede the historical batch plans below. Goblin Spearhand, Air Elemental and Wolf are approved anchors; remaining humanoids go first.
+
 ## Prepared November 10, 2026
 
 The core path is **existing/licensed/free base → Blender inspection/adaptation → rig/animation preservation or repair → GLB → actual game validation**. A coherent reference turnaround (front, side and back) informs the work. A cloud-generated base is an optional branch, not a requirement. Meshy is a cloud service, not a local modeling application; Bruce clarified he has no account and may not need it. No Meshy account, paid plan, separate server or generation was created.

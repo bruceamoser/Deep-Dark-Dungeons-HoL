@@ -1,6 +1,13 @@
+import fs from "node:fs";
 import { expect } from "@playwright/test";
 import { settingsAction } from "./ui-session.mjs";
 import { CREATURE_ROSTER } from "../src/core/creature-roster.mjs";
+
+const approved = JSON.parse(
+  fs.readFileSync(
+    new URL("../config/approved-creature-assets.json", import.meta.url),
+  ),
+).assets;
 
 export async function verifyBestiaryPreview(page) {
   await settingsAction(page, "Bestiary");
@@ -11,7 +18,17 @@ export async function verifyBestiaryPreview(page) {
   for (const [id, look] of Object.entries(CREATURE_ROSTER)) {
     await guide.locator(`button[data-creature="${id}"]`).click();
     await expect(canvas).toHaveAttribute("data-creature", id);
-    await expect(canvas).toHaveAttribute("data-model", look.model);
+    const candidate = approved.find((a) => a.creatureId === id);
+    const installed =
+      candidate &&
+      (await page.evaluate(
+        (model) => window.__ddd.scene.assets.has(model),
+        candidate.model,
+      ));
+    await expect(canvas).toHaveAttribute(
+      "data-model",
+      installed ? candidate.model : look.model,
+    );
     await expect(canvas).toHaveAttribute("data-rendered", "true");
     expect(
       await original.evaluate(
@@ -32,6 +49,25 @@ export async function verifyBestiaryPreview(page) {
         .locator(".creature-portrait img")
         .evaluate((img) => img.complete && img.naturalWidth > 0),
     ).toBe(true);
+  }
+  for (const candidate of approved) {
+    if (
+      !(await page.evaluate(
+        (model) => window.__ddd.scene.assets.has(model),
+        candidate.model,
+      ))
+    )
+      continue;
+    await guide
+      .locator(`button[data-creature="${candidate.creatureId}"]`)
+      .click();
+    for (const pose of ["idle", "walk", "attack", "hit", "death"]) {
+      await guide.getByLabel("Model animation").selectOption(pose);
+      await expect(canvas).toHaveAttribute("data-pose", pose);
+      await expect(canvas).not.toHaveAttribute("data-clip", "");
+      if (candidate.model === "WolfPilot" && pose === "attack")
+        await expect(canvas).toHaveAttribute("data-clip", "Bite_Front");
+    }
   }
   await guide
     .locator('button[data-creature="creature-hobgoblin-shieldguard"]')

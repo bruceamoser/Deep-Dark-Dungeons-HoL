@@ -1,3 +1,10 @@
+const wolfPilot = typeof __WOLF_PILOT__ !== "undefined" && __WOLF_PILOT__;
+const airPilot =
+  typeof __AIR_ELEMENTAL_PILOT__ !== "undefined" && __AIR_ELEMENTAL_PILOT__;
+const spearhandModel =
+  typeof __GOBLIN_SPEARHAND_MODEL__ === "undefined"
+    ? null
+    : __GOBLIN_SPEARHAND_MODEL__;
 // Encounter eligibility and visual casting are game adaptations; stat cards come from the pinned book.
 const rows = [
   ["bone-sentry", "SkeletonWarrior", "crypt", 1, "melee"],
@@ -13,7 +20,13 @@ const rows = [
   ["grave-cultist", "Witch", "outlaws", 2, "spell"],
   ["hedge-sorcerer", "Witch", "outlaws", 3, "spell"],
   ["goblin-scrapper", "OrcRaider", "goblins", 1, "melee"],
-  ["goblin-spearhand", "OrcRaider", "goblins", 1, "spear"],
+  [
+    "goblin-spearhand",
+    spearhandModel ? "GoblinSpearhand" : "OrcRaider",
+    "goblins",
+    1,
+    "spear",
+  ],
   ["goblin-smoke-slinger", "OrcRaider", "goblins", 2, "sling"],
   ["goblin-firestarter", "OrcRaider", "goblins", 2, "spell"],
   ["goblin-rattlechanter", "OrcRaider", "goblins", 3, "spell"],
@@ -37,7 +50,7 @@ const rows = [
   ["cave-bat", "CaveBat", "vermin", 1, "bite"],
   ["giant-rat", "Rat", "vermin", 1, "bite"],
   ["giant-spider", "Spider", "vermin", 2, "bite"],
-  ["wolf", "Wolf", "beasts", 1, "bite"],
+  ["wolf", wolfPilot ? "WolfPilot" : "Wolf", "beasts", 1, "bite"],
   ["dire-wolf", "Wolf", "beasts", 4, "bite"],
   ["hell-hound", "Wolf", "infernal", 5, "bite"],
   ["winter-wolf", "Wolf", "rime", 9, "spell"],
@@ -55,7 +68,13 @@ const rows = [
   ["glass-sentinel", "FrostGolem", "constructs", 3, "spell"],
   ["stone-knuckle", "StoneKnuckle", "constructs", 2, "slam"],
   ["icebound-warden", "FrostGolem", "rime", 4, "slam"],
-  ["air-elemental", "AirVortex", "elementals", 4, "spell"],
+  [
+    "air-elemental",
+    airPilot ? "AirElementalSculpted" : "AirVortex",
+    "elementals",
+    4,
+    "spell",
+  ],
   ["emberling", "Emberling", "infernal", 1, "slam"],
   ["cinder-strider", "CinderStrider", "infernal", 3, "claw"],
   ["cinder-imp", "Demon", "infernal", 1, "claw"],
@@ -73,6 +92,16 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  ...(wolfPilot
+    ? { WolfPilot: "/assets/licensed/creatures/WolfPilot.glb" }
+    : {}),
+  ...(airPilot
+    ? {
+        AirElementalSculpted:
+          "/assets/licensed/creatures/AirElementalSculpted.glb",
+      }
+    : {}),
+  ...(spearhandModel ? { GoblinSpearhand: spearhandModel } : {}),
   HobgoblinShieldguard: "/assets/creatures/wave-05/HobgoblinShieldguard.glb",
   Ghast: "/assets/creatures/wave-05/Ghast.glb",
   CryptGhoul: "/assets/creatures/wave-05/CryptGhoul.glb",

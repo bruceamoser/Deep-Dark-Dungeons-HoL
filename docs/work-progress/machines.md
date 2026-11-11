@@ -66,3 +66,45 @@ Final installed-target native checks pass 19 updated actors,58 bestiary comparis
 ## bmoser local generation pilot — November 10
 
 Supersedes the earlier uninstalled-tool note: isolated Modly v0.4.3/TRELLIS2-GGUF/Python3.11+torch2.6cu126 now run locally under `~/.local/share/four-lanterns-pipeline-pilot/2026-11-10`. About 10.4 GB pinned model weights plus preprocessing model; both generation and texturing completed on one RTX3090. Mesh2Motion npm app installed and real browser rig/export/playback exercised. Private safe Vite override avoids exposing process environment. AssetFurnace source inspected only. No Meshy account/cloud inference, personal Blender scene or game installation changed. See exact pins and local evidence in [pilot report](../local-mesh-pipeline-pilot.md). Raw mesh/model environments and exploratory job scripts are not transferred by Git.
+
+## bmoser owned-asset workshop — November 11
+
+Unity Hub 3.22.6 is installed as the official Debian package (`/usr/bin/unityhub`, `/usr/share/applications/unityhub.desktop`). Its official per-app AppArmor userns profile is installed; no `--no-sandbox` workaround. The unused initial AppImage/extraction remains at `~/.local/opt/unity-hub`. CLI `~/.local/bin/unity` is 1.0.0-beta.17; Editor is `~/Unity/Hub/Editor/6000.3.28f1/Editor/Unity`. The official CLI installer also installed its Unity agent skills. Hub sign-in and active license were verified after Bruce signed in; no credentials in Git.
+
+Private workshop: `~/Projects/DDD-Asset-Workshop`. `AssetReview` is a successfully created local URP project, opened muted, no Unity Cloud project link. `AssetReview-before-license` preserves the initial unsuccessful setup attempt. Hub runs as user service `fld-unityhub-desktop`. Unity is for asset inspection/import, not a change of game engine.
+
+KayKit archive: `~/Downloads/The Complete KayKit Collection v8.zip`. Extracted source root: `~/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8` (24 packs, 132 `.blend` files, CC0). Dungeon Mason original Unity download remains pending; only its earlier private runtime exports are currently verified. Another machine needs private transfer or a fresh download through the owner's account.
+
+Private experiment: `~/.local/share/four-lanterns-modular-pilot/2026-11-11` contains head `.blend`/GLB, reports, 120 frames and phase screenshots. Source head donor is `~/.local/share/four-lanterns-pipeline-pilot/2026-11-10/meeple-roster-2026-11-11/goblin-smoke-slinger/painted-refined.glb`. The `fld-meeple-review-vite` service serves the local fixture at 127.0.0.1:5197. Visual acceptance failed; do not promote this model. No new DeepSeek workers or generation jobs. See [pilot report](../owned-assets-pilot.md).
+
+## bmoser Dungeon Mason source recovered — November 11
+
+Supersedes the pending-download note above: Bruce imported into `~/Setup Guide In-Editor Tutorial/Assets/RPGTinyHeroWavePolyart`. All 1,024 files match the cached `.unitypackage` under `~/.local/share/unity3d/Asset Store-5.x/Dungeon Mason/3D ModelsCharactersHumanoidsFantasy`. Package hash matches the original purchase record. Read-only inspection copy: `~/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart`. No tutorial source assets modified by the agent.
+
+`com.unity.pipeline` 1.0.0-pre.1 was added only to AssetReview; its open Editor had not refreshed/loaded the server. No live Unity automation was used. Unity/Hub may be closed; private source/Blender/browser inspection works independently. If driving Unity later, open the intended project and verify CLI readiness first.
+
+Private evidence root: `~/.local/share/four-lanterns-modular-pilot/2026-11-11/mason-source-review` contains inventory/hash comparison, package previews, source-body rig report, `source-spear.blend`/GLB, five-state renders and a silent slowed-motion MP4. Exported human spear fixture: 5,354 triangles, seven draw calls, one texture. No creature promotion or encounter benchmark. The temporary additional motion-capture harness is under ignored `test-results/owned-source-motion`; portable builder and standard reviewer are versioned. Raw purchases and outputs require separate private transfer.
+
+## bmoser Goblin Spearhand preview — November 11
+
+Private output root `~/.local/share/four-lanterns-modular-pilot/2026-11-11/goblin-spearhand`: editable `.blend`, GLB, provenance/preservation/roundtrip reports, `presentation/` (254 frames at 30 fps), final `goblin-spearhand-preview.png` and silent `goblin-spearhand-motion.mp4`. Fixture input remains `../spear-thrust/source-spear.blend`; both need private transfer with the purchased source. Versioned builders/renderers recreate the candidate from those licensed inputs. Unity/Hub not needed for these background Blender/Three.js operations. No gameplay, installed application or saves changed; no batch job remains for this task.
+
+## bmoser Spearhand runtime and installed review — November 11
+
+Approved private GLB staged at `public/assets/licensed/creatures/GoblinSpearhand.glb` (SHA-256 `0774c4ca0b2c844e7160363ce2cbe620d89d158aaa987c7d11ada18197d1c099`), requiring separate private transfer. Distinct key prevents collision with the old spear-only model. Without this file, a fresh checkout keeps the existing fallback. Native launcher and normal menu AppImage both passed six-creature/four-hero tests. New local AppImage and Debian artifacts are in `release/`; normal menu AppImage replaced via supported checksum installer, still labeled 0.8.7. Old AppImage/menu backed up under `~/.local/share/four-lanterns-install-backups/2026-11-11-spearhand/`. Public release/system Debian unchanged. Already-open games continue on the previous binary; restart normally.
+
+Native evidence, screenshots and silent MP4: ignored `test-results/goblin-spearhand-dungeon/` and `test-results/goblin-spearhand-installed/`. Tests launch through user systemd + `aa-exec -p unconfined`, muted, temporary saves; agent NoNewPrivs is unsuitable for the SUID launcher check. The renderer uses one RTX 3090 via ANGLE/OpenGL, not both GPUs. No game test or batch service left running by this task. User's separately open game was left alone.
+
+## bmoser Air Elemental native pilot — November 11
+
+Private v3 model and editable source: `~/.local/share/four-lanterns-modular-pilot/2026-11-11/air-elemental/v3/`. Runtime staging: ignored `public/assets/licensed/creatures/AirElementalSculpted.glb`. Enable only through `FLD_AIR_PILOT=1 npm run package:dir`. The native test service `fld-air-dungeon-framed-check` completed; checkout packaging was then restored without the flag. Installed menu AppImage remains the Spearhand build. Silent motion and metrics are under ignored `test-results/air-elemental-dungeon`; these assets/evidence do not travel with Git. No Hunyuan installation, weight download or generation occurred.
+
+## bmoser Wolf pilot — November 11
+
+Private candidate `~/.local/share/four-lanterns-modular-pilot/2026-11-11/wolf/v2/wolf-pilot.glb`, editable sibling `.blend`, roundtrip report and `review-v2/wolf-comparison.mp4`. Original source is the earlier `meeple-roster-2026-11-11/wolf/animated-candidate.blend`; preserve it. Ignored staging `public/assets/licensed/creatures/WolfPilot.glb`, opt-in with `FLD_WOLF_PILOT=1`; native test service `fld-wolf-pilot-ui-check` passed and exited. Evidence under `test-results/wolf-pilot-dungeon`. Installed AppImage unchanged; restore normal checkout packaging without the flag. No new tools/weights/accounts.
+
+## bmoser approved-anchor delivery — November 11
+
+Bruce approved all three anchors. `config/approved-creature-assets.json` pins GoblinSpearhand, AirElementalSculpted and WolfPilot private GLB hashes; they are enabled by default, superseding the opt-in notes above. Only these creature exports plus existing Dungeon Mason inputs were staged into a clean build, excluding unrelated local routing experiments. Linux AppImage and `.deb` are in `release/`; normal menu AppImage was updated through the checksum installer. Previous per-user AppImage/menu backed up under `~/.local/share/four-lanterns-install-backups/2026-11-11-approved-anchors/`. System Debian and public 0.8.7 release remain unchanged. Restart already-open games to load the new local build. Native evidence: three respective dungeon-test folders plus `test-results/approved-anchors-installed` for the installed bestiary/encounter check. No private assets/installer transfer via Git.
+
+Active production is the one-at-a-time queue, not the historical generator scripts. Goblin Scrapper brief is complete; modeling is next. The checkout still contains unrelated old uncommitted routing/generator changes. Continue building from reviewed/index snapshots until those changes are deliberately reconciled; preserve them, do not reset or silently ship them.

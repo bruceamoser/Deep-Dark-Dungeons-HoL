@@ -58,6 +58,7 @@ export function creaturePreview(canvas, assets, creatureId) {
       idle: ["Idle"],
       walk: ["Walking_A"],
       attack: [
+        ...(weapon === "bite" ? ["Bite_Front"] : []),
         weapon === "spell"
           ? "Spellcast_Shoot"
           : ["bow", "dart", "sling"].includes(weapon)
@@ -82,6 +83,7 @@ export function creaturePreview(canvas, assets, creatureId) {
     if (!clip && !["idle", "walk"].includes(name)) return;
     pose = name;
     canvas.dataset.pose = pose;
+    canvas.dataset.clip = clip?.name ?? "";
     mixer.stopAllAction();
     if (clip) mixer.clipAction(clip).reset().play();
     mixer.update(0.1);
