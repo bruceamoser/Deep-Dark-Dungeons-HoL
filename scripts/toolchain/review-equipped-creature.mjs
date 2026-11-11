@@ -130,6 +130,9 @@ try {
     ["Idle", "Idle", 3, 0],
     ["Walk", "Walking_A", 3, 0],
     ["Weapon attack", "1H_Melee_Attack_Slice_Diagonal", 3, 0],
+    ...(info.clips.some((c) => c.name === "Unarmed_Melee_Attack_Punch_A")
+      ? [["Melee backup", "Unarmed_Melee_Attack_Punch_A", 2, 0]]
+      : []),
     ["Hit reaction", "Hit_A", 2, 0],
     ["Death", "Death_A_Pose", 1, 1],
   ]) {

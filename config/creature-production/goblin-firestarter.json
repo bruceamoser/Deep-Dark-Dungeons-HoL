@@ -1,0 +1,132 @@
+{
+  "id": "goblin-firestarter",
+  "body": "Body05",
+  "headFixture": {
+    "path": "~/.local/share/four-lanterns-modular-pilot/2026-11-11/goblin-spearhand/goblin-spearhand.blend",
+    "object": "Goblin head"
+  },
+  "parts": [
+    [
+      "HeadParts",
+      "AC03_NerdGlass",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "BackPack02",
+      "BackpackBone"
+    ]
+  ],
+  "partFit": {
+    "AC03_NerdGlass": {
+      "offset": [
+        0,
+        0,
+        0.1
+      ],
+      "scale": [
+        0.88,
+        1.0,
+        0.88
+      ]
+    }
+  },
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/MoveFWD_Battle_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/CarryThrow_NoWeapon.fbx",
+    "Unarmed_Melee_Attack_Punch_A": "NoWeapon/Attack01_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "NoWeapon/Die01_NoWeapon.fbx"
+  },
+  "palette": {
+    "1": "#665037",
+    "2": "#514839",
+    "3": "#d47728",
+    "4": "#9a6a39",
+    "5": "#88623b",
+    "6": "#d47728",
+    "7": "#4c3326",
+    "8": "#b69c67",
+    "9": "#739444"
+  },
+  "partPalette": {
+    "BackPack02": {
+      "2": "#684b30",
+      "3": "#a86935",
+      "4": "#bb8c50",
+      "7": "#513825"
+    }
+  },
+  "externalParts": [
+    {
+      "name": "Firestarter held flask",
+      "tag": "throwable",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/bottle_A_brown.gltf",
+      "bone": "weapon_r",
+      "scale": 0.42,
+      "offset": [
+        0,
+        0,
+        0
+      ],
+      "origin": [
+        0,
+        0,
+        0.64
+      ]
+    },
+    {
+      "name": "Firestarter reserve left",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/bottle_A_brown.gltf",
+      "bone": "pelvis",
+      "scale": 0.32,
+      "offset": [
+        0.23,
+        -0.055,
+        0.02
+      ],
+      "rotateY": -10
+    },
+    {
+      "name": "Firestarter reserve right",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/bottle_A_brown.gltf",
+      "bone": "pelvis",
+      "scale": 0.28,
+      "offset": [
+        -0.23,
+        -0.055,
+        0.02
+      ],
+      "rotateY": 10
+    }
+  ],
+  "paintRegions": [
+    {
+      "part": "AC03_NerdGlass",
+      "color": "#263932",
+      "metal": 0.25,
+      "centers": [
+        [
+          0.136,
+          0,
+          1.041
+        ],
+        [
+          -0.136,
+          0,
+          1.041
+        ]
+      ],
+      "radius": 0.079,
+      "frontY": -0.31
+    }
+  ],
+  "fitUpright": [
+    {
+      "part": "Firestarter held flask",
+      "bone": "weapon_r",
+      "frame": 6
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { BooleanKeyframeTrack } from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 
 // Complete authored exports already include fitted gear and five source clips.
@@ -26,5 +27,28 @@ export function equippedCreatureAppearance(asset, spec) {
     equipment: { weapon: spec.weapon, shield: !!spec.shield },
     dispose: () => materials.forEach((material) => material.dispose()),
   });
-  return { model, clips: asset.animations };
+  let clips = asset.animations;
+  if (spec.attack?.kind === "bottle") {
+    const flask =
+      model.getObjectByName("Firestarter_held_flask") ??
+      model.getObjectByName("Firestarter held flask");
+    if (!flask)
+      throw new Error("Equipped bottle throw requires the reviewed held flask");
+    clips = clips.map((source) => {
+      const clip = source.clone();
+      const throwing = clip.name === spec.attack.clip;
+      const times = throwing
+        ? [0, spec.attack.release, Math.min(clip.duration, 0.9)]
+        : [0];
+      clip.tracks.push(
+        new BooleanKeyframeTrack(
+          `${flask.uuid}.visible`,
+          times,
+          throwing ? [true, false, true] : [true],
+        ),
+      );
+      return clip;
+    });
+  }
+  return { model, clips };
 }
