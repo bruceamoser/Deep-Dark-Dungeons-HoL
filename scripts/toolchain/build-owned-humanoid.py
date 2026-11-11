@@ -29,7 +29,9 @@ def modify_source_part(o,name):
    i=todo.pop();component.append(i)
    for j in adj[i]:
     if j in unseen:unseen.remove(j);todo.append(j)
-  if max((o.matrix_world@o.data.vertices[i].co).z for i in component)>cfg['removeComponentsAbove']:
+  points=[o.matrix_world@o.data.vertices[i].co for i in component]
+  selected=(max(p.z for p in points)>cfg['removeComponentsAbove']) if 'removeComponentsAbove' in cfg else all(abs(p.x)>cfg['removeComponentsOutsideX'] for p in points)
+  if selected:
    remove.extend(component);groups+=1
  assert groups==cfg['expectedComponents'],(name,'Unexpected source topology; inspect before modifying',groups)
  bm=bmesh.new();bm.from_mesh(o.data);bm.verts.ensure_lookup_table();bmesh.ops.delete(bm,geom=[bm.verts[i] for i in remove],context='VERTS');bm.to_mesh(o.data);bm.free()
@@ -43,6 +45,17 @@ for folder,name,bone in spec['parts']:
   fit=spec.get('partFit',{}).get(name,{})
   o.matrix_world=Matrix.Translation(rig.matrix_world@rig.data.bones[bone].head_local+Vector(fit.get('offset',[0,0,0])))@Matrix.Diagonal((*fit.get('scale',[1,1,1]),1))@o.matrix_world
   g=o.vertex_groups.new(name=bone);g.add(list(range(len(o.data.vertices))),1,'REPLACE');o.modifiers.new('Original source rig','ARMATURE').object=rig
+# Refit paired accessory halves around inspected rest-space pivots. This keeps
+# source ear folds/topology while changing their placement, not anatomy repair.
+for cfg in spec.get('symmetricFits',[]):
+ obj=bpy.data.objects[cfg['part']];inverse=obj.matrix_world.inverted()
+ for vertex in obj.data.vertices:
+  point=obj.matrix_world@vertex.co;side=1 if point.x>=0 else -1
+  pivot=Vector((side*cfg['pivot'][0],cfg['pivot'][1],cfg['pivot'][2]))
+  rotation=Matrix.Rotation(math.radians(side*cfg['angleY']),3,'Y')
+  point=pivot+rotation@(point-pivot)*cfg['scale']+Vector((side*cfg['offset'][0],cfg['offset'][1],cfg['offset'][2]))
+  vertex.co=inverse@point
+ modifications.append({'part':cfg['part'],'purpose':cfg['purpose'],'recipe':cfg})
 # Keep original palette for unmasked facial/skin detail; exact source masks tint
 # only identified regions. Owned meshes retain UVs, weights and rest transforms.
 base=bpy.data.materials.new('Owned source palette');base.use_nodes=True;base['preserveAuthoredRoughness']=True

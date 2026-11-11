@@ -164,9 +164,16 @@
       "name": "Orc Outrider",
       "order": 10,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/orc-outrider.md",
+        "model": "docs/creature-production/orc-outrider.md",
+        "motion": "docs/creature-production/orc-outrider.md",
+        "game-view": "docs/creature-production/orc-outrider.md",
+        "integration": "docs/creature-production/orc-outrider.md"
+      },
+      "approvedAsset": "OrcOutrider"
     },
     {
       "id": "creature-orc-shieldbreaker",
