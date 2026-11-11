@@ -1,3 +1,5 @@
+export const EQUIPPED_CREATURES =
+  typeof __EQUIPPED_CREATURES__ === "undefined" ? {} : __EQUIPPED_CREATURES__;
 const wolfPilot = typeof __WOLF_PILOT__ !== "undefined" && __WOLF_PILOT__;
 const airPilot =
   typeof __AIR_ELEMENTAL_PILOT__ !== "undefined" && __AIR_ELEMENTAL_PILOT__;
@@ -88,10 +90,19 @@ const rows = [
 export const CREATURE_ROSTER = Object.fromEntries(
   rows.map(([id, model, theme, depth, weapon, shield]) => [
     `creature-${id}`,
-    { model, theme, depth, weapon, shield: !!shield },
+    {
+      model: EQUIPPED_CREATURES[`creature-${id}`]?.model ?? model,
+      theme,
+      depth,
+      weapon,
+      shield: !!shield,
+    },
   ]),
 );
 export const CREATURE_MODELS = {
+  ...Object.fromEntries(
+    Object.values(EQUIPPED_CREATURES).map((a) => [a.model, a.path]),
+  ),
   ...(wolfPilot
     ? { WolfPilot: "/assets/licensed/creatures/WolfPilot.glb" }
     : {}),

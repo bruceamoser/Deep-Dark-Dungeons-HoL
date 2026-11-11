@@ -7,6 +7,7 @@ import { createHash } from "node:crypto";
 import { resolveApprovedCreatureAssets } from "../scripts/approved-creature-assets.mjs";
 import {
   startCreature,
+  reviseCreature,
   validateQueue,
   GATES,
 } from "../scripts/creature-production.mjs";
@@ -36,7 +37,7 @@ test("production queue covers the bestiary and permits only one active creature"
     /Only one/,
   );
 });
-test("integration cannot skip motion/encounter evidence or register an unapproved model", () => {
+test("integration cannot skip motion/game-view evidence or register an unapproved model", () => {
   const q = structuredClone(queue),
     row = q.creatures.find((c) => c.status === "queued");
   row.gates.motion = "docs/wolf-pilot.md";
@@ -86,4 +87,21 @@ test("private assets fall back when absent, fail in required builds, and reject 
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("reopening an integrated creature preserves its prior evidence and requires a fresh visual review", () => {
+  const q = structuredClone(queue);
+  for (const r of q.creatures) if (r.status === "active") r.status = "queued";
+  const r = q.creatures.find((r) => r.status === "integrated"),
+    old = { ...r.gates };
+  reviseCreature(q, r.id);
+  assert.equal(r.status, "active");
+  assert.deepEqual(r.gates, { brief: old.brief });
+  assert.deepEqual(r.revisions.at(-1).gates, old);
+  assert.throws(
+    () =>
+      reviseCreature(q, q.creatures.find((c) => c.status === "integrated").id),
+    /Finish/,
+  );
+  validateQueue(q, Object.keys(CREATURE_ROSTER), approved);
 });

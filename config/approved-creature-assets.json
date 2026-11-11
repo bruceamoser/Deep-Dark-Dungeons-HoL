@@ -30,6 +30,63 @@
       "method": "existing-multiview-animal",
       "report": "docs/wolf-pilot.md",
       "distribution": "private-local-build"
+    },
+    {
+      "creatureId": "creature-goblin-scrapper",
+      "model": "GoblinScrapper",
+      "path": "/assets/licensed/creatures/GoblinScrapper.glb",
+      "sha256": "4fd5a5f9702a7367b7c387315cda17bba0eaa52106fa9e2bdc79955adc4d5631",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "author review under delegated production direction; not separate user approval",
+      "report": "docs/creature-production/goblin-scrapper.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.9,
+        "height": 1.2,
+        "weapon": "melee"
+      }
+    },
+    {
+      "creatureId": "creature-road-bandit",
+      "model": "RoadBandit",
+      "path": "/assets/licensed/creatures/RoadBandit.glb",
+      "sha256": "76e056146502519fffdb032a4e490a3d740a08ba73b2319bb0b8ca9f125841af",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "author review under delegated production direction",
+      "report": "docs/creature-production/road-bandit.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "melee"
+      }
+    },
+    {
+      "creatureId": "creature-shield-soldier",
+      "model": "ShieldSoldier",
+      "path": "/assets/licensed/creatures/ShieldSoldier.glb",
+      "sha256": "9449db39ef16062969fa822e7233a14e430679aa696fb38dd74df782d02cc78c",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "author review under delegated production direction",
+      "report": "docs/creature-production/shield-soldier.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.3,
+        "weapon": "melee",
+        "shield": true,
+        "attack": {
+          "kind": "thrust",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.26666666666666666
+        }
+      }
     }
   ]
 }

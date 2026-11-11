@@ -131,3 +131,19 @@ Reuse the already generated multiview wolf mesh and fitted rig, preserving origi
 Bruce explicitly approves the Goblin Spearhand, Air Elemental and Wolf results for the game. Promote the exact reviewed exports as defaults, update the local installed review build, and follow a tracked queue for all 55 remaining creatures. This supersedes prior pilot-only/no-roster-work constraints, while retaining one active creature at a time rather than the failed unattended generation batch. Humanoids go first to reuse fitted bodies, heads, held gear and authored clips; specialized grips/anatomy get their own reviews. No requirement to ask Bruce for routine per-creature permission within this approved direction.
 
 Use `docs/creature-production/README.md`, queue.json and the pinned approved asset manifest. Status/gates/evidence must travel through Git. Goblin Scrapper is first; its brief is complete, modeling remains next. Private assets stay outside Git; missing-input fallback must not be confused with a complete delivery build. No Hunyuan, Tripo spending or parallel creature workers authorized by this workflow change.
+
+## 2026-11-11 — Final bulk performance pass, per-creature visual gates
+
+Bruce explicitly deferred performance testing until the full roster is complete. Replace the per-creature encounter benchmark gate with `game-view`: actual game appearance/bestiary routing and game-scale look, alongside model/gear and five-animation review. Preserve all existing evidence. Queue records performance as deferred; do not infer new FPS results from old anchors. Commit each source integration before proceeding; installed builds/PR merges occur at delivery checkpoints. This reduces repeated packaging/benchmarking without dropping visual checks.
+
+## 2026-11-11 — Modify owned headpieces; reject shallow primitive caps
+
+Bruce rejected the authored shallow Scrapper cap and Soldier helmet and explicitly directed reuse/modification of existing bundle items. Use supplied helmet/cap/hood volume and fit as the baseline. Soldier now uses Hat02 with only its two disconnected horns removed, preserving shell/rim/crest/guards. Revise Scrapper’s headwear next before new roster work. Do not treat successful mesh/animation checks as overriding the user’s visual correction.
+
+## 2026-11-11 — Deliberate creature palettes and recolored owned items
+
+Bruce explicitly requires color schemes when modifying supplied assets to give creatures distinct looks and feels. Each role brief/spec must name dominant/secondary/accent colors and material colors, coordinate outfit/gear, preserve facial/weapon detail, and verify readability in dungeon lighting. Palette design complements silhouette/gear; it does not replace them. Related factions can share colors with role accents, while ordinary animals keep appropriate coats. See the active production workflow’s color-scheme section.
+
+## 2026-11-11 — Mandatory creative owned-prop search for every creature
+
+Bruce explicitly requires the pipeline to always search what we own for items to add to creatures, including nonweapon tools, bottles, books, rope, traps, containers and lights. Every brief must record inspected candidate parts, selected role/personality props, planned modifications/colors/attachments and any remaining gap. Reuse/modify first; avoid random clutter and do not equip ordinary animals without a creature-specific reason. The workflow’s required brief gate now spells this out.

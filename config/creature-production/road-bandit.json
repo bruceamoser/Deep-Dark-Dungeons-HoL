@@ -1,0 +1,23 @@
+{
+  "id": "road-bandit",
+  "body": "Body05",
+  "parts": [
+    ["HeadParts", "Head01_Male", "head"],
+    ["HeadParts", "Hair02", "head"],
+    ["HeadParts", "Eye01", "head"],
+    ["HeadParts", "Mouth01", "head"],
+    ["HeadParts", "Eyebrow01", "head"],
+    ["HeadParts", "BackPack01", "BackpackBone"],
+    ["Weapons", "OHS08_Sword", "weapon_r"]
+  ],
+  "clips": {
+    "Idle": "SingleSword/Idle_Battle_SingleSword.fbx",
+    "Walking_A": "SingleSword/InPlace/MoveFWD_Battle_InPlace_SingleSword.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SingleSword/Attack01_SingleSword.fbx",
+    "Hit_A": "SingleSword/GetHit01_SingleSword.fbx",
+    "Death_A_Pose": "SingleSword/Die01_SingleSword.fbx"
+  },
+  "palette": {"1":"#735335", "2":"#485b36", "3":"#a44b32", "4":"#7a874b", "5":"#8c7656", "6":"#a44b32", "7":"#593a27", "8":"#c0bda5"},
+  "partPalette": {"BackPack01":{"3":"#685134","4":"#bead7b","5":"#817b53","7":"#69462f","8":"#575b58"}, "OHS08_Sword":{"4":"#9d7c45","8":"#b9c4c5"}},
+  "solid": {"Hair02":"#493123","Eyebrow01":"#35281f"}
+}

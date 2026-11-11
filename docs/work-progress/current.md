@@ -2,7 +2,15 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Three approved anchors; sequential humanoid-first production
+### Latest — First sequential humanoids integrated and installed
+
+Clean worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/sequential-creature-production`, base `fca55f7` (PR161). Main checkout’s historical dirty experiments are preserved. **Six of 58 integrated; 52 remain.** Added Goblin Scrapper, Road Bandit and Shield Soldier to the three approved anchors. Installed menu AppImage and primary checkout launcher packages are updated; both passed the native 58-entry bestiary/save/sandbox check. All 366 tests and AppImage/deb builds pass. Version stays 0.8.7 local review build; no public release or Windows test.
+
+Bruce deferred performance to a final bulk roster pass. Per-creature model/look/gear/five-animation and actual game-view review remain required. He rejected shallow authored headwear: Soldier now uses supplied Hat02 minus two disconnected horns (explicitly approved); Scrapper uses fitted Hat04 (explicitly approved). Reuse/modify owned items first. Deliberate coordinated color schemes are required in briefs/specs; verified [nonweapon gear inventory](../creature-production/owned-gear-inventory.md) lists existing tools, headwear, packs and props.
+
+See [Scrapper](../creature-production/goblin-scrapper.md), [Bandit](../creature-production/road-bandit.md), [Soldier](../creature-production/shield-soldier.md), and tracked queue. Next: Goblin Firestarter after this checkpoint; no unattended generator. Source/private outputs and review media are under `~/.local/share/four-lanterns-creature-production/`. Git carries hashes/builders/docs, not private assets.
+
+### Previous — Three approved anchors; sequential humanoid-first production
 
 Bruce approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private GLBs are now pinned and enabled by default when installed; no Air/Wolf environment flag is required. [Production queue](../creature-production/README.md) covers **58 creatures: three integrated, 55 remaining**, with one active creature and ordered review gates. **Goblin Scrapper brief is complete; modeling is next.** Existing reference/body/rig reuse precedes new generation. Earlier unattended batch plans are superseded.
 

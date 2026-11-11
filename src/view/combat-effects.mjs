@@ -202,6 +202,11 @@ export function attackPresentation(from, data) {
     };
   if (data.ranged)
     return { kind: "arrow", clip: "2H_Ranged_Shoot", release: 0.28 };
+  if (
+    from.model.userData.authoredEquippedCreature &&
+    from.model.userData.attackPresentation
+  )
+    return { ...from.model.userData.attackPresentation };
   if (from.model.userData.goblinSpearhand)
     return {
       kind: "spear",

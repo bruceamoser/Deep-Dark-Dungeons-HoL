@@ -1,3 +1,4 @@
+import { equippedCreatureAppearance } from "./equipped-creature.mjs";
 import { wolfPilotAppearance } from "./wolf-pilot.mjs";
 import { airElementalAppearance } from "./air-elemental.mjs";
 import { goblinSpearhandAppearance } from "./goblin-spearhand.mjs";
@@ -9,13 +10,20 @@ import { avatarFor } from "../core/hero-avatars.mjs";
 import { dressIdentity } from "./hero-identity.mjs";
 import { creatureLook } from "../core/creature-variation.mjs";
 import { creatureAppearance } from "./creatures.mjs";
-import { CREATURE_ROSTER, HUMANOID_MODELS } from "../core/creature-roster.mjs";
+import {
+  CREATURE_ROSTER,
+  HUMANOID_MODELS,
+  EQUIPPED_CREATURES,
+} from "../core/creature-roster.mjs";
 import { activeItemEffects } from "../core/treasure.mjs";
 import * as T from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 export function equipmentAppearance(assets, hero, enemy = false) {
+  const equipped = enemy && EQUIPPED_CREATURES[hero.type];
+  if (equipped && assets.has(equipped.model))
+    return equippedCreatureAppearance(assets.get(equipped.model), equipped);
   if (enemy && hero.type === "creature-wolf" && assets.has("WolfPilot"))
     return wolfPilotAppearance(assets.get("WolfPilot"));
   if (

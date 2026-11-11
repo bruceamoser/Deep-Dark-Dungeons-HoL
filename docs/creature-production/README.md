@@ -1,6 +1,6 @@
 # One-creature-at-a-time production
 
-This is the active production workflow, approved November 11, 2026. It supersedes the earlier unattended generation batches and old partial-completion spreadsheets. **58 creatures: three approved anchors, 55 remaining.** The user approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private exports are pinned in `config/approved-creature-assets.json` and are now normal build defaults when installed.
+This is the active production workflow, approved November 11, 2026. It supersedes the earlier unattended generation batches and old partial-completion spreadsheets. **58 creatures total; current completion and active work are recorded in queue.json.** The user approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private exports are pinned in `config/approved-creature-assets.json` and are now normal build defaults when installed.
 
 The queue and its evidence are the cross-machine source of truth. No job continues merely because a chat ends: the next local session reads this queue, resumes its one active creature and records its actual progress. These tools track work and prevent overlap; they do not automate artistic judgment or claim generation is running in the background.
 
@@ -21,24 +21,57 @@ From the repository root:
 ```sh
 node scripts/creature-production.mjs status
 node scripts/creature-production.mjs next
-node scripts/creature-production.mjs start goblin-scrapper
+node scripts/creature-production.mjs start CREATURE_ID
+# To reopen an integrated creature after visual feedback:
+node scripts/creature-production.mjs revise CREATURE_ID
 node scripts/creature-production.mjs record goblin-scrapper brief docs/creature-production/goblin-scrapper.md
-# Record the subsequent gates in order: model, motion, encounter, integration.
+# Record the subsequent gates in order: model, motion, game-view, integration.
 node scripts/creature-production.mjs validate
 node scripts/creature-production.mjs assets
 ```
 
 `start` refuses a second active creature or skipping the documented order. `record` requires an existing repository report and ordered gates. The final gate also requires a matching approved manifest entry and the exact asset bytes locally. Evidence content must be reviewed by the author; a command succeeding does not establish visual quality. No new permission is required for each routine refinement within Bruce's authorized direction.
 
+See [verified owned gear inventory](owned-gear-inventory.md) for supplied headwear, packs, tools, consumables and role props.
+
+## Reuse before new geometry
+
+Bruce explicitly corrected the shallow authored headwear: use the bundle’s helmets, caps, hoods and accessories first, modifying the owned copy to fit the creature. Preserve the source item’s rounded volume, side/back coverage and finished silhouette. Remove ornaments only after inspecting component topology (e.g. the Soldier’s two separate Hat02 horns); recolor or refit rather than replacing the whole item with a primitive. New geometry is for a demonstrated missing part, not a shortcut around inspecting the bundle.
+
+## Mandatory owned-asset search for every creature
+
+**Always inspect what we already own before modeling a creature or its accessories.** This is a required part of the brief gate, not an optional fallback. Search the verified Dungeon Mason/KayKit inventory and inspect likely source meshes or thumbnails. Do not stop at the weapon/headwear: look for clothing, packs, tools, consumables, containers, books, ropes, lights and small environmental props that can be adapted into personal equipment.
+
+Record in each brief:
+
+1. What this creature does and what its silhouette should communicate.
+2. The owned candidates actually inspected, with source pack/part names. State which are selected, which need modification and why unsuitable candidates were rejected.
+3. One strong signature prop plus supporting details where useful: a fuel bottle/torch for a firestarter, a folded trap/rope/keyring for a trapkeeper, a worn book/candle for a cultist, or a journal/potions for a traveler/caster. These are prompts for creative selection, not fixed loadouts for every member of a family.
+4. Attachment and modification plan: carried, worn, held, sheathed, hung from a belt or packed; fit/scale/pivot, palette/material changes, and relevant animation clearance. An environmental prop may become a convincing worn item after adaptation. Large anvils, tents or furniture are not automatically body-sized accessories.
+5. Any genuine gap requiring newly authored geometry, after the owned search. Explain why adapting a suitable existing item would not work. Preserve source files, UVs and rigs wherever practical.
+
+Use props to convey occupation, habits and personality while maintaining game-scale readability. Avoid random clutter, impossible loads and gear intersecting hands/limbs. Ordinary animals should remain ordinary animals unless the creature description calls for equipment; the asset search may correctly conclude no carried gear is appropriate. A successful source import is not a grip, attachment or animation check.
+
+## Color schemes are part of creature design
+
+Bruce explicitly requires deliberate color and color schemes when adapting owned items, to give each creature its own look and feel. **Reusing a mesh does not mean leaving the supplier’s default colors or recoloring every surface the same shade.**
+
+- Record the palette in the brief/spec before assembly: dominant cloth/body color, secondary color, restrained focal accent, and skin/fur, leather, metal and other material colors. Explain the intended role or personality; exact swatches belong in the versioned role JSON when applicable.
+- Modify supplied clothing, headwear, shields, weapons, packs and accessories through their existing tint masks/material regions. Coordinate the complete outfit rather than painting each item independently. Preserve readable eyes, mouths, blade edges, straps and other important details.
+- Use hue, value and saturation deliberately. Keep neighboring roles distinguishable at dungeon scale: for example Scrapper’s teal/ochre workwear and warm leather, Road Bandit’s olive/rust travel clothes, and Shield Soldier’s green livery/steel armor. These are examples, not a fixed palette imposed on the whole roster.
+- Let related creatures share a family or faction palette where useful, while varying accents, equipment finish and silhouette to identify role/rank. Keep the overall sculpted, clean-painted style cohesive. Ordinary animals retain appropriate natural coat colors and do not gain costume gear merely for differentiation.
+- Preserve material identity: steel, brass, leather, cloth, skin, stone, fur and elemental effects should read appropriately. Use contrast and selective accents to direct attention; do not make every surface metallic, emissive or uniformly dull. Retain the approved approximately 0.3 polished finish where appropriate, with purposeful material exceptions.
+- Review the full palette from front/side/back, in motion and under actual dungeon lighting alongside party characters and nearby creature roles. Check readable light/dark contrast as well as hue; a nameplate or color alone must not carry identity. Record palette revisions in the report/spec and preserve source colors in untouched originals.
+
 ## Gates for each creature
 
 | Gate | Required work and evidence |
 | --- | --- |
-| brief | Read pinned book text/image, existing references and source inventory. Record silhouette, anatomy, signature, equipment, palette, donor/license and cost. Reuse existing reference sheets before generating any. |
+| brief | Read pinned book text/image, existing references and source inventory. Perform and record the mandatory owned clothing/gear/prop search, selected candidates and adaptation/attachment plan. Record silhouette, anatomy, signature, equipment, dominant/secondary/accent and material palette, intended feel, donor/license and cost. Reuse existing reference sheets before generating any. |
 | model | Preserve original sources; create an editable task-owned copy. Correct body/head/gear and paint. Review front/side/back at game scale. Record source/output hashes, actual triangles, materials, textures and preliminary six-part fit. No automatic welding, hidden-face deletion or topology reduction. |
 | motion | Pose for creature identity, then verify idle, locomotion, correct attack, hit and full death. Check grip, weapon travel, eyes/jaw, joints, foot contact and cloth at multiple frames. Export/reimport, compare bones/clips/materials and test actual Three.js skinning. Return failures to the same creature. |
-| encounter | Six target creatures plus four heroes in a generated dungeon, meaningful AI turns, attacks and death. Muted native launcher through ordinary terminal AppArmor context, temporary saves, no sandbox bypass. Measure after warmup and record video separately. Aim for 60 FPS here, require above 30 FPS on this machine; report viewport/GPU/sample and limitations. Do not hide prompts, errors or failed animations to obtain a pass. |
-| integration | Author-review the actual evidence. Pin the exact GLB/hash/model route and source/license record; add role-specific factory/attack handling where needed. Verify bestiary and combat use the same asset. Run applicable tests, update report/queue/handoff, self-review and merge a passing PR. Update the installed local review build and verify it before calling the creature delivered. |
+| game-view | Verify actual game appearance factory, equipped identity, all five animation states and game-scale readability. Check the bestiary uses the same asset. No per-creature FPS benchmark: Bruce explicitly deferred performance testing to a final bulk roster pass on November 11. |
+| integration | Author-review the actual evidence. Pin the exact GLB/hash/model route and source/license record; add role-specific factory/attack handling where needed. Verify bestiary and combat use the same asset. Run applicable tests, update report/queue/handoff and commit the checkpoint. Self-review and merge passing changes; update and verify the installed review build at delivery checkpoints. Distinguish source integration from installed delivery. |
 
 Bruce's three approved anchors establish the direction. Keep further creatures cohesive: deliberate sculpted forms, clean readable colors, fitted equipment and polished materials. Triangle count is a measured cost, not a universal target. The wolf's larger mesh passed its actual encounter. Known minor limitations stay visible in the report; passing FPS alone does not satisfy the art gate. New paid services and broad style changes are outside this no-additional-cost workflow.
 
@@ -48,4 +81,4 @@ Private sources/exports stay out of Git. The manifest records paths, hashes, app
 
 Use a clean committed/index checkout for packaging while unrelated experimental edits exist. Stage Dungeon Mason inputs and only the approved creature exports. Preserve saves/audio settings; back up the old per-user AppImage before using the supported installer. Build both AppImage and `.deb`. No public release containing private exports is implied by local installation.
 
-After completing one creature, commit/push its progress and verify the remote hash before starting the next. Do not silently skip broken work or leave progress only in chat. Keep rejected attempts separate and explain the remaining failure if work stops.
+After completing one creature, commit/push its progress and verify the remote hash before starting the next. Performance remains pending until the final bulk roster pass; never infer FPS from polygon counts or static captures. Do not silently skip broken work or leave progress only in chat. Keep rejected attempts separate and explain the remaining failure if work stops.

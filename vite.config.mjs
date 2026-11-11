@@ -16,6 +16,16 @@ const { models: approved } = resolveApprovedCreatureAssets(
 
 export default defineConfig({
   define: {
+    __EQUIPPED_CREATURES__: JSON.stringify(
+      Object.fromEntries(
+        approvedManifest.assets
+          .filter((a) => a.runtime?.kind === "equipped" && approved[a.model])
+          .map((a) => [
+            a.creatureId,
+            { ...a.runtime, model: a.model, path: a.path },
+          ]),
+      ),
+    ),
     // Legacy macro names retained internally; these are now approved defaults.
     __WOLF_PILOT__: JSON.stringify(!!approved.WolfPilot),
     __AIR_ELEMENTAL_PILOT__: JSON.stringify(!!approved.AirElementalSculpted),
