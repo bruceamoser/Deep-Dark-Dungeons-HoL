@@ -66,3 +66,13 @@ Final installed-target native checks pass 19 updated actors,58 bestiary comparis
 ## bmoser local generation pilot — November 10
 
 Supersedes the earlier uninstalled-tool note: isolated Modly v0.4.3/TRELLIS2-GGUF/Python3.11+torch2.6cu126 now run locally under `~/.local/share/four-lanterns-pipeline-pilot/2026-11-10`. About 10.4 GB pinned model weights plus preprocessing model; both generation and texturing completed on one RTX3090. Mesh2Motion npm app installed and real browser rig/export/playback exercised. Private safe Vite override avoids exposing process environment. AssetFurnace source inspected only. No Meshy account/cloud inference, personal Blender scene or game installation changed. See exact pins and local evidence in [pilot report](../local-mesh-pipeline-pilot.md). Raw mesh/model environments and exploratory job scripts are not transferred by Git.
+
+## bmoser owned-asset workshop — November 11
+
+Unity Hub 3.22.6 is installed as the official Debian package (`/usr/bin/unityhub`, `/usr/share/applications/unityhub.desktop`). Its official per-app AppArmor userns profile is installed; no `--no-sandbox` workaround. The unused initial AppImage/extraction remains at `~/.local/opt/unity-hub`. CLI `~/.local/bin/unity` is 1.0.0-beta.17; Editor is `~/Unity/Hub/Editor/6000.3.28f1/Editor/Unity`. The official CLI installer also installed its Unity agent skills. Hub sign-in and active license were verified after Bruce signed in; no credentials in Git.
+
+Private workshop: `~/Projects/DDD-Asset-Workshop`. `AssetReview` is a successfully created local URP project, opened muted, no Unity Cloud project link. `AssetReview-before-license` preserves the initial unsuccessful setup attempt. Hub runs as user service `fld-unityhub-desktop`. Unity is for asset inspection/import, not a change of game engine.
+
+KayKit archive: `~/Downloads/The Complete KayKit Collection v8.zip`. Extracted source root: `~/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8` (24 packs, 132 `.blend` files, CC0). Dungeon Mason original Unity download remains pending; only its earlier private runtime exports are currently verified. Another machine needs private transfer or a fresh download through the owner's account.
+
+Private experiment: `~/.local/share/four-lanterns-modular-pilot/2026-11-11` contains head `.blend`/GLB, reports, 120 frames and phase screenshots. Source head donor is `~/.local/share/four-lanterns-pipeline-pilot/2026-11-10/meeple-roster-2026-11-11/goblin-smoke-slinger/painted-refined.glb`. The `fld-meeple-review-vite` service serves the local fixture at 127.0.0.1:5197. Visual acceptance failed; do not promote this model. No new DeepSeek workers or generation jobs. See [pilot report](../owned-assets-pilot.md).

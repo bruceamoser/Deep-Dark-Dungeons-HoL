@@ -95,3 +95,9 @@ Bruce proposed Modly plus local rigging/motion tools, then explicitly prioritize
 ## 2026-11-10 — Local generation pilot result
 
 The Crypt Ghoul experiment establishes a promising local source-generation route: Modly/TRELLIS.2 produces a much closer static shape and textured illustration match. Keep the successful source private and preserve the production baseline. The first reduced proxy/Mesh2Motion skin fails actual deformation; do not bulk-convert the roster or call it game-ready. Prioritize neutral pose preparation, selective topology/texture baking and fitted weights; require actual five-clip Three.js review before adoption. User approval of the static image does not establish motion acceptance. See [pilot report](../local-mesh-pipeline-pilot.md).
+
+## 2026-11-11 — Reuse owned sources before more generation
+
+Bruce prioritizes minimal/no additional cost and a cohesive high-quality result, allows a style change, and wants the actual KayKit/Dungeon Mason inventory established first. Unity installation is authorized as an asset import/inspection utility; it does not migrate the game. User supplied KayKit v8, matching the already documented version. Retrieve the purchased Unity package through the signed-in owner account; no new purchase needed.
+
+Do not resume unattended full-roster generation based on static mesh success. A bounded reused-body/attached-head experiment is only an assembly test; its visible neck, paint and equipment problems prevent promotion. Choose authored source parts after full inventory and pass one equipped creature through real motion/dungeon review before scaling. See [inventory and acceptance gaps](../owned-assets-pilot.md).

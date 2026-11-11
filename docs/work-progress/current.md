@@ -1,5 +1,13 @@
 # Current working progress
 
+## Active work — owned assets and no-cost modular pilot (November 11)
+
+Bruce is reassessing the generation workflow and wants to reuse KayKit/Dungeon Mason before spending more. No creature batch is running. See [verified inventory and pilot review](../owned-assets-pilot.md); the historical production notes below are not a directive to restart the batch.
+
+On bmoser, KayKit v8 is downloaded and extracted (24 packs, 132 editable Blender sources; same archive hash as before). Unity Hub 3.22.6 and Editor 6000.3.28f1 are installed. Bruce signed in; active license verified. The local AssetReview project was successfully created and launched. Dungeon Mason's original Unity package remains pending: its download link was opened and Bruce was asked to select AssetReview and Download in Package Manager.
+
+A private modular head/body test rendered 120 frames using existing Mason rig/clips. It failed visual acceptance (neck/paint/grip/clearance issues); no game replacement or release. Next: inspect the full purchased package, choose authored donors, then refine one creature before any batch. Branch `codex/modular-owned-assets-pilot`, base `b6409be`. [Handoff](handoffs/2026-11-11-owned-assets-setup.md) records private paths and setup gaps. Older dirty creature work is preserved locally and excluded from this checkpoint.
+
 Updated: 2026-11-10 (America/New_York).
 
 ## Latest work — local mesh pipeline pilot
