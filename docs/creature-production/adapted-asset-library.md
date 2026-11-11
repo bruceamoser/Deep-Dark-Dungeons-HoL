@@ -13,3 +13,11 @@ Search this library alongside the owned-source inventory during every creature b
 | Workshop supply pack palette | Dungeon Mason BackPack02; Firestarter `partPalette` | Same Firestarter scene; BackPack02 | BackpackBone, coordinated leather/brass work kit. Head and arm clearance need recheck on other bodies. | Author-reviewed full motion and game view |
 
 Dungeon Mason entries are private Unity Asset Store derivatives from RPG Tiny Hero Wave Polyart. The table/recipes are portable; the licensed meshes are not supplied by this repository. The owned inventory remains the authority for unmodified parts. New candidates must be labeled candidate until their visual and motion review is complete.
+
+## Roster pass additions
+
+| Variant | Source and recipe | Private editable file/object | Fit and review status |
+| --- | --- | --- | --- |
+| Ash ritual hood/robe | Dungeon Mason Hat05/Body11; Grave Cultist palette in `config/creature-production/grave-cultist.json` | `~/.local/share/four-lanterns-creature-production/grave-cultist/grave-cultist.blend`; Hat05, Body11 | Original human rig/head; ash/charcoal, full hood coverage. Author turnarounds/motion reviewed; recheck hair/ears on other heads. |
+| Bone skull on wood focus | Dungeon Mason Wand07; same spec paintBands separates source shaft from skull, fitUpright at Idle frame6 | Same scene; Wand07 | weapon_r, MagicWand idle/cast and separate SingleSword swing checked. Refitting required for a different stance. |
+| Belt ritual tome | KayKit Mixed Bag 2 necronomicon_A; same spec externalParts | Same scene; Cultist ritual book | Pelvis-bound .38-scale leather tome at outer left hip; source face-cover detail retained. Author motion review; avoid arm/sleeve clipping on other bodies. |

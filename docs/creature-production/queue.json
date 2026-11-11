@@ -132,9 +132,16 @@
       "name": "Grave Cultist",
       "order": 8,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/grave-cultist.md",
+        "model": "docs/creature-production/grave-cultist.md",
+        "motion": "docs/creature-production/grave-cultist.md",
+        "game-view": "docs/creature-production/grave-cultist.md",
+        "integration": "docs/creature-production/grave-cultist.md"
+      },
+      "approvedAsset": "GraveCultist"
     },
     {
       "id": "creature-hedge-sorcerer",

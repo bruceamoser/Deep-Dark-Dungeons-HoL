@@ -151,3 +151,7 @@ Bruce explicitly requires the pipeline to always search what we own for items to
 ## 2026-11-11 — Register modified items for future reuse
 
 Bruce explicitly requires an item created by modifying an existing item to join the possible asset pool for other creatures. The adapted asset library is a required brief input and integration output: record original source/license, reproducible modification, private editable file/object, attachment/fit, palette and review state. Keep variants separable or reproducibly extractable; recheck fit/motion on the next wearer. This complements the mandatory original owned-asset search and preserves the value of completed work.
+
+## 2026-11-11 — Complete roster before next installed build and user review
+
+Bruce explicitly asks to stop updating the installed game per creature, complete the creature roster, then review models in bulk and identify tweaks. Retain author model/motion/runtime visual checks and source commits; defer packaging/installation and performance to the final bulk checkpoint. Continue without per-creature approval prompts.

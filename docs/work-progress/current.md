@@ -2,7 +2,11 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Goblin Firestarter and reusable adapted-item library
+### Latest — Roster production; bulk delivery/review deferred
+
+Bruce requests completing the roster before the next installed update or user art review. Keep per-creature author model/motion/runtime visual checks and source commits; defer installers/native package checks/performance to the final roster checkpoint. Installed build remains seven creatures (Firestarter). Active branch `codex/creature-roster-production` in `/home/bmoser/Projects/FLD-Creature-Production`, from main PR163 (`9f2e624`). Grave Cultist passed model/motion/runtime checks and source integration: **8/58 source-integrated, 50 remaining**. Next Hedge Sorcerer. [Current handoff](handoffs/2026-11-11-roster-bulk-review.md).
+
+### Previous — Goblin Firestarter and reusable adapted-item library
 
 Clean worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/sequential-creature-wave02`. **Seven of 58 source-integrated; 51 remain.** Firestarter reuses the approved goblin head, owned Body05/round goggles/plain pack and KayKit corked bottles. Soot-brown/ember-orange palette, upright neck grip, actual flask projectile/release and a separate melee punch. 29,368 triangles, 43 bones, six clips. Full model/motion/bestiary/dungeon review and 368 tests pass. AppImage/deb built; launcher native check passed; menu AppImage updated and its native bestiary/save/sandbox verification passed too. Version remains 0.8.7 local review build; no public release/Windows test. Performance remains deferred. See [Firestarter report](../creature-production/goblin-firestarter.md).
 

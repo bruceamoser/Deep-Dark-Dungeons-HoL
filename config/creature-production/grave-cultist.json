@@ -1,0 +1,100 @@
+{
+  "id": "grave-cultist",
+  "body": "Body11",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hat05",
+      "head"
+    ],
+    [
+      "Weapons",
+      "Wand07",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "MagicWand/Idle_Battle_MagicWand.fbx",
+    "Walking_A": "MagicWand/InPlace/MoveFWD_Battle_InPlace_MagicWand.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SingleSword/Attack01_SingleSword.fbx",
+    "Spellcast_Shoot": "MagicWand/Attack01_MagicWand.fbx",
+    "Hit_A": "MagicWand/GetHit01_MagicWand.fbx",
+    "Death_A_Pose": "MagicWand/Die01_MagicWand.fbx"
+  },
+  "palette": {
+    "1": "#333a3b",
+    "2": "#353b3c",
+    "3": "#a8a58b",
+    "4": "#827d63",
+    "5": "#98927b",
+    "6": "#363535",
+    "7": "#4e3d32",
+    "8": "#a69c78"
+  },
+  "partPalette": {
+    "Hat05": {
+      "2": "#a8a58b",
+      "3": "#a8a58b",
+      "4": "#716f5e",
+      "8": "#686654"
+    },
+    "Wand07": {
+      "4": "#a69971",
+      "8": "#c8c1a3"
+    }
+  },
+  "solid": {
+    "Head01_Male": "#c1bdab",
+    "Eyebrow01": "#57544a"
+  },
+  "externalParts": [
+    {
+      "name": "Cultist ritual book",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Mixed Bag 2/Assets/gltf/necronomicon_A.gltf",
+      "bone": "pelvis",
+      "scale": 0.38,
+      "offset": [
+        0.24,
+        -0.1,
+        0.04
+      ],
+      "rotateY": -8
+    }
+  ],
+  "fitUpright": [
+    {
+      "part": "Wand07",
+      "bone": "weapon_r",
+      "frame": 6
+    }
+  ],
+  "paintBands": [
+    {
+      "part": "Wand07",
+      "minZ": 0,
+      "maxZ": 1.36,
+      "color": "#54402e",
+      "purpose": "Wood shaft distinct from retained aged-bone skull"
+    }
+  ]
+}

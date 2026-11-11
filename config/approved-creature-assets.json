@@ -115,6 +115,34 @@
           }
         }
       }
+    },
+    {
+      "creatureId": "creature-grave-cultist",
+      "model": "GraveCultist",
+      "path": "/assets/licensed/creatures/GraveCultist.glb",
+      "sha256": "23edbbef4e68d16e9ad973f52358ed54a33e49c35ac3f63f3835dd82effdec88",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/grave-cultist.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "spell",
+        "attack": {
+          "kind": "life",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.3,
+          "melee": {
+            "kind": "staff",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.3
+          }
+        }
+      }
     }
   ]
 }

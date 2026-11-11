@@ -84,6 +84,13 @@ for cfg in spec.get('paintRegions',[]):
   if any(sum((center[i]-c[i])**2 for i in [0,2])<cfg['radius']**2 and center.y<cfg['frontY'] for c in cfg['centers']):face.material_index=slot;count+=1
  assert count>0,('Paint region missed',cfg['part'])
  modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':'Separate supplied lens faces from brass frame'})
+for cfg in spec.get('paintBands',[]):
+ obj=bpy.data.objects[cfg['part']];slot=len(obj.data.materials);obj.data.materials.append(mat(cfg['color'],cfg.get('metal',0)));count=0
+ for face in obj.data.polygons:
+  center=sum((obj.matrix_world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
+  if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
+ assert count>0,('Paint band missed',cfg['part'])
+ modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
 if spec.get('headFixture'):
  cfg=spec['headFixture'];file=Path(cfg['path']).expanduser()
  with bpy.data.libraries.load(str(file),link=False) as (src,dst):
