@@ -1,6 +1,13 @@
 import * as T from "three";
 
 const UP = new T.Vector3(0, 1, 0);
+const MAGIC_LOOKS = {
+  cold: { name: "Flying ice lance", color: 0x91dfff },
+  life: { name: "Living light ribbons", color: 0x82e8ba },
+  lightning: { name: "Flying thunder lance", color: 0x9b88ff },
+  shadow: { name: "Flying grave-light lance", color: 0x9cae88 },
+  fire: { name: "Flying ember lance", color: 0xffa54d },
+};
 const v = (x = 0, y = 0, z = 0) => new T.Vector3(x, y, z);
 const glow = (color, opacity = 1) =>
   new T.MeshBasicMaterial({
@@ -135,14 +142,9 @@ function impactBurst(owned, color, kind) {
 
 function magicMissile(owned, kind) {
   const group = new T.Group();
-  group.name =
-    kind === "cold"
-      ? "Flying ice lance"
-      : kind === "life"
-        ? "Living light ribbons"
-        : "Flying ember lance";
-  const color =
-    kind === "cold" ? 0x91dfff : kind === "life" ? 0x82e8ba : 0xffa54d;
+  const look = MAGIC_LOOKS[kind] ?? MAGIC_LOOKS.fire;
+  group.name = look.name;
+  const color = look.color;
   if (kind !== "life") {
     const core = owned.mesh(new T.OctahedronGeometry(1, 0), glow(color));
     core.scale.set(kind === "cold" ? 0.12 : 0.09, 0.55, 0.12);
@@ -431,13 +433,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
   const color =
     spec.kind === "wind"
       ? 0xc8ecff
-      : spec.kind === "cold"
-        ? 0xa3e4ff
-        : spec.kind === "life"
-          ? 0x91e6ba
-          : data.spell
-            ? 0xffa153
-            : 0xffda96;
+      : MAGIC_LOOKS[spec.kind]?.color ?? (data.spell ? 0xffa153 : 0xffda96);
   const burst = impactBurst(owned, color, spec.kind);
   burst.group.position.copy(end);
   root.add(burst.group);

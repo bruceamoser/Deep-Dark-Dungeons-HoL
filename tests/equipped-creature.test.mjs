@@ -105,3 +105,37 @@ test("equipped flask leaves the hand at release and returns on recovery or anoth
   flask.geometry.dispose();
   flask.material.dispose();
 });
+
+test("authored thunder and grave spells keep their palette in flight and at impact", async () => {
+  const { createAttackEffect } = await import("../src/view/combat-effects.mjs");
+  for (const [kind, color] of [
+    ["lightning", 0x9b88ff],
+    ["shadow", 0x9cae88],
+  ]) {
+    const from = { data: {}, group: new T.Group(), model: new T.Group() },
+      to = { data: {}, group: new T.Group(), model: new T.Group() };
+    to.group.position.z = 4;
+    from.group.add(from.model);
+    to.group.add(to.model);
+    Object.assign(from.model.userData, {
+      authoredEquippedCreature: true,
+      attackPresentation: { kind, when: "projectile", clip: "Cast", release: 0.3 },
+    });
+    const host = {
+      entities: new Map([["from", from], ["to", to]]),
+      scene: new T.Scene(),
+      animate() {},
+    };
+    const effect = createAttackEffect(host, { attacker: "from", target: "to", spell: true });
+    assert.ok(effect.projectile);
+    effect.projectile.traverse((o) => {
+      if (o.isMesh) assert.equal(o.material.color.getHex(), color);
+    });
+    const impact = effect.root.getObjectByName(`${kind} impact`);
+    assert.ok(impact);
+    impact.traverse((o) => {
+      if (o.isMesh) assert.equal(o.material.color.getHex(), color);
+    });
+    effect.dispose();
+  }
+});
