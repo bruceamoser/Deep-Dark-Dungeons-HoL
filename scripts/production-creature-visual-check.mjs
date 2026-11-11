@@ -149,7 +149,18 @@ try {
       s.camera.lookAt(middle);
     }, projectileKind);
     const samples = [];
-    for (let frame = 0; frame < 45; frame++) {
+    const release = entry.runtime.attack.release;
+    for (
+      let frame = 0;
+      frame <
+      Math.max(
+        45,
+        Math.ceil(
+          (Math.max(release, entry.runtime.attack.recover ?? 0) + 0.9) * 30,
+        ),
+      );
+      frame++
+    ) {
       samples.push(
         await page.evaluate(() => {
           const s = window.__ddd.scene,
@@ -161,10 +172,16 @@ try {
           const flask =
             actor.model.getObjectByName("Firestarter_held_flask") ??
             actor.model.getObjectByName("Firestarter held flask") ??
-            actor.model.getObjectByName("Slinger_stone");
+            actor.model.getObjectByName("Slinger_stone") ??
+            actor.model.getObjectByName("Archer_arrow");
           const arrow = actor.model.getObjectByName("arrowBone"),
-            nock = actor.model.getObjectByName("BowJoint05"),
-            hand = actor.model.getObjectByName("weapon_r");
+            nock =
+              actor.model.getObjectByName("BowJoint05") ??
+              actor.model.getObjectByName("BowNock"),
+            hand =
+              actor.model.getObjectByName("weapon_r") ??
+              actor.model.getObjectByName("handslotr") ??
+              actor.model.getObjectByName("handslot.r");
           return {
             time: fx.age,
             kind: fx.kind,
@@ -193,7 +210,9 @@ try {
         ),
       });
     }
-    const flying = samples.find((s) => s.time > 0.5 && s.time < 0.6);
+    const flying = samples.find(
+      (s) => s.time > release + 0.03 && s.time < release + 0.13,
+    );
     expect(flying.kind).toBe(projectileKind);
     if (projectileKind !== "sonic") expect(flying.held).toBe(false);
     expect(flying.meshes).toBeGreaterThan(0);
@@ -203,7 +222,7 @@ try {
     if (projectileKind === "arrow")
       expect(
         samples
-          .filter((s) => s.time >= 0.3 && s.time <= 0.4)
+          .filter((s) => s.time >= release - 0.13 && s.time <= release - 0.03)
           .every((s) => s.nockGap < 0.06),
       ).toBe(true);
     await page.evaluate(() => {

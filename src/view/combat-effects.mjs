@@ -499,7 +499,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
       }
       if (projectile) {
         if (age < spec.release) {
-          projectile.visible = spec.kind === "arrow";
+          projectile.visible = spec.kind === "arrow" && !spec.nockBone;
           projectile.position.copy(launchPoint(age));
           projectile.quaternion.setFromUnitVectors(
             UP,

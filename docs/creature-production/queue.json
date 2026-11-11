@@ -384,9 +384,16 @@
       "name": "Skeleton Archer",
       "order": 23,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/bone-archer.md",
+        "model": "docs/creature-production/bone-archer.md",
+        "motion": "docs/creature-production/bone-archer.md",
+        "game-view": "docs/creature-production/bone-archer.md",
+        "integration": "docs/creature-production/bone-archer.md"
+      },
+      "approvedAsset": "SkeletonArcher"
     },
     {
       "id": "creature-skeleton-champion",

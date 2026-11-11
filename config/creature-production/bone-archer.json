@@ -1,0 +1,121 @@
+{
+  "id": "bone-archer",
+  "body": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/characters/gltf/Skeleton_Minion.glb",
+  "cloth": {
+    "Skeleton_Minion_Cloak": "#53604a"
+  },
+  "eyes": "#94cbb0",
+  "parts": [
+    {
+      "name": "Archer bow",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/bow_withString.gltf",
+      "bone": "handslot.l",
+      "scale": 0.65,
+      "fitIdle": true,
+      "tiltX": 90,
+      "tiltZ": -90,
+      "reviewAxis": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "Archer quiver",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/quiver.gltf",
+      "bone": "chest",
+      "scale": 0.75,
+      "fitIdle": true,
+      "tiltY": 25,
+      "worldOffset": [
+        0.3,
+        0.4,
+        0.05
+      ]
+    }
+  ],
+  "clips": {
+    "Idle": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatRanged.glb",
+      "name": "Ranged_Bow_Idle"
+    },
+    "Walking_A": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Walking"
+    },
+    "1H_Melee_Attack_Slice_Diagonal": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatMelee.glb",
+      "name": "Melee_Unarmed_Attack_Kick"
+    },
+    "Hit_A": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb",
+      "name": "Hit_A"
+    },
+    "Death_A_Pose": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Death"
+    },
+    "2H_Ranged_Shoot": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatRanged.glb",
+      "names": [
+        "Ranged_Bow_Draw",
+        "Ranged_Bow_Release"
+      ],
+      "joinBlendFrames": 6
+    }
+  },
+  "bow": {
+    "part": "Archer bow",
+    "bare": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/bow.gltf",
+    "arrow": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/arrow_bow.gltf",
+    "clip": "2H_Ranged_Shoot",
+    "fitFrame": 40,
+    "drawStart": 8,
+    "releaseFrame": 49,
+    "recoverFrame": 70,
+    "scale": 0.65,
+    "cant": 15,
+    "stringVertices": 310,
+    "stringCenter": [
+      -0.32246,
+      0,
+      0
+    ],
+    "stringHalfLength": 0.798,
+    "arrowScale": 0.98,
+    "arrowTailY": 0.6414669
+  },
+  "fallWrists": [
+    {
+      "part": "Archer bow",
+      "hand": "hand.l",
+      "start": 0,
+      "end": 8,
+      "direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "groundContactClips": [
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.2
+    }
+  ],
+  "fallProps": [
+    {
+      "part": "Archer quiver",
+      "bone": "QuiverCollapse",
+      "start": 0,
+      "end": 6,
+      "rotateX": 90,
+      "position": [
+        -0.6,
+        0.4,
+        0.1
+      ]
+    }
+  ]
+}
