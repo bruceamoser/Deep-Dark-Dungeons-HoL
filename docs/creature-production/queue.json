@@ -72,9 +72,16 @@
       "name": "Road Bandit",
       "order": 5,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/road-bandit.md",
+        "model": "docs/creature-production/road-bandit.md",
+        "motion": "docs/creature-production/road-bandit.md",
+        "game-view": "docs/creature-production/road-bandit.md",
+        "integration": "docs/creature-production/road-bandit.md"
+      },
+      "approvedAsset": "RoadBandit"
     },
     {
       "id": "creature-shield-soldier",

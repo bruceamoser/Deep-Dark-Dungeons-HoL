@@ -47,6 +47,23 @@
         "height": 1.2,
         "weapon": "melee"
       }
+    },
+    {
+      "creatureId": "creature-road-bandit",
+      "model": "RoadBandit",
+      "path": "/assets/licensed/creatures/RoadBandit.glb",
+      "sha256": "76e056146502519fffdb032a4e490a3d740a08ba73b2319bb0b8ca9f125841af",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "author review under delegated production direction",
+      "report": "docs/creature-production/road-bandit.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "melee"
+      }
     }
   ]
 }
