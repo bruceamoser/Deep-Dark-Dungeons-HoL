@@ -188,6 +188,23 @@
         "height": 1.45,
         "weapon": "melee"
       }
+    },
+    {
+      "creatureId": "creature-orc-shieldbreaker",
+      "model": "OrcShieldbreaker",
+      "path": "/assets/licensed/creatures/OrcShieldbreaker.glb",
+      "sha256": "ce85d9ec6343c568fac1ad2315d373446750328c41ca07cbce92726eead208f9",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/orc-shieldbreaker.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.1,
+        "height": 1.5,
+        "weapon": "melee"
+      }
     }
   ]
 }

@@ -180,9 +180,16 @@
       "name": "Orc Shieldbreaker",
       "order": 11,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/orc-shieldbreaker.md",
+        "model": "docs/creature-production/orc-shieldbreaker.md",
+        "motion": "docs/creature-production/orc-shieldbreaker.md",
+        "game-view": "docs/creature-production/orc-shieldbreaker.md",
+        "integration": "docs/creature-production/orc-shieldbreaker.md"
+      },
+      "approvedAsset": "OrcShieldbreaker"
     },
     {
       "id": "creature-hobgoblin-shieldguard",

@@ -4,7 +4,7 @@
 
 ### Latest — Roster production; bulk delivery/review deferred
 
-Bruce requests completing the roster before the next installed update or user art review. Keep per-creature author model/motion/runtime visual checks and source commits; defer installers/native package checks/performance to the final roster checkpoint. Installed build remains seven creatures (Firestarter). Active branch `codex/creature-roster-production` in `/home/bmoser/Projects/FLD-Creature-Production`, from main PR163 (`9f2e624`). Grave Cultist, Hedge Sorcerer and Orc Outrider passed model/motion/runtime checks and source integration: **10/58 source-integrated, 48 remaining**. All 368 tests pass; focused checks rerun after additions. Next Orc Shieldbreaker. [Current handoff](handoffs/2026-11-11-roster-bulk-review.md).
+Bruce requests completing the roster before the next installed update or user art review. Keep per-creature author model/motion/runtime visual checks and source commits; defer installers/native package checks/performance to the final roster checkpoint. Installed build remains seven creatures (Firestarter). Active branch `codex/creature-roster-production` in `/home/bmoser/Projects/FLD-Creature-Production`, from main PR163 (`9f2e624`). Grave Cultist, Hedge Sorcerer, Orc Outrider and Orc Shieldbreaker passed model/motion/runtime checks and source integration: **11/58 source-integrated, 47 remaining**. All 368 tests pass; focused checks rerun after additions. Next Hobgoblin Shieldguard. [Current handoff](handoffs/2026-11-11-roster-bulk-review.md).
 
 ### Previous — Goblin Firestarter and reusable adapted-item library
 
