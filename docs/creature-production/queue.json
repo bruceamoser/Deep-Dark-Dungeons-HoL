@@ -244,9 +244,16 @@
       "name": "Goblin Boss",
       "order": 15,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/goblin-boss.md",
+        "model": "docs/creature-production/goblin-boss.md",
+        "motion": "docs/creature-production/goblin-boss.md",
+        "game-view": "docs/creature-production/goblin-boss.md",
+        "integration": "docs/creature-production/goblin-boss.md"
+      },
+      "approvedAsset": "GoblinBoss"
     },
     {
       "id": "creature-orc-warcaller",
