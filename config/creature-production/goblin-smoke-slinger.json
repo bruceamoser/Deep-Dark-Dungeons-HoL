@@ -1,0 +1,99 @@
+{
+  "id": "goblin-smoke-slinger",
+  "body": "Body09",
+  "headFixture": {
+    "path": "~/.local/share/four-lanterns-modular-pilot/2026-11-11/goblin-spearhand/goblin-spearhand.blend",
+    "object": "Goblin head"
+  },
+  "parts": [
+    [
+      "HeadParts",
+      "Hair07",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/MoveFWD_Battle_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
+    "2H_Ranged_Shoot": "NoWeapon/CarryThrow_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "NoWeapon/Die02_NoWeapon.fbx"
+  },
+  "palette": {
+    "1": "#34342d",
+    "2": "#514534",
+    "3": "#713e35",
+    "4": "#8e7654",
+    "5": "#604e39",
+    "6": "#713e35",
+    "7": "#493b2d",
+    "8": "#9b9782",
+    "9": "#739444"
+  },
+  "externalParts": [
+    {
+      "name": "Slinger clay reserve 1",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/smokebomb.gltf",
+      "bone": "pelvis",
+      "scale": 0.55,
+      "offset": [
+        -0.24,
+        0.1,
+        0
+      ]
+    },
+    {
+      "name": "Slinger clay reserve 2",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/smokebomb.gltf",
+      "bone": "pelvis",
+      "scale": 0.55,
+      "offset": [
+        0.0,
+        0.16,
+        0
+      ]
+    },
+    {
+      "name": "Slinger clay reserve 3",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/smokebomb.gltf",
+      "bone": "pelvis",
+      "scale": 0.55,
+      "offset": [
+        0.24,
+        -0.15,
+        0
+      ]
+    },
+    {
+      "name": "Slinger spare cord",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/rope_bundle_A.gltf",
+      "bone": "pelvis",
+      "scale": 0.17,
+      "rotateY": 90,
+      "offset": [
+        0.2,
+        0.08,
+        0.09
+      ]
+    }
+  ],
+  "paintRegions": [],
+  "fitUpright": [],
+  "solid": {
+    "Hair07": "#292a26"
+  },
+  "sling": {
+    "clip": "2H_Ranged_Shoot",
+    "releaseFrame": 14,
+    "length": 0.3,
+    "stone": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Space Base Bits 1.0/Assets/gltf/rock_A.gltf"
+  },
+  "groundContactClips": [
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.18,
+      "margin": 0.002
+    }
+  ]
+}

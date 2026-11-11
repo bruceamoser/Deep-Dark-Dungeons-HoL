@@ -104,7 +104,9 @@ for o in bpy.context.scene.objects:
  if o.type!='MESH':continue
  o.data.materials.clear();o.data.materials.append(base)
  if o.name in spec.get('solid',{}):
-  o.data.materials.clear();o.data.materials.append(mat(spec['solid'][o.name]));continue
+  o.data.materials.clear();o.data.materials.append(mat(spec['solid'][o.name]))
+  for face in o.data.polygons:face.material_index=0
+  continue
  if o.name.startswith(('Head','Eye','Mouth')):continue
  colors={**spec['palette'],**spec.get('partPalette',{}).get(o.name,{})};slots={}
  for channel,h in colors.items():
@@ -239,6 +241,7 @@ for cfg in spec.get('externalParts',[]):
    modifications.append({'part':cfg['name'],'paintedFaces':count,'recipe':band})
   transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateX',0)),4,'X')@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Rotation(math.radians(cfg.get('rotateZ',0)),4,'Z')@Matrix.Diagonal((*scale,1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
   obj.matrix_world=transform@world;obj.name=cfg['name']
+  if cfg.get('landmarks'):obj['fitLandmarks']=json.dumps({key:list(transform@Vector(point)) for key,point in cfg['landmarks'].items()})
   group=obj.vertex_groups.new(name=bone);group.add(list(range(len(obj.data.vertices))),1,'REPLACE');obj.modifiers.new('Owned prop socket','ARMATURE').object=rig
   if cfg.get('tag'):obj['equipmentPart']=cfg['tag']
   for m in obj.data.materials:
@@ -297,6 +300,7 @@ def pose_delta(bone,clip,frame):
 def rotate_part(name,bone,rotation):
  obj=bpy.data.objects[name];pivot=rig.matrix_world@rig.data.bones[bone].head_local;inv=obj.matrix_world.inverted()
  for v in obj.data.vertices:v.co=inv@(pivot+rotation@(obj.matrix_world@v.co-pivot))
+ if obj.get('fitLandmarks'):obj['fitLandmarks']=json.dumps({key:list(pivot+rotation@(Vector(point)-pivot)) for key,point in json.loads(obj['fitLandmarks']).items()})
 for f in spec.get('fitUpright',[]):
  delta=pose_delta(f['bone'],'Idle',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,0,1));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix();rotate_part(f['part'],f['bone'],rotation)
  fits[f['part']]={'frame':f['frame'],'alignment':(delta@rotation@Vector((0,0,1))).normalized().dot(Vector((0,0,1))),'method':'constant socket rotation, upright at inspected idle grip'}
@@ -332,6 +336,14 @@ for cfg,wr in weapon_rigs:
   for obj in added:bpy.data.objects.remove(obj,do_unlink=True)
   extra_sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
  fits[cfg['name']]={'method':'Owned deformation rig, synchronized clips and constant socket fit','frame':cfg['fitFrame'],'forward':list(forward)}
+if spec.get('sling'):
+ sys.path.insert(0,str(Path(__file__).parent))
+ from owned_sling import add_owned_sling
+ recipe,hashes=add_owned_sling(rig,spec['sling'],mat);modifications.append(recipe);extra_sources.update(hashes)
+if spec.get('propStrike'):
+ sys.path.insert(0,str(Path(__file__).parent))
+ from prop_strike import author_prop_strike
+ modifications.append(author_prop_strike(rig,spec['propStrike']))
 # Bounded per-clip contact correction for reviewed forward falls. Sample the
 # assembled silhouette before writing keys; preserve all relative joint motion.
 # Large penetrations fail instead of lifting an unsuitable pose into the air.

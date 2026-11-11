@@ -336,18 +336,32 @@
       "name": "Goblin Rattlechanter",
       "order": 20,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/goblin-rattlechanter.md",
+        "model": "docs/creature-production/goblin-rattlechanter.md",
+        "motion": "docs/creature-production/goblin-rattlechanter.md",
+        "game-view": "docs/creature-production/goblin-rattlechanter.md",
+        "integration": "docs/creature-production/goblin-rattlechanter.md"
+      },
+      "approvedAsset": "GoblinRattlechanter"
     },
     {
       "id": "creature-goblin-smoke-slinger",
       "name": "Goblin Smoke Slinger",
       "order": 21,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/goblin-smoke-slinger.md",
+        "model": "docs/creature-production/goblin-smoke-slinger.md",
+        "motion": "docs/creature-production/goblin-smoke-slinger.md",
+        "game-view": "docs/creature-production/goblin-smoke-slinger.md",
+        "integration": "docs/creature-production/goblin-smoke-slinger.md"
+      },
+      "approvedAsset": "GoblinSmokeSlinger"
     },
     {
       "id": "creature-bone-sentry",

@@ -28,12 +28,13 @@ export function equippedCreatureAppearance(asset, spec) {
     dispose: () => materials.forEach((material) => material.dispose()),
   });
   let clips = asset.animations;
-  if (spec.attack?.kind === "bottle") {
-    const flask =
-      model.getObjectByName("Firestarter_held_flask") ??
-      model.getObjectByName("Firestarter held flask");
+  if (spec.attack?.kind === "bottle" || spec.attack?.payloadPart) {
+    const flask = spec.attack.payloadPart
+      ? model.getObjectByName(spec.attack.payloadPart)
+      : (model.getObjectByName("Firestarter_held_flask") ??
+        model.getObjectByName("Firestarter held flask"));
     if (!flask)
-      throw new Error("Equipped bottle throw requires the reviewed held flask");
+      throw new Error("Equipped throw requires its reviewed held payload");
     clips = clips.map((source) => {
       const clip = source.clone();
       const throwing = clip.name === spec.attack.clip;

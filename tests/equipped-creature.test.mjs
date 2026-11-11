@@ -70,47 +70,58 @@ test("bottle throw uses its authored projectile clip; basic melee remains a punc
   assert.equal(attackPresentation(from, {}).clip, "Punch");
 });
 
-test("equipped flask leaves the hand at release and returns on recovery or another pose", () => {
-  const scene = new T.Group(),
-    flask = new T.Mesh(new T.BoxGeometry(), new T.MeshStandardMaterial());
-  flask.name = "Firestarter_held_flask";
-  scene.add(flask);
-  const source = [
-    new T.AnimationClip("Throw", 1.03, []),
-    new T.AnimationClip("Idle", 1, []),
-  ];
-  const a = equippedCreatureAppearance(
-    { scene, animations: source },
-    { scale: 1, attack: { kind: "bottle", clip: "Throw", release: 0.46 } },
-  );
-  const mixer = new T.AnimationMixer(a.model),
-    held = a.model.getObjectByName(flask.name);
-  mixer.clipAction(a.clips[0]).play();
-  mixer.update(0.45);
-  assert.equal(held.visible, true);
-  mixer.update(0.02);
-  assert.equal(held.visible, false);
-  mixer.update(0.44);
-  assert.equal(held.visible, true);
-  mixer.stopAllAction();
-  mixer.clipAction(a.clips[0]).reset().play();
-  mixer.update(0.5);
-  assert.equal(held.visible, false);
-  mixer.stopAllAction();
-  mixer.clipAction(a.clips[1]).play();
-  mixer.update(0.01);
-  assert.equal(held.visible, true);
-  assert.equal(source[0].tracks.length, 0);
-  a.model.userData.dispose();
-  flask.geometry.dispose();
-  flask.material.dispose();
-});
+for (const payloadKind of ["bottle", "sling"])
+  test(`equipped ${payloadKind} payload leaves at release and returns on recovery or another pose`, () => {
+    const scene = new T.Group(),
+      flask = new T.Mesh(new T.BoxGeometry(), new T.MeshStandardMaterial());
+    flask.name =
+      payloadKind === "bottle" ? "Firestarter_held_flask" : "Slinger_stone";
+    scene.add(flask);
+    const source = [
+      new T.AnimationClip("Throw", 1.03, []),
+      new T.AnimationClip("Idle", 1, []),
+    ];
+    const a = equippedCreatureAppearance(
+      { scene, animations: source },
+      {
+        scale: 1,
+        attack: {
+          kind: payloadKind,
+          payloadPart: payloadKind === "sling" ? flask.name : undefined,
+          clip: "Throw",
+          release: 0.46,
+        },
+      },
+    );
+    const mixer = new T.AnimationMixer(a.model),
+      held = a.model.getObjectByName(flask.name);
+    mixer.clipAction(a.clips[0]).play();
+    mixer.update(0.45);
+    assert.equal(held.visible, true);
+    mixer.update(0.02);
+    assert.equal(held.visible, false);
+    mixer.update(0.44);
+    assert.equal(held.visible, true);
+    mixer.stopAllAction();
+    mixer.clipAction(a.clips[0]).reset().play();
+    mixer.update(0.5);
+    assert.equal(held.visible, false);
+    mixer.stopAllAction();
+    mixer.clipAction(a.clips[1]).play();
+    mixer.update(0.01);
+    assert.equal(held.visible, true);
+    assert.equal(source[0].tracks.length, 0);
+    a.model.userData.dispose();
+    flask.geometry.dispose();
+    flask.material.dispose();
+  });
 
 test("authored thunder and grave spells keep their palette in flight and at impact", async () => {
   const { createAttackEffect } = await import("../src/view/combat-effects.mjs");
   for (const [kind, color] of [
     ["lightning", 0x9b88ff],
     ["shadow", 0x9cae88],
+    ["sonic", 0xe2c77e],
   ]) {
     const from = { data: {}, group: new T.Group(), model: new T.Group() },
       to = { data: {}, group: new T.Group(), model: new T.Group() };
@@ -119,15 +130,36 @@ test("authored thunder and grave spells keep their palette in flight and at impa
     to.group.add(to.model);
     Object.assign(from.model.userData, {
       authoredEquippedCreature: true,
-      attackPresentation: { kind, when: "projectile", clip: "Cast", release: 0.3 },
+      attackPresentation: {
+        kind,
+        when: "projectile",
+        clip: "Cast",
+        release: 0.3,
+      },
     });
     const host = {
-      entities: new Map([["from", from], ["to", to]]),
+      entities: new Map([
+        ["from", from],
+        ["to", to],
+      ]),
       scene: new T.Scene(),
       animate() {},
     };
-    const effect = createAttackEffect(host, { attacker: "from", target: "to", spell: true });
+    const effect = createAttackEffect(host, {
+      attacker: "from",
+      target: "to",
+      spell: true,
+    });
     assert.ok(effect.projectile);
+    if (kind === "sonic") {
+      assert.equal(effect.projectile.name, "Traveling resonance rings");
+      assert.equal(effect.projectile.children.length, 3);
+      assert.ok(
+        effect.projectile.children.every(
+          (o) => o.geometry.type === "TorusGeometry",
+        ),
+      );
+    }
     effect.projectile.traverse((o) => {
       if (o.isMesh) assert.equal(o.material.color.getHex(), color);
     });
@@ -149,23 +181,48 @@ test("authored bow projectile leaves the animated nock at its supplied release t
   to.group.position.z = 4;
   const nock = new T.Object3D();
   nock.name = "BowJoint05";
-  nock.position.set(.2, 1, .4);
+  nock.position.set(0.2, 1, 0.4);
   from.model.add(nock);
-  Object.assign(from.model.userData, { authoredEquippedCreature: true,
-    attackPresentation: { kind: "arrow", when: "projectile", clip: "Shoot",
-      release: 13 / 30, nockBone: "BowJoint05", launchOffset: .54, projectileScale: .84 } });
+  Object.assign(from.model.userData, {
+    authoredEquippedCreature: true,
+    attackPresentation: {
+      kind: "arrow",
+      when: "projectile",
+      clip: "Shoot",
+      release: 13 / 30,
+      nockBone: "BowJoint05",
+      launchOffset: 0.54,
+      projectileScale: 0.84,
+    },
+  });
   const arrow = new T.Mesh(new T.ConeGeometry(), new T.MeshStandardMaterial());
-  const host = { entities: new Map([["from", from], ["to", to]]),
-    scene: new T.Scene(), assets: new Map([["arrow", { scene: arrow }]]), animate() {} };
+  const host = {
+    entities: new Map([
+      ["from", from],
+      ["to", to],
+    ]),
+    scene: new T.Scene(),
+    assets: new Map([["arrow", { scene: arrow }]]),
+    animate() {},
+  };
   let releases = 0;
-  const effect = createAttackEffect(host, { attacker: "from", target: "to", ranged: true },
-    { release() { releases++; } });
-  effect.update(.43);
+  const effect = createAttackEffect(
+    host,
+    { attacker: "from", target: "to", ranged: true },
+    {
+      release() {
+        releases++;
+      },
+    },
+  );
+  effect.update(0.43);
   assert.equal(releases, 0);
-  effect.update(13 / 30 - .43);
+  effect.update(13 / 30 - 0.43);
   assert.equal(releases, 1);
-  assert.equal(effect.projectile.children[0].scale.x, .84);
-  assert.ok(effect.projectile.position.distanceTo(new T.Vector3(.2, 1, .94)) < 1e-6);
+  assert.equal(effect.projectile.children[0].scale.x, 0.84);
+  assert.ok(
+    effect.projectile.position.distanceTo(new T.Vector3(0.2, 1, 0.94)) < 1e-6,
+  );
   effect.dispose();
   arrow.geometry.dispose();
   arrow.material.dispose();
