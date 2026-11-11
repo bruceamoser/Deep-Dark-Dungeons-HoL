@@ -1,34 +1,26 @@
-import { existsSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { resolveApprovedCreatureAssets } from "./scripts/approved-creature-assets.mjs";
 import { defineConfig } from "vite";
+const approvedManifest = JSON.parse(
+  readFileSync(
+    new URL("./config/approved-creature-assets.json", import.meta.url),
+    "utf8",
+  ),
+);
+const { models: approved } = resolveApprovedCreatureAssets(
+  fileURLToPath(new URL(".", import.meta.url)),
+  approvedManifest,
+  { required: process.env.FLD_REQUIRE_APPROVED_CREATURES === "1" },
+);
+
 export default defineConfig({
   define: {
-    __WOLF_PILOT__: JSON.stringify(
-      process.env.FLD_WOLF_PILOT === "1" &&
-        existsSync(
-          new URL(
-            "./public/assets/licensed/creatures/WolfPilot.glb",
-            import.meta.url,
-          ),
-        ),
-    ),
-    __AIR_ELEMENTAL_PILOT__: JSON.stringify(
-      process.env.FLD_AIR_PILOT === "1" &&
-        existsSync(
-          new URL(
-            "./public/assets/licensed/creatures/AirElementalSculpted.glb",
-            import.meta.url,
-          ),
-        ),
-    ),
+    // Legacy macro names retained internally; these are now approved defaults.
+    __WOLF_PILOT__: JSON.stringify(!!approved.WolfPilot),
+    __AIR_ELEMENTAL_PILOT__: JSON.stringify(!!approved.AirElementalSculpted),
     __GOBLIN_SPEARHAND_MODEL__: JSON.stringify(
-      existsSync(
-        new URL(
-          "./public/assets/licensed/creatures/GoblinSpearhand.glb",
-          import.meta.url,
-        ),
-      )
-        ? "/assets/licensed/creatures/GoblinSpearhand.glb"
-        : null,
+      approved.GoblinSpearhand ?? null,
     ),
   },
   base: "./",

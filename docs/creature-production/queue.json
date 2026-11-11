@@ -1,0 +1,552 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-11-11",
+  "policy": "One active creature at a time. Reviewed individual promotion; no unattended generator batch.",
+  "creatures": [
+    {
+      "id": "creature-goblin-spearhand",
+      "name": "Goblin Spearhand",
+      "order": 1,
+      "family": "owned-humanoid",
+      "status": "integrated",
+      "route": "owned-humanoid",
+      "gates": {
+        "brief": "docs/goblin-spearhand-dungeon.md",
+        "model": "docs/goblin-spearhand-dungeon.md",
+        "motion": "docs/goblin-spearhand-dungeon.md",
+        "encounter": "docs/goblin-spearhand-dungeon.md",
+        "integration": "docs/goblin-spearhand-dungeon.md"
+      },
+      "approvedAsset": "GoblinSpearhand"
+    },
+    {
+      "id": "creature-air-elemental",
+      "name": "Air Elemental",
+      "order": 2,
+      "family": "procedural-effects",
+      "status": "integrated",
+      "route": "procedural-effects",
+      "gates": {
+        "brief": "docs/air-elemental-dungeon-pilot.md",
+        "model": "docs/air-elemental-dungeon-pilot.md",
+        "motion": "docs/air-elemental-dungeon-pilot.md",
+        "encounter": "docs/air-elemental-dungeon-pilot.md",
+        "integration": "docs/air-elemental-dungeon-pilot.md"
+      },
+      "approvedAsset": "AirElementalSculpted"
+    },
+    {
+      "id": "creature-wolf",
+      "name": "Wolf",
+      "order": 3,
+      "family": "existing-multiview-animal",
+      "status": "integrated",
+      "route": "existing-multiview-animal",
+      "gates": {
+        "brief": "docs/wolf-pilot.md",
+        "model": "docs/wolf-pilot.md",
+        "motion": "docs/wolf-pilot.md",
+        "encounter": "docs/wolf-pilot.md",
+        "integration": "docs/wolf-pilot.md"
+      },
+      "approvedAsset": "WolfPilot"
+    },
+    {
+      "id": "creature-goblin-scrapper",
+      "name": "Goblin Scrapper",
+      "order": 4,
+      "family": "humanoid-equipment",
+      "status": "active",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {
+        "brief": "docs/creature-production/goblin-scrapper.md"
+      }
+    },
+    {
+      "id": "creature-road-bandit",
+      "name": "Road Bandit",
+      "order": 5,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-shield-soldier",
+      "name": "Shield Soldier",
+      "order": 6,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-goblin-firestarter",
+      "name": "Goblin Firestarter",
+      "order": 7,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-grave-cultist",
+      "name": "Grave Cultist",
+      "order": 8,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-hedge-sorcerer",
+      "name": "Hedge Sorcerer",
+      "order": 9,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-orc-outrider",
+      "name": "Orc Outrider",
+      "order": 10,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-orc-shieldbreaker",
+      "name": "Orc Shieldbreaker",
+      "order": 11,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-hobgoblin-shieldguard",
+      "name": "Hobgoblin Shieldguard",
+      "order": 12,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-hobgoblin-marshal",
+      "name": "Hobgoblin Marshal",
+      "order": 13,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-masked-duelist",
+      "name": "Masked Duelist",
+      "order": 14,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-goblin-boss",
+      "name": "Goblin Boss",
+      "order": 15,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-orc-warcaller",
+      "name": "Orc Warcaller",
+      "order": 16,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-tomb-sage",
+      "name": "Lich — Tomb Sage",
+      "order": 17,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-bandit-bow",
+      "name": "Bandit Bow",
+      "order": 18,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-hobgoblin-longbow",
+      "name": "Hobgoblin Longbow",
+      "order": 19,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-goblin-rattlechanter",
+      "name": "Goblin Rattlechanter",
+      "order": 20,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-goblin-smoke-slinger",
+      "name": "Goblin Smoke Slinger",
+      "order": 21,
+      "family": "humanoid-equipment",
+      "status": "queued",
+      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "gates": {}
+    },
+    {
+      "id": "creature-bone-sentry",
+      "name": "Skeleton Sentry",
+      "order": 22,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-bone-archer",
+      "name": "Skeleton Archer",
+      "order": 23,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-skeleton-champion",
+      "name": "Skeleton Champion",
+      "order": 24,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-barrow-guard",
+      "name": "Barrow Guard",
+      "order": 25,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-wight",
+      "name": "Wight",
+      "order": 26,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-death-knight",
+      "name": "Death Knight",
+      "order": 27,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-plague-zombie",
+      "name": "Plague Zombie",
+      "order": 28,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-crypt-ghoul",
+      "name": "Crypt Ghoul",
+      "order": 29,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-ghast",
+      "name": "Ghast",
+      "order": 30,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-kobold-tunnel-scout",
+      "name": "Kobold Tunnel Scout",
+      "order": 31,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-kobold-trapkeeper",
+      "name": "Kobold Trapkeeper",
+      "order": 32,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-kobold-emberkeeper",
+      "name": "Kobold Emberkeeper",
+      "order": 33,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-wererat",
+      "name": "Wererat",
+      "order": 34,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-werewolf",
+      "name": "Werewolf",
+      "order": 35,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-werebear",
+      "name": "Werebear",
+      "order": 36,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-cinder-imp",
+      "name": "Cinder Imp",
+      "order": 37,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-horned-devil",
+      "name": "Horned Devil",
+      "order": 38,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-ash-demon",
+      "name": "Ash Demon",
+      "order": 39,
+      "family": "humanoid-specialized",
+      "status": "queued",
+      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "gates": {}
+    },
+    {
+      "id": "creature-dire-wolf",
+      "name": "Dire Wolf",
+      "order": 40,
+      "family": "animal",
+      "status": "queued",
+      "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
+      "gates": {}
+    },
+    {
+      "id": "creature-winter-wolf",
+      "name": "Winter Wolf",
+      "order": 41,
+      "family": "animal",
+      "status": "queued",
+      "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
+      "gates": {}
+    },
+    {
+      "id": "creature-hell-hound",
+      "name": "Hell Hound",
+      "order": 42,
+      "family": "animal",
+      "status": "queued",
+      "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
+      "gates": {}
+    },
+    {
+      "id": "creature-giant-rat",
+      "name": "Giant Rat",
+      "order": 43,
+      "family": "animal",
+      "status": "queued",
+      "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
+      "gates": {}
+    },
+    {
+      "id": "creature-cave-bat",
+      "name": "Cave Bat",
+      "order": 44,
+      "family": "animal",
+      "status": "queued",
+      "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
+      "gates": {}
+    },
+    {
+      "id": "creature-giant-spider",
+      "name": "Giant Spider",
+      "order": 45,
+      "family": "animal",
+      "status": "queued",
+      "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
+      "gates": {}
+    },
+    {
+      "id": "creature-animated-armor",
+      "name": "Animated Armor",
+      "order": 46,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-animated-statue",
+      "name": "Animated Statue",
+      "order": 47,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-clay-helper",
+      "name": "Clay Helper",
+      "order": 48,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-clockwork-scout",
+      "name": "Clockwork Scout",
+      "order": 49,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-glass-sentinel",
+      "name": "Glass Sentinel",
+      "order": 50,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-stone-knuckle",
+      "name": "Stone Knuckle",
+      "order": 51,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-icebound-warden",
+      "name": "Icebound Warden",
+      "order": 52,
+      "family": "construct",
+      "status": "queued",
+      "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
+      "gates": {}
+    },
+    {
+      "id": "creature-emberling",
+      "name": "Emberling",
+      "order": 53,
+      "family": "effects",
+      "status": "queued",
+      "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
+      "gates": {}
+    },
+    {
+      "id": "creature-cinder-strider",
+      "name": "Cinder Strider",
+      "order": 54,
+      "family": "effects",
+      "status": "queued",
+      "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
+      "gates": {}
+    },
+    {
+      "id": "creature-grave-wisp",
+      "name": "Grave Wisp",
+      "order": 55,
+      "family": "effects",
+      "status": "queued",
+      "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
+      "gates": {}
+    },
+    {
+      "id": "creature-shadow",
+      "name": "Shadow",
+      "order": 56,
+      "family": "effects",
+      "status": "queued",
+      "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
+      "gates": {}
+    },
+    {
+      "id": "creature-wraith",
+      "name": "Wraith",
+      "order": 57,
+      "family": "effects",
+      "status": "queued",
+      "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
+      "gates": {}
+    },
+    {
+      "id": "creature-mire-ooze",
+      "name": "Mire Ooze",
+      "order": 58,
+      "family": "effects",
+      "status": "queued",
+      "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
+      "gates": {}
+    }
+  ]
+}

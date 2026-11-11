@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "creatureId": "creature-goblin-spearhand",
+      "model": "GoblinSpearhand",
+      "path": "/assets/licensed/creatures/GoblinSpearhand.glb",
+      "sha256": "0774c4ca0b2c844e7160363ce2cbe620d89d158aaa987c7d11ada18197d1c099",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "report": "docs/goblin-spearhand-dungeon.md",
+      "distribution": "private-local-build"
+    },
+    {
+      "creatureId": "creature-air-elemental",
+      "model": "AirElementalSculpted",
+      "path": "/assets/licensed/creatures/AirElementalSculpted.glb",
+      "sha256": "2ad97340eb9d31e476b1b2f04864178c6c1e600d70514cb1be572a1d33cd2a9b",
+      "approvedOn": "2026-11-11",
+      "method": "procedural-effects",
+      "report": "docs/air-elemental-dungeon-pilot.md",
+      "distribution": "private-local-build"
+    },
+    {
+      "creatureId": "creature-wolf",
+      "model": "WolfPilot",
+      "path": "/assets/licensed/creatures/WolfPilot.glb",
+      "sha256": "b28b9b256a6147099bd3d8d7397194ef2a5f005114869f5f5651e140399e129f",
+      "approvedOn": "2026-11-11",
+      "method": "existing-multiview-animal",
+      "report": "docs/wolf-pilot.md",
+      "distribution": "private-local-build"
+    }
+  ]
+}

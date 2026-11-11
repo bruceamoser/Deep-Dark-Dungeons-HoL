@@ -1,3 +1,4 @@
+import { verifyBestiaryPreview } from "./bestiary-preview-check.mjs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -59,6 +60,8 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.setViewportSize({ width: 1600, height: 1000 });
   await waitForGame(page);
+  if (process.env.DDD_VERIFY_APPROVED_BESTIARY === "1")
+    await verifyBestiaryPreview(page);
   if (await page.locator("#modal .close").count())
     await page.locator("#modal .close").click();
   await page.locator(".town-destination[data-action=descend]").click();

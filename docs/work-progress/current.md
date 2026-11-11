@@ -2,7 +2,13 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Wolf pilot adapted and dungeon-tested
+### Latest — Three approved anchors; sequential humanoid-first production
+
+Bruce approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private GLBs are now pinned and enabled by default when installed; no Air/Wolf environment flag is required. [Production queue](../creature-production/README.md) covers **58 creatures: three integrated, 55 remaining**, with one active creature and ordered review gates. **Goblin Scrapper brief is complete; modeling is next.** Existing reference/body/rig reuse precedes new generation. Earlier unattended batch plans are superseded.
+
+Clean-index Linux AppImage and Debian builds pass; all 363 tests pass. Normal menu AppImage is updated and passed the full bestiary plus six-wolf/four-hero installed check; all three launcher encounter tests passed. Restart the game to load this local build. See [delivery report](../creature-production/2026-11-11-approved-anchors.md). The private assets are not part of Git. Preserve unrelated historical dirty generator files. No new generator/tool installation, public release or all-roster background job.
+
+### Previous — Wolf pilot adapted and dungeon-tested
 
 Bruce asked to continue the current workflow and called the Air Elemental fantastic; Hunyuan is deferred. The Wolf pilot reuses the existing private multiview/CuMesh body and fitted rig, with new slate/ivory vertex paint, fitted amber eyes, an actual opening jaw/teeth and revised five-state animation. No new generation, purchase or roster batch. **Six wolves plus four heroes passed the native dungeon check: 59.90 FPS, p95 16.8 ms, all five states, zero JS errors.** All 360 tests pass. Read [wolf report](../wolf-pilot.md) and [handoff](handoffs/2026-11-11-wolf-pilot.md).
 

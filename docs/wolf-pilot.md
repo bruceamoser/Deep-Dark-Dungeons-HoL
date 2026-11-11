@@ -1,5 +1,7 @@
 # Wolf pilot — November 11, 2026
 
+**Promotion update — November 11:** Bruce approved this model for the game. The exact reviewed export is now pinned in `config/approved-creature-assets.json` and enabled by default when installed; no pilot environment flag is needed. The historical qualification notes below remain the evidence and limitations. Current production follows [the sequential queue](creature-production/README.md).
+
 Bruce approved continuing the existing workflow after the Air Elemental test. No Hunyuan installation, paid generation or roster batch was started. This is a bounded wolf candidate for review, not a new installed release.
 
 ## Source and changes

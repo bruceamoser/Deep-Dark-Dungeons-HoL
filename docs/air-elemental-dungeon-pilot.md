@@ -1,5 +1,7 @@
 # Air Elemental native dungeon pilot — November 11, 2026
 
+**Promotion update — November 11:** Bruce approved this model for the game. The exact reviewed export is now pinned in `config/approved-creature-assets.json` and enabled by default when installed; no pilot environment flag is needed. The historical qualification notes below remain the evidence and limitations. Current production follows [the sequential queue](creature-production/README.md).
+
 Status: **opt-in integration and technical test passed; final art approval pending**. The installed menu AppImage remains the approved Goblin Spearhand build. No public release, Debian replacement or roster batch.
 
 ## Candidate and presentation

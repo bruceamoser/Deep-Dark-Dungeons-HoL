@@ -125,3 +125,9 @@ Bruce then asked to continue the existing workflow and called the Air Elemental 
 ## 2026-11-11 — Bounded Wolf reuse pilot
 
 Reuse the already generated multiview wolf mesh and fitted rig, preserving originals; no new image generation or whole-roster job. The Quaternius source is useful as a comparison, but too blocky for this target and lacks a hit clip. Candidate refinements include coat, fitted eyes and a real opening jaw. Its 118,007 triangles are qualified by an actual six-wolf/four-hero encounter, not by a fixed triangle-budget promise. Keep the candidate opt-in until visual review. Remaining foot/gait/mouth polish is explicit in the report; passing FPS and clip assertions is not final art approval.
+
+## 2026-11-11 — Promote all three anchors; humanoids first, sequential production
+
+Bruce explicitly approves the Goblin Spearhand, Air Elemental and Wolf results for the game. Promote the exact reviewed exports as defaults, update the local installed review build, and follow a tracked queue for all 55 remaining creatures. This supersedes prior pilot-only/no-roster-work constraints, while retaining one active creature at a time rather than the failed unattended generation batch. Humanoids go first to reuse fitted bodies, heads, held gear and authored clips; specialized grips/anatomy get their own reviews. No requirement to ask Bruce for routine per-creature permission within this approved direction.
+
+Use `docs/creature-production/README.md`, queue.json and the pinned approved asset manifest. Status/gates/evidence must travel through Git. Goblin Scrapper is first; its brief is complete, modeling remains next. Private assets stay outside Git; missing-input fallback must not be confused with a complete delivery build. No Hunyuan, Tripo spending or parallel creature workers authorized by this workflow change.
