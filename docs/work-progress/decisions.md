@@ -113,3 +113,11 @@ Bruce approved the owned-source Goblin Spearhand preview and requested six oppon
 ## 2026-11-11 — Existing reference sheets for Tripo
 
 Bruce selected Air Elemental then Wolf for the next tests, and wants a Tripo comparison using existing multiview sheets. Find and reuse the earlier references; do not regenerate them just because they are absent from the immediate chat. An unnecessary new Air Elemental image was generated before this correction, and is excluded from the supplied reference bundle. The original Air Elemental and later solid-body variant are separate designs, clearly labeled. Goblin Smoke Slinger uses the prior stylized equipped A-pose sheet. No Tripo spending or generation has occurred.
+
+## 2026-11-11 — Air pilot and local Hunyuan research
+
+Keep the Air Elemental candidate behind `FLD_AIR_PILOT=1` while reviewing its appearance. Native six-plus-four technical checks pass, but that does not authorize automatic roster promotion or a new installed release. Runtime object animation is appropriate for this wind creature; do not claim the static GLB contains a humanoid skeleton or embedded clips. Wolf remains the next planned pilot.
+
+Bruce reports Tripo's extra cost did not produce a worthwhile improvement and asks about local Hunyuan multiview. Research confirms technical feasibility on a 3090, but the current 2mv license explicitly restricts generated outputs in EU/UK/South Korea. No installation or generation occurred. Resolve that production-use issue before adopting it; judge any bounded experiment by total correction time through animation, not static generation speed. See [research](../hunyuan-local-feasibility.md).
+
+Bruce then asked to continue the existing workflow and called the Air Elemental fantastic. Defer Hunyuan; proceed to the already planned Wolf pilot using existing owned/free sources.

@@ -45,8 +45,8 @@ export function airElementalAppearance(asset) {
       rotation(
         band,
         duration,
-        (i === 1 ? -0.7 : 1) *
-          (mode === "walk" ? 1.25 : mode === "attack" ? 1.6 : 1),
+        (i === 1 ? -1 : 1) *
+          (mode === "walk" ? 2 : mode === "attack" ? 1.6 : 1),
         mode === "walk" ? 0.1 : 0,
       ),
     );

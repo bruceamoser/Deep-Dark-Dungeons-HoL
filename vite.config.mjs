@@ -2,6 +2,15 @@ import { existsSync } from "node:fs";
 import { defineConfig } from "vite";
 export default defineConfig({
   define: {
+    __AIR_ELEMENTAL_PILOT__: JSON.stringify(
+      process.env.FLD_AIR_PILOT === "1" &&
+        existsSync(
+          new URL(
+            "./public/assets/licensed/creatures/AirElementalSculpted.glb",
+            import.meta.url,
+          ),
+        ),
+    ),
     __GOBLIN_SPEARHAND_MODEL__: JSON.stringify(
       existsSync(
         new URL(

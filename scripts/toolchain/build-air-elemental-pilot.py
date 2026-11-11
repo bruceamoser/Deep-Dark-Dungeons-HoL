@@ -16,12 +16,12 @@ pearl=material('Pearl wind',(.78,.88,.94));white=material('Ivory curl tips',(.95
 parts=[]
 def sweep(name,points,width,depth,mat,parent):
  # Closed elliptical cross-sections taper to fine tips, following a transported frame.
- verts=[];faces=[];N=len(points);sides=10
+ verts=[];faces=[];N=len(points);sides=10;previous_normal=None
  for i,p in enumerate(points):
   tangent=Vector(points[min(i+1,N-1)])-Vector(points[max(i-1,0)]);tangent.normalize()
-  normal=tangent.cross(Vector((0,0,1)))
+  normal=(previous_normal-tangent*previous_normal.dot(tangent)) if previous_normal is not None else tangent.cross(Vector((0,0,1)))
   if normal.length<.01:normal=tangent.cross(Vector((0,1,0)))
-  normal.normalize();binormal=tangent.cross(normal).normalized()
+  normal.normalize();previous_normal=normal.copy();binormal=tangent.cross(normal).normalized()
   t=i/(N-1);taper=max(.015,math.sin(math.pi*t)**.55)
   for j in range(sides):
    a=2*math.pi*j/sides;v=Vector(p)+normal*(math.cos(a)*width*taper)+binormal*(math.sin(a)*depth*taper);verts.append(v)

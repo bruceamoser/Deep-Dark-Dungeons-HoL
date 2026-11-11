@@ -2,9 +2,15 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Air Elemental pilot and existing Tripo reference sheets
+### Latest — Air Elemental native test complete; Hunyuan feasibility reviewed
 
-Bruce selected **Air Elemental, then Wolf** as the next bounded tests. An original procedural wind pilot has been built privately; its first version failed author review as too coil-like. V2 rendered at 25,736 triangles/9 primitives with five adapter motion states, but is **not accepted, integrated, or dungeon-tested**. Scripts and unused `src/view/air-elemental.mjs` are WIP only; the installed Spearhand build remains unchanged. Wolf work remains pending.
+The opt-in Air Elemental v3 passed a real native dungeon encounter with six elementals and four heroes: **59.50 FPS average, p95 16.8 ms at 1600×1000**, five animation states, no JS errors. Transported sweep frames remove the earlier geometry flips; idle/walk loops now close. Dedicated pale pressure waves replace generic fire projectiles. This is a technical pilot, not final art acceptance: the shape still reads as sculpted ribbons. Normal checkout packaging was restored without `FLD_AIR_PILOT`; the installed Spearhand AppImage was not replaced. All 360 tests pass. See [test report](../air-elemental-dungeon-pilot.md) and [handoff](handoffs/2026-11-11-air-elemental-dungeon-test.md).
+
+Bruce likes the first Air Elemental and reports Tripo adds cost without improvement. He asks whether local Hunyuan multiview could shorten base mesh work. Primary-source review confirms Hunyuan3D-2mv fits the hardware and accepts four separate views, but its current license explicitly restricts outputs in EU/UK/South Korea. No installation or generation performed. See [feasibility and license findings](../hunyuan-local-feasibility.md). Wolf remains next after this bounded Air review; no roster batch restart.
+
+### Previous — Air Elemental pilot and existing Tripo reference sheets
+
+Bruce selected **Air Elemental, then Wolf** as the next bounded tests. An original procedural wind pilot has been built privately; its first version failed author review as too coil-like. V2 rendered at 25,736 triangles/9 primitives with five adapter motion states; it was then an unintegrated WIP. The latest v3 native result above supersedes that technical status; final art acceptance remains open. The installed Spearhand build remains unchanged. Wolf work remains pending.
 
 Bruce also wants to try Tripo and requested the **existing** Air Elemental and Goblin Smoke Slinger multiview sheets. The agent initially regenerated an unnecessary Air Elemental sheet; Bruce corrected this. **Retrieve existing references before creating new ones.** Located the prior meeple sheets, inspected them, and copied 15 existing PNGs byte-for-byte (three sheets plus separate front/back/left/right images) into `~/Downloads/Tripo-Reference-Sheets`, with a ZIP and source/hash manifest; project copy under ignored `test-results/tripo-reference-sheets`. Includes original Air Elemental, its later solid-body variant, and stylized equipped Slinger. No new Slinger image, Tripo account setup, upload, generation, purchase or installation performed. See [handoff](handoffs/2026-11-11-air-pilot-tripo-references.md). Next: use these existing inputs for the Tripo comparison, qualify the Air Elemental candidate, then Wolf. No batch restart.
 

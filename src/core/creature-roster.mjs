@@ -1,3 +1,5 @@
+const airPilot =
+  typeof __AIR_ELEMENTAL_PILOT__ !== "undefined" && __AIR_ELEMENTAL_PILOT__;
 const spearhandModel =
   typeof __GOBLIN_SPEARHAND_MODEL__ === "undefined"
     ? null
@@ -65,7 +67,13 @@ const rows = [
   ["glass-sentinel", "FrostGolem", "constructs", 3, "spell"],
   ["stone-knuckle", "StoneKnuckle", "constructs", 2, "slam"],
   ["icebound-warden", "FrostGolem", "rime", 4, "slam"],
-  ["air-elemental", "AirVortex", "elementals", 4, "spell"],
+  [
+    "air-elemental",
+    airPilot ? "AirElementalSculpted" : "AirVortex",
+    "elementals",
+    4,
+    "spell",
+  ],
   ["emberling", "Emberling", "infernal", 1, "slam"],
   ["cinder-strider", "CinderStrider", "infernal", 3, "claw"],
   ["cinder-imp", "Demon", "infernal", 1, "claw"],
@@ -83,6 +91,12 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  ...(airPilot
+    ? {
+        AirElementalSculpted:
+          "/assets/licensed/creatures/AirElementalSculpted.glb",
+      }
+    : {}),
   ...(spearhandModel ? { GoblinSpearhand: spearhandModel } : {}),
   HobgoblinShieldguard: "/assets/creatures/wave-05/HobgoblinShieldguard.glb",
   Ghast: "/assets/creatures/wave-05/Ghast.glb",
