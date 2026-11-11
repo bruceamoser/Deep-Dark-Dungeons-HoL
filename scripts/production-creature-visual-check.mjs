@@ -112,8 +112,8 @@ try {
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
   let projectileReview;
   const projectileKind = entry.runtime?.attack?.kind;
-  if (["bottle", "arrow"].includes(projectileKind)) {
-    const frameFolder = projectileKind === "bottle" ? "throw-frames" : "shot-frames";
+  if (["bottle", "arrow", "sonic"].includes(projectileKind)) {
+    const frameFolder = projectileKind === "bottle" ? "throw-frames" : projectileKind === "sonic" ? "resonance-frames" : "shot-frames";
     await fs.mkdir(path.join(output, frameFolder), { recursive: true });
     await page.evaluate((kind) => {
       const s = window.__ddd.scene;
@@ -129,7 +129,7 @@ try {
         fx: s.attackEffect({
           attacker: actor.data.id,
           target: target.data.id,
-          spell: kind === "bottle",
+          spell: kind !== "arrow",
           ranged: kind === "arrow",
           element: kind === "bottle" ? "fire" : undefined,
           damage: 0,
@@ -162,7 +162,7 @@ try {
           return {
             time: fx.age,
             kind: fx.kind,
-            held: flask ? flask.visible : arrow.scale.x > .5,
+            held: flask ? flask.visible : arrow ? arrow.scale.x > .5 : undefined,
             nockGap: nock && hand ? nock.getWorldPosition(nock.position.clone()).distanceTo(hand.getWorldPosition(hand.position.clone())) : undefined,
             projectile: fx.projectile.visible,
             meshes: fx.projectile.children.length,
@@ -180,10 +180,10 @@ try {
     }
     const flying = samples.find((s) => s.time > 0.5 && s.time < 0.6);
     expect(flying.kind).toBe(projectileKind);
-    expect(flying.held).toBe(false);
+    if (projectileKind !== "sonic") expect(flying.held).toBe(false);
     expect(flying.meshes).toBeGreaterThan(0);
     expect(flying.projectile).toBe(true);
-    expect(samples.at(-1).held).toBe(true);
+    if (projectileKind !== "sonic") expect(samples.at(-1).held).toBe(true);
     expect(samples.every((s) => s.position.every(Number.isFinite))).toBe(true);
     if (projectileKind === "arrow")
       expect(samples.filter(s => s.time >= .3 && s.time <= .4).every(s => s.nockGap < .06)).toBe(true);

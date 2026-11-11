@@ -111,6 +111,7 @@ test("authored thunder and grave spells keep their palette in flight and at impa
   for (const [kind, color] of [
     ["lightning", 0x9b88ff],
     ["shadow", 0x9cae88],
+    ["sonic", 0xe2c77e],
   ]) {
     const from = { data: {}, group: new T.Group(), model: new T.Group() },
       to = { data: {}, group: new T.Group(), model: new T.Group() };
@@ -128,6 +129,11 @@ test("authored thunder and grave spells keep their palette in flight and at impa
     };
     const effect = createAttackEffect(host, { attacker: "from", target: "to", spell: true });
     assert.ok(effect.projectile);
+    if (kind === "sonic") {
+      assert.equal(effect.projectile.name, "Traveling resonance rings");
+      assert.equal(effect.projectile.children.length, 3);
+      assert.ok(effect.projectile.children.every(o => o.geometry.type === "TorusGeometry"));
+    }
     effect.projectile.traverse((o) => {
       if (o.isMesh) assert.equal(o.material.color.getHex(), color);
     });

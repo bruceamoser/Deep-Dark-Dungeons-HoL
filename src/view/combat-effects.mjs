@@ -2,6 +2,7 @@ import * as T from "three";
 
 const UP = new T.Vector3(0, 1, 0);
 const MAGIC_LOOKS = {
+  sonic: { name: "Traveling resonance rings", color: 0xe2c77e },
   cold: { name: "Flying ice lance", color: 0x91dfff },
   life: { name: "Living light ribbons", color: 0x82e8ba },
   lightning: { name: "Flying thunder lance", color: 0x9b88ff },
@@ -353,13 +354,14 @@ export function createAttackEffect(host, data, callbacks = {}) {
   } else if (spec.kind === "bottle") {
     projectile = bottleFlight;
     projectile.name = "Thrown fuel flask";
-  } else if (spec.kind === "wind") {
+  } else if (spec.kind === "wind" || spec.kind === "sonic") {
+    const sonic = spec.kind === "sonic";
     projectile = new T.Group();
-    projectile.name = "Flying pressure wave";
+    projectile.name = sonic ? "Traveling resonance rings" : "Flying pressure wave";
     for (let i = 0; i < 3; i++) {
       const ring = owned.mesh(
-        new T.TorusGeometry(0.25 + i * 0.1, 0.024, 5, 24, Math.PI * 1.65),
-        glow(0xc8ecff, 0.65),
+        new T.TorusGeometry(0.25 + i * 0.1, 0.024, 5, 24, Math.PI * (sonic ? 2 : 1.65)),
+        glow(sonic ? MAGIC_LOOKS.sonic.color : 0xc8ecff, 0.65),
       );
       ring.rotation.x = Math.PI / 2;
       ring.rotation.z = i * 1.1;

@@ -1,0 +1,209 @@
+{
+  "id": "goblin-rattlechanter",
+  "body": "Body05",
+  "parts": [
+    [
+      "HeadParts",
+      "Hair12",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack01_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die02_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#48362a",
+    "2": "#733c2d",
+    "3": "#9c5036",
+    "4": "#b49a60",
+    "5": "#563c2b",
+    "6": "#8e4430",
+    "7": "#563c2b",
+    "8": "#9b9e91",
+    "9": "#739444"
+  },
+  "partPalette": {},
+  "solid": {
+    "Hair12": "#713c27"
+  },
+  "headFixture": {
+    "path": "~/.local/share/four-lanterns-modular-pilot/2026-11-11/goblin-spearhand/goblin-spearhand.blend",
+    "object": "Goblin head"
+  },
+  "externalParts": [
+    {
+      "name": "Rattle mallet",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/mallet.gltf",
+      "bone": "weapon_r",
+      "scale": 0.42,
+      "landmarks": {
+        "tip": [
+          0.321,
+          0,
+          0.59
+        ],
+        "center": [
+          0,
+          0,
+          0.59
+        ]
+      }
+    },
+    {
+      "name": "Rattle hand pan",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Restaurant Bits 1.0/Assets/gltf/pan_A.gltf",
+      "bone": "weapon_l",
+      "scale": 0.34,
+      "rotateX": 90,
+      "origin": [
+        0,
+        -0.8,
+        0.13
+      ],
+      "landmarks": {
+        "strike": [
+          0,
+          0,
+          0.06
+        ]
+      }
+    },
+    {
+      "name": "Rattle chest bell 1",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Holiday Bits 1.0/Assets/gltf/bell.gltf",
+      "bone": "spine_03",
+      "scale": 0.16,
+      "origin": [
+        0,
+        0,
+        0.5
+      ],
+      "offset": [
+        -0.17,
+        -0.18,
+        -0.08
+      ]
+    },
+    {
+      "name": "Rattle chest bell 2",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Holiday Bits 1.0/Assets/gltf/bell.gltf",
+      "bone": "spine_03",
+      "scale": 0.16,
+      "origin": [
+        0,
+        0,
+        0.5
+      ],
+      "offset": [
+        0,
+        -0.18,
+        -0.16
+      ]
+    },
+    {
+      "name": "Rattle chest bell 3",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Holiday Bits 1.0/Assets/gltf/bell.gltf",
+      "bone": "spine_03",
+      "scale": 0.16,
+      "origin": [
+        0,
+        0,
+        0.5
+      ],
+      "offset": [
+        0.17,
+        -0.18,
+        -0.08
+      ]
+    },
+    {
+      "name": "Rattle belt pan 1",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Restaurant Bits 1.0/Assets/gltf/pan_B.gltf",
+      "bone": "pelvis",
+      "scale": 0.22,
+      "rotateX": -90,
+      "origin": [
+        0,
+        -0.8,
+        0.13
+      ],
+      "offset": [
+        -0.24,
+        -0.15,
+        0.08
+      ]
+    },
+    {
+      "name": "Rattle belt pan 2",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Restaurant Bits 1.0/Assets/gltf/pan_B.gltf",
+      "bone": "pelvis",
+      "scale": 0.22,
+      "rotateX": -90,
+      "origin": [
+        0,
+        -0.8,
+        0.13
+      ],
+      "offset": [
+        0.24,
+        -0.15,
+        0.08
+      ]
+    }
+  ],
+  "fitUpright": [
+    {
+      "part": "Rattle mallet",
+      "bone": "weapon_r",
+      "frame": 6
+    }
+  ],
+  "fitShield": {
+    "part": "Rattle hand pan",
+    "bone": "weapon_l",
+    "frame": 6,
+    "front": [
+      0,
+      -1,
+      0
+    ]
+  },
+  "partFit": {
+    "Hair12": {
+      "scale": [
+        1.12,
+        1.08,
+        1.0
+      ],
+      "offset": [
+        0,
+        0.02,
+        0.01
+      ]
+    }
+  },
+  "propStrike": {
+    "clip": "Spellcast_Shoot",
+    "referenceFrame": 6,
+    "leftSocket": [
+      0.1,
+      -0.12,
+      0.43
+    ],
+    "mallet": "Rattle mallet",
+    "pan": "Rattle hand pan",
+    "contactFrame": 14,
+    "frames": 31
+  },
+  "groundContactClips": [
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.16,
+      "margin": 0.002
+    }
+  ]
+}
