@@ -3,19 +3,19 @@ Usage: blender -b --python-exit-code 1 --python THIS -- scene.blend report.json
 Tiny source sole/cloth contact is allowed up to 0.03 world units; deeper
 penetration fails. This supplements visual review, not body/prop collision QA.
 """
-import bpy,sys,json
+import bpy,sys,json,math
 from pathlib import Path
 scene,report_path=sys.argv[sys.argv.index('--')+1:]
 bpy.ops.wm.open_mainfile(filepath=str(Path(scene)))
 rigs=[o for o in bpy.context.scene.objects if o.type=='ARMATURE']
 report={}
 for clip in [t.name for t in rigs[0].animation_data.nla_tracks]:
- end=0
+ start=999999;end=0
  for r in rigs:
   for t in r.animation_data.nla_tracks:t.mute=True
-  t=next(t for t in r.animation_data.nla_tracks if t.name==clip);r.animation_data.action=t.strips[0].action;r.animation_data.action_slot=r.animation_data.action.slots[0];end=max(end,int(t.strips[0].action_frame_end))
+  t=next(t for t in r.animation_data.nla_tracks if t.name==clip);r.animation_data.action=t.strips[0].action;r.animation_data.action_slot=r.animation_data.action.slots[0];start=min(start,math.floor(t.strips[0].action_frame_start));end=max(end,math.ceil(t.strips[0].action_frame_end))
  vals={}
- for f in range(1,end+1):
+ for f in range(start,end+1):
   bpy.context.scene.frame_set(f);bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get()
   for o in bpy.context.scene.objects:
    if o.type!='MESH':continue

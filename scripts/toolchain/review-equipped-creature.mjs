@@ -3,7 +3,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { chromium } from "@playwright/test";
-const [input, out] = process.argv.slice(2);
+const [input, out, scaleArg = "1", mode = "full"] = process.argv.slice(2);
+if (!["full", "stills"].includes(mode))
+  throw Error("Expected full or stills review mode");
+const reviewScale = Number(scaleArg);
+if (!Number.isFinite(reviewScale) || reviewScale <= 0)
+  throw Error("Invalid review scale");
 if (!input || !out)
   throw Error("Usage: review-equipped-creature.mjs PRIVATE.glb PRIVATE_OUTPUT");
 await fs.mkdir(out, { recursive: true });
@@ -28,13 +33,14 @@ try {
   await page.goto(
     (process.env.AUDIT_URL ?? "http://127.0.0.1:5197") + "/__goblin_preview",
   );
-  const info = await page.evaluate(async () => {
+  const info = await page.evaluate(async (scale) => {
     const src = await (await fetch("/src/view/appearance.mjs")).text();
     const T = await import(src.match(/import \* as T from "([^"]+)"/)[1]);
     const { GLTFLoader } =
       await import("/node_modules/three/examples/jsm/loaders/GLTFLoader.js");
     const a = await new GLTFLoader().loadAsync("/__goblin.glb");
     const model = a.scene;
+    model.scale.multiplyScalar(scale);
     const scene = new T.Scene();
     scene.background = new T.Color("#202b2b");
     scene.add(model, new T.HemisphereLight(0xf2f0e6, 0x545b50, 2.0));
@@ -83,7 +89,7 @@ try {
       action.clampWhenFinished = true;
       action.play();
       mixer.setTime(Math.min(seconds, clip.duration));
-      const zoom = close ? 0.69 : 1.45;
+      const zoom = view === "wide" ? 2.2 : close ? 0.69 : 1.45;
       camera.left = -zoom;
       camera.right = zoom;
       camera.top = zoom;
@@ -92,6 +98,7 @@ try {
       const positions = {
         front: [0, 1.9, 6],
         quarter: [3, 2.8, 6],
+        wide: [3, 2.8, 6],
         side: [6, 2, 0],
         back: [0, 1.9, -6],
       };
@@ -105,8 +112,9 @@ try {
     return {
       clips: a.animations.map((c) => ({ name: c.name, duration: c.duration })),
       helmetGroups: helmet.length,
+      reviewScale: scale,
     };
-  });
+  }, reviewScale);
 
   for (const [name, view, bare, close] of [
     ["equipped", "quarter", false, false],
@@ -122,71 +130,99 @@ try {
     );
     await page.screenshot({ path: path.join(out, name + ".png") });
   }
-  const frames = path.join(out, "frames");
-  await fs.rm(frames, { recursive: true, force: true });
-  await fs.mkdir(frames, { recursive: true });
-  let idx = 0;
-  const segments = [];
-  for (const [label, name, repeats, hold] of [
-    ["Idle", "Idle", 3, 0],
-    ["Walk", "Walking_A", 3, 0],
-    ["Weapon attack", "1H_Melee_Attack_Slice_Diagonal", 3, 0],
-    ...(info.clips.some((c) => c.name === "2H_Ranged_Shoot")
-      ? [["Bow draw/release", "2H_Ranged_Shoot", 3, 0]]
-      : []),
-    ...(info.clips.some((c) => c.name === "Unarmed_Melee_Attack_Punch_A")
-      ? [["Melee backup", "Unarmed_Melee_Attack_Punch_A", 2, 0]]
-      : []),
-    ...(info.clips.some((c) => c.name === "Spellcast_Shoot")
-      ? [["Spell cast", "Spellcast_Shoot", 2, 0]]
-      : []),
-    ["Hit reaction", "Hit_A", 2, 0],
-    ["Death", "Death_A_Pose", 1, 1],
-  ]) {
-    const clip = info.clips.find((c) => c.name === name);
-    const count = Math.ceil(clip.duration * 30);
-    const start = idx;
-    for (let repeat = 0; repeat < repeats; repeat++)
-      for (let i = 0; i < count; i++) {
+  await page.evaluate(() => {
+    const clip = window.preview.clips.find((c) => c.name === "Death_A_Pose");
+    window.preview.frame(clip.name, clip.duration, "wide");
+  });
+  await page.screenshot({ path: path.join(out, "death-end-wide.png") });
+  if (mode === "full") {
+    const frames = path.join(out, "frames");
+    await fs.rm(frames, { recursive: true, force: true });
+    await fs.mkdir(frames, { recursive: true });
+    let idx = 0;
+    const segments = [];
+    for (const [label, name, repeats, hold] of [
+      ["Idle", "Idle", 3, 0],
+      ["Walk", "Walking_A", 3, 0],
+      ["Weapon attack", "1H_Melee_Attack_Slice_Diagonal", 3, 0],
+      ...(info.clips.some((c) => c.name === "2H_Ranged_Shoot")
+        ? [["Ranged release", "2H_Ranged_Shoot", 3, 0]]
+        : []),
+      ...(info.clips.some((c) => c.name === "Unarmed_Melee_Attack_Punch_A")
+        ? [["Melee backup", "Unarmed_Melee_Attack_Punch_A", 2, 0]]
+        : []),
+      ...(info.clips.some((c) => c.name === "Spellcast_Shoot")
+        ? [["Spell cast", "Spellcast_Shoot", 2, 0]]
+        : []),
+      ["Hit reaction", "Hit_A", 2, 0],
+      ["Death", "Death_A_Pose", 1, 1],
+    ]) {
+      const clip = info.clips.find((c) => c.name === name);
+      const count = Math.ceil(clip.duration * 30);
+      const start = idx;
+      for (let repeat = 0; repeat < repeats; repeat++)
+        for (let i = 0; i < count; i++) {
+          await page.evaluate((v) => window.preview.frame(v.name, v.t), {
+            name,
+            t: i / 30,
+          });
+          await page.screenshot({
+            path: path.join(frames, String(idx++).padStart(4, "0") + ".png"),
+          });
+        }
+      for (let i = 0; i < hold * 30; i++) {
         await page.evaluate((v) => window.preview.frame(v.name, v.t), {
           name,
-          t: i / 30,
+          t: clip.duration,
         });
         await page.screenshot({
           path: path.join(frames, String(idx++).padStart(4, "0") + ".png"),
         });
       }
-    for (let i = 0; i < hold * 30; i++) {
-      await page.evaluate((v) => window.preview.frame(v.name, v.t), {
-        name,
-        t: clip.duration,
-      });
-      await page.screenshot({
-        path: path.join(frames, String(idx++).padStart(4, "0") + ".png"),
+      segments.push({
+        label,
+        clip: name,
+        startFrame: start,
+        endFrame: idx - 1,
       });
     }
-    segments.push({ label, clip: name, startFrame: start, endFrame: idx - 1 });
+    if (errors.length) throw Error(errors.join("\n"));
+    await fs.writeFile(
+      path.join(out, "capture.json"),
+      JSON.stringify(
+        {
+          input,
+          sha256: createHash("sha256").update(bytes).digest("hex"),
+          ...info,
+          frames: idx,
+          fps: 30,
+          segments,
+          errors,
+          scope:
+            "Private preview at source animation speed; no gameplay performance claim",
+        },
+        null,
+        2,
+      ),
+    );
+    console.log(JSON.stringify({ frames: idx, segments, errors }));
+  } else {
+    if (errors.length) throw Error(errors.join("\n"));
+    await fs.writeFile(
+      path.join(out, "capture-stills.json"),
+      JSON.stringify(
+        {
+          input,
+          sha256: createHash("sha256").update(bytes).digest("hex"),
+          ...info,
+          errors,
+          scope: "Still review only; no motion acceptance",
+        },
+        null,
+        2,
+      ),
+    );
   }
-  if (errors.length) throw Error(errors.join("\n"));
-  await fs.writeFile(
-    path.join(out, "capture.json"),
-    JSON.stringify(
-      {
-        input,
-        sha256: createHash("sha256").update(bytes).digest("hex"),
-        ...info,
-        frames: idx,
-        fps: 30,
-        segments,
-        errors,
-        scope:
-          "Private preview at source animation speed; no gameplay performance claim",
-      },
-      null,
-      2,
-    ),
-  );
-  console.log(JSON.stringify({ frames: idx, segments, errors }));
 } finally {
   await browser.close();
 }
