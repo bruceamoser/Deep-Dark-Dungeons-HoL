@@ -2,6 +2,10 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
+### Latest — Goblin Spearhand preview for Bruce
+
+Built a clean authored goblin head and removable saucepan on the accepted source body/rig/thrust; moss-green skin, rust tunic and brown leather. Reviewed bare/equipped front/side/back, five animation states and 254 silent motion frames. Final GLB: 29,454 triangles, 14 draw calls, one 512×512 texture. Exact source body/spear/rig/keyframe preservation and GLB structural roundtrip pass. [Preview report](../goblin-spearhand-owned-pilot.md) records limitations and reproduction; [handoff](handoffs/2026-11-11-goblin-spearhand-preview.md) records private artifacts. **Not integrated into the dungeon**, as requested. Next is Bruce's visual review, then dungeon qualification if continuing with this candidate. No batch restart or release.
+
 Bruce is reassessing the generation workflow and wants to reuse KayKit/Dungeon Mason before spending more. No creature batch is running. See [verified inventory and pilot review](../owned-assets-pilot.md); the historical production notes below are not a directive to restart the batch.
 
 On bmoser, KayKit v8 is extracted (24 packs, 132 editable Blender sources). Unity Hub 3.22.6 and Editor 6000.3.28f1 are installed/licensed. Bruce imported the full Dungeon Mason package into `~/Setup Guide In-Editor Tutorial`; all 1,024 files match the archive. Private source copies are under the workshop. The package has 598 animation FBXs (including variants); existing runtime export already covers the head parts and handheld weapon designs. URP/HDRP ZIPs add no models. Unity and Hub can be closed during Blender/Three.js work.
