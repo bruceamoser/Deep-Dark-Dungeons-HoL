@@ -185,6 +185,8 @@ export function attackPresentation(from, data) {
   const melee = items.find(
     (i) => i.carried && i.held && i.catalogId === "item-ordinary-melee-weapon",
   );
+  if (from.model.userData.wolfPilot)
+    return { kind: "unarmed", clip: "Bite_Front", contact: 13 / 24 };
   if (from.model.userData.airElemental)
     return {
       kind: "wind",

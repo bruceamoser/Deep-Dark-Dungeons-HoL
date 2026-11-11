@@ -2,7 +2,13 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Air Elemental native test complete; Hunyuan feasibility reviewed
+### Latest — Wolf pilot adapted and dungeon-tested
+
+Bruce asked to continue the current workflow and called the Air Elemental fantastic; Hunyuan is deferred. The Wolf pilot reuses the existing private multiview/CuMesh body and fitted rig, with new slate/ivory vertex paint, fitted amber eyes, an actual opening jaw/teeth and revised five-state animation. No new generation, purchase or roster batch. **Six wolves plus four heroes passed the native dungeon check: 59.90 FPS, p95 16.8 ms, all five states, zero JS errors.** All 360 tests pass. Read [wolf report](../wolf-pilot.md) and [handoff](handoffs/2026-11-11-wolf-pilot.md).
+
+Wolf remains a review candidate: coarse fur ridges, gait/ground contact and mouth corners need player review. Source and media are private; Git carries the builder/adapter/test. It is opt-in through `FLD_WOLF_PILOT=1`; the installed Spearhand AppImage is unchanged. Normal checkout packaging is restored after the test. Next: Bruce reviews the silent comparison/dungeon captures, then decide whether to promote/refine these pilots. Do not restart a batch or replace unrelated creatures.
+
+### Previous — Air Elemental native test complete; Hunyuan feasibility reviewed
 
 The opt-in Air Elemental v3 passed a real native dungeon encounter with six elementals and four heroes: **59.50 FPS average, p95 16.8 ms at 1600×1000**, five animation states, no JS errors. Transported sweep frames remove the earlier geometry flips; idle/walk loops now close. Dedicated pale pressure waves replace generic fire projectiles. This is a technical pilot, not final art acceptance: the shape still reads as sculpted ribbons. Normal checkout packaging was restored without `FLD_AIR_PILOT`; the installed Spearhand AppImage was not replaced. All 360 tests pass. See [test report](../air-elemental-dungeon-pilot.md) and [handoff](handoffs/2026-11-11-air-elemental-dungeon-test.md).
 

@@ -121,3 +121,7 @@ Keep the Air Elemental candidate behind `FLD_AIR_PILOT=1` while reviewing its ap
 Bruce reports Tripo's extra cost did not produce a worthwhile improvement and asks about local Hunyuan multiview. Research confirms technical feasibility on a 3090, but the current 2mv license explicitly restricts generated outputs in EU/UK/South Korea. No installation or generation occurred. Resolve that production-use issue before adopting it; judge any bounded experiment by total correction time through animation, not static generation speed. See [research](../hunyuan-local-feasibility.md).
 
 Bruce then asked to continue the existing workflow and called the Air Elemental fantastic. Defer Hunyuan; proceed to the already planned Wolf pilot using existing owned/free sources.
+
+## 2026-11-11 — Bounded Wolf reuse pilot
+
+Reuse the already generated multiview wolf mesh and fitted rig, preserving originals; no new image generation or whole-roster job. The Quaternius source is useful as a comparison, but too blocky for this target and lacks a hit clip. Candidate refinements include coat, fitted eyes and a real opening jaw. Its 118,007 triangles are qualified by an actual six-wolf/four-hero encounter, not by a fixed triangle-budget promise. Keep the candidate opt-in until visual review. Remaining foot/gait/mouth polish is explicit in the report; passing FPS and clip assertions is not final art approval.

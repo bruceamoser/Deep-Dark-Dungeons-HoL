@@ -1,3 +1,4 @@
+import { wolfPilotAppearance } from "./wolf-pilot.mjs";
 import { airElementalAppearance } from "./air-elemental.mjs";
 import { goblinSpearhandAppearance } from "./goblin-spearhand.mjs";
 import { colorGoblinFace } from "./goblin-face.mjs";
@@ -15,6 +16,8 @@ import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { gameClips } from "./animation-library.mjs";
 const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 export function equipmentAppearance(assets, hero, enemy = false) {
+  if (enemy && hero.type === "creature-wolf" && assets.has("WolfPilot"))
+    return wolfPilotAppearance(assets.get("WolfPilot"));
   if (
     enemy &&
     hero.type === "creature-air-elemental" &&

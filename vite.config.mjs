@@ -2,6 +2,15 @@ import { existsSync } from "node:fs";
 import { defineConfig } from "vite";
 export default defineConfig({
   define: {
+    __WOLF_PILOT__: JSON.stringify(
+      process.env.FLD_WOLF_PILOT === "1" &&
+        existsSync(
+          new URL(
+            "./public/assets/licensed/creatures/WolfPilot.glb",
+            import.meta.url,
+          ),
+        ),
+    ),
     __AIR_ELEMENTAL_PILOT__: JSON.stringify(
       process.env.FLD_AIR_PILOT === "1" &&
         existsSync(

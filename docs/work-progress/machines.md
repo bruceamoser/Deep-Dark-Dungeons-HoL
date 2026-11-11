@@ -98,3 +98,7 @@ Native evidence, screenshots and silent MP4: ignored `test-results/goblin-spearh
 ## bmoser Air Elemental native pilot — November 11
 
 Private v3 model and editable source: `~/.local/share/four-lanterns-modular-pilot/2026-11-11/air-elemental/v3/`. Runtime staging: ignored `public/assets/licensed/creatures/AirElementalSculpted.glb`. Enable only through `FLD_AIR_PILOT=1 npm run package:dir`. The native test service `fld-air-dungeon-framed-check` completed; checkout packaging was then restored without the flag. Installed menu AppImage remains the Spearhand build. Silent motion and metrics are under ignored `test-results/air-elemental-dungeon`; these assets/evidence do not travel with Git. No Hunyuan installation, weight download or generation occurred.
+
+## bmoser Wolf pilot — November 11
+
+Private candidate `~/.local/share/four-lanterns-modular-pilot/2026-11-11/wolf/v2/wolf-pilot.glb`, editable sibling `.blend`, roundtrip report and `review-v2/wolf-comparison.mp4`. Original source is the earlier `meeple-roster-2026-11-11/wolf/animated-candidate.blend`; preserve it. Ignored staging `public/assets/licensed/creatures/WolfPilot.glb`, opt-in with `FLD_WOLF_PILOT=1`; native test service `fld-wolf-pilot-ui-check` passed and exited. Evidence under `test-results/wolf-pilot-dungeon`. Installed AppImage unchanged; restore normal checkout packaging without the flag. No new tools/weights/accounts.

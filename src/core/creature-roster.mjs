@@ -1,3 +1,4 @@
+const wolfPilot = typeof __WOLF_PILOT__ !== "undefined" && __WOLF_PILOT__;
 const airPilot =
   typeof __AIR_ELEMENTAL_PILOT__ !== "undefined" && __AIR_ELEMENTAL_PILOT__;
 const spearhandModel =
@@ -49,7 +50,7 @@ const rows = [
   ["cave-bat", "CaveBat", "vermin", 1, "bite"],
   ["giant-rat", "Rat", "vermin", 1, "bite"],
   ["giant-spider", "Spider", "vermin", 2, "bite"],
-  ["wolf", "Wolf", "beasts", 1, "bite"],
+  ["wolf", wolfPilot ? "WolfPilot" : "Wolf", "beasts", 1, "bite"],
   ["dire-wolf", "Wolf", "beasts", 4, "bite"],
   ["hell-hound", "Wolf", "infernal", 5, "bite"],
   ["winter-wolf", "Wolf", "rime", 9, "spell"],
@@ -91,6 +92,9 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  ...(wolfPilot
+    ? { WolfPilot: "/assets/licensed/creatures/WolfPilot.glb" }
+    : {}),
   ...(airPilot
     ? {
         AirElementalSculpted:
