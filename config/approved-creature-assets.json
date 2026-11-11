@@ -228,6 +228,23 @@
           "contact": 0.26666666666666666
         }
       }
+    },
+    {
+      "creatureId": "creature-hobgoblin-marshal",
+      "model": "HobgoblinMarshal",
+      "path": "/assets/licensed/creatures/HobgoblinMarshal.glb",
+      "sha256": "b75523fabe6331ac329962bbd3d5379d67eee65cb7d63de0056d0f775a46d3f7",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/hobgoblin-marshal.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.08,
+        "height": 1.5,
+        "weapon": "melee"
+      }
     }
   ]
 }

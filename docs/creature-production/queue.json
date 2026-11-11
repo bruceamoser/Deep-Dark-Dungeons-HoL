@@ -212,9 +212,16 @@
       "name": "Hobgoblin Marshal",
       "order": 13,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hobgoblin-marshal.md",
+        "model": "docs/creature-production/hobgoblin-marshal.md",
+        "motion": "docs/creature-production/hobgoblin-marshal.md",
+        "game-view": "docs/creature-production/hobgoblin-marshal.md",
+        "integration": "docs/creature-production/hobgoblin-marshal.md"
+      },
+      "approvedAsset": "HobgoblinMarshal"
     },
     {
       "id": "creature-masked-duelist",

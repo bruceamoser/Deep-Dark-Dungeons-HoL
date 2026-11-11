@@ -1,0 +1,171 @@
+{
+  "id": "hobgoblin-marshal",
+  "body": "Body18",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "AC04_ShortEars",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hat02",
+      "head"
+    ],
+    [
+      "Weapons",
+      "OHS08_Sword",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack01_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#313b30",
+    "2": "#3d5037",
+    "3": "#3d5037",
+    "4": "#ad915b",
+    "5": "#5c6259",
+    "6": "#3d5037",
+    "7": "#59432f",
+    "8": "#8f9991",
+    "9": "#a86548"
+  },
+  "partPalette": {
+    "Hat02": {
+      "1": "#596459",
+      "2": "#596459",
+      "3": "#637b80",
+      "4": "#a99768",
+      "5": "#596459",
+      "7": "#526467",
+      "8": "#8e9fa3"
+    },
+    "OHS08_Sword": {
+      "3": "#59432f",
+      "4": "#af965e",
+      "8": "#bec8c1"
+    }
+  },
+  "solid": {
+    "Head01_Male": "#a86548",
+    "AC04_ShortEars": "#a86548",
+    "Eyebrow02": "#38281f"
+  },
+  "fitShield": {
+    "part": "Marshal map backing",
+    "attachments": [
+      "Marshal field map"
+    ],
+    "frame": 6
+  },
+  "partModifications": {
+    "Head01_Male": {
+      "removeComponentsOutsideX": 0.27,
+      "expectedComponents": 2,
+      "purpose": "Replace the two inspected detached round ears (73 vertices each) with refitted supplied pointed ears"
+    },
+    "Hat02": {
+      "removeComponentsAbove": 0.6,
+      "expectedComponents": 2,
+      "purpose": "Remove only the two disconnected horns; preserve supplied fitted shell, rim, crest, nose and cheek guards"
+    }
+  },
+  "symmetricFits": [
+    {
+      "part": "AC04_ShortEars",
+      "pivot": [
+        0.22,
+        -0.05,
+        1.24
+      ],
+      "angleY": 55,
+      "scale": 0.85,
+      "offset": [
+        0.06,
+        0.04,
+        -0.28
+      ],
+      "purpose": "Refit supplied pointed ears laterally for a hobgoblin soldier"
+    }
+  ],
+  "externalParts": [
+    {
+      "name": "Marshal map backing",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Restaurant Bits 1.0/Assets/gltf/cuttingboard.gltf",
+      "bone": "weapon_l",
+      "scale": 0.42,
+      "rotateX": 90,
+      "rotateZ": 90,
+      "offset": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "Marshal field map",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/map.gltf",
+      "bone": "weapon_l",
+      "scale": 0.3,
+      "rotateX": 90,
+      "rotateZ": 90,
+      "offset": [
+        0,
+        -0.067,
+        0
+      ]
+    }
+  ],
+  "additionalBodies": [
+    "Cloak02"
+  ],
+  "partFit": {
+    "Hat02": {
+      "scale": [
+        1,
+        1,
+        0.88
+      ],
+      "offset": [
+        0,
+        0,
+        0.1
+      ]
+    }
+  },
+  "helmetEarNotches": [
+    {
+      "part": "Hat02",
+      "minX": 0.23,
+      "minY": -0.24,
+      "maxY": 0.09,
+      "topZ": 1.15
+    }
+  ]
+}
