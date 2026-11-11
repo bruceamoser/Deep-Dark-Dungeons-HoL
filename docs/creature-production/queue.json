@@ -196,9 +196,16 @@
       "name": "Hobgoblin Shieldguard",
       "order": 12,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hobgoblin-shieldguard.md",
+        "model": "docs/creature-production/hobgoblin-shieldguard.md",
+        "motion": "docs/creature-production/hobgoblin-shieldguard.md",
+        "game-view": "docs/creature-production/hobgoblin-shieldguard.md",
+        "integration": "docs/creature-production/hobgoblin-shieldguard.md"
+      },
+      "approvedAsset": "HobgoblinShieldguard"
     },
     {
       "id": "creature-hobgoblin-marshal",

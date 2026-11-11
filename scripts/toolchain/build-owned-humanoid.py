@@ -140,6 +140,30 @@ for cfg in spec.get('externalParts',[]):
   if uri and not uri.startswith('data:'):deps.append(file.parent/uri)
  for dep in deps:extra_sources[str(dep)]=hashlib.sha256(dep.read_bytes()).hexdigest()
 
+# Small painted inscriptions conform to the inspected owned surface. Join the
+# baked letters into that part so its existing socket fit moves them together.
+for cfg in spec.get('inscriptions',[]):
+ from mathutils.bvhtree import BVHTree
+ obj=bpy.data.objects[cfg['part']];bone=cfg['bone'];anchor=rig.matrix_world@rig.data.bones[bone].head_local
+ vertices=[obj.matrix_world@v.co for v in obj.data.vertices]
+ tree=BVHTree.FromPolygons(vertices,[list(f.vertices) for f in obj.data.polygons])
+ for row in cfg['rows']:
+  hit,normal,_,_=tree.ray_cast(anchor+Vector((row['x'],-2,row['z'])),Vector((0,1,0)))
+  assert hit is not None,('Inscription missed owned surface',cfg['part'],row)
+  curve=bpy.data.curves.new('Painted inscription','FONT');curve.body=row['text'];curve.align_x='CENTER';curve.size=cfg['size'];curve.resolution_u=2
+  label=bpy.data.objects.new('Painted '+row['text'],curve);bpy.context.collection.objects.link(label)
+  label.location=hit+Vector((0,-.001,0));label.rotation_euler=(math.pi/2,0,0);curve.materials.append(mat(cfg['color']))
+  bpy.ops.object.select_all(action='DESELECT');label.select_set(True);bpy.context.view_layer.objects.active=label;bpy.ops.object.convert(target='MESH');label=bpy.context.object
+  bpy.context.view_layer.update();inverse=label.matrix_world.inverted()
+  for vertex in label.data.vertices:
+   point=label.matrix_world@vertex.co
+   surface,_,_,_=tree.ray_cast(Vector((point.x,anchor.y-2,point.z)),Vector((0,1,0)))
+   assert surface is not None,('Letter extends beyond owned surface',row['text'])
+   vertex.co=inverse@(surface+Vector((0,-.001,0)))
+  group=label.vertex_groups.new(name=bone);group.add(list(range(len(label.data.vertices))),1,'REPLACE')
+  obj.select_set(True);bpy.context.view_layer.objects.active=obj;bpy.ops.object.join()
+ modifications.append({'part':cfg['part'],'purpose':'Painted memorial names on owned shield; baked into the same skinned part','recipe':cfg})
+
 checks=[]
 for name,rel in spec['clips'].items():
  file=a.source/'Animation'/rel;before=set(bpy.data.objects);bpy.ops.import_scene.fbx(filepath=str(file));added=set(bpy.data.objects)-before;donor=next(o for o in added if o.type=='ARMATURE')

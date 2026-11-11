@@ -100,9 +100,6 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
-  ...Object.fromEntries(
-    Object.values(EQUIPPED_CREATURES).map((a) => [a.model, a.path]),
-  ),
   ...(wolfPilot
     ? { WolfPilot: "/assets/licensed/creatures/WolfPilot.glb" }
     : {}),
@@ -165,6 +162,10 @@ export const CREATURE_MODELS = {
   Ninja: "/assets/characters/series4/Ninja.glb",
   Paladin: "/assets/characters/series4/Paladin.glb",
   Survivalist: "/assets/characters/series4/Survivalist.glb",
+  // Reviewed equipped replacements win when reusing a legacy model name.
+  ...Object.fromEntries(
+    Object.values(EQUIPPED_CREATURES).map((a) => [a.model, a.path]),
+  ),
 };
 
 /**

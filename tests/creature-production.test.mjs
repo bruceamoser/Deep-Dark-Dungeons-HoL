@@ -22,6 +22,34 @@ const queue = JSON.parse(
     new URL("../docs/creature-production/queue.json", import.meta.url),
   ),
 );
+test("reviewed equipped paths override legacy names while missing private assets retain fallbacks", async () => {
+  const source = fs.readFileSync(
+    new URL("../src/core/creature-roster.mjs", import.meta.url),
+    "utf8",
+  );
+  const replacement = {
+    "creature-hobgoblin-shieldguard": {
+      model: "HobgoblinShieldguard",
+      path: "/assets/licensed/creatures/HobgoblinShieldguard.glb",
+    },
+  };
+  const load = (entries) =>
+    import(
+      `data:text/javascript;base64,${Buffer.from(
+        `const __EQUIPPED_CREATURES__ = ${JSON.stringify(entries)};\n${source}`,
+      ).toString("base64")}`
+    );
+  const approved = await load(replacement);
+  assert.equal(
+    approved.CREATURE_MODELS.HobgoblinShieldguard,
+    replacement["creature-hobgoblin-shieldguard"].path,
+  );
+  const fallback = await load({});
+  assert.equal(
+    fallback.CREATURE_MODELS.HobgoblinShieldguard,
+    "/assets/creatures/wave-05/HobgoblinShieldguard.glb",
+  );
+});
 test("production queue covers the bestiary and permits only one active creature", () => {
   const q = structuredClone(queue);
   validateQueue(q, Object.keys(CREATURE_ROSTER), approved);
