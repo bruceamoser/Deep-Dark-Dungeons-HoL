@@ -5,7 +5,7 @@ No original assets are modified. New props are rigidly skinned to existing bones
 import argparse, hashlib, json, math, sys
 from pathlib import Path
 import bpy
-from mathutils import Vector
+from mathutils import Vector,Matrix
 p=argparse.ArgumentParser();p.add_argument('fixture',type=Path);p.add_argument('source',type=Path);p.add_argument('output',type=Path)
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);a.output.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.open_mainfile(filepath=str(a.fixture))
@@ -42,32 +42,13 @@ def box(n,loc,sc,m,bone,bevel=.008):
  if bevel:
   mod=o.modifiers.new('Soft sewn edges','BEVEL');mod.width=min(bevel,min(sc)*.25);mod.segments=2;bpy.ops.object.modifier_apply(modifier=mod.name)
  return bind(o,bone)
-# Soft fitted cap follows the approved scalp, without the Spearhand's saucepan.
-vs=[];fs=[];N=40
-for j in range(8):
- t=j/8*math.pi/2
- for i in range(N):
-  ang=i/N*math.tau;vs.append((.314*math.cos(t)*math.cos(ang),.014+.276*math.cos(t)*math.sin(ang),1.145+.176*math.sin(t)))
-vs.append((0,.014,1.321))
-for i in range(N):fs.append((7*N+i,7*N+(i+1)%N,8*N))
-for j in range(7):
- for i in range(N):fs.append((j*N+i,j*N+(i+1)%N,(j+1)*N+(i+1)%N,(j+1)*N+i))
-cap=mesh('Soft salvager head wrap',vs,fs,wrap,'head')
-for f in cap.data.polygons:f.use_smooth=True
-# Layered cloth band and side knot/tails, all head-bound.
-for z in [1.15,1.175]:
- vs=[]
- for h in [z,z+.018]:
-  for i in range(N):
-   t=i/N*math.tau;vs.append((.319*math.cos(t),.014+.281*math.sin(t),h))
- band=mesh('Folded headcloth band',vs,[(i,(i+1)%N,(i+1)%N+N,i+N) for i in range(N)],wrap,'head')
- for f in band.data.polygons:f.use_smooth=True
-oval('Headcloth knot',(.298,.075,1.17),(.045,.054,.039),wrap,'head')
-for x,z,rot in [(.315,1.105,-.22),(.342,1.12,.2)]:
- tail=box('Tied cloth tail',(x,.10,z),(.043,.025,.13),wrap,'head');tail.rotation_euler.y=rot
-# Patch rests on front cap surface; stitch beads remain readable at game scale.
-box('Headcloth repair patch',(-.13,-.252,1.197),(.1,.012,.07),patch,'head')
-for x in [-.166,-.14,-.114,-.09]:box('Headcloth stitch',(x,-.261,1.227),(.009,.009,.02),seam,'head',.002)
+# Reuse the supplied fitted leather cap. Keep its folded crown and long side/
+# back coverage; refit the task-owned copy to the goblin head, never the source.
+cap_file=a.source/'Mesh/HeadParts/Hat04.fbx'
+before=set(bpy.data.objects);bpy.ops.import_scene.fbx(filepath=str(cap_file));cap=next(o for o in set(bpy.data.objects)-before if o.type=='MESH');cap.name='Scrapper fitted supplied cap'
+cap.matrix_world=Matrix.Translation(rig.matrix_world@rig.data.bones['head'].head_local+Vector((0,0,-.04)))@Matrix.Diagonal((1.04,1.0,.86,1))@cap.matrix_world
+cap.data.materials.clear();cap.data.materials.append(wrap)
+bind(cap,'head')
 # Belt pouches and protruding tool scraps. Pelvis-bound to avoid dangling props.
 for x,z,s in [(-.18,.365,1),(.185,.37,.8)]:
  oval('Bulging salvage pouch',(x,-.145,z),(.082*s,.05,.09*s),leather,'pelvis')
@@ -115,4 +96,4 @@ for t in rig.animation_data.nla_tracks:t.mute=False
 bpy.context.scene.frame_set(1)
 bpy.ops.wm.save_as_mainfile(filepath=str(a.output/'goblin-scrapper.blend'))
 bpy.ops.export_scene.gltf(filepath=str(a.output/'goblin-scrapper.glb'),export_format='GLB',export_extras=True,export_animations=True,export_animation_mode='NLA_TRACKS',export_force_sampling=True)
-(a.output/'provenance.json').write_text(json.dumps({'fixture':str(a.fixture),'fixtureSha256':hashlib.sha256(a.fixture.read_bytes()).hexdigest(),'source':str(a.source),'changes':'Authored head wrap, sewn patch, belt pouches, metal scraps, scrap knife; teal cloth and knee patch; SingleSword source clips','clipChecks':checks,'status':'Candidate awaiting visual and motion review'},indent=2)+'\n')
+(a.output/'provenance.json').write_text(json.dumps({'fixture':str(a.fixture),'fixtureSha256':hashlib.sha256(a.fixture.read_bytes()).hexdigest(),'source':str(a.source),'headwearSource':str(cap_file),'headwearSha256':hashlib.sha256(cap_file.read_bytes()).hexdigest(),'changes':'Supplied Hat04 cap refit and recolor; authored belt pouches, metal scraps, scrap knife; teal cloth and knee patch; SingleSword source clips','clipChecks':checks,'status':'Candidate awaiting visual and motion review'},indent=2)+'\n')

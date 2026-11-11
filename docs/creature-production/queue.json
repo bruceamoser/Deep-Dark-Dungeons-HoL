@@ -65,6 +65,18 @@
         "game-view": "docs/creature-production/goblin-scrapper.md",
         "integration": "docs/creature-production/goblin-scrapper.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-scrapper.md",
+            "model": "docs/creature-production/goblin-scrapper.md",
+            "motion": "docs/creature-production/goblin-scrapper.md",
+            "game-view": "docs/creature-production/goblin-scrapper.md",
+            "integration": "docs/creature-production/goblin-scrapper.md"
+          },
+          "approvedAsset": "GoblinScrapper"
+        }
+      ],
       "approvedAsset": "GoblinScrapper"
     },
     {

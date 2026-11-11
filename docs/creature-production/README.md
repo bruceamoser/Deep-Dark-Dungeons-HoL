@@ -1,6 +1,6 @@
 # One-creature-at-a-time production
 
-This is the active production workflow, approved November 11, 2026. It supersedes the earlier unattended generation batches and old partial-completion spreadsheets. **58 creatures: three approved anchors, 55 remaining.** The user approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private exports are pinned in `config/approved-creature-assets.json` and are now normal build defaults when installed.
+This is the active production workflow, approved November 11, 2026. It supersedes the earlier unattended generation batches and old partial-completion spreadsheets. **58 creatures total; current completion and active work are recorded in queue.json.** The user approved Goblin Spearhand, Air Elemental and Wolf for the game. Their exact private exports are pinned in `config/approved-creature-assets.json` and are now normal build defaults when installed.
 
 The queue and its evidence are the cross-machine source of truth. No job continues merely because a chat ends: the next local session reads this queue, resumes its one active creature and records its actual progress. These tools track work and prevent overlap; they do not automate artistic judgment or claim generation is running in the background.
 
@@ -21,7 +21,9 @@ From the repository root:
 ```sh
 node scripts/creature-production.mjs status
 node scripts/creature-production.mjs next
-node scripts/creature-production.mjs start goblin-scrapper
+node scripts/creature-production.mjs start CREATURE_ID
+# To reopen an integrated creature after visual feedback:
+node scripts/creature-production.mjs revise CREATURE_ID
 node scripts/creature-production.mjs record goblin-scrapper brief docs/creature-production/goblin-scrapper.md
 # Record the subsequent gates in order: model, motion, game-view, integration.
 node scripts/creature-production.mjs validate

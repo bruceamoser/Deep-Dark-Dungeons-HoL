@@ -35,7 +35,7 @@
       "creatureId": "creature-goblin-scrapper",
       "model": "GoblinScrapper",
       "path": "/assets/licensed/creatures/GoblinScrapper.glb",
-      "sha256": "76d0d95becca2c72e751681d10a6c1e051c89a845c04245452d6cc9614fd3e17",
+      "sha256": "4fd5a5f9702a7367b7c387315cda17bba0eaa52106fa9e2bdc79955adc4d5631",
       "approvedOn": "2026-11-11",
       "method": "owned-humanoid",
       "review": "author review under delegated production direction; not separate user approval",

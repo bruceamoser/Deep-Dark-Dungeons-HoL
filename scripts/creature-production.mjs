@@ -36,6 +36,22 @@ export function validateQueue(queue, ids, approved) {
       );
   }
 }
+export function reviseCreature(queue, id) {
+  if (queue.creatures.some((c) => c.status === "active"))
+    throw Error("Finish the active creature before reopening another");
+  const row = queue.creatures.find(
+    (c) => c.id === id && c.status === "integrated",
+  );
+  if (!row) throw Error("Choose an integrated creature to revise");
+  (row.revisions ??= []).push({
+    gates: { ...row.gates },
+    approvedAsset: row.approvedAsset,
+  });
+  row.gates = { brief: row.gates.brief };
+  row.status = "active";
+  delete row.approvedAsset;
+  return row;
+}
 export function startCreature(queue, id) {
   const active = queue.creatures.find((c) => c.status === "active");
   if (active && active.id !== id)
@@ -112,6 +128,7 @@ function main() {
   }
   const id = input?.startsWith("creature-") ? input : `creature-${input}`;
   if (command === "start") startCreature(queue, id);
+  else if (command === "revise") reviseCreature(queue, id);
   else if (command === "record") {
     const row = queue.creatures.find(
       (c) => c.id === id && c.status === "active",
@@ -137,7 +154,7 @@ function main() {
     row.gates[gate] = report;
   } else
     throw Error(
-      "Usage: creature-production.mjs status|next|validate|assets|start ID|record ID GATE docs/report.md",
+      "Usage: creature-production.mjs status|next|validate|assets|start ID|revise ID|record ID GATE docs/report.md",
     );
   queue.updated = new Date().toISOString().slice(0, 10);
   validateQueue(queue, Object.keys(CREATURE_ROSTER), approved);
