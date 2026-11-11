@@ -132,45 +132,80 @@
       "name": "Grave Cultist",
       "order": 8,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/grave-cultist.md",
+        "model": "docs/creature-production/grave-cultist.md",
+        "motion": "docs/creature-production/grave-cultist.md",
+        "game-view": "docs/creature-production/grave-cultist.md",
+        "integration": "docs/creature-production/grave-cultist.md"
+      },
+      "approvedAsset": "GraveCultist"
     },
     {
       "id": "creature-hedge-sorcerer",
       "name": "Hedge Sorcerer",
       "order": 9,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hedge-sorcerer.md",
+        "model": "docs/creature-production/hedge-sorcerer.md",
+        "motion": "docs/creature-production/hedge-sorcerer.md",
+        "game-view": "docs/creature-production/hedge-sorcerer.md",
+        "integration": "docs/creature-production/hedge-sorcerer.md"
+      },
+      "approvedAsset": "HedgeSorcerer"
     },
     {
       "id": "creature-orc-outrider",
       "name": "Orc Outrider",
       "order": 10,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/orc-outrider.md",
+        "model": "docs/creature-production/orc-outrider.md",
+        "motion": "docs/creature-production/orc-outrider.md",
+        "game-view": "docs/creature-production/orc-outrider.md",
+        "integration": "docs/creature-production/orc-outrider.md"
+      },
+      "approvedAsset": "OrcOutrider"
     },
     {
       "id": "creature-orc-shieldbreaker",
       "name": "Orc Shieldbreaker",
       "order": 11,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/orc-shieldbreaker.md",
+        "model": "docs/creature-production/orc-shieldbreaker.md",
+        "motion": "docs/creature-production/orc-shieldbreaker.md",
+        "game-view": "docs/creature-production/orc-shieldbreaker.md",
+        "integration": "docs/creature-production/orc-shieldbreaker.md"
+      },
+      "approvedAsset": "OrcShieldbreaker"
     },
     {
       "id": "creature-hobgoblin-shieldguard",
       "name": "Hobgoblin Shieldguard",
       "order": 12,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hobgoblin-shieldguard.md",
+        "model": "docs/creature-production/hobgoblin-shieldguard.md",
+        "motion": "docs/creature-production/hobgoblin-shieldguard.md",
+        "game-view": "docs/creature-production/hobgoblin-shieldguard.md",
+        "integration": "docs/creature-production/hobgoblin-shieldguard.md"
+      },
+      "approvedAsset": "HobgoblinShieldguard"
     },
     {
       "id": "creature-hobgoblin-marshal",

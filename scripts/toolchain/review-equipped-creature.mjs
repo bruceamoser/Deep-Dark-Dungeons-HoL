@@ -133,6 +133,9 @@ try {
     ...(info.clips.some((c) => c.name === "Unarmed_Melee_Attack_Punch_A")
       ? [["Melee backup", "Unarmed_Melee_Attack_Punch_A", 2, 0]]
       : []),
+    ...(info.clips.some((c) => c.name === "Spellcast_Shoot")
+      ? [["Spell cast", "Spellcast_Shoot", 2, 0]]
+      : []),
     ["Hit reaction", "Hit_A", 2, 0],
     ["Death", "Death_A_Pose", 1, 1],
   ]) {

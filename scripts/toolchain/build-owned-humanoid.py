@@ -12,7 +12,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.fbx(filepath=str(a.source/'Mesh/AllBodiesCloaks.fbx'))
 rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
 for o in list(bpy.context.scene.objects):
- if o.type=='MESH' and o.name!=spec['body']:bpy.data.objects.remove(o,do_unlink=True)
+ if o.type=='MESH' and o.name not in [spec['body'],*spec.get('additionalBodies',[])]:bpy.data.objects.remove(o,do_unlink=True)
 rig.animation_data_clear()
 for act in list(bpy.data.actions):bpy.data.actions.remove(act)
 modifications=[]
@@ -29,7 +29,9 @@ def modify_source_part(o,name):
    i=todo.pop();component.append(i)
    for j in adj[i]:
     if j in unseen:unseen.remove(j);todo.append(j)
-  if max((o.matrix_world@o.data.vertices[i].co).z for i in component)>cfg['removeComponentsAbove']:
+  points=[o.matrix_world@o.data.vertices[i].co for i in component]
+  selected=(max(p.z for p in points)>cfg['removeComponentsAbove']) if 'removeComponentsAbove' in cfg else all(abs(p.x)>cfg['removeComponentsOutsideX'] for p in points)
+  if selected:
    remove.extend(component);groups+=1
  assert groups==cfg['expectedComponents'],(name,'Unexpected source topology; inspect before modifying',groups)
  bm=bmesh.new();bm.from_mesh(o.data);bm.verts.ensure_lookup_table();bmesh.ops.delete(bm,geom=[bm.verts[i] for i in remove],context='VERTS');bm.to_mesh(o.data);bm.free()
@@ -43,6 +45,17 @@ for folder,name,bone in spec['parts']:
   fit=spec.get('partFit',{}).get(name,{})
   o.matrix_world=Matrix.Translation(rig.matrix_world@rig.data.bones[bone].head_local+Vector(fit.get('offset',[0,0,0])))@Matrix.Diagonal((*fit.get('scale',[1,1,1]),1))@o.matrix_world
   g=o.vertex_groups.new(name=bone);g.add(list(range(len(o.data.vertices))),1,'REPLACE');o.modifiers.new('Original source rig','ARMATURE').object=rig
+# Refit paired accessory halves around inspected rest-space pivots. This keeps
+# source ear folds/topology while changing their placement, not anatomy repair.
+for cfg in spec.get('symmetricFits',[]):
+ obj=bpy.data.objects[cfg['part']];inverse=obj.matrix_world.inverted()
+ for vertex in obj.data.vertices:
+  point=obj.matrix_world@vertex.co;side=1 if point.x>=0 else -1
+  pivot=Vector((side*cfg['pivot'][0],cfg['pivot'][1],cfg['pivot'][2]))
+  rotation=Matrix.Rotation(math.radians(side*cfg['angleY']),3,'Y')
+  point=pivot+rotation@(point-pivot)*cfg['scale']+Vector((side*cfg['offset'][0],cfg['offset'][1],cfg['offset'][2]))
+  vertex.co=inverse@point
+ modifications.append({'part':cfg['part'],'purpose':cfg['purpose'],'recipe':cfg})
 # Keep original palette for unmasked facial/skin detail; exact source masks tint
 # only identified regions. Owned meshes retain UVs, weights and rest transforms.
 base=bpy.data.materials.new('Owned source palette');base.use_nodes=True;base['preserveAuthoredRoughness']=True
@@ -83,7 +96,14 @@ for cfg in spec.get('paintRegions',[]):
   center=sum((obj.matrix_world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
   if any(sum((center[i]-c[i])**2 for i in [0,2])<cfg['radius']**2 and center.y<cfg['frontY'] for c in cfg['centers']):face.material_index=slot;count+=1
  assert count>0,('Paint region missed',cfg['part'])
- modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':'Separate supplied lens faces from brass frame'})
+ modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg.get('purpose','Separate supplied lens faces from brass frame')})
+for cfg in spec.get('paintBands',[]):
+ obj=bpy.data.objects[cfg['part']];slot=len(obj.data.materials);obj.data.materials.append(mat(cfg['color'],cfg.get('metal',0)));count=0
+ for face in obj.data.polygons:
+  center=sum((obj.matrix_world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
+  if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
+ assert count>0,('Paint band missed',cfg['part'])
+ modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
 if spec.get('headFixture'):
  cfg=spec['headFixture'];file=Path(cfg['path']).expanduser()
  with bpy.data.libraries.load(str(file),link=False) as (src,dst):
@@ -119,6 +139,30 @@ for cfg in spec.get('externalParts',[]):
   uri=ref.get('uri','')
   if uri and not uri.startswith('data:'):deps.append(file.parent/uri)
  for dep in deps:extra_sources[str(dep)]=hashlib.sha256(dep.read_bytes()).hexdigest()
+
+# Small painted inscriptions conform to the inspected owned surface. Join the
+# baked letters into that part so its existing socket fit moves them together.
+for cfg in spec.get('inscriptions',[]):
+ from mathutils.bvhtree import BVHTree
+ obj=bpy.data.objects[cfg['part']];bone=cfg['bone'];anchor=rig.matrix_world@rig.data.bones[bone].head_local
+ vertices=[obj.matrix_world@v.co for v in obj.data.vertices]
+ tree=BVHTree.FromPolygons(vertices,[list(f.vertices) for f in obj.data.polygons])
+ for row in cfg['rows']:
+  hit,normal,_,_=tree.ray_cast(anchor+Vector((row['x'],-2,row['z'])),Vector((0,1,0)))
+  assert hit is not None,('Inscription missed owned surface',cfg['part'],row)
+  curve=bpy.data.curves.new('Painted inscription','FONT');curve.body=row['text'];curve.align_x='CENTER';curve.size=cfg['size'];curve.resolution_u=2
+  label=bpy.data.objects.new('Painted '+row['text'],curve);bpy.context.collection.objects.link(label)
+  label.location=hit+Vector((0,-.001,0));label.rotation_euler=(math.pi/2,0,0);curve.materials.append(mat(cfg['color']))
+  bpy.ops.object.select_all(action='DESELECT');label.select_set(True);bpy.context.view_layer.objects.active=label;bpy.ops.object.convert(target='MESH');label=bpy.context.object
+  bpy.context.view_layer.update();inverse=label.matrix_world.inverted()
+  for vertex in label.data.vertices:
+   point=label.matrix_world@vertex.co
+   surface,_,_,_=tree.ray_cast(Vector((point.x,anchor.y-2,point.z)),Vector((0,1,0)))
+   assert surface is not None,('Letter extends beyond owned surface',row['text'])
+   vertex.co=inverse@(surface+Vector((0,-.001,0)))
+  group=label.vertex_groups.new(name=bone);group.add(list(range(len(label.data.vertices))),1,'REPLACE')
+  obj.select_set(True);bpy.context.view_layer.objects.active=obj;bpy.ops.object.join()
+ modifications.append({'part':cfg['part'],'purpose':'Painted memorial names on owned shield; baked into the same skinned part','recipe':cfg})
 
 checks=[]
 for name,rel in spec['clips'].items():

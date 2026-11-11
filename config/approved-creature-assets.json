@@ -115,6 +115,119 @@
           }
         }
       }
+    },
+    {
+      "creatureId": "creature-grave-cultist",
+      "model": "GraveCultist",
+      "path": "/assets/licensed/creatures/GraveCultist.glb",
+      "sha256": "23edbbef4e68d16e9ad973f52358ed54a33e49c35ac3f63f3835dd82effdec88",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/grave-cultist.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "spell",
+        "attack": {
+          "kind": "life",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.3,
+          "melee": {
+            "kind": "staff",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.3
+          }
+        }
+      }
+    },
+    {
+      "creatureId": "creature-hedge-sorcerer",
+      "model": "HedgeSorcerer",
+      "path": "/assets/licensed/creatures/HedgeSorcerer.glb",
+      "sha256": "e6156aa23ebb22da766355903c6b2b45e25e48fde703976e16d27276e44f05f8",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/hedge-sorcerer.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "spell",
+        "attack": {
+          "kind": "fire",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.3,
+          "melee": {
+            "kind": "staff",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.3
+          }
+        }
+      }
+    },
+    {
+      "creatureId": "creature-orc-outrider",
+      "model": "OrcOutrider",
+      "path": "/assets/licensed/creatures/OrcOutrider.glb",
+      "sha256": "ce642e73f17885be166a66d411e480ec87553130aee420799d7363b397c1fcad",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/orc-outrider.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.05,
+        "height": 1.45,
+        "weapon": "melee"
+      }
+    },
+    {
+      "creatureId": "creature-orc-shieldbreaker",
+      "model": "OrcShieldbreaker",
+      "path": "/assets/licensed/creatures/OrcShieldbreaker.glb",
+      "sha256": "ce85d9ec6343c568fac1ad2315d373446750328c41ca07cbce92726eead208f9",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/orc-shieldbreaker.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.1,
+        "height": 1.5,
+        "weapon": "melee"
+      }
+    },
+    {
+      "creatureId": "creature-hobgoblin-shieldguard",
+      "model": "HobgoblinShieldguard",
+      "path": "/assets/licensed/creatures/HobgoblinShieldguard.glb",
+      "sha256": "a8dd16c35add2ff02ec1474eda72169dcf0dc32f32a69d10b7a74053acc14220",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/hobgoblin-shieldguard.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.05,
+        "height": 1.45,
+        "weapon": "melee",
+        "shield": true,
+        "attack": {
+          "kind": "thrust",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.26666666666666666
+        }
+      }
     }
   ]
 }
