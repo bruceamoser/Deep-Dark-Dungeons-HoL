@@ -228,9 +228,16 @@
       "name": "Masked Duelist",
       "order": 14,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/masked-duelist.md",
+        "model": "docs/creature-production/masked-duelist.md",
+        "motion": "docs/creature-production/masked-duelist.md",
+        "game-view": "docs/creature-production/masked-duelist.md",
+        "integration": "docs/creature-production/masked-duelist.md"
+      },
+      "approvedAsset": "MaskedDuelist"
     },
     {
       "id": "creature-goblin-boss",

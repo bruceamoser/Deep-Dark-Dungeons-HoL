@@ -245,6 +245,28 @@
         "height": 1.5,
         "weapon": "melee"
       }
+    },
+    {
+      "creatureId": "creature-masked-duelist",
+      "model": "MaskedDuelist",
+      "path": "/assets/licensed/creatures/MaskedDuelist.glb",
+      "sha256": "060ac3b8e080a9533a693bbf29679f105c4e96462d796bf0581658b46850f72e",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/masked-duelist.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.98,
+        "height": 1.4,
+        "weapon": "melee",
+        "attack": {
+          "kind": "thrust",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.26666666666666666
+        }
+      }
     }
   ]
 }

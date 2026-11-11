@@ -71,6 +71,14 @@ for cfg in spec.get('symmetricFits',[]):
   point=pivot+rotation@(point-pivot)*cfg['scale']+Vector((side*cfg['offset'][0],cfg['offset'][1],cfg['offset'][2]))
   vertex.co=inverse@point
  modifications.append({'part':cfg['part'],'purpose':cfg['purpose'],'recipe':cfg})
+for cfg in spec.get('bladeFits',[]):
+ obj=bpy.data.objects[cfg['part']];anchor=rig.matrix_world@rig.data.bones[cfg['bone']].head_local;inverse=obj.matrix_world.inverted();count=0
+ for vertex in obj.data.vertices:
+  point=obj.matrix_world@vertex.co
+  if point.z-anchor.z>cfg['aboveGrip']:
+   point.x=anchor.x+(point.x-anchor.x)*cfg['widthScale'];vertex.co=inverse@point;count+=1
+ assert count>0,('Blade fit missed source geometry',cfg['part'])
+ modifications.append({'part':cfg['part'],'vertices':count,'purpose':'Narrow blade while preserving supplied hilt and grip','recipe':cfg})
 # Keep original palette for unmasked facial/skin detail; exact source masks tint
 # only identified regions. Owned meshes retain UVs, weights and rest transforms.
 base=bpy.data.materials.new('Owned source palette');base.use_nodes=True;base['preserveAuthoredRoughness']=True
@@ -119,6 +127,29 @@ for cfg in spec.get('paintBands',[]):
   if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
  assert count>0,('Paint band missed',cfg['part'])
  modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
+for cfg in spec.get('faceShells',[]):
+ source=bpy.data.objects[cfg['source']];obj=source.copy();obj.data=source.data.copy();obj.name=cfg['name'];bpy.context.collection.objects.link(obj)
+ bm=bmesh.new();bm.from_mesh(obj.data)
+ discard=[]
+ for face in bm.faces:
+  center=obj.matrix_world@face.calc_center_median()
+  if not (cfg['minZ']<center.z<cfg['maxZ'] and center.y<cfg['frontY'] and abs(center.x)<cfg['maxX']):discard.append(face)
+ assert 0<len(discard)<len(bm.faces),('Inspect face shell region',cfg['name'])
+ bmesh.ops.delete(bm,geom=discard,context='FACES');bm.to_mesh(obj.data);bm.free()
+ obj.matrix_world=Matrix.Translation(Vector(cfg['offset']))@obj.matrix_world
+ obj.data.materials.clear();obj.data.materials.append(mat(cfg['color']));obj.data.materials.append(mat(cfg['rimColor'],.25))
+ for face in obj.data.polygons:face.material_index=0
+ shell=obj.modifiers.new('Thin fitted mask shell','SOLIDIFY');shell.thickness=cfg['thickness'];shell.offset=1;shell.material_offset_rim=1
+ bpy.context.view_layer.objects.active=obj;bpy.ops.object.modifier_apply(modifier=shell.name)
+ for opening in cfg.get('eyeHoles',[]):
+  bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=1,depth=1)
+  cutter=bpy.context.object;cutter.matrix_world=Matrix.Translation(Vector(opening['center']))@Matrix.Rotation(math.pi/2,4,'X')@Matrix.Diagonal((opening['width'],opening['height'],.8,1))
+  hole=obj.modifiers.new('Mask eye opening','BOOLEAN');hole.operation='DIFFERENCE';hole.solver='EXACT';hole.object=cutter
+  bpy.context.view_layer.objects.active=obj;bpy.ops.object.modifier_apply(modifier=hole.name)
+  cutter_mesh=cutter.data;bpy.data.objects.remove(cutter,do_unlink=True);bpy.data.meshes.remove(cutter_mesh)
+ if cfg.get('eyeHoles'):
+  obj.vertex_groups['head'].add(list(range(len(obj.data.vertices))),1,'REPLACE')
+ modifications.append({'part':obj.name,'purpose':'Fitted mask copied from owned face contours; original head retained','recipe':cfg})
 if spec.get('headFixture'):
  cfg=spec['headFixture'];file=Path(cfg['path']).expanduser()
  with bpy.data.libraries.load(str(file),link=False) as (src,dst):
