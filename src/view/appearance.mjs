@@ -1,3 +1,4 @@
+import { goblinSpearhandAppearance } from "./goblin-spearhand.mjs";
 import { colorGoblinFace } from "./goblin-face.mjs";
 import { hangingItemStabilizer } from "./hanging-equipment.mjs";
 import { elementalMotion } from "./elemental-motion.mjs";
@@ -15,6 +16,12 @@ const armorNames = { light: "Rogue", medium: "Knight", heavy: "Knight" };
 export function equipmentAppearance(assets, hero, enemy = false) {
   if (!enemy && assets.has("DungeonMason"))
     return masonAppearance(assets.get("DungeonMason"), hero, assets);
+  if (
+    enemy &&
+    hero.type === "creature-goblin-spearhand" &&
+    assets.has("GoblinSpearhand")
+  )
+    return goblinSpearhandAppearance(assets.get("GoblinSpearhand"));
   const look = enemy ? CREATURE_ROSTER[hero.type] : null;
   // KayKit character models are complete rigged humanoids and take this path; the
   // Quaternius animals and constructs go to the procedural creature path.

@@ -1,3 +1,7 @@
+const spearhandModel =
+  typeof __GOBLIN_SPEARHAND_MODEL__ === "undefined"
+    ? null
+    : __GOBLIN_SPEARHAND_MODEL__;
 // Encounter eligibility and visual casting are game adaptations; stat cards come from the pinned book.
 const rows = [
   ["bone-sentry", "SkeletonWarrior", "crypt", 1, "melee"],
@@ -13,7 +17,13 @@ const rows = [
   ["grave-cultist", "Witch", "outlaws", 2, "spell"],
   ["hedge-sorcerer", "Witch", "outlaws", 3, "spell"],
   ["goblin-scrapper", "OrcRaider", "goblins", 1, "melee"],
-  ["goblin-spearhand", "OrcRaider", "goblins", 1, "spear"],
+  [
+    "goblin-spearhand",
+    spearhandModel ? "GoblinSpearhand" : "OrcRaider",
+    "goblins",
+    1,
+    "spear",
+  ],
   ["goblin-smoke-slinger", "OrcRaider", "goblins", 2, "sling"],
   ["goblin-firestarter", "OrcRaider", "goblins", 2, "spell"],
   ["goblin-rattlechanter", "OrcRaider", "goblins", 3, "spell"],
@@ -73,6 +83,7 @@ export const CREATURE_ROSTER = Object.fromEntries(
   ]),
 );
 export const CREATURE_MODELS = {
+  ...(spearhandModel ? { GoblinSpearhand: spearhandModel } : {}),
   HobgoblinShieldguard: "/assets/creatures/wave-05/HobgoblinShieldguard.glb",
   Ghast: "/assets/creatures/wave-05/Ghast.glb",
   CryptGhoul: "/assets/creatures/wave-05/CryptGhoul.glb",

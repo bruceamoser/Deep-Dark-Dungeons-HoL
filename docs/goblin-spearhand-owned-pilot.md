@@ -42,4 +42,4 @@ Preview renderer uses the local game's Three.js dependency and actual exported m
 
 Private artifact root: `~/.local/share/four-lanterns-modular-pilot/2026-11-11/goblin-spearhand`. It contains editable `.blend`, GLB, provenance, preservation report, roundtrip report, static/motion validation and the final `goblin-spearhand-preview.png` / `goblin-spearhand-motion.mp4`. These must transfer separately between machines.
 
-Next gate: Bruce reviews the head/style and motion. Only then take this candidate into the dungeon for actual scale, lighting, hand/ground clearance and encounter performance. No roster batch restart or second role is part of this preview.
+Update: Bruce approved the preview and requested dungeon qualification. The [six-creature native encounter report](goblin-spearhand-dungeon.md) records the subsequent runtime integration, animation checks, performance and local installation. The measurements above remain the original isolated-preview record. No roster batch restart.

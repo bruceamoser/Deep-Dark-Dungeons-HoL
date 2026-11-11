@@ -105,3 +105,7 @@ Do not resume unattended full-roster generation based on static mesh success. A 
 ## 2026-11-11 — Goblin preview before dungeon integration
 
 Bruce accepted the source spear test and required a point-first stab. The source Attack02 hand motion needed a constant socket rotation for the separate spear mesh; this is now validated. Bruce then requested a clean goblin head, skin/outfit colours and gear/animation preview before integration. The authored-head/saucepan candidate reuses the exact source rig/body/spear/clips, with green skin/rust cloth/brown leather and a bare scalp under removable headgear. This is a candidate for review, not approval of the full roster's style. See [preview report](../goblin-spearhand-owned-pilot.md). No new purchase, cloud generation, game replacement or batch restart.
+
+## 2026-11-11 — Approve Spearhand for the dungeon pilot
+
+Bruce approved the owned-source Goblin Spearhand preview and requested six opponents plus four heroes in the actual dungeon. Promote that exact private GLB through a dedicated conditional model route; preserve its source skeleton/materials/thrust and avoid legacy gear attachments. Reuse existing approach-before-impact/full-death handling. Normal installed-menu review must match the checkout, so update the per-user AppImage with a backup, then test it independently using temporary saves and muted audio. This one-role qualification does not authorize resuming the abandoned whole-roster generator. See [native encounter report](../goblin-spearhand-dungeon.md).

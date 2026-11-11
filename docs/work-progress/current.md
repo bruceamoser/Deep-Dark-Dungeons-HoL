@@ -2,9 +2,11 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — Goblin Spearhand preview for Bruce
+### Latest — Goblin Spearhand integrated and tested
 
-Built a clean authored goblin head and removable saucepan on the accepted source body/rig/thrust; moss-green skin, rust tunic and brown leather. Reviewed bare/equipped front/side/back, five animation states and 254 silent motion frames. Final GLB: 29,454 triangles, 14 draw calls, one 512×512 texture. Exact source body/spear/rig/keyframe preservation and GLB structural roundtrip pass. [Preview report](../goblin-spearhand-owned-pilot.md) records limitations and reproduction; [handoff](handoffs/2026-11-11-goblin-spearhand-preview.md) records private artifacts. **Not integrated into the dungeon**, as requested. Next is Bruce's visual review, then dungeon qualification if continuing with this candidate. No batch restart or release.
+Bruce approved the authored head/source-rig preview. The private Goblin Spearhand is now routed into the dungeon with its source thrust, authored materials, fixed goblin scale and full hit/death playback. **Six Spearhands + four heroes passed the native Linux encounter check:** 59.75 FPS average at 1600×1000 on RTX 3090; p95 16.8 ms, all five animation states, no JS errors. The updated **normal menu AppImage** also passed separately (59.80 FPS); restart the game to load it. Version label remains 0.8.7, no public release or system Debian replacement. Local AppImage and `.deb` rebuilt. All 358 tests and the staged-index build pass.
+
+[Dungeon report](../goblin-spearhand-dungeon.md) and [handoff](handoffs/2026-11-11-goblin-spearhand-dungeon.md) record reproducible test scope, private asset transfer and evidence. `test-results/goblin-spearhand-dungeon/dungeon-motion.mp4` is actual silent native dungeon capture, recorded after benchmarking. Test heroes have boosted HP and pass turns; this validates presentation/performance, not combat balance. Broader pipeline remains WIP; other dirty creature work stays separate. Next: Bruce's in-dungeon review, then choose another bounded owned-source creature; do not restart the roster batch automatically.
 
 Bruce is reassessing the generation workflow and wants to reuse KayKit/Dungeon Mason before spending more. No creature batch is running. See [verified inventory and pilot review](../owned-assets-pilot.md); the historical production notes below are not a directive to restart the batch.
 
