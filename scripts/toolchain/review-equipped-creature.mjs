@@ -123,6 +123,7 @@ try {
     await page.screenshot({ path: path.join(out, name + ".png") });
   }
   const frames = path.join(out, "frames");
+  await fs.rm(frames, { recursive: true, force: true });
   await fs.mkdir(frames, { recursive: true });
   let idx = 0;
   const segments = [];
@@ -130,6 +131,9 @@ try {
     ["Idle", "Idle", 3, 0],
     ["Walk", "Walking_A", 3, 0],
     ["Weapon attack", "1H_Melee_Attack_Slice_Diagonal", 3, 0],
+    ...(info.clips.some((c) => c.name === "2H_Ranged_Shoot")
+      ? [["Bow draw/release", "2H_Ranged_Shoot", 3, 0]]
+      : []),
     ...(info.clips.some((c) => c.name === "Unarmed_Melee_Attack_Punch_A")
       ? [["Melee backup", "Unarmed_Melee_Attack_Punch_A", 2, 0]]
       : []),

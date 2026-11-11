@@ -1,0 +1,126 @@
+{
+  "id": "bandit-bow",
+  "body": "Body05",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hat05",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "AC08_NinjaMask01",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "BowAndArrow/Idle_Battle_BowAndArrow.fbx",
+    "Walking_A": "BowAndArrow/InPlace/MoveFWD_Battle_InPlace_BowAndArrow.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
+    "2H_Ranged_Shoot": "BowAndArrow/Attack01_BowAndArrow.fbx",
+    "Hit_A": "BowAndArrow/GetHit01_BowAndArrow.fbx",
+    "Death_A_Pose": "BowAndArrow/Die01_BowAndArrow.fbx"
+  },
+  "palette": {
+    "1": "#735335",
+    "2": "#405439",
+    "3": "#6e6043",
+    "4": "#8b8355",
+    "5": "#7b6b4b",
+    "6": "#3e5135",
+    "7": "#593a27",
+    "8": "#92937e"
+  },
+  "partPalette": {
+    "Hat05": {
+      "2": "#405439",
+      "3": "#405439",
+      "4": "#6e704d",
+      "8": "#6e704d"
+    },
+    "Cloak03": {
+      "1": "#405439",
+      "2": "#405439",
+      "3": "#405439",
+      "4": "#405439",
+      "5": "#405439",
+      "6": "#405439",
+      "7": "#405439",
+      "8": "#405439"
+    }
+  },
+  "solid": {
+    "AC08_NinjaMask01": "#405439",
+    "Eyebrow01": "#3d3024"
+  },
+  "additionalBodies": [
+    "Cloak03"
+  ],
+  "weaponRigs": [
+    {
+      "name": "Hunting bow",
+      "source": "Mesh/Weapons/BowsSkinnedMesh.fbx",
+      "mesh": "Bow01",
+      "bone": "weapon_l",
+      "idle": "Animation/BowAndArrow/BowAnim/Idle_Bow.fbx",
+      "attack": "Animation/BowAndArrow/BowAnim/Attack01_Combo0102_Bow.fbx",
+      "fitClip": "2H_Ranged_Shoot",
+      "fitFrame": 9
+    },
+    {
+      "name": "Nocked arrow",
+      "source": "Mesh/Weapons/ArrowsSkinnedMesh.fbx",
+      "mesh": "Arrow01",
+      "bone": "weapon_r",
+      "idle": "Animation/BowAndArrow/ArrowAnim/Idle_Arrow.fbx",
+      "attack": "Animation/BowAndArrow/ArrowAnim/Attack01_Combo0102_Arrow.fbx",
+      "fitClip": "2H_Ranged_Shoot",
+      "fitFrame": 9
+    }
+  ],
+  "externalParts": [
+    {
+      "name": "Bandit quiver",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Adventurers 2.0/Assets/gltf/quiver.gltf",
+      "bone": "BackpackBone",
+      "scale": 0.7,
+      "offset": [
+        0.28,
+        0.18,
+        -0.12
+      ],
+      "rotateY": 25
+    },
+    {
+      "name": "Bandit spare string",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/rope_bundle_B.gltf",
+      "bone": "pelvis",
+      "scale": 0.23,
+      "offset": [
+        0.22,
+        -0.12,
+        0.05
+      ]
+    }
+  ]
+}

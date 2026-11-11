@@ -133,8 +133,9 @@ try {
         "1H_Melee_Attack_Slice_Diagonal",
         "Hit_A",
         "Death_A_Pose",
-        ...(clipSource === "dart" ? ["2H_Ranged_Shoot"] : []),
-        ...(clipSource === "unarmed" ? ["Unarmed_Melee_Attack_Punch_A"] : []),
+        ...(clipSource === "dart" || clips.some((c) => c.name === "2H_Ranged_Shoot") ? ["2H_Ranged_Shoot"] : []),
+        ...(clipSource === "unarmed" || clips.some((c) => c.name === "Unarmed_Melee_Attack_Punch_A") ? ["Unarmed_Melee_Attack_Punch_A"] : []),
+        ...(clips.some((c) => c.name === "Spellcast_Shoot") ? ["Spellcast_Shoot"] : []),
       ]) {
         mixer.stopAllAction();
         const clip =

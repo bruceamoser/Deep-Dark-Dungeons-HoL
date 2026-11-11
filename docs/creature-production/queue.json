@@ -292,9 +292,16 @@
       "name": "Bandit Bow",
       "order": 18,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/bandit-bow.md",
+        "model": "docs/creature-production/bandit-bow.md",
+        "motion": "docs/creature-production/bandit-bow.md",
+        "game-view": "docs/creature-production/bandit-bow.md",
+        "integration": "docs/creature-production/bandit-bow.md"
+      },
+      "approvedAsset": "BanditBow"
     },
     {
       "id": "creature-hobgoblin-longbow",

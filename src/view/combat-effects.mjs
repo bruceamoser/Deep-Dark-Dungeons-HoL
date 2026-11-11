@@ -331,7 +331,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
     // steers its +Y axis, so align the actual shaft with that axis first.
     const wrapper = new T.Group();
     projectile.quaternion.setFromUnitVectors(v(0, 0, 1), UP);
-    projectile.scale.setScalar(1.65);
+    projectile.scale.setScalar(spec.projectileScale ?? 1.65);
     projectile.traverse((o) => {
       if (!o.isMesh) return;
       o.material = owned.material(o.material.clone());
@@ -413,6 +413,9 @@ export function createAttackEffect(host, data, callbacks = {}) {
     from.model.getObjectByName("weapon_r");
   const launchPoint = (age = spec.release) => {
     from.group.updateMatrixWorld(true);
+    const authoredNock = spec.nockBone && from.model.getObjectByName(spec.nockBone);
+    if (spec.kind === "arrow" && authoredNock)
+      return authoredNock.getWorldPosition(v()).addScaledVector(direction, spec.launchOffset ?? 0.603);
     if (spec.kind === "arrow" && bow) {
       // The nock follows the drawn string; the loaded shaft is 0.603 units
       // from its centre to the feathered tail after the display scale.

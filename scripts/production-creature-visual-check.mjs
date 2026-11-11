@@ -111,13 +111,15 @@ try {
   for (const instance of instances) expect(instance.avatar).toBe(entry.model);
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
   let projectileReview;
-  if (entry.runtime?.attack?.kind === "bottle") {
-    await fs.mkdir(path.join(output, "throw-frames"), { recursive: true });
-    await page.evaluate(() => {
+  const projectileKind = entry.runtime?.attack?.kind;
+  if (["bottle", "arrow"].includes(projectileKind)) {
+    const frameFolder = projectileKind === "bottle" ? "throw-frames" : "shot-frames";
+    await fs.mkdir(path.join(output, frameFolder), { recursive: true });
+    await page.evaluate((kind) => {
       const s = window.__ddd.scene;
       window.__savedTick = s.tick;
       s.tick = () => {};
-      const actor = s.entities.get("visual-0"),
+      const actor = s.entities.get("visual-5"),
         target = [...s.entities.values()].find((e) => !e.isEnemy);
       actor.travel = [];
       s.clearEffects();
@@ -127,8 +129,9 @@ try {
         fx: s.attackEffect({
           attacker: actor.data.id,
           target: target.data.id,
-          spell: true,
-          element: "fire",
+          spell: kind === "bottle",
+          ranged: kind === "arrow",
+          element: kind === "bottle" ? "fire" : undefined,
           damage: 0,
         }),
       };
@@ -139,7 +142,7 @@ try {
         .lerp(target.group.position, 0.5);
       s.camera.position.add(middle.clone().sub(s.focus));
       s.camera.lookAt(middle);
-    });
+    }, projectileKind);
     const samples = [];
     for (let frame = 0; frame < 45; frame++) {
       samples.push(
@@ -153,10 +156,14 @@ try {
           const flask =
             actor.model.getObjectByName("Firestarter_held_flask") ??
             actor.model.getObjectByName("Firestarter held flask");
+          const arrow = actor.model.getObjectByName("arrowBone"),
+            nock = actor.model.getObjectByName("BowJoint05"),
+            hand = actor.model.getObjectByName("weapon_r");
           return {
             time: fx.age,
             kind: fx.kind,
-            held: flask.visible,
+            held: flask ? flask.visible : arrow.scale.x > .5,
+            nockGap: nock && hand ? nock.getWorldPosition(nock.position.clone()).distanceTo(hand.getWorldPosition(hand.position.clone())) : undefined,
             projectile: fx.projectile.visible,
             meshes: fx.projectile.children.length,
             position: fx.projectile.position.toArray(),
@@ -166,18 +173,20 @@ try {
       await page.screenshot({
         path: path.join(
           output,
-          "throw-frames",
+          frameFolder,
           `${String(frame).padStart(4, "0")}.png`,
         ),
       });
     }
     const flying = samples.find((s) => s.time > 0.5 && s.time < 0.6);
-    expect(flying.kind).toBe("bottle");
+    expect(flying.kind).toBe(projectileKind);
     expect(flying.held).toBe(false);
     expect(flying.meshes).toBeGreaterThan(0);
     expect(flying.projectile).toBe(true);
     expect(samples.at(-1).held).toBe(true);
     expect(samples.every((s) => s.position.every(Number.isFinite))).toBe(true);
+    if (projectileKind === "arrow")
+      expect(samples.filter(s => s.time >= .3 && s.time <= .4).every(s => s.nockGap < .06)).toBe(true);
     await page.evaluate(() => {
       window.__throwReview.fx.dispose();
       window.__ddd.scene.effects = [];
@@ -186,7 +195,7 @@ try {
     projectileReview = {
       samples,
       scope:
-        "Actual game throw effect sampled at fixed animation times; no FPS measurement",
+        "Actual game projectile effect sampled at fixed animation times; no FPS measurement",
     };
   }
   expect(errors).toEqual([]);

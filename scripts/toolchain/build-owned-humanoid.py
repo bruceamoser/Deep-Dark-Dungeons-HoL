@@ -81,6 +81,14 @@ for cfg in spec.get('bladeFits',[]):
  modifications.append({'part':cfg['part'],'vertices':count,'purpose':'Narrow blade while preserving supplied hilt and grip','recipe':cfg})
 # Keep original palette for unmasked facial/skin detail; exact source masks tint
 # only identified regions. Owned meshes retain UVs, weights and rest transforms.
+weapon_rigs=[];weapon_sources={}
+for cfg in spec.get('weaponRigs',[]):
+ file=a.source/cfg['source'];before=set(bpy.data.objects);bpy.ops.import_scene.fbx(filepath=str(file));added=set(bpy.data.objects)-before
+ wr=next(o for o in added if o.type=='ARMATURE');wr.name=cfg['name']+' rig';wr.animation_data_clear()
+ for obj in added:
+  if obj.type=='MESH' and obj.name!=cfg['mesh']:bpy.data.objects.remove(obj,do_unlink=True)
+ assert bpy.data.objects.get(cfg['mesh']) is not None,('Missing selected owned weapon',cfg['mesh'])
+ weapon_rigs.append((cfg,wr));weapon_sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
 base=bpy.data.materials.new('Owned source palette');base.use_nodes=True;base['preserveAuthoredRoughness']=True
 bs=base.node_tree.nodes['Principled BSDF'];bs.inputs['Roughness'].default_value=.3
 tex=base.node_tree.nodes.new('ShaderNodeTexImage');tex.image=bpy.data.images.load(str(a.source/'Texture/DefaultPolyart/Albedo.png'));base.node_tree.links.new(tex.outputs['Color'],bs.inputs['Base Color'])
@@ -110,7 +118,7 @@ for o in bpy.context.scene.objects:
   channel=max(range(9),key=lambda i:values[i])+1 if max(values)>.5 else 0
   if channel in slots:f.material_index=slots[channel]
 # Reuse an approved ancestry sculpt without importing its old outfit/animations.
-extra_sources={}
+extra_sources=dict(weapon_sources)
 # Inspectable, explicit face-region recolours for adapted owned accessories.
 for cfg in spec.get('paintRegions',[]):
  obj=bpy.data.objects[cfg['part']];slot=len(obj.data.materials);obj.data.materials.append(mat(cfg['color'],cfg.get('metal',0)))
@@ -275,6 +283,29 @@ if spec.get('fitThrust'):
  f=spec['fitThrust'];delta=pose_delta('weapon_r','1H_Melee_Attack_Slice_Diagonal',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,-1,0));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix();rotate_part(f['part'],'weapon_r',rotation)
  fits['thrust']={'frame':f['frame'],'alignment':(delta@rotation@Vector((0,0,1))).normalized().dot(Vector((0,-1,0))),'method':'constant socket rotation'}
  assert fits['thrust']['alignment']>.99
+# Keep supplied bow/arrow deformation rigs and their synchronized source actions.
+# Attach each complete small rig at the inspected character socket, rather than
+# retargeting its joints onto the unrelated humanoid hierarchy.
+for cfg,wr in weapon_rigs:
+ delta=pose_delta(cfg['bone'],cfg['fitClip'],cfg['fitFrame'])
+ forward=(rig.matrix_world@rig.pose.bones['weapon_l'].head)-(rig.matrix_world@rig.pose.bones['weapon_r'].head);forward.z=0;forward.normalize()
+ up=Vector((0,0,1));right=up.cross(forward).normalized();desired=Matrix((right,-forward,up)).transposed()
+ world=Matrix.Translation(rig.matrix_world@rig.data.bones[cfg['bone']].head_local)@delta.to_3x3().inverted().to_4x4()@desired.to_4x4()@wr.matrix_world
+ rig.animation_data.action=None
+ for b in rig.pose.bones:b.matrix_basis.identity()
+ bpy.context.view_layer.update();wr.parent=rig;wr.parent_type='BONE';wr.parent_bone=cfg['bone'];wr.matrix_world=world
+ for clip in spec['clips']:
+  rel=cfg['attack'] if clip=='2H_Ranged_Shoot' else cfg['idle'];file=a.source/rel
+  before=set(bpy.data.objects);bpy.ops.import_scene.fbx(filepath=str(file));added=set(bpy.data.objects)-before;donor=next(o for o in added if o.type=='ARMATURE')
+  assert set(wr.data.bones.keys())==set(donor.data.bones.keys())
+  rest_delta=max(abs(x-y) for b in wr.data.bones for r1,r2 in zip(b.matrix_local,donor.data.bones[b.name].matrix_local) for x,y in zip(r1,r2));assert rest_delta<1e-5
+  action=donor.animation_data.action;action.name=cfg['name']+' '+clip;wr.animation_data_create();wr.animation_data.action=action;wr.animation_data.action_slot=action.slots[0]
+  track=wr.animation_data.nla_tracks.new();track.name=clip;strip=track.strips.new(clip,1,action)
+  human_end=next(t.strips[0].action.frame_range[1] for t in rig.animation_data.nla_tracks if t.name==clip)
+  strip.action_frame_end=min(action.frame_range[1],human_end);wr.animation_data.action=None
+  for obj in added:bpy.data.objects.remove(obj,do_unlink=True)
+  extra_sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
+ fits[cfg['name']]={'method':'Owned deformation rig, synchronized clips and constant socket fit','frame':cfg['fitFrame'],'forward':list(forward)}
 rig.animation_data.action=None
 for b in rig.pose.bones:b.matrix_basis.identity()
 for t in rig.animation_data.nla_tracks:t.mute=False
