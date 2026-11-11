@@ -112,8 +112,13 @@ try {
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
   let projectileReview;
   const projectileKind = entry.runtime?.attack?.kind;
-  if (["bottle", "arrow", "sonic"].includes(projectileKind)) {
-    const frameFolder = projectileKind === "bottle" ? "throw-frames" : projectileKind === "sonic" ? "resonance-frames" : "shot-frames";
+  if (["bottle", "arrow", "sonic", "sling"].includes(projectileKind)) {
+    const frameFolder =
+      projectileKind === "bottle"
+        ? "throw-frames"
+        : projectileKind === "sonic"
+          ? "resonance-frames"
+          : "shot-frames";
     await fs.mkdir(path.join(output, frameFolder), { recursive: true });
     await page.evaluate((kind) => {
       const s = window.__ddd.scene;
@@ -129,8 +134,8 @@ try {
         fx: s.attackEffect({
           attacker: actor.data.id,
           target: target.data.id,
-          spell: kind !== "arrow",
-          ranged: kind === "arrow",
+          spell: ["bottle", "sonic"].includes(kind),
+          ranged: ["arrow", "sling"].includes(kind),
           element: kind === "bottle" ? "fire" : undefined,
           damage: 0,
         }),
@@ -155,15 +160,25 @@ try {
           s.renderer.render(s.scene, s.camera);
           const flask =
             actor.model.getObjectByName("Firestarter_held_flask") ??
-            actor.model.getObjectByName("Firestarter held flask");
+            actor.model.getObjectByName("Firestarter held flask") ??
+            actor.model.getObjectByName("Slinger_stone");
           const arrow = actor.model.getObjectByName("arrowBone"),
             nock = actor.model.getObjectByName("BowJoint05"),
             hand = actor.model.getObjectByName("weapon_r");
           return {
             time: fx.age,
             kind: fx.kind,
-            held: flask ? flask.visible : arrow ? arrow.scale.x > .5 : undefined,
-            nockGap: nock && hand ? nock.getWorldPosition(nock.position.clone()).distanceTo(hand.getWorldPosition(hand.position.clone())) : undefined,
+            held: flask
+              ? flask.visible
+              : arrow
+                ? arrow.scale.x > 0.5
+                : undefined,
+            nockGap:
+              nock && hand
+                ? nock
+                    .getWorldPosition(nock.position.clone())
+                    .distanceTo(hand.getWorldPosition(hand.position.clone()))
+                : undefined,
             projectile: fx.projectile.visible,
             meshes: fx.projectile.children.length,
             position: fx.projectile.position.toArray(),
@@ -186,7 +201,11 @@ try {
     if (projectileKind !== "sonic") expect(samples.at(-1).held).toBe(true);
     expect(samples.every((s) => s.position.every(Number.isFinite))).toBe(true);
     if (projectileKind === "arrow")
-      expect(samples.filter(s => s.time >= .3 && s.time <= .4).every(s => s.nockGap < .06)).toBe(true);
+      expect(
+        samples
+          .filter((s) => s.time >= 0.3 && s.time <= 0.4)
+          .every((s) => s.nockGap < 0.06),
+      ).toBe(true);
     await page.evaluate(() => {
       window.__throwReview.fx.dispose();
       window.__ddd.scene.effects = [];

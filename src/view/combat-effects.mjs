@@ -267,23 +267,24 @@ export function createAttackEffect(host, data, callbacks = {}) {
     .add(v(0, 1.05, 0))
     .addScaledVector(direction, -0.23);
   let start, projectile, ribbon, weapon;
-  const heldFlask =
-    spec.kind === "bottle"
+  const heldPayload = spec.payloadPart
+    ? from.model.getObjectByName(spec.payloadPart)
+    : spec.kind === "bottle"
       ? (from.model.getObjectByName("Firestarter_held_flask") ??
         from.model.getObjectByName("Firestarter held flask"))
       : null;
-  const flaskMeshes = [];
-  heldFlask?.traverse((o) => {
-    if (o.isMesh) flaskMeshes.push(o);
+  const payloadMeshes = [];
+  heldPayload?.traverse((o) => {
+    if (o.isMesh) payloadMeshes.push(o);
   });
-  const flaskVisibility = flaskMeshes.map((o) => o.visible);
-  const bottleFlight = new T.Group();
+  const payloadVisibility = payloadMeshes.map((o) => o.visible);
+  const payloadFlight = new T.Group();
   // Freeze the actual owned prop at release, including its current skin pose.
-  // This avoids creating a second approximate bottle or reusing a live skeleton.
-  const releaseFlask = () => {
+  // This keeps the bottle/stone geometry without reusing a live skeleton.
+  const releasePayload = () => {
     from.group.updateMatrixWorld(true);
     const center = new T.Box3();
-    for (const source of flaskMeshes) {
+    for (const source of payloadMeshes) {
       source.skeleton?.update();
       const geometry = owned.geometry(source.geometry.clone());
       const positions = geometry.attributes.position;
@@ -304,11 +305,11 @@ export function createAttackEffect(host, data, callbacks = {}) {
       const material = Array.isArray(source.material)
         ? source.material.map((m) => owned.material(m.clone()))
         : owned.material(source.material.clone());
-      bottleFlight.add(new T.Mesh(geometry, material));
+      payloadFlight.add(new T.Mesh(geometry, material));
       source.visible = false;
     }
     const origin = center.isEmpty() ? launchPoint() : center.getCenter(v());
-    bottleFlight.children.forEach((mesh) =>
+    payloadFlight.children.forEach((mesh) =>
       mesh.geometry.translate(-origin.x, -origin.y, -origin.z),
     );
     start = origin;
@@ -351,16 +352,25 @@ export function createAttackEffect(host, data, callbacks = {}) {
     wrapper.add(projectile);
     projectile = wrapper;
     projectile.name = "Arrow flight";
-  } else if (spec.kind === "bottle") {
-    projectile = bottleFlight;
-    projectile.name = "Thrown fuel flask";
+  } else if (spec.kind === "bottle" || spec.kind === "sling") {
+    projectile = payloadFlight;
+    projectile.name =
+      spec.kind === "sling" ? "Flying sling stone" : "Thrown fuel flask";
   } else if (spec.kind === "wind" || spec.kind === "sonic") {
     const sonic = spec.kind === "sonic";
     projectile = new T.Group();
-    projectile.name = sonic ? "Traveling resonance rings" : "Flying pressure wave";
+    projectile.name = sonic
+      ? "Traveling resonance rings"
+      : "Flying pressure wave";
     for (let i = 0; i < 3; i++) {
       const ring = owned.mesh(
-        new T.TorusGeometry(0.25 + i * 0.1, 0.024, 5, 24, Math.PI * (sonic ? 2 : 1.65)),
+        new T.TorusGeometry(
+          0.25 + i * 0.1,
+          0.024,
+          5,
+          24,
+          Math.PI * (sonic ? 2 : 1.65),
+        ),
         glow(sonic ? MAGIC_LOOKS.sonic.color : 0xc8ecff, 0.65),
       );
       ring.rotation.x = Math.PI / 2;
@@ -415,9 +425,12 @@ export function createAttackEffect(host, data, callbacks = {}) {
     from.model.getObjectByName("weapon_r");
   const launchPoint = (age = spec.release) => {
     from.group.updateMatrixWorld(true);
-    const authoredNock = spec.nockBone && from.model.getObjectByName(spec.nockBone);
+    const authoredNock =
+      spec.nockBone && from.model.getObjectByName(spec.nockBone);
     if (spec.kind === "arrow" && authoredNock)
-      return authoredNock.getWorldPosition(v()).addScaledVector(direction, spec.launchOffset ?? 0.603);
+      return authoredNock
+        .getWorldPosition(v())
+        .addScaledVector(direction, spec.launchOffset ?? 0.603);
     if (spec.kind === "arrow" && bow) {
       // The nock follows the drawn string; the loaded shaft is 0.603 units
       // from its centre to the feathered tail after the display scale.
@@ -438,7 +451,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
   const color =
     spec.kind === "wind"
       ? 0xc8ecff
-      : MAGIC_LOOKS[spec.kind]?.color ?? (data.spell ? 0xffa153 : 0xffda96);
+      : (MAGIC_LOOKS[spec.kind]?.color ?? (data.spell ? 0xffa153 : 0xffda96));
   const burst = impactBurst(owned, color, spec.kind);
   burst.group.position.copy(end);
   root.add(burst.group);
@@ -481,7 +494,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
       if (!released && age >= (spec.release ?? 0.15)) {
         released = true;
         if (isProjectile) start = launchPoint();
-        if (spec.kind === "bottle") releaseFlask();
+        if (spec.kind === "bottle" || spec.kind === "sling") releasePayload();
         callbacks.release?.(spec.kind);
       }
       if (projectile) {
@@ -505,7 +518,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
           projectile.position.y += 4 * arc * p * (1 - p);
           const tangent = end.clone().sub(start);
           tangent.y += 4 * arc * (1 - 2 * p);
-          if (spec.kind === "bottle") projectile.rotation.set(p * Math.PI * 2, 0, 0);
+          if (spec.kind === "bottle" || spec.kind === "sling")
+            projectile.rotation.set(p * Math.PI * 2, 0, 0);
           else
             projectile.quaternion.setFromUnitVectors(UP, tangent.normalize());
           if (age > contact && spec.kind === "arrow") {
@@ -543,8 +557,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
       disposed = true;
       if (!impacted) to.pendingImpacts = Math.max(0, to.pendingImpacts - 1);
       if (lunge) from.model.position.copy(restingPosition);
-      flaskMeshes.forEach((mesh, i) => {
-        mesh.visible = flaskVisibility[i];
+      payloadMeshes.forEach((mesh, i) => {
+        mesh.visible = payloadVisibility[i];
       });
       if (bowRotation) bow.quaternion.copy(bowRotation);
       for (const { mesh, index, rest } of bowDraws)

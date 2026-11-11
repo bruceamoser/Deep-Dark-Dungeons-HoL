@@ -104,7 +104,9 @@ for o in bpy.context.scene.objects:
  if o.type!='MESH':continue
  o.data.materials.clear();o.data.materials.append(base)
  if o.name in spec.get('solid',{}):
-  o.data.materials.clear();o.data.materials.append(mat(spec['solid'][o.name]));continue
+  o.data.materials.clear();o.data.materials.append(mat(spec['solid'][o.name]))
+  for face in o.data.polygons:face.material_index=0
+  continue
  if o.name.startswith(('Head','Eye','Mouth')):continue
  colors={**spec['palette'],**spec.get('partPalette',{}).get(o.name,{})};slots={}
  for channel,h in colors.items():
@@ -334,6 +336,10 @@ for cfg,wr in weapon_rigs:
   for obj in added:bpy.data.objects.remove(obj,do_unlink=True)
   extra_sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
  fits[cfg['name']]={'method':'Owned deformation rig, synchronized clips and constant socket fit','frame':cfg['fitFrame'],'forward':list(forward)}
+if spec.get('sling'):
+ sys.path.insert(0,str(Path(__file__).parent))
+ from owned_sling import add_owned_sling
+ recipe,hashes=add_owned_sling(rig,spec['sling'],mat);modifications.append(recipe);extra_sources.update(hashes)
 if spec.get('propStrike'):
  sys.path.insert(0,str(Path(__file__).parent))
  from prop_strike import author_prop_strike
