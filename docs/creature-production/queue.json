@@ -116,9 +116,16 @@
       "name": "Goblin Firestarter",
       "order": 7,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/goblin-firestarter.md",
+        "model": "docs/creature-production/goblin-firestarter.md",
+        "motion": "docs/creature-production/goblin-firestarter.md",
+        "game-view": "docs/creature-production/goblin-firestarter.md",
+        "integration": "docs/creature-production/goblin-firestarter.md"
+      },
+      "approvedAsset": "GoblinFirestarter"
     },
     {
       "id": "creature-grave-cultist",

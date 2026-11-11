@@ -2,7 +2,13 @@
 
 ## Active work — owned assets and no-cost modular pilot (November 11)
 
-### Latest — First sequential humanoids integrated and installed
+### Latest — Goblin Firestarter and reusable adapted-item library
+
+Clean worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/sequential-creature-wave02`. **Seven of 58 source-integrated; 51 remain.** Firestarter reuses the approved goblin head, owned Body05/round goggles/plain pack and KayKit corked bottles. Soot-brown/ember-orange palette, upright neck grip, actual flask projectile/release and a separate melee punch. 29,368 triangles, 43 bones, six clips. Full model/motion/bestiary/dungeon review and 368 tests pass. AppImage/deb built; launcher native check passed; menu AppImage updated and its native bestiary/save/sandbox verification passed too. Version remains 0.8.7 local review build; no public release/Windows test. Performance remains deferred. See [Firestarter report](../creature-production/goblin-firestarter.md).
+
+Bruce requires useful modified items to join the available asset pool. [Adapted asset library](../creature-production/adapted-asset-library.md) registers fitted Scrapper cap, hornless Soldier helmet/shield, Firestarter goggles/flasks/pack palette with source, recipes, private editable objects, fit and review limits. Search it alongside the original owned inventory for every brief. Next: Grave Cultist. No unattended processing is running.
+
+### Previous — First sequential humanoids integrated and installed
 
 Clean worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/sequential-creature-production`, base `fca55f7` (PR161). Main checkout’s historical dirty experiments are preserved. **Six of 58 integrated; 52 remain.** Added Goblin Scrapper, Road Bandit and Shield Soldier to the three approved anchors. Installed menu AppImage and primary checkout launcher packages are updated; both passed the native 58-entry bestiary/save/sandbox check. All 366 tests and AppImage/deb builds pass. Version stays 0.8.7 local review build; no public release or Windows test.
 

@@ -194,6 +194,11 @@ export function attackPresentation(from, data) {
       release: 0.52,
       contact: 0.52,
     };
+  const authored =
+    from.model.userData.authoredEquippedCreature &&
+    from.model.userData.attackPresentation;
+  if (authored?.when === "projectile")
+    return { ...(data.spell || data.ranged ? authored : authored.melee) };
   if (data.spell)
     return {
       kind: data.element ?? "fire",
@@ -259,6 +264,52 @@ export function createAttackEffect(host, data, callbacks = {}) {
     .add(v(0, 1.05, 0))
     .addScaledVector(direction, -0.23);
   let start, projectile, ribbon, weapon;
+  const heldFlask =
+    spec.kind === "bottle"
+      ? (from.model.getObjectByName("Firestarter_held_flask") ??
+        from.model.getObjectByName("Firestarter held flask"))
+      : null;
+  const flaskMeshes = [];
+  heldFlask?.traverse((o) => {
+    if (o.isMesh) flaskMeshes.push(o);
+  });
+  const flaskVisibility = flaskMeshes.map((o) => o.visible);
+  const bottleFlight = new T.Group();
+  // Freeze the actual owned prop at release, including its current skin pose.
+  // This avoids creating a second approximate bottle or reusing a live skeleton.
+  const releaseFlask = () => {
+    from.group.updateMatrixWorld(true);
+    const center = new T.Box3();
+    for (const source of flaskMeshes) {
+      source.skeleton?.update();
+      const geometry = owned.geometry(source.geometry.clone());
+      const positions = geometry.attributes.position;
+      for (let i = 0; i < positions.count; i++) {
+        const point = v().fromBufferAttribute(
+          source.geometry.attributes.position,
+          i,
+        );
+        if (source.isSkinnedMesh) source.applyBoneTransform(i, point);
+        point.applyMatrix4(source.matrixWorld);
+        positions.setXYZ(i, point.x, point.y, point.z);
+      }
+      geometry.deleteAttribute("skinIndex");
+      geometry.deleteAttribute("skinWeight");
+      geometry.computeVertexNormals();
+      geometry.computeBoundingBox();
+      center.union(geometry.boundingBox);
+      const material = Array.isArray(source.material)
+        ? source.material.map((m) => owned.material(m.clone()))
+        : owned.material(source.material.clone());
+      bottleFlight.add(new T.Mesh(geometry, material));
+      source.visible = false;
+    }
+    const origin = center.isEmpty() ? launchPoint() : center.getCenter(v());
+    bottleFlight.children.forEach((mesh) =>
+      mesh.geometry.translate(-origin.x, -origin.y, -origin.z),
+    );
+    start = origin;
+  };
   const isProjectile = !!(data.spell || data.ranged || spec.kind === "wind");
   const restingPosition = from.model.position.clone();
   const lunge = isProjectile
@@ -297,6 +348,9 @@ export function createAttackEffect(host, data, callbacks = {}) {
     wrapper.add(projectile);
     projectile = wrapper;
     projectile.name = "Arrow flight";
+  } else if (spec.kind === "bottle") {
+    projectile = bottleFlight;
+    projectile.name = "Thrown fuel flask";
   } else if (spec.kind === "wind") {
     projectile = new T.Group();
     projectile.name = "Flying pressure wave";
@@ -353,7 +407,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
   aimBow(0);
   const hand =
     from.model.getObjectByName("handslotr") ??
-    from.model.getObjectByName("handslot.r");
+    from.model.getObjectByName("handslot.r") ??
+    from.model.getObjectByName("weapon_r");
   const launchPoint = (age = spec.release) => {
     from.group.updateMatrixWorld(true);
     if (spec.kind === "arrow" && bow) {
@@ -425,6 +480,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
       if (!released && age >= (spec.release ?? 0.15)) {
         released = true;
         if (isProjectile) start = launchPoint();
+        if (spec.kind === "bottle") releaseFlask();
         callbacks.release?.(spec.kind);
       }
       if (projectile) {
@@ -440,13 +496,17 @@ export function createAttackEffect(host, data, callbacks = {}) {
           const arc =
             spec.kind === "arrow"
               ? Math.min(0.65, start.distanceTo(end) * 0.035)
-              : 0.08;
+              : spec.kind === "bottle"
+                ? 0.75
+                : 0.08;
           projectile.visible = spec.kind === "arrow" || p < 1;
           projectile.position.lerpVectors(start, end, p);
           projectile.position.y += 4 * arc * p * (1 - p);
           const tangent = end.clone().sub(start);
           tangent.y += 4 * arc * (1 - 2 * p);
-          projectile.quaternion.setFromUnitVectors(UP, tangent.normalize());
+          if (spec.kind === "bottle") projectile.rotation.set(p * Math.PI * 2, 0, 0);
+          else
+            projectile.quaternion.setFromUnitVectors(UP, tangent.normalize());
           if (age > contact && spec.kind === "arrow") {
             const alpha = Math.max(0, 1 - (age - contact) / 0.32);
             projectile.traverse((o) => {
@@ -482,6 +542,9 @@ export function createAttackEffect(host, data, callbacks = {}) {
       disposed = true;
       if (!impacted) to.pendingImpacts = Math.max(0, to.pendingImpacts - 1);
       if (lunge) from.model.position.copy(restingPosition);
+      flaskMeshes.forEach((mesh, i) => {
+        mesh.visible = flaskVisibility[i];
+      });
       if (bowRotation) bow.quaternion.copy(bowRotation);
       for (const { mesh, index, rest } of bowDraws)
         mesh.morphTargetInfluences[index] = rest;

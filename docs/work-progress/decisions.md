@@ -147,3 +147,7 @@ Bruce explicitly requires color schemes when modifying supplied assets to give c
 ## 2026-11-11 — Mandatory creative owned-prop search for every creature
 
 Bruce explicitly requires the pipeline to always search what we own for items to add to creatures, including nonweapon tools, bottles, books, rope, traps, containers and lights. Every brief must record inspected candidate parts, selected role/personality props, planned modifications/colors/attachments and any remaining gap. Reuse/modify first; avoid random clutter and do not equip ordinary animals without a creature-specific reason. The workflow’s required brief gate now spells this out.
+
+## 2026-11-11 — Register modified items for future reuse
+
+Bruce explicitly requires an item created by modifying an existing item to join the possible asset pool for other creatures. The adapted asset library is a required brief input and integration output: record original source/license, reproducible modification, private editable file/object, attachment/fit, palette and review state. Keep variants separable or reproducibly extractable; recheck fit/motion on the next wearer. This complements the mandatory original owned-asset search and preserves the value of completed work.

@@ -52,6 +52,10 @@ Record in each brief:
 
 Use props to convey occupation, habits and personality while maintaining game-scale readability. Avoid random clutter, impossible loads and gear intersecting hands/limbs. Ordinary animals should remain ordinary animals unless the creature description calls for equipment; the asset search may correctly conclude no carried gear is appropriate. A successful source import is not a grip, attachment or animation check.
 
+## Keep adaptations reusable
+
+Search [the adapted asset library](adapted-asset-library.md) as well as the original inventory. Every useful item made by modifying an existing item must be registered there before its creature completes integration. Include the source/license, modification recipe/spec, private editable object/file, socket/fit, palette and review status. Preserve a separable object or a reproducible extraction/assembly recipe. Reusing a reviewed item on another creature still requires fit and motion clearance checks.
+
 ## Color schemes are part of creature design
 
 Bruce explicitly requires deliberate color and color schemes when adapting owned items, to give each creature its own look and feel. **Reusing a mesh does not mean leaving the supplier’s default colors or recoloring every surface the same shade.**

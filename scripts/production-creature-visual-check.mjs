@@ -110,6 +110,85 @@ try {
   expect(instances.length).toBe(6);
   for (const instance of instances) expect(instance.avatar).toBe(entry.model);
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
+  let projectileReview;
+  if (entry.runtime?.attack?.kind === "bottle") {
+    await fs.mkdir(path.join(output, "throw-frames"), { recursive: true });
+    await page.evaluate(() => {
+      const s = window.__ddd.scene;
+      window.__savedTick = s.tick;
+      s.tick = () => {};
+      const actor = s.entities.get("visual-0"),
+        target = [...s.entities.values()].find((e) => !e.isEnemy);
+      actor.travel = [];
+      s.clearEffects();
+      window.__throwReview = {
+        actor,
+        target,
+        fx: s.attackEffect({
+          attacker: actor.data.id,
+          target: target.data.id,
+          spell: true,
+          element: "fire",
+          damage: 0,
+        }),
+      };
+      s.camera.zoom *= 1.8;
+      s.camera.updateProjectionMatrix();
+      const middle = actor.group.position
+        .clone()
+        .lerp(target.group.position, 0.5);
+      s.camera.position.add(middle.clone().sub(s.focus));
+      s.camera.lookAt(middle);
+    });
+    const samples = [];
+    for (let frame = 0; frame < 45; frame++) {
+      samples.push(
+        await page.evaluate(() => {
+          const s = window.__ddd.scene,
+            { actor, fx } = window.__throwReview;
+          actor.mixer.update(1 / 30);
+          s.scene.updateMatrixWorld(true);
+          fx.update(1 / 30);
+          s.renderer.render(s.scene, s.camera);
+          const flask =
+            actor.model.getObjectByName("Firestarter_held_flask") ??
+            actor.model.getObjectByName("Firestarter held flask");
+          return {
+            time: fx.age,
+            kind: fx.kind,
+            held: flask.visible,
+            projectile: fx.projectile.visible,
+            meshes: fx.projectile.children.length,
+            position: fx.projectile.position.toArray(),
+          };
+        }),
+      );
+      await page.screenshot({
+        path: path.join(
+          output,
+          "throw-frames",
+          `${String(frame).padStart(4, "0")}.png`,
+        ),
+      });
+    }
+    const flying = samples.find((s) => s.time > 0.5 && s.time < 0.6);
+    expect(flying.kind).toBe("bottle");
+    expect(flying.held).toBe(false);
+    expect(flying.meshes).toBeGreaterThan(0);
+    expect(flying.projectile).toBe(true);
+    expect(samples.at(-1).held).toBe(true);
+    expect(samples.every((s) => s.position.every(Number.isFinite))).toBe(true);
+    await page.evaluate(() => {
+      window.__throwReview.fx.dispose();
+      window.__ddd.scene.effects = [];
+      window.__ddd.scene.tick = window.__savedTick;
+    });
+    projectileReview = {
+      samples,
+      scope:
+        "Actual game throw effect sampled at fixed animation times; no FPS measurement",
+    };
+  }
   expect(errors).toEqual([]);
   await fs.writeFile(
     path.join(output, "results.json"),
@@ -120,6 +199,7 @@ try {
         hash: entry.sha256,
         clips,
         instances,
+        projectileReview,
         errors,
         scope:
           "Actual game bestiary + dungeon appearance routing; muted isolated browser context; performance deferred",
