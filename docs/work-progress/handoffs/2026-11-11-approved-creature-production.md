@@ -28,4 +28,4 @@ Unrelated uncommitted historical creature routing, effects, native-check and gen
 
 ## Sync
 
-Commit/push this complete integration and self-review/merge the passing PR as previously authorized. Verify the remote branch and main contain the intended checkpoint; Git history/PR identifies final hashes. No silent background model batch remains after delivery.
+Integration checkpoint: `3459ecc10dca1144245952547d6ab7c818324751`, pushed and verified against the remote branch. [PR #161](https://github.com/bruceamoser/Four-Lanterns-Deep/pull/161) tracks the final source merge and CI result; its merge commit is the authoritative main checkpoint. Author self-review covered the diff and passing checks; no independent review is claimed. No silent background model batch remains after delivery.
