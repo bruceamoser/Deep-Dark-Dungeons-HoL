@@ -45,6 +45,21 @@ for folder,name,bone in spec['parts']:
   fit=spec.get('partFit',{}).get(name,{})
   o.matrix_world=Matrix.Translation(rig.matrix_world@rig.data.bones[bone].head_local+Vector(fit.get('offset',[0,0,0])))@Matrix.Diagonal((*fit.get('scale',[1,1,1]),1))@o.matrix_world
   g=o.vertex_groups.new(name=bone);g.add(list(range(len(o.data.vertices))),1,'REPLACE');o.modifiers.new('Original source rig','ARMATURE').object=rig
+# Open explicit ear notches in a fitted helmet copy; preserve the dome/rim.
+for cfg in spec.get('helmetEarNotches',[]):
+ obj=bpy.data.objects[cfg['part']]
+ bm=bmesh.new();bm.from_mesh(obj.data);bm.transform(obj.matrix_world)
+ for axis,value in [(2,cfg['topZ']),(0,-cfg['minX']),(0,cfg['minX']),(1,cfg['minY']),(1,cfg['maxY'])]:
+  point=Vector();point[axis]=value;normal=Vector();normal[axis]=1
+  region=list(bm.faces) if axis==2 else [f for f in bm.faces if f.calc_center_median().z<cfg['topZ']+1e-6]
+  geom=list({v for f in region for v in f.verts})+list({e for f in region for e in f.edges})+region
+  bmesh.ops.bisect_plane(bm,geom=geom,dist=1e-6,plane_co=point,plane_no=normal)
+ faces=[f for f in bm.faces if abs(f.calc_center_median().x)>cfg['minX'] and cfg['minY']<f.calc_center_median().y<cfg['maxY'] and f.calc_center_median().z<cfg['topZ']]
+ assert 0<len(faces)<len(bm.faces)/2,('Inspect helmet notch bounds',cfg['part'],len(faces))
+ count=len(faces);bmesh.ops.delete(bm,geom=faces,context='FACES');bm.transform(obj.matrix_world.inverted());bm.to_mesh(obj.data);bm.free()
+ for face in obj.data.polygons:
+  if (obj.matrix_world@face.center).z<cfg['topZ']:face.use_smooth=False
+ modifications.append({'part':cfg['part'],'removedFaces':count,'purpose':'Paired open-bottom ear notches in helmet skirt; preserve fitted crown','recipe':cfg})
 # Refit paired accessory halves around inspected rest-space pivots. This keeps
 # source ear folds/topology while changing their placement, not anatomy repair.
 for cfg in spec.get('symmetricFits',[]):
@@ -56,6 +71,14 @@ for cfg in spec.get('symmetricFits',[]):
   point=pivot+rotation@(point-pivot)*cfg['scale']+Vector((side*cfg['offset'][0],cfg['offset'][1],cfg['offset'][2]))
   vertex.co=inverse@point
  modifications.append({'part':cfg['part'],'purpose':cfg['purpose'],'recipe':cfg})
+for cfg in spec.get('bladeFits',[]):
+ obj=bpy.data.objects[cfg['part']];anchor=rig.matrix_world@rig.data.bones[cfg['bone']].head_local;inverse=obj.matrix_world.inverted();count=0
+ for vertex in obj.data.vertices:
+  point=obj.matrix_world@vertex.co
+  if point.z-anchor.z>cfg['aboveGrip']:
+   point.x=anchor.x+(point.x-anchor.x)*cfg['widthScale'];vertex.co=inverse@point;count+=1
+ assert count>0,('Blade fit missed source geometry',cfg['part'])
+ modifications.append({'part':cfg['part'],'vertices':count,'purpose':'Narrow blade while preserving supplied hilt and grip','recipe':cfg})
 # Keep original palette for unmasked facial/skin detail; exact source masks tint
 # only identified regions. Owned meshes retain UVs, weights and rest transforms.
 base=bpy.data.materials.new('Owned source palette');base.use_nodes=True;base['preserveAuthoredRoughness']=True
@@ -104,6 +127,29 @@ for cfg in spec.get('paintBands',[]):
   if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
  assert count>0,('Paint band missed',cfg['part'])
  modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
+for cfg in spec.get('faceShells',[]):
+ source=bpy.data.objects[cfg['source']];obj=source.copy();obj.data=source.data.copy();obj.name=cfg['name'];bpy.context.collection.objects.link(obj)
+ bm=bmesh.new();bm.from_mesh(obj.data)
+ discard=[]
+ for face in bm.faces:
+  center=obj.matrix_world@face.calc_center_median()
+  if not (cfg['minZ']<center.z<cfg['maxZ'] and center.y<cfg['frontY'] and abs(center.x)<cfg['maxX']):discard.append(face)
+ assert 0<len(discard)<len(bm.faces),('Inspect face shell region',cfg['name'])
+ bmesh.ops.delete(bm,geom=discard,context='FACES');bm.to_mesh(obj.data);bm.free()
+ obj.matrix_world=Matrix.Translation(Vector(cfg['offset']))@obj.matrix_world
+ obj.data.materials.clear();obj.data.materials.append(mat(cfg['color']));obj.data.materials.append(mat(cfg['rimColor'],.25))
+ for face in obj.data.polygons:face.material_index=0
+ shell=obj.modifiers.new('Thin fitted mask shell','SOLIDIFY');shell.thickness=cfg['thickness'];shell.offset=1;shell.material_offset_rim=1
+ bpy.context.view_layer.objects.active=obj;bpy.ops.object.modifier_apply(modifier=shell.name)
+ for opening in cfg.get('eyeHoles',[]):
+  bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=1,depth=1)
+  cutter=bpy.context.object;cutter.matrix_world=Matrix.Translation(Vector(opening['center']))@Matrix.Rotation(math.pi/2,4,'X')@Matrix.Diagonal((opening['width'],opening['height'],.8,1))
+  hole=obj.modifiers.new('Mask eye opening','BOOLEAN');hole.operation='DIFFERENCE';hole.solver='EXACT';hole.object=cutter
+  bpy.context.view_layer.objects.active=obj;bpy.ops.object.modifier_apply(modifier=hole.name)
+  cutter_mesh=cutter.data;bpy.data.objects.remove(cutter,do_unlink=True);bpy.data.meshes.remove(cutter_mesh)
+ if cfg.get('eyeHoles'):
+  obj.vertex_groups['head'].add(list(range(len(obj.data.vertices))),1,'REPLACE')
+ modifications.append({'part':obj.name,'purpose':'Fitted mask copied from owned face contours; original head retained','recipe':cfg})
 if spec.get('headFixture'):
  cfg=spec['headFixture'];file=Path(cfg['path']).expanduser()
  with bpy.data.libraries.load(str(file),link=False) as (src,dst):
@@ -122,7 +168,7 @@ for cfg in spec.get('externalParts',[]):
   if obj.type!='MESH':continue
   world=obj.matrix_world.copy();obj.parent=None
   bone=cfg['bone'];anchor=rig.matrix_world@rig.data.bones[bone].head_local
-  transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Diagonal((*([cfg['scale']]*3),1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
+  transform=Matrix.Translation(anchor+Vector(cfg.get('offset',[0,0,0])))@Matrix.Rotation(math.radians(cfg.get('rotateX',0)),4,'X')@Matrix.Rotation(math.radians(cfg.get('rotateY',0)),4,'Y')@Matrix.Rotation(math.radians(cfg.get('rotateZ',0)),4,'Z')@Matrix.Diagonal((*([cfg['scale']]*3),1))@Matrix.Translation(-Vector(cfg.get('origin',[0,0,0])))
   obj.matrix_world=transform@world;obj.name=cfg['name']
   group=obj.vertex_groups.new(name=bone);group.add(list(range(len(obj.data.vertices))),1,'REPLACE');obj.modifiers.new('Owned prop socket','ARMATURE').object=rig
   if cfg.get('tag'):obj['equipmentPart']=cfg['tag']
@@ -187,7 +233,8 @@ for f in spec.get('fitUpright',[]):
  fits[f['part']]={'frame':f['frame'],'alignment':(delta@rotation@Vector((0,0,1))).normalized().dot(Vector((0,0,1))),'method':'constant socket rotation, upright at inspected idle grip'}
 if spec.get('fitShield'):
  f=spec['fitShield'];delta=pose_delta('weapon_l','Idle',f['frame']).to_3x3();front=Vector((.15,-1,0)).normalized();up=Vector((0,0,1));right=up.cross(front).normalized();desired=Matrix((right,-front,up)).transposed();rotation=delta.inverted()@desired
- rotate_part(f['part'],'weapon_l',rotation);fits['shield']={'frame':f['frame'],'worldNormal':list(front),'method':'constant bind rotation; no sliding'}
+ for name in [f['part'],*f.get('attachments',[])]:rotate_part(name,'weapon_l',rotation)
+ fits['shield']={'frame':f['frame'],'worldNormal':list(front),'method':'constant bind rotation; no sliding'}
 if spec.get('fitThrust'):
  f=spec['fitThrust'];delta=pose_delta('weapon_r','1H_Melee_Attack_Slice_Diagonal',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,-1,0));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix();rotate_part(f['part'],'weapon_r',rotation)
  fits['thrust']={'frame':f['frame'],'alignment':(delta@rotation@Vector((0,0,1))).normalized().dot(Vector((0,-1,0))),'method':'constant socket rotation'}

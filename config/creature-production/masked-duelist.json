@@ -1,0 +1,138 @@
+{
+  "id": "masked-duelist",
+  "body": "Body12",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hat01",
+      "head"
+    ],
+    [
+      "Weapons",
+      "OHS06_Sword",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack03_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#2e292b",
+    "2": "#352a2b",
+    "3": "#7d2e35",
+    "4": "#b79a62",
+    "5": "#42362f",
+    "6": "#722e36",
+    "7": "#49382e",
+    "8": "#d5cdb3"
+  },
+  "partPalette": {
+    "Hat01": {
+      "1": "#302c2d",
+      "2": "#302c2d",
+      "3": "#302c2d",
+      "4": "#b59a68",
+      "5": "#7d3037",
+      "6": "#7d3037",
+      "7": "#352b2b",
+      "8": "#c9b988"
+    },
+    "OHS06_Sword": {
+      "3": "#4a332d",
+      "4": "#b49c64",
+      "8": "#c7d0d1"
+    },
+    "Cloak03": {
+      "1": "#29272b",
+      "2": "#38292d",
+      "3": "#762c38",
+      "4": "#ae925b",
+      "5": "#392c30",
+      "6": "#762c38",
+      "7": "#762c38",
+      "8": "#c7b583"
+    }
+  },
+  "solid": {},
+  "fitThrust": {
+    "part": "OHS06_Sword",
+    "frame": 9
+  },
+  "additionalBodies": [
+    "Cloak03"
+  ],
+  "partFit": {
+    "OHS06_Sword": {
+      "scale": [
+        0.65,
+        0.65,
+        1
+      ]
+    }
+  },
+  "faceShells": [
+    {
+      "source": "Head01_Male",
+      "name": "Duelist ivory mask",
+      "minZ": 0.74,
+      "maxZ": 1.14,
+      "frontY": -0.2,
+      "maxX": 0.28,
+      "offset": [
+        0,
+        -0.018,
+        0
+      ],
+      "thickness": 0.007,
+      "color": "#e1d9bc",
+      "rimColor": "#b59654",
+      "eyeHoles": [
+        {
+          "center": [
+            -0.12,
+            -0.3,
+            0.91
+          ],
+          "width": 0.058,
+          "height": 0.09
+        },
+        {
+          "center": [
+            0.12,
+            -0.3,
+            0.91
+          ],
+          "width": 0.058,
+          "height": 0.09
+        }
+      ]
+    }
+  ],
+  "bladeFits": [
+    {
+      "part": "OHS06_Sword",
+      "bone": "weapon_r",
+      "aboveGrip": 0.2,
+      "widthScale": 0.35
+    }
+  ]
+}

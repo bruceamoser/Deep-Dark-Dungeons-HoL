@@ -212,27 +212,48 @@
       "name": "Hobgoblin Marshal",
       "order": 13,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hobgoblin-marshal.md",
+        "model": "docs/creature-production/hobgoblin-marshal.md",
+        "motion": "docs/creature-production/hobgoblin-marshal.md",
+        "game-view": "docs/creature-production/hobgoblin-marshal.md",
+        "integration": "docs/creature-production/hobgoblin-marshal.md"
+      },
+      "approvedAsset": "HobgoblinMarshal"
     },
     {
       "id": "creature-masked-duelist",
       "name": "Masked Duelist",
       "order": 14,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/masked-duelist.md",
+        "model": "docs/creature-production/masked-duelist.md",
+        "motion": "docs/creature-production/masked-duelist.md",
+        "game-view": "docs/creature-production/masked-duelist.md",
+        "integration": "docs/creature-production/masked-duelist.md"
+      },
+      "approvedAsset": "MaskedDuelist"
     },
     {
       "id": "creature-goblin-boss",
       "name": "Goblin Boss",
       "order": 15,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/goblin-boss.md",
+        "model": "docs/creature-production/goblin-boss.md",
+        "motion": "docs/creature-production/goblin-boss.md",
+        "game-view": "docs/creature-production/goblin-boss.md",
+        "integration": "docs/creature-production/goblin-boss.md"
+      },
+      "approvedAsset": "GoblinBoss"
     },
     {
       "id": "creature-orc-warcaller",
