@@ -340,6 +340,68 @@
           }
         }
       }
+    },
+    {
+      "creatureId": "creature-bandit-bow",
+      "model": "BanditBow",
+      "path": "/assets/licensed/creatures/BanditBow.glb",
+      "sha256": "12fb4330276d49b806741d53974b37f21f545c5e61cd1078a515e3db6bb5f2fb",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/bandit-bow.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "bow",
+        "attack": {
+          "kind": "arrow",
+          "when": "projectile",
+          "clip": "2H_Ranged_Shoot",
+          "release": 0.43333333333333335,
+          "nockBone": "BowJoint05",
+          "launchOffset": 0.398,
+          "melee": {
+            "kind": "unarmed",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.2
+          },
+          "projectileScale": 0.63
+        }
+      }
+    },
+    {
+      "creatureId": "creature-hobgoblin-longbow",
+      "model": "HobgoblinLongbow",
+      "path": "/assets/licensed/creatures/HobgoblinLongbow.glb",
+      "sha256": "bccf9d0abf7603d9c5cb3c839b894d8d476f628cc87fe190117058fe2cb0c8d4",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/hobgoblin-longbow.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.05,
+        "height": 1.45,
+        "weapon": "bow",
+        "attack": {
+          "kind": "arrow",
+          "when": "projectile",
+          "clip": "2H_Ranged_Shoot",
+          "release": 0.43333333333333335,
+          "nockBone": "BowJoint05",
+          "launchOffset": 0.44,
+          "melee": {
+            "kind": "unarmed",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.2
+          },
+          "projectileScale": 0.697
+        }
+      }
     }
   ]
 }

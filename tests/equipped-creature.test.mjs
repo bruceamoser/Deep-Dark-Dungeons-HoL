@@ -139,3 +139,34 @@ test("authored thunder and grave spells keep their palette in flight and at impa
     effect.dispose();
   }
 });
+
+test("authored bow projectile leaves the animated nock at its supplied release time", async () => {
+  const { createAttackEffect } = await import("../src/view/combat-effects.mjs");
+  const from = { data: {}, group: new T.Group(), model: new T.Group() },
+    to = { data: {}, group: new T.Group(), model: new T.Group() };
+  from.group.add(from.model);
+  to.group.add(to.model);
+  to.group.position.z = 4;
+  const nock = new T.Object3D();
+  nock.name = "BowJoint05";
+  nock.position.set(.2, 1, .4);
+  from.model.add(nock);
+  Object.assign(from.model.userData, { authoredEquippedCreature: true,
+    attackPresentation: { kind: "arrow", when: "projectile", clip: "Shoot",
+      release: 13 / 30, nockBone: "BowJoint05", launchOffset: .54, projectileScale: .84 } });
+  const arrow = new T.Mesh(new T.ConeGeometry(), new T.MeshStandardMaterial());
+  const host = { entities: new Map([["from", from], ["to", to]]),
+    scene: new T.Scene(), assets: new Map([["arrow", { scene: arrow }]]), animate() {} };
+  let releases = 0;
+  const effect = createAttackEffect(host, { attacker: "from", target: "to", ranged: true },
+    { release() { releases++; } });
+  effect.update(.43);
+  assert.equal(releases, 0);
+  effect.update(13 / 30 - .43);
+  assert.equal(releases, 1);
+  assert.equal(effect.projectile.children[0].scale.x, .84);
+  assert.ok(effect.projectile.position.distanceTo(new T.Vector3(.2, 1, .94)) < 1e-6);
+  effect.dispose();
+  arrow.geometry.dispose();
+  arrow.material.dispose();
+});
