@@ -143,6 +143,34 @@
           }
         }
       }
+    },
+    {
+      "creatureId": "creature-hedge-sorcerer",
+      "model": "HedgeSorcerer",
+      "path": "/assets/licensed/creatures/HedgeSorcerer.glb",
+      "sha256": "e6156aa23ebb22da766355903c6b2b45e25e48fde703976e16d27276e44f05f8",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/hedge-sorcerer.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.95,
+        "height": 1.35,
+        "weapon": "spell",
+        "attack": {
+          "kind": "fire",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.3,
+          "melee": {
+            "kind": "staff",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.3
+          }
+        }
+      }
     }
   ]
 }

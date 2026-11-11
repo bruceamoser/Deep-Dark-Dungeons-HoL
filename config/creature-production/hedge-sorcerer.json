@@ -1,0 +1,123 @@
+{
+  "id": "hedge-sorcerer",
+  "body": "Body12",
+  "additionalBodies": [
+    "Cloak01"
+  ],
+  "parts": [
+    [
+      "HeadParts",
+      "Head02_Female",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hair10",
+      "head"
+    ],
+    [
+      "Weapons",
+      "Wand02",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "MagicWand/Idle_Battle_MagicWand.fbx",
+    "Walking_A": "MagicWand/InPlace/MoveFWD_Battle_InPlace_MagicWand.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SingleSword/Attack01_SingleSword.fbx",
+    "Spellcast_Shoot": "MagicWand/Attack01_MagicWand.fbx",
+    "Hit_A": "MagicWand/GetHit01_MagicWand.fbx",
+    "Death_A_Pose": "MagicWand/Die01_MagicWand.fbx"
+  },
+  "palette": {
+    "1": "#465c42",
+    "2": "#50674a",
+    "3": "#d3c59f",
+    "4": "#bcb188",
+    "5": "#61734f",
+    "6": "#4c513c",
+    "7": "#65462e",
+    "8": "#b09655"
+  },
+  "partPalette": {
+    "Cloak01": {
+      "1": "#42573d",
+      "2": "#42573d",
+      "3": "#67764f",
+      "4": "#a69b6e",
+      "5": "#42573d",
+      "6": "#42573d",
+      "7": "#65462e",
+      "8": "#95865b"
+    }
+  },
+  "solid": {
+    "Hair10": "#75432d",
+    "Eyebrow02": "#593622",
+    "Wand02": "#705030"
+  },
+  "externalParts": [
+    {
+      "name": "Hedge field journal",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit RPG Tools Bits 1.0/Assets/gltf/journal_closed.gltf",
+      "bone": "pelvis",
+      "scale": 0.28,
+      "offset": [
+        0.24,
+        -0.12,
+        0.01
+      ],
+      "rotateY": -10
+    },
+    {
+      "name": "Hedge amber flask",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/bottle_A_brown.gltf",
+      "bone": "pelvis",
+      "scale": 0.25,
+      "offset": [
+        -0.23,
+        -0.11,
+        0.01
+      ],
+      "rotateY": 10
+    }
+  ],
+  "fitUpright": [
+    {
+      "part": "Wand02",
+      "bone": "weapon_r",
+      "frame": 6
+    }
+  ],
+  "paintRegions": [
+    {
+      "part": "Cloak01",
+      "color": "#67764f",
+      "centers": [
+        [
+          0,
+          0,
+          0.32
+        ]
+      ],
+      "radius": 0.09,
+      "frontY": 1,
+      "purpose": "Paint out royal crown motif for a self-taught traveling caster; keep hem trim"
+    }
+  ]
+}

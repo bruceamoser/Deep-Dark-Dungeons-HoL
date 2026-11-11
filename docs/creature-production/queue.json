@@ -148,9 +148,16 @@
       "name": "Hedge Sorcerer",
       "order": 9,
       "family": "humanoid-equipment",
-      "status": "queued",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/hedge-sorcerer.md",
+        "model": "docs/creature-production/hedge-sorcerer.md",
+        "motion": "docs/creature-production/hedge-sorcerer.md",
+        "game-view": "docs/creature-production/hedge-sorcerer.md",
+        "integration": "docs/creature-production/hedge-sorcerer.md"
+      },
+      "approvedAsset": "HedgeSorcerer"
     },
     {
       "id": "creature-orc-outrider",

@@ -12,7 +12,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.fbx(filepath=str(a.source/'Mesh/AllBodiesCloaks.fbx'))
 rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
 for o in list(bpy.context.scene.objects):
- if o.type=='MESH' and o.name!=spec['body']:bpy.data.objects.remove(o,do_unlink=True)
+ if o.type=='MESH' and o.name not in [spec['body'],*spec.get('additionalBodies',[])]:bpy.data.objects.remove(o,do_unlink=True)
 rig.animation_data_clear()
 for act in list(bpy.data.actions):bpy.data.actions.remove(act)
 modifications=[]
@@ -83,7 +83,7 @@ for cfg in spec.get('paintRegions',[]):
   center=sum((obj.matrix_world@obj.data.vertices[i].co for i in face.vertices),Vector())/len(face.vertices)
   if any(sum((center[i]-c[i])**2 for i in [0,2])<cfg['radius']**2 and center.y<cfg['frontY'] for c in cfg['centers']):face.material_index=slot;count+=1
  assert count>0,('Paint region missed',cfg['part'])
- modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':'Separate supplied lens faces from brass frame'})
+ modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg.get('purpose','Separate supplied lens faces from brass frame')})
 for cfg in spec.get('paintBands',[]):
  obj=bpy.data.objects[cfg['part']];slot=len(obj.data.materials);obj.data.materials.append(mat(cfg['color'],cfg.get('metal',0)));count=0
  for face in obj.data.polygons:
