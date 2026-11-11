@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 import bpy
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 parser = argparse.ArgumentParser()
 parser.add_argument('source', type=Path)
@@ -66,7 +66,8 @@ for o in bpy.context.scene.objects:
 paths = {
     'Idle': 'Idle_Battle_Spear.fbx',
     'Walking_A': 'InPlace/MoveFWD_Battle_InPlace_Spear.fbx',
-    '1H_Melee_Attack_Slice_Diagonal': 'Attack01_Spear.fbx',
+    # Legacy review-slot name; the motion is the author's forward spear thrust.
+    '1H_Melee_Attack_Slice_Diagonal': 'Attack02_Spear.fbx',
     'Hit_A': 'GetHit01_Spear.fbx',
     'Death_A_Pose': 'Die01_Spear.fbx',
 }
@@ -97,6 +98,43 @@ for name, rel in paths.items():
     checks.append({'clip': name, 'source': rel, 'maxRestMatrixDelta': delta})
     for o in added:
         bpy.data.objects.remove(o, do_unlink=True)
+
+# The separate weapon FBX is authored upright. Translation to the socket alone
+# leaves it upright while the hand thrusts. Fit a single rigid bind-space rotation
+# at the attack's extension pose; retain that same grip through every clip.
+for track in rig.animation_data.nla_tracks:
+    track.mute = True
+rig.animation_data.action = bpy.data.actions['1H_Melee_Attack_Slice_Diagonal']
+rig.animation_data.action_slot = rig.animation_data.action.slots[0]
+bpy.context.scene.frame_set(9)
+bpy.context.view_layer.update()
+rest = rig.matrix_world @ rig.data.bones['weapon_r'].matrix_local
+posed = rig.matrix_world @ rig.pose.bones['weapon_r'].matrix
+target = ((posed @ rest.inverted()).to_3x3().inverted() @ Vector((0, -1, 0))).normalized()
+spear = bpy.data.objects['Spear02']
+axis = (spear.matrix_world.to_3x3() @ Vector((0, 1, 0))).normalized()
+rotation = axis.rotation_difference(target).to_matrix().to_4x4()
+spear.matrix_world = Matrix.Translation(rest.translation) @ rotation @ Matrix.Translation(-rest.translation) @ spear.matrix_world
+tip_index = max(range(len(spear.data.vertices)), key=lambda i: spear.data.vertices[i].co.y)
+tail_index = min(range(len(spear.data.vertices)), key=lambda i: spear.data.vertices[i].co.y)
+samples = {}
+for frame in (5, 9):
+    bpy.context.scene.frame_set(frame)
+    bpy.context.view_layer.update()
+    evaluated = spear.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    tip = evaluated.matrix_world @ evaluated.data.vertices[tip_index].co
+    tail = evaluated.matrix_world @ evaluated.data.vertices[tail_index].co
+    samples[frame] = (tip, (tip - tail).normalized())
+forward = Vector((0, -1, 0))
+extension = (samples[9][0] - samples[5][0]).dot(forward)
+alignment = samples[9][1].dot(forward)
+assert extension > .5, ('Spear must stab forward', extension)
+assert alignment > .98, ('Spear point must lead the thrust', alignment)
+rig.animation_data.action = None
+for bone in rig.pose.bones:
+    bone.matrix_basis.identity()
+for track in rig.animation_data.nla_tracks:
+    track.mute = False
 bpy.context.scene.frame_set(1)
 bpy.ops.wm.save_as_mainfile(filepath=str(args.output / 'source-spear.blend'))
 bpy.ops.export_scene.gltf(filepath=str(args.output / 'source-spear.glb'), export_format='GLB',
@@ -105,5 +143,8 @@ bpy.ops.export_scene.gltf(filepath=str(args.output / 'source-spear.glb'), export
 (args.output / 'source-spear-report.json').write_text(json.dumps({
     'source': str(args.source), 'bodyInventory': body_inventory,
     'sourceBoneCount': len(rig.data.bones), 'clipChecks': checks,
+    'spearGrip': {'extensionFrame': 9, 'worldForward': [0, -1, 0],
+                  'bindAxis': list(target), 'method': 'constant rigid socket rotation',
+                  'forwardTipTravel': extension, 'extensionAlignment': alignment},
     'status': 'Source assembly; grip and visual acceptance still required',
 }, indent=2) + '\n')
