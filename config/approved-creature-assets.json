@@ -481,6 +481,39 @@
           "contact": 0.43333333333333335
         }
       }
+    },
+    {
+      "creatureId": "creature-bone-archer",
+      "model": "SkeletonArcher",
+      "path": "/assets/licensed/creatures/SkeletonArcher.glb",
+      "sha256": "e79e4474ff2cf6dd7b4076cfc670b81385c9120e02b5e09c30554582bf67de39",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; user bulk review deferred",
+      "report": "docs/creature-production/bone-archer.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.75,
+        "height": 1.65,
+        "weapon": "bow",
+        "attack": {
+          "kind": "arrow",
+          "when": "projectile",
+          "clip": "2H_Ranged_Shoot",
+          "release": 1.6333333333333333,
+          "recover": 2.3333333333333335,
+          "nockBone": "BowNock",
+          "payloadPart": "Archer_arrow",
+          "projectileScale": 0.735,
+          "launchOffset": 0.471478,
+          "melee": {
+            "kind": "unarmed",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.43333333333333335
+          }
+        }
+      }
     }
   ]
 }

@@ -38,14 +38,26 @@ export function equippedCreatureAppearance(asset, spec) {
     clips = clips.map((source) => {
       const clip = source.clone();
       const throwing = clip.name === spec.attack.clip;
+      const release = spec.attack.release;
+      const recover = spec.attack.recover ?? Math.max(0.9, release + 0.4);
+      if (
+        throwing &&
+        !(release > 0 && recover > release && release < clip.duration)
+      )
+        throw new Error(
+          "Equipped payload requires ordered release/recovery times",
+        );
+      const returns = throwing && recover <= clip.duration;
       const times = throwing
-        ? [0, spec.attack.release, Math.min(clip.duration, 0.9)]
+        ? returns
+          ? [0, release, recover]
+          : [0, release]
         : [0];
       clip.tracks.push(
         new BooleanKeyframeTrack(
           `${flask.uuid}.visible`,
           times,
-          throwing ? [true, false, true] : [true],
+          throwing ? (returns ? [true, false, true] : [true, false]) : [true],
         ),
       );
       return clip;

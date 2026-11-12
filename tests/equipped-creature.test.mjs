@@ -217,13 +217,58 @@ test("authored bow projectile leaves the animated nock at its supplied release t
   );
   effect.update(0.43);
   assert.equal(releases, 0);
+  assert.equal(effect.projectile.visible, false);
   effect.update(13 / 30 - 0.43);
   assert.equal(releases, 1);
+  assert.equal(effect.projectile.visible, true);
   assert.equal(effect.projectile.children[0].scale.x, 0.84);
   assert.ok(
     effect.projectile.position.distanceTo(new T.Vector3(0.2, 1, 0.94)) < 1e-6,
   );
   effect.dispose();
+  arrow.geometry.dispose();
+  arrow.material.dispose();
+});
+
+test("late bow release keeps the nocked arrow until release and restores it after recovery", () => {
+  const scene = new T.Group(),
+    arrow = new T.Mesh(new T.BoxGeometry(), new T.MeshStandardMaterial());
+  arrow.name = "Archer_arrow";
+  scene.add(arrow);
+  const a = equippedCreatureAppearance(
+    {
+      scene,
+      animations: [
+        new T.AnimationClip("Shoot", 2.87, []),
+        new T.AnimationClip("Idle", 1, []),
+      ],
+    },
+    {
+      scale: 1,
+      attack: {
+        kind: "arrow",
+        payloadPart: arrow.name,
+        clip: "Shoot",
+        release: 49 / 30,
+        recover: 70 / 30,
+      },
+    },
+  );
+  const mixer = new T.AnimationMixer(a.model),
+    held = a.model.getObjectByName(arrow.name);
+  mixer.clipAction(a.clips[0]).play();
+  mixer.setTime(1.5);
+  assert.equal(held.visible, true);
+  mixer.setTime(1.65);
+  assert.equal(held.visible, false);
+  mixer.setTime(2.4);
+  assert.equal(held.visible, true);
+  mixer.setTime(1.7);
+  mixer.stopAllAction();
+  mixer.clipAction(a.clips[1]).play();
+  mixer.update(0.01);
+  assert.equal(held.visible, true);
+  a.model.userData.dispose();
   arrow.geometry.dispose();
   arrow.material.dispose();
 });

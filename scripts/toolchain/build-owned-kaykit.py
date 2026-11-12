@@ -91,7 +91,42 @@ for dest,clip in cfg['clips'].items():
  errors={b.name:max(abs(b.matrix_local[i][j]-rig.data.bones[b.name].matrix_local[i][j]) for i in range(4) for j in range(4)) for b in source_rig.data.bones if b.name in rig.data.bones}
  assert all((b.parent.name if b.parent else None)==(source_rig.data.bones[b.name].parent.name if source_rig.data.bones[b.name].parent else None) for b in rig.data.bones)
  assert len(errors)==len(rig.data.bones) and max(errors.values())<1e-5,('Source rig is incompatible; no automatic retarget',errors)
- action=next(x for x in set(bpy.data.actions)-before_actions if x.name.split('.')[0]==clip['name']);action.name=dest;start,end=action.frame_range
+ imported=list(set(bpy.data.actions)-before_actions)
+ selected=[next(x for x in imported if x.name.split('.')[0]==name) for name in clip.get('names',[clip.get('name')])]
+ if len(selected)==1:action=selected[0]
+ else:
+  for t in source_rig.animation_data.nla_tracks:t.mute=True
+  frames=[];joins=[]
+  for segment in selected:
+   source_rig.animation_data.action=segment;source_rig.animation_data.action_slot=segment.slots[0]
+   for b in source_rig.pose.bones:b.matrix_basis.identity()
+   samples=[]
+   for frame in range(round(segment.frame_range[0]),round(segment.frame_range[1])+1):
+    bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();samples.append({b.name:b.matrix_basis.copy() for b in source_rig.pose.bones if b.name in rig.data.bones})
+   if frames:
+    difference=max(abs(frames[-1][name][i][j]-samples[0][name][i][j]) for name in samples[0] for i in range(4) for j in range(4));joins.append(difference)
+    blend=clip.get('joinBlendFrames',0)
+    assert difference<(.35 if blend else .02),('Review source action join',dest,segment.name,difference)
+    if blend:
+     first=frames[-1]
+     for step in range(1,blend+1):
+      t=step/blend;t=t*t*(3-2*t);bridge={}
+      for name in samples[0]:
+       l1,q1,s1=first[name].decompose();l2,q2,s2=samples[0][name].decompose();bridge[name]=Matrix.LocRotScale(l1.lerp(l2,t),q1.slerp(q2,t),s1.lerp(s2,t))
+      frames.append(bridge)
+    samples=samples[1:]
+   frames.extend(samples)
+  rig.animation_data_create()
+  for t in rig.animation_data.nla_tracks:t.mute=True
+  action=bpy.data.actions.new(dest);rig.animation_data.action=action
+  for frame,bones in enumerate(frames):
+   for name,matrix in bones.items():
+    b=rig.pose.bones[name];b.rotation_mode='QUATERNION';b.location,b.rotation_quaternion,b.scale=matrix.decompose()
+    for channel in ['location','rotation_quaternion','scale']:b.keyframe_insert(data_path=channel,frame=frame,group=name)
+  rig.animation_data.action=None
+  for t in rig.animation_data.nla_tracks:t.mute=False
+  checks.append({'clip':dest,'joinedSourceActions':[c.name for c in selected],'joinMatrixDelta':joins})
+ action.name=dest;start,end=action.frame_range
  rig.animation_data_create();track=rig.animation_data.nla_tracks.new();track.name=dest;strip=track.strips.new(dest,0,action);strip.action_frame_start=start;strip.action_frame_end=end;strip.frame_start=0;strip.frame_end=end-start;strip.extrapolation='NOTHING'
  checks.append({'clip':dest,'source':clip,'start':start,'end':end,'restDifference':max(errors.values())})
  for obj in added:bpy.data.objects.remove(obj,do_unlink=True)
@@ -105,9 +140,14 @@ for part in cfg['parts']:
  rig.animation_data.action=next(t for t in rig.animation_data.nla_tracks if t.name=='Idle').strips[0].action;rig.animation_data.action_slot=rig.animation_data.action.slots[0]
  bpy.context.scene.frame_set(6);bpy.context.view_layer.update()
  bone=part['bone'];delta=(rig.matrix_world@rig.pose.bones[bone].matrix)@(rig.matrix_world@rig.data.bones[bone].matrix_local).inverted();anchor=rig.matrix_world@rig.data.bones[bone].head_local
- orientation=Matrix.Rotation(math.radians(part.get('tiltX',0)),4,'X');offset=delta.to_3x3().inverted()@Vector(part.get('worldOffset',[0,0,0]))
+ orientation=Matrix.Rotation(math.radians(part.get('tiltZ',0)),4,'Z')@Matrix.Rotation(math.radians(part.get('tiltY',0)),4,'Y')@Matrix.Rotation(math.radians(part.get('tiltX',0)),4,'X');offset=delta.to_3x3().inverted()@Vector(part.get('worldOffset',[0,0,0]))
  bpy.data.objects[part['name']].matrix_world=Matrix.Translation(anchor+offset)@delta.to_3x3().inverted().to_4x4()@orientation@Matrix.Diagonal((part.get('scale',1),)*3+(1,))@source_matrices[part['name']]
  bpy.data.objects[part['name']]['restForward']=list(delta.to_3x3().inverted()@orientation.to_3x3()@Vector(part.get('reviewAxis',[0,0,1])))
+bow_checks=None
+if cfg.get('bow'):
+ sys.path.insert(0,str(Path(__file__).parent))
+ from owned_bow import add_owned_bow
+ bow_checks=add_owned_bow(rig,cfg['bow'],source,source_matrices)
 # Ease the equipped wrists onto the floor during the skeleton collapse. The
 # original hand and its child socket rotate together, preserving their grip.
 for fall in cfg.get('fallWrists',[]):
@@ -119,9 +159,40 @@ for fall in cfg.get('fallWrists',[]):
  for frame,target in samples:
   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();hand.matrix=rig.matrix_world.inverted()@target
   for channel in ['location','rotation_quaternion','scale']:hand.keyframe_insert(data_path=channel,frame=frame,group='Equipped collapse wrist')
+# Loose worn gear follows the body until the authored skeleton collapse;
+# then its own rigid prop bone settles alongside the scattered remains.
+for fall in cfg.get('fallProps',[]):
+ part=next(p for p in cfg['parts'] if p['name']==fall['part']);obj=bpy.data.objects[fall['part']];parent=part['bone']
+ rig.animation_data.action=None
+ for t in rig.animation_data.nla_tracks:t.mute=True
+ for bone in rig.pose.bones:bone.matrix_basis.identity()
+ bpy.context.view_layer.update()
+ anchor=obj.matrix_world.translation.copy();name=fall['bone']
+ bpy.ops.object.select_all(action='DESELECT');rig.select_set(True);bpy.context.view_layer.objects.active=rig;bpy.ops.object.mode_set(mode='EDIT');bone=rig.data.edit_bones.new(name);bone.head=rig.matrix_world.inverted()@anchor;bone.tail=rig.matrix_world.inverted()@(anchor+Vector((0,0,.1)));bone.parent=rig.data.edit_bones[parent];bpy.ops.object.mode_set(mode='OBJECT')
+ obj.vertex_groups[parent].name=name
+ for track in rig.animation_data.nla_tracks:
+  if track.name=='Death_A_Pose':continue
+  rig.animation_data.action=track.strips[0].action;rig.animation_data.action_slot=rig.animation_data.action.slots[0];prop=rig.pose.bones[name];prop.rotation_mode='QUATERNION';prop.matrix_basis.identity()
+  for frame in [math.floor(rig.animation_data.action.frame_range[0]),math.ceil(rig.animation_data.action.frame_range[1])]:
+   for channel in ['location','rotation_quaternion','scale']:prop.keyframe_insert(data_path=channel,frame=frame,group='Worn gear rest')
+ rest=rig.matrix_world@rig.data.bones[name].matrix_local;source_rest=rig.matrix_world@rig.data.bones[parent].matrix_local;prop_rest=obj.matrix_world.copy()
+ action=next(t for t in rig.animation_data.nla_tracks if t.name=='Death_A_Pose').strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];bone=rig.pose.bones[name];bone.rotation_mode='QUATERNION';samples=[]
+ rotation=Matrix.Identity(4)
+ for axis in 'XYZ':rotation=rotation@Matrix.Rotation(math.radians(fall.get('rotate'+axis,0)),4,axis)
+ final=Matrix.Translation(Vector(fall['position']))@rotation@Matrix.Diagonal((part['scale'],)*3+(1,))@source_matrices[part['name']];target=final@prop_rest.inverted()@rest
+ for frame in range(math.floor(action.frame_range[0]),math.ceil(action.frame_range[1])+1):
+  bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();original=(rig.matrix_world@rig.pose.bones[parent].matrix)@source_rest.inverted()@rest;t=max(0,min(1,(frame-fall['start'])/(fall['end']-fall['start'])));t=t*t*(3-2*t);l1,q1,s1=original.decompose();l2,q2,s2=target.decompose();samples.append((frame,Matrix.LocRotScale(l1.lerp(l2,t),q1.slerp(q2,t),s1.lerp(s2,t))))
+ for frame,matrix in samples:
+  bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();bone.matrix=rig.matrix_world.inverted()@matrix
+  for channel in ['location','rotation_quaternion','scale']:bone.keyframe_insert(data_path=channel,frame=frame,group='Loose collapse gear')
 contact_checks=[]
 for contact in cfg.get('groundContactClips',[]):
  for track in rig.animation_data.nla_tracks:track.mute=True
+ for obj in bpy.context.scene.objects:
+  keys=obj.data.shape_keys if obj.type=='MESH' else None
+  if keys and keys.animation_data:
+   keys.animation_data.action=None
+   for t in keys.animation_data.nla_tracks:t.mute=t.name!=contact['clip']
  action=next(t for t in rig.animation_data.nla_tracks if t.name==contact['clip']).strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];root=rig.pose.bones['root'];inverse=(rig.matrix_world@rig.data.bones['root'].matrix_local).to_3x3().inverted();samples=[]
  for frame in range(math.floor(action.frame_range[0]),math.ceil(action.frame_range[1])+1):
   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();minimum=999
@@ -134,7 +205,11 @@ for contact in cfg.get('groundContactClips',[]):
 rig.animation_data.action=None
 for bone in rig.pose.bones:bone.matrix_basis.identity()
 for track in rig.animation_data.nla_tracks:track.mute=False
+for obj in bpy.context.scene.objects:
+ keys=obj.data.shape_keys if obj.type=='MESH' else None
+ if keys and keys.animation_data:
+  for t in keys.animation_data.nla_tracks:t.mute=False
 bpy.context.scene.frame_set(0)
 bpy.ops.wm.save_as_mainfile(filepath=str(a.output/(cfg['id']+'.blend')))
 bpy.ops.export_scene.gltf(filepath=str(a.output/(cfg['id']+'.glb')),export_format='GLB',export_extras=True,export_animations=True,export_animation_mode='NLA_TRACKS',export_force_sampling=True)
-(a.output/'provenance.json').write_text(json.dumps({'spec':cfg,'specSha256':hashlib.sha256(a.spec.read_bytes()).hexdigest(),'sourceHashes':hashes,'clips':checks,'groundContact':contact_checks,'status':'Candidate; requires author model/motion/game review'},indent=2)+'\n')
+(a.output/'provenance.json').write_text(json.dumps({'spec':cfg,'specSha256':hashlib.sha256(a.spec.read_bytes()).hexdigest(),'sourceHashes':hashes,'clips':checks,'groundContact':contact_checks,'bow':bow_checks,'status':'Candidate; requires author model/motion/game review'},indent=2)+'\n')
