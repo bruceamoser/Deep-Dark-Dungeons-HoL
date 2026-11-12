@@ -53,9 +53,13 @@ test("reviewed equipped paths override legacy names while missing private assets
 test("production queue covers the bestiary and permits only one active creature", () => {
   const q = structuredClone(queue);
   validateQueue(q, Object.keys(CREATURE_ROSTER), approved);
-  const [first, second] = q.creatures
-    .filter((c) => c.status !== "integrated")
-    .sort((a, b) => a.order - b.order);
+  // Queue behavior must remain testable after the real roster is complete.
+  for (const row of q.creatures) {
+    row.status = "queued";
+    row.gates = {};
+    delete row.approvedAsset;
+  }
+  const [first, second] = q.creatures.toSorted((a, b) => a.order - b.order);
   startCreature(q, first.id);
   assert.throws(() => startCreature(q, second.id), /Finish/);
   assert.equal(q.creatures.filter((c) => c.status === "active").length, 1);
@@ -66,8 +70,11 @@ test("production queue covers the bestiary and permits only one active creature"
   );
 });
 test("integration cannot skip motion/game-view evidence or register an unapproved model", () => {
-  const q = structuredClone(queue),
-    row = q.creatures.find((c) => c.status === "queued");
+  const q = structuredClone(queue);
+  const row = q.creatures[0];
+  row.status = "queued";
+  row.gates = {};
+  delete row.approvedAsset;
   row.gates.motion = "docs/wolf-pilot.md";
   assert.throws(
     () => validateQueue(q, Object.keys(CREATURE_ROSTER), approved),
