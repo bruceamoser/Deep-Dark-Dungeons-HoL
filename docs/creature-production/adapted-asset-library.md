@@ -127,3 +127,7 @@ Owned Mason Body01/Head01 surfaces (private Asset Store derivatives) copied into
 ## Crypt Ghoul waist rag and nails
 
 The waist rag is a narrower Body01-derived cloth copy, fitted for the Ghoul and painted with TextureCraft Linen. The ten authored ivory tips use the measured rest-space finger surfaces and source distal finger weights. Both remain separable in `crypt-ghoul/clustered-pits/crypt-ghoul.blend`. See the [Ghoul report](crypt-ghoul.md) and the role JSON for the private material recipe and socket coordinates. Refit to the next donor and review motion before reusing either part.
+
+## Ghast's dirt-stained finery
+
+Dungeon Mason Body12, Cloak03 and Hair12 with the Ghoul's refitted nail tips. The coat and tattered cloak have coarse Linen, worn gold and hem dirt driven by baked position and occlusion. Hair12 is shortened and colored pale cream. The editable parts, TextureCraft project and recipe are under `ghast/deep-sockets/` in the private production root. The [Ghast report](ghast.md) records motion fit and materials.

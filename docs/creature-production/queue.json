@@ -496,9 +496,16 @@
       "name": "Ghast",
       "order": 30,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/ghast.md",
+        "model": "docs/creature-production/ghast.md",
+        "motion": "docs/creature-production/ghast.md",
+        "game-view": "docs/creature-production/ghast.md",
+        "integration": "docs/creature-production/ghast.md"
+      },
+      "approvedAsset": "Ghast"
     },
     {
       "id": "creature-kobold-tunnel-scout",
