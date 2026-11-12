@@ -9,3 +9,7 @@ Owned builder uses `config/creature-production/animated-armor.json`; `refine-ani
 Final review: 272 rendered animation frames, front/side/back and muted actual six-guardian/four-hero dungeon. 4,830 triangles, three meshes, 43 bones and five preserved clips. Reimport found no zero-area faces, loose or unweighted vertices. All clip floor minima 0.002. TextureCraft six512 maps plus original atlas.22 focused tests and production build pass (existing chunk-size warning). Author review, not independent or final user approval.
 
 Fit83/100: anatomy4, silhouette4, signature4, gear5, materials4, distinction4. Limits: chibi proportions, simplified crossed shield bands instead of portrait heraldry, command plate not separately visible. Gauntlet jab and shield-specific collapse reviewed. Final private evidence `final/review-final` and `game-view`; exact export pinned in approved manifest. Bulk user art review/install/performance deferred.
+
+## Player review revision — sword restored
+
+Fitted the owned OHS09 sword to the right-hand socket with an 82% scale and 30° rest cant. Replaced the gauntlet presentation with sword-and-shield clips and a slash effect. Quarter-frame blade/helmet intersection check passes, all five clips pass floor clearance, and the 5,214-triangle reimport has no zero-area faces or unweighted vertices. Reviewed 242 motion frames and the muted development bestiary and six-guardian encounter. Evidence under private `animated-armor/sword-revision/`. The installed build still awaits the review update.

@@ -9,15 +9,20 @@
     ],
     [
       "Weapons",
+      "OHS09_Sword",
+      "weapon_r"
+    ],
+    [
+      "Weapons",
       "Shield08",
       "weapon_l"
     ]
   ],
   "clips": {
-    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
-    "Walking_A": "NoWeapon/InPlace/WalkFWD_InPlace_NoWeapon.fbx",
-    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
-    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack01_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
     "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
   },
   "palette": {
@@ -46,6 +51,10 @@
       "7": "#111b18",
       "8": "#a6ae9b",
       "9": "#111b18"
+    },
+    "OHS09_Sword": {
+      "4": "#8f7951",
+      "8": "#83b8b0"
     }
   },
   "solid": {},
@@ -79,5 +88,26 @@
       "margin": 0.002,
       "maxCorrection": 0.22
     }
-  ]
+  ],
+  "fitUpright": [
+    {
+      "part": "OHS09_Sword",
+      "bone": "weapon_r",
+      "frame": 6,
+      "restRotationDegrees": [
+        0,
+        0,
+        -30
+      ]
+    }
+  ],
+  "partFit": {
+    "OHS09_Sword": {
+      "scale": [
+        0.82,
+        0.82,
+        0.82
+      ]
+    }
+  }
 }

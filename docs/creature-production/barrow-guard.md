@@ -13,3 +13,7 @@ Final private file `~/.local/share/four-lanterns-creature-production/barrow-guar
 Fit88: anatomy5,silhouette4,signature4,gear4,materials4,distinction5. Remaining limits: short original cloth rather than the portrait's long burial tabard; stylized clean turf/armor rather than granular dirt; rigid hood keeps its sculpted form. Author assessment, not independent or final user art approval. User review/performance/installation deferred to completed roster.
 
 Actual development bestiary routes to BarrowGuard and plays Idle/Walk/Attack/Hit/Death. Six Barrow Guards beside four heroes reviewed under dungeon lighting; no JavaScript errors. `game-view/results.json` records routing. No FPS benchmark, installer rebuild or gameplay-stat change.
+
+## Player review revision — blade clearance
+
+Preserved the full-length sword and original diagonal attack. The blade now cants away from the hood at the hand socket, and the right shoulder opens through the living clips. A shorter candidate cleared the head but obscured the sword in the idle view and was rejected. The final blade clears hood, skull and jaw at quarter-frame samples through the attack. All five clips passed ground checks and 756 motion frames were reviewed. The 6,688-triangle export passed reimport and the muted development bestiary and dungeon fixture. Private final evidence: `barrow-guard/visible-blade-revision/`.

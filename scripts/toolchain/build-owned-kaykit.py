@@ -4,7 +4,7 @@ Original inputs are read-only; export only the reviewed private assembly.
 """
 import bpy,sys,json,hashlib,math,argparse,struct
 from pathlib import Path
-from mathutils import Matrix,Vector,Quaternion
+from mathutils import Euler,Matrix,Vector,Quaternion
 p=argparse.ArgumentParser();p.add_argument('spec',type=Path);p.add_argument('output',type=Path);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);cfg=json.loads(a.spec.read_text());a.output.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True);bpy.context.scene.render.fps=30
 hashes={};checks=[]
@@ -190,6 +190,37 @@ for part in cfg['parts']:
  orientation=Matrix.Rotation(math.radians(part.get('tiltZ',0)),4,'Z')@Matrix.Rotation(math.radians(part.get('tiltY',0)),4,'Y')@Matrix.Rotation(math.radians(part.get('tiltX',0)),4,'X');offset=delta.to_3x3().inverted()@Vector(part.get('worldOffset',[0,0,0]))
  bpy.data.objects[part['name']].matrix_world=Matrix.Translation(anchor+offset)@delta.to_3x3().inverted().to_4x4()@orientation@Matrix.Diagonal(tuple(part.get('scaleXYZ',[part.get('scale',1)]*3))+(1,))@Matrix.Translation(-Vector(part.get('sourceCenter',[0,0,0])))@source_matrices[part['name']]
  bpy.data.objects[part['name']]['restForward']=list(delta.to_3x3().inverted()@orientation.to_3x3()@Vector(part.get('reviewAxis',[0,0,1])))
+# Apply a constant adjustment around the fitted socket in bind space.
+for part in cfg['parts']:
+ if not (angles := part.get('restRotationDegrees')):continue
+ obj=bpy.data.objects[part['name']]
+ pivot=rig.matrix_world@rig.data.bones[part['bone']].head_local
+ rotation=Euler(tuple(map(math.radians,angles))).to_matrix()
+ transform=Matrix.Translation(pivot)@rotation.to_4x4()@Matrix.Translation(-pivot)
+ obj.matrix_world=transform@obj.matrix_world
+ obj['restForward']=list(rotation@Vector(obj['restForward']))
+
+# Open the equipped shoulder across the living clips while retaining the
+# source motion of the elbow, hand and sword socket.
+for adjustment in cfg.get('armClearance',[]):
+ rotation=Euler(tuple(map(math.radians,adjustment['degrees']))).to_matrix().to_4x4()
+ arm=rig.pose.bones[adjustment['bone']]
+ for track in rig.animation_data.nla_tracks:track.mute=True
+ for clip in adjustment['clips']:
+  action=next(t for t in rig.animation_data.nla_tracks if t.name==clip).strips[0].action
+  rig.animation_data.action=action
+  rig.animation_data.action_slot=action.slots[0]
+  samples=[]
+  for frame in range(math.floor(action.frame_range[0]),math.ceil(action.frame_range[1])+1):
+   bpy.context.scene.frame_set(frame)
+   world=rig.matrix_world@arm.matrix
+   target=rotation@world
+   target.translation=world.translation
+   samples.append((frame,rig.matrix_world.inverted()@target))
+  for frame,target in samples:
+   bpy.context.scene.frame_set(frame)
+   arm.matrix=target
+   arm.keyframe_insert(data_path='rotation_quaternion',frame=frame,group='Equipped shoulder clearance')
 # Supporting gear may attach to another inspected owned part in its source
 # coordinates. Sharing that part's bone preserves the fit through wrist motion.
 for part in cfg['parts']:

@@ -5,11 +5,22 @@
       "creatureId": "creature-goblin-spearhand",
       "model": "GoblinSpearhand",
       "path": "/assets/licensed/creatures/GoblinSpearhand.glb",
-      "sha256": "0774c4ca0b2c844e7160363ce2cbe620d89d158aaa987c7d11ada18197d1c099",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "f0b27f10e6c8f3d23439f54d01fa722f992c4eb90b0728ae6b22b1cbc927b97d",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "report": "docs/goblin-spearhand-dungeon.md",
-      "distribution": "private-local-build"
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.85,
+        "height": 1.34,
+        "weapon": "spear",
+        "attack": {
+          "kind": "thrust",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.5
+        }
+      }
     },
     {
       "creatureId": "creature-air-elemental",
@@ -35,17 +46,22 @@
       "creatureId": "creature-goblin-scrapper",
       "model": "GoblinScrapper",
       "path": "/assets/licensed/creatures/GoblinScrapper.glb",
-      "sha256": "4fd5a5f9702a7367b7c387315cda17bba0eaa52106fa9e2bdc79955adc4d5631",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "e4951f313030c40a9b15944797234a6ad0326d995f34d4b2d24c7de77a660441",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "review": "author review under delegated production direction; not separate user approval",
       "report": "docs/creature-production/goblin-scrapper.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.9,
-        "height": 1.2,
-        "weapon": "melee"
+        "scale": 0.82,
+        "height": 1.23,
+        "weapon": "melee",
+        "attack": {
+          "kind": "slash",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.53
+        }
       }
     },
     {
@@ -92,16 +108,16 @@
       "creatureId": "creature-goblin-firestarter",
       "model": "GoblinFirestarter",
       "path": "/assets/licensed/creatures/GoblinFirestarter.glb",
-      "sha256": "2c7742f647046f8665fc4f1f440fa895f1aacf38c97d539088664e03b24ba2db",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "9df7cc3a6585513d633027f447f9f2822be8195972515543ef74b4a120c7e5f3",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "review": "Author review under delegated production direction; model, motion and runtime visual gates passed",
       "report": "docs/creature-production/goblin-firestarter.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.9,
-        "height": 1.2,
+        "scale": 0.82,
+        "height": 1.25,
         "weapon": "spell",
         "attack": {
           "kind": "bottle",
@@ -112,7 +128,8 @@
             "kind": "unarmed",
             "clip": "Unarmed_Melee_Attack_Punch_A",
             "contact": 0.2
-          }
+          },
+          "muzzleBone": "RHand"
         }
       }
     },
@@ -272,17 +289,22 @@
       "creatureId": "creature-goblin-boss",
       "model": "GoblinBoss",
       "path": "/assets/licensed/creatures/GoblinBoss.glb",
-      "sha256": "6cb8a51622ce023b5fab72a6ebdf671f455c8a04439a45c6bbf85a3f7aeb0325",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "4779e74e04eec4e2805f0abe72ae80bb90cda74b4ace32c3857cde62aca3e32e",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "review": "Author model/motion review; bulk user review deferred",
       "report": "docs/creature-production/goblin-boss.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.95,
-        "height": 1.3,
-        "weapon": "melee"
+        "scale": 0.9,
+        "height": 1.49,
+        "weapon": "melee",
+        "attack": {
+          "kind": "slash",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.53
+        }
       }
     },
     {
@@ -407,9 +429,9 @@
       "creatureId": "creature-goblin-rattlechanter",
       "model": "GoblinRattlechanter",
       "path": "/assets/licensed/creatures/GoblinRattlechanter.glb",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; user bulk review deferred",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/goblin-rattlechanter.md",
       "distribution": "private-local-build",
       "runtime": {
@@ -421,24 +443,25 @@
           "kind": "sonic",
           "when": "projectile",
           "clip": "Spellcast_Shoot",
-          "release": 0.4666666666666667,
+          "release": 0.5833333333333334,
           "melee": {
             "kind": "unarmed",
             "clip": "1H_Melee_Attack_Slice_Diagonal",
             "contact": 0.3
-          }
+          },
+          "muzzleBone": "RattlePanMuzzle"
         }
       },
-      "sha256": "c259df1612a1366030b02f7b1ce160f4724a32bbdae59319204fa54872b4a66e"
+      "sha256": "5afe5c61d75bcff95dd45af4f2c34229e3293b6456aa09303813e7e049898816"
     },
     {
       "creatureId": "creature-goblin-smoke-slinger",
       "model": "GoblinSmokeSlinger",
       "path": "/assets/licensed/creatures/GoblinSmokeSlinger.glb",
-      "sha256": "8270937c8a88d80134fdc752ee37c17091b2f58e348fd94fe36dcf153330df33",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; user bulk review deferred",
+      "sha256": "19fb06b55f7606d91207e6b518ed4de8b9d564e148d1602f69c1e7e01d8cf1a6",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/goblin-smoke-slinger.md",
       "distribution": "private-local-build",
       "runtime": {
@@ -450,13 +473,15 @@
           "kind": "sling",
           "when": "projectile",
           "clip": "2H_Ranged_Shoot",
-          "release": 0.4666666666666667,
+          "release": 0.5,
           "payloadPart": "Slinger_stone",
           "melee": {
             "kind": "unarmed",
             "clip": "1H_Melee_Attack_Slice_Diagonal",
             "contact": 0.2
-          }
+          },
+          "muzzleBone": "SlingPouch",
+          "recover": 0.95
         }
       }
     },
@@ -542,7 +567,7 @@
       "creatureId": "creature-barrow-guard",
       "model": "BarrowGuard",
       "path": "/assets/licensed/creatures/BarrowGuard.glb",
-      "sha256": "44c4f86952532221140643378eaa6285215e9593e9781d040b27ccaf551133d4",
+      "sha256": "a9068c947bf8023da8b80046cbb753483a7a5ce0cd0f19804f3815a9b0718954",
       "approvedOn": "2026-11-11",
       "method": "owned-humanoid",
       "review": "Author model/motion review; bulk user review deferred",
@@ -677,22 +702,22 @@
       "creatureId": "creature-kobold-tunnel-scout",
       "model": "KoboldScout",
       "path": "/assets/licensed/creatures/KoboldScout.glb",
-      "sha256": "87d87f1222325f7bc3ac5f84f8368768a7f0ae47235e180884d87dabe5b0d35d",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "424c1c9f60c66b22197c16acdc027636609a036d0556c33636797dfe34d0903d",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/kobold-tunnel-scout.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.65,
+        "scale": 0.72,
         "height": 1.22,
         "weapon": "dart",
         "attack": {
           "kind": "dart",
           "when": "projectile",
           "clip": "2H_Ranged_Shoot",
-          "release": 0.3,
+          "release": 0.375,
           "recover": 0.9,
           "payloadPart": "Loaded_Dart",
           "muzzleBone": "ScoutDartMuzzle",
@@ -708,23 +733,23 @@
       "creatureId": "creature-kobold-trapkeeper",
       "model": "KoboldTrapkeeper",
       "path": "/assets/licensed/creatures/KoboldTrapkeeper.glb",
-      "sha256": "79482dae47454ddc7e661a24fec0c55432e5ef9562a89890905bc95a8e17bfe3",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "53733598c044f730f77085f120c368c4da3d6cda5a4be9c25238a60f311c370e",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/kobold-trapkeeper.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.65,
+        "scale": 0.74,
         "height": 1.22,
         "weapon": "dart",
         "attack": {
           "kind": "dart",
           "when": "projectile",
           "clip": "2H_Ranged_Shoot",
-          "release": 0.7,
-          "recover": 1.35,
+          "release": 0.5833333333333334,
+          "recover": 1.1,
           "payloadPart": "Loaded_Dart",
           "muzzleBone": "TrapkeeperDartMuzzle",
           "melee": {
@@ -739,27 +764,28 @@
       "creatureId": "creature-kobold-emberkeeper",
       "model": "KoboldEmberkeeper",
       "path": "/assets/licensed/creatures/KoboldEmberkeeper.glb",
-      "sha256": "3aef133bcf02512eee6e1ce284bfd0dd3c92d9ec44a2c2dfa82a215652ae64eb",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "78efd58640383c6de6f3e8301cadc5108a0dba5426412abfdb47c34dc4bdf133",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/kobold-emberkeeper.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.65,
+        "scale": 0.73,
         "height": 1.22,
         "weapon": "caster",
         "attack": {
           "kind": "fire",
           "when": "projectile",
           "clip": "Spellcast_Shoot",
-          "release": 0.3,
+          "release": 0.4166666666666667,
           "melee": {
             "kind": "unarmed",
             "clip": "1H_Melee_Attack_Slice_Diagonal",
             "contact": 0.28
-          }
+          },
+          "muzzleBone": "EmberPalmMuzzle"
         }
       }
     },
@@ -767,21 +793,21 @@
       "creatureId": "creature-wererat",
       "model": "Wererat",
       "path": "/assets/licensed/creatures/Wererat.glb",
-      "sha256": "3510ce1a335892801e76abcb2326fe2ca06b9efecfd2ea398a7b34387d5e8538",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "99279fedfcb9a8a802a560bc8c59e87e120200cb2e1f6404b766eef6087129ae",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/wererat.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 1,
+        "scale": 0.92,
         "height": 1.45,
         "weapon": "melee",
         "attack": {
-          "kind": "sword",
+          "kind": "thrust",
           "clip": "1H_Melee_Attack_Slice_Diagonal",
-          "contact": 0.27
+          "contact": 0.2916666666666667
         }
       }
     },
@@ -811,10 +837,10 @@
       "creatureId": "creature-werebear",
       "model": "Werebear",
       "path": "/assets/licensed/creatures/Werebear.glb",
-      "sha256": "6835d3b85066b3d218c1fe276b1dd4feacff3bdc95b2c603addb800e739bfb26",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "3e04c74d109cd5cca44236fc43b4ba55ab7aea97729e9205ffab4e947a960bd3",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/werebear.md",
       "distribution": "private-local-build",
       "runtime": {
@@ -825,7 +851,7 @@
         "attack": {
           "kind": "unarmed",
           "clip": "1H_Melee_Attack_Slice_Diagonal",
-          "contact": 0.42
+          "contact": 0.4166666666666667
         }
       }
     },
@@ -833,27 +859,28 @@
       "creatureId": "creature-cinder-imp",
       "model": "CinderImp",
       "path": "/assets/licensed/creatures/CinderImp.glb",
-      "sha256": "b5cc8b37c07e92d5f5ad276538f8c2330a6cc8f5e9aa3907e1ca94a303be4f2b",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "f5fb2cce4d2036ff639d64263aaee8aa4ae94242048fa8d572428bef05bbf78b",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "review": "Author model/motion review; bulk user review deferred",
       "report": "docs/creature-production/cinder-imp.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.7,
+        "scale": 0.9,
         "height": 1.13,
         "weapon": "caster",
         "attack": {
           "kind": "fire",
           "when": "projectile",
           "clip": "Spellcast_Shoot",
-          "release": 0.3,
+          "release": 0.46,
           "melee": {
             "kind": "unarmed",
             "clip": "1H_Melee_Attack_Slice_Diagonal",
-            "contact": 0.28
-          }
+            "contact": 0.46
+          },
+          "muzzleBone": "RHand"
         }
       }
     },
@@ -1051,7 +1078,7 @@
       "creatureId": "creature-animated-armor",
       "model": "AnimatedArmor",
       "path": "/assets/licensed/creatures/AnimatedArmor.glb",
-      "sha256": "46381b448e90f615b2549946cbb2fc463c3f4807e28c9db392c9fabbc0a8856b",
+      "sha256": "a0a6ffab9ee1a0cadf23da60e63dc7cb2e508f5191b5577f5e8ddafd669a2a6c",
       "approvedOn": "2026-11-12",
       "method": "owned-humanoid",
       "review": "Author review; bulk user review deferred",
@@ -1061,12 +1088,12 @@
         "kind": "equipped",
         "scale": 1,
         "height": 1.5,
-        "weapon": "unarmed",
+        "weapon": "melee",
         "shield": true,
         "attack": {
-          "kind": "unarmed",
+          "kind": "slash",
           "clip": "1H_Melee_Attack_Slice_Diagonal",
-          "contact": 0.2
+          "contact": 0.35
         }
       }
     },

@@ -15,3 +15,9 @@ Dark officer green, oxblood accents, brass trim, brown leather, natural parchmen
 Author fit A5/S4/F4/G4/M4/D4 =86/100. Clear goblin in a borrowed green/brass long coat with rolled map, food pouch and coin detail. Clean, simplified coat lacks fringed epaulettes and the illustration's many stitched pockets/medals; one snack pouch substitutes for overflowing pocket clutter. No crown/giant armor added. Small coin/cheese details are close-view features; coat/face/blade carry identity at game scale. Bulk user review pending.
 
 Actual development bestiary five-state controls and six Bosses beside four heroes passed with correct model and no JS errors. Author game-scale inspection complete; nine focused tests and required-private-assets production build pass. No installer/performance update.
+
+## Player review revision — image-to-3D
+
+The replacement starts from a new neutral reference derived from the book portrait, with a stockier face, broad brass epaulettes, oxblood cuffs and readable map pockets. Reconstruct and texture the new anatomy, then fit the owned officer's blade separately to the right hand. Keep the current model available while the replacement is in review. Private reference and candidate outputs are under `goblin-boss/rebuild/`.
+
+Reconstructed the new neutral image locally, then used CuMesh reduction after Blender collapse damaged the dense source. The final atlas, rebuilt anatomy, separately fitted owned officer sword, coat weights and new motions are authored in the private `rebuild/rigged-coat-fitted/` scene. The final export is 73,540 triangles. Corrected hand and coat stretching visible in the early motion pass. The highest slash pose still has some collar movement. Quarter-frame sword/head clearance, all five ground checks, GLB reimport, 474-frame motion review, muted bestiary and six-Boss dungeon checks pass. This is the completed development candidate for player review.

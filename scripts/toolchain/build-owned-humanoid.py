@@ -6,7 +6,7 @@ import argparse,json,hashlib,sys,math
 from pathlib import Path
 import bpy
 import bmesh
-from mathutils import Matrix,Quaternion,Vector
+from mathutils import Euler,Matrix,Quaternion,Vector
 p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('spec',type=Path);p.add_argument('output',type=Path);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);spec=json.loads(a.spec.read_text());a.output.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.fbx(filepath=str(a.source/'Mesh/AllBodiesCloaks.fbx'))
@@ -352,7 +352,10 @@ def rotate_part(name,bone,rotation):
  for v in obj.data.vertices:v.co=inv@(pivot+rotation@(obj.matrix_world@v.co-pivot))
  if obj.get('fitLandmarks'):obj['fitLandmarks']=json.dumps({key:list(pivot+rotation@(Vector(point)-pivot)) for key,point in json.loads(obj['fitLandmarks']).items()})
 for f in spec.get('fitUpright',[]):
- delta=pose_delta(f['bone'],'Idle',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,0,1));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix();rotate_part(f['part'],f['bone'],rotation)
+ delta=pose_delta(f['bone'],'Idle',f['frame']).to_3x3();desired=delta.inverted()@Vector((0,0,1));rotation=Vector((0,0,1)).rotation_difference(desired.normalized()).to_matrix()
+ if angles:=f.get("restRotationDegrees"):
+  rotation=Euler(tuple(map(math.radians,angles))).to_matrix()@rotation
+ rotate_part(f['part'],f['bone'],rotation)
  fits[f['part']]={'frame':f['frame'],'alignment':(delta@rotation@Vector((0,0,1))).normalized().dot(Vector((0,0,1))),'method':'constant socket rotation, upright at inspected idle grip'}
 if spec.get('fitShield'):
  f=spec['fitShield'];bone=f.get('bone','weapon_l');delta=pose_delta(bone,'Idle',f['frame']).to_3x3();front=Vector(f.get('front',[.15,-1,0])).normalized();up=Vector((0,0,1));right=up.cross(front).normalized();desired=Matrix((right,-front,up)).transposed();rotation=delta.inverted()@desired

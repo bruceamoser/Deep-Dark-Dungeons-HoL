@@ -11,12 +11,14 @@ def add_owned_sling(rig,cfg,material):
  rig.animation_data.action=None
  for bone in rig.pose.bones:bone.matrix_basis.identity()
  bpy.context.view_layer.update()
- grip=rig.matrix_world@rig.data.bones['weapon_r'].head_local
+ hand=cfg.get('handBone','weapon_r')
+ grip=Vector(cfg['grip']) if 'grip' in cfg else rig.matrix_world@rig.data.bones[hand].head_local
+ hand_space=(rig.matrix_world@rig.data.bones[hand].matrix_local).inverted()@grip
  length=cfg.get('length',.30);pouch=grip+Vector((0,0,-length))
  bpy.ops.object.select_all(action='DESELECT');rig.select_set(True);bpy.context.view_layer.objects.active=rig;bpy.ops.object.mode_set(mode='EDIT')
  def bone(name,head,tail,parent):
   b=rig.data.edit_bones.new(name);b.head=rig.matrix_world.inverted()@head;b.tail=rig.matrix_world.inverted()@tail;b.parent=rig.data.edit_bones[parent];b.use_deform=True
- bone('SlingPivot',grip,pouch,'weapon_r')
+ bone('SlingPivot',grip,pouch,hand)
  bone('SlingPouch',pouch,pouch+Vector((0,0,-.06)),'SlingPivot')
  bone('SlingRelease',grip+Vector((.012,0,0)),grip+Vector((.012,0,-.04)),'SlingPivot')
  bpy.ops.object.mode_set(mode='OBJECT')
@@ -66,7 +68,7 @@ def add_owned_sling(rig,cfg,material):
  for track in rig.animation_data.nla_tracks:
   action=track.strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];end=int(action.frame_range[1]);throwing=track.name==cfg['clip']
   for frame in range(1,end+1):
-   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();anchor=(rig.matrix_world@rig.pose.bones['weapon_r'].matrix).translation
+   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();anchor=rig.matrix_world@rig.pose.bones[hand].matrix@hand_space
    theta=0
    if throwing:
     if frame<=cfg['releaseFrame']:theta=(frame-1)/(cfg['releaseFrame']-1)*math.pi/2

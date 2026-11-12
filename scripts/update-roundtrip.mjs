@@ -59,6 +59,7 @@ const child = spawn(
     "--",
     installed,
     "--remote-debugging-port=0",
+    "--mute-audio",
     "--inspect=0",
   ],
   {
@@ -126,7 +127,7 @@ try {
       const fs = process.mainModule.require('node:fs');
       const fd = fs.openSync(${JSON.stringify(restartLog)}, 'a');
       const child = process.mainModule.require('node:child_process').spawn(file,
-        ['--remote-debugging-port=0'], {env, detached:true, stdio:['ignore','ignore',fd]});
+        ['--remote-debugging-port=0','--mute-audio'], {env, detached:true, stdio:['ignore','ignore',fd]});
       fs.closeSync(fd); child.unref(); return true;
     };
     return check.apply(this, args);

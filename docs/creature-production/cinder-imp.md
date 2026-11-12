@@ -11,3 +11,11 @@ Reviewed front/back and320 frames across six states. Floor clearance0.002m acros
 Private root `~/.local/share/four-lanterns-creature-production/cinder-imp/`. Rebuild owned base from JSON, `assemble-cinder-imp.py`, `texture-cinder-imp.py`, `animate-cinder-imp.py`. Anatomy ingredients remain separable. Mason body/head-derived fixture carries purchased restrictions; Ash anatomy is project-authored on CC0 rig. Private-only distribution.
 
 Author fit83/100: anatomy4, silhouette4, signature5, gear4, materials4, distinction4. Remaining: simple one-joint-per-wing deformation and stylized coiled tail/shorts. No dedicated sustained flight animation; movement is the source gait with flapping wings. Bulk user review/install/performance remain deferred.
+
+## Player review revision — fresh model
+
+The player rejected the adapted goblin-based design. The new reference depicts a wiry bat-demon with a triangular snout, recurved horns, clawed digitigrade feet and red wing membranes. The local TRELLIS.2 reconstruction uses only that new reference. Private work is in `cinder-imp/rebuild/`. The geometry candidate needs rigging and runtime review before integration.
+
+The fresh image produced a 1,033,026-triangle TRELLIS.2 shape. The reduced, textured export has 74,960 triangles, 25 bones, six new clips and no loose, zero-area or unweighted geometry on GLB reimport. Reviewed 558 final frames and changed the initial back fall to a forward collapse after seeing the wings hold the torso off the floor. All six ground checks pass. The bestiary and six-Imp dungeon fixture pass, including the actual fire release from the claw. The final capture and ground/roundtrip reports are in `cinder-imp/rebuild/rigged-forward/`. The body is dark red at dungeon scale. Animation is stylized with grounded locomotion and wing motion.
+
+Reproduce with `reconstruct-creature-reference.py`, `reduce-creature-reconstruction.py`, the reconstruction script's `--texture-mesh` option and `rig-cinder-imp-rebuild.py`, in that order. Keep the generated inputs and exports private.

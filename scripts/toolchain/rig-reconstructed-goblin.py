@@ -1,0 +1,826 @@
+"""Fit a rig and held equipment to an image-derived goblin or kobold."""
+import argparse
+import heapq
+import json
+import math
+from pathlib import Path
+import sys
+
+import bmesh
+import bpy
+from mathutils import Euler, Matrix, Vector
+from mathutils.bvhtree import BVHTree
+import numpy as np
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("source", type=Path)
+parser.add_argument("weapon_source", type=Path)
+parser.add_argument("output", type=Path)
+heights = {
+    "boss": 1.65, "spearhand": 1.57, "scrapper": 1.50, "firestarter": 1.52,
+    "rattlechanter": 1.56, "smoke-slinger": 1.53,
+    "tunnel-scout": 1.68, "trapkeeper": 1.64, "emberkeeper": 1.66,
+    "wererat": 1.74, "werebear": 2.08,
+}
+parser.add_argument("--role", choices=tuple(heights), default="boss")
+args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
+source, weapon_source, output = args.source, args.weapon_source, args.output
+spearhand = args.role == "spearhand"
+scrapper = args.role == "scrapper"
+firestarter = args.role == "firestarter"
+rattle = args.role == "rattlechanter"
+slinger = args.role == "smoke-slinger"
+scout = args.role == "tunnel-scout"
+trap = args.role == "trapkeeper"
+ember = args.role == "emberkeeper"
+kobold = scout or trap or ember
+rat = args.role == "wererat"
+bear = args.role == "werebear"
+tailed = kobold or rat
+lean = spearhand or scrapper or firestarter or rattle or slinger or tailed
+ancestry = "Kobold" if kobold else "Goblin"
+creature_name = args.role.title() if rat or bear else ancestry + " " + args.role.replace("-", " ").title()
+slug = args.role if rat or bear else ancestry.lower() + "-" + args.role
+height = heights[args.role]
+output.mkdir(parents=True, exist_ok=True)
+bpy.ops.wm.read_factory_settings(use_empty=True)
+bpy.ops.import_scene.gltf(filepath=str(source))
+body, = [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
+body.data.transform(body.matrix_world)
+body.parent = None
+body.matrix_world = Matrix.Identity(4)
+rotation = Matrix.Rotation(math.pi, 4, "Z")
+body.data.transform(rotation)
+lo = Vector([min(v.co[i] for v in body.data.vertices) for i in range(3)])
+hi = Vector([max(v.co[i] for v in body.data.vertices) for i in range(3)])
+factor = height / (hi.z - lo.z)
+offset = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
+if tailed:
+    feet = [v.co for v in body.data.vertices if v.co.z < lo.z+.14*(hi.z-lo.z)]
+    toe = min(point.y for point in feet)
+    feet = [point for point in feet if point.y < toe+.24*(hi.z-lo.z)]
+    offset.x = (min(point.x for point in feet)+max(point.x for point in feet))/2
+    offset.y = (min(point.y for point in feet)+max(point.y for point in feet))/2+.055/factor
+body.data.transform(Matrix.Diagonal((factor, factor, factor, 1)) @ Matrix.Translation(-offset))
+body.name = f"{creature_name} reconstructed anatomy"
+if rat:
+    # Repair the reconstructed terminal tail bridge while retaining the body,
+    # proximal tail, UVs and color at the boundary.
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+    bmesh.ops.remove_doubles(mesh, verts=[v for v in mesh.verts if v.co.x > .60 and v.co.y > .28], dist=5e-5)
+    plane = .73
+    bmesh.ops.bisect_plane(mesh, geom=[*mesh.verts, *mesh.edges, *mesh.faces],
+                          dist=1e-6, plane_co=(plane, 0, 0), plane_no=(1, 0, 0),
+                          clear_outer=True)
+    boundary = [edge for edge in mesh.edges if edge.is_boundary
+                and all(abs(v.co.x-plane) < 2e-5 for v in edge.verts)]
+    rim = {vertex for edge in boundary for vertex in edge.verts}
+    assert len(rim) == len(boundary) and len(rim) > 6, "Inspect the tail tip seam"
+    center = sum((vertex.co for vertex in rim), Vector())/len(rim)
+    end = Vector((.825, .445, .56))
+    midpoint = center.lerp(end, .49)
+    ring = {vertex: mesh.verts.new(midpoint+(vertex.co-center)*.47) for vertex in rim}
+    tip = mesh.verts.new(end)
+    uv = mesh.loops.layers.uv.active
+    for edge in boundary:
+        loop, = edge.link_loops
+        a, b = loop.vert, loop.link_loop_next.vert
+        surface = loop.face
+        outer = mesh.faces.new((b, a, ring[a], ring[b]))
+        terminal = mesh.faces.new((ring[b], ring[a], tip))
+        for face in (outer, terminal):
+            face.smooth = True
+            face.material_index = surface.material_index
+        if uv:
+            a_uv, b_uv = loop[uv].uv.copy(), loop.link_loop_next[uv].uv.copy()
+            inset = loop.link_loop_prev[uv].uv
+            samples = {a: a_uv, b: b_uv, ring[a]: a_uv.lerp(inset, .19),
+                       ring[b]: b_uv.lerp(inset, .19), tip: (a_uv+b_uv)*.4+inset*.2}
+            for face in (outer, terminal):
+                for corner in face.loops:
+                    corner[uv].uv = samples[corner.vert]
+    mesh.normal_update()
+    degenerate = [face for face in mesh.faces if face.calc_area() <= 1e-12]
+    assert len(degenerate) == 1 and degenerate[0].calc_center_median().z > 1.25
+    bmesh.ops.delete(mesh, geom=degenerate, context="FACES")
+    mesh.to_mesh(body.data)
+    mesh.free()
+if bear:
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+    degenerate = [face for face in mesh.faces if face.calc_area() <= 1e-12]
+    assert len(degenerate) == 1 and .8 < degenerate[0].calc_center_median().z < .9
+    bmesh.ops.delete(mesh, geom=degenerate, context="FACES")
+    mesh.to_mesh(body.data)
+    mesh.free()
+if spearhand or scrapper:
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+    degenerate = [face for face in mesh.faces if face.calc_area() <= 1e-12]
+    assert len(degenerate) == 6, f"Inspect the {creature_name} reconstruction before changing topology"
+    bmesh.ops.delete(mesh, geom=degenerate, context="FACES")
+    mesh.to_mesh(body.data)
+    mesh.free()
+
+
+rig = bpy.data.objects.new(creature_name, bpy.data.armatures.new(creature_name))
+bpy.context.collection.objects.link(rig)
+bpy.context.view_layer.objects.active = rig
+rig.select_set(True)
+bpy.ops.object.mode_set(mode="EDIT")
+segments = {}
+
+
+def chain(names, points, parent=None):
+    fit_scale = height/1.57 if lean else 1
+    for name, start, end in zip(names, points, points[1:]):
+        start = Vector(start)*fit_scale
+        end = Vector(end)*fit_scale
+        bone = rig.data.edit_bones.new(name)
+        bone.head, bone.tail = start, end
+        if parent:
+            bone.parent = rig.data.edit_bones[parent]
+        segments[name] = (np.array(start), np.array(end))
+        parent = name
+
+
+chain(["Root"], [(0, 0, 0), (0, 0, .12)])
+if bear:
+    chain(["Pelvis", "Spine", "Chest", "Neck", "Head"],
+          [(0, .145, .91), (0, .13, 1.12), (0, .145, 1.39),
+           (0, .10, 1.63), (0, .02, 1.72), (0, -.04, 2.07)], "Root")
+    for side, sign in (("R", -1), ("L", 1)):
+        chain([side+"UpperArm", side+"Forearm", side+"Hand"],
+              [(sign*.433, .181, 1.60), (sign*.661, .095, 1.343),
+               (sign*.829, -.091, .988), (sign*.911, -.216, .704)], "Chest")
+        chain([side+"Thigh", side+"Shin", side+"Foot"],
+              [(sign*.26, .164, .91), (sign*.323, .18, .548),
+               (sign*.389, .106, .173), (sign*.401, -.191, .04)], "Pelvis")
+        chain([side+"Coat"], [(sign*.257, .12, .94), (sign*.36, .10, .58)], "Pelvis")
+elif lean:
+    torso = [(0, .04, .72), (0, .025, .82), (0, .01, .95),
+             (0, 0, 1.17), (0, -.025, 1.24), (0, -.025, 1.55)]
+    if trap:
+        torso = [(0, .153, .72), (0, .136, .83), (0, .132, .96),
+                 (0, .107, 1.16), (0, .043, 1.29), (0, .011, 1.54)]
+    chain(["Pelvis", "Spine", "Chest", "Neck", "Head"], torso, "Root")
+    for side, sign in [("R", -1), ("L", 1)]:
+        if rattle:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.188, .012, 1.09), (sign*.337, .015, .925),
+                   (sign*.465, -.069, .752), (sign*.495, -.106, .664)], "Chest")
+        elif trap:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.202, .164, 1.11), (sign*.317, .134, .985),
+                   (sign*.444, .051, .843), (sign*.529, .012, .694)], "Chest")
+        elif ember:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.178, .02, 1.10), (sign*.298, -.01, .968),
+                   (sign*.409, -.045, .835), (sign*.459, -.071, .748)], "Chest")
+            chain([side+"Wing", side+"WingTip"],
+                  [(sign*.108, .124, 1.109), (sign*.299, .140, 1.425),
+                   (sign*.578, .244, 1.245)], "Chest")
+        elif rat:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.154, -.012, 1.151), (sign*.354, -.044, .991),
+                   (sign*.493, -.103, .846), (sign*.577, -.176, .715)], "Chest")
+        elif scout:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.15, .012, 1.11), (sign*.257, -.006, .97),
+                   (sign*.365, -.039, .835), (sign*.414, -.064, .736)], "Chest")
+        elif slinger:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.16, .012, 1.10), (sign*.30, -.005, .936),
+                   (sign*.446, -.04, .793), (sign*.489, -.085, .706)], "Chest")
+        else:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.235, .018, 1.11), (sign*.402, -.02, .945),
+                   (sign*.552, -.075, .778), (sign*.655, -.10, .62)], "Chest")
+        leg = [(sign*.135, .035, .72), (sign*.19, -.025, .45),
+               (sign*.242, .02, .126), (sign*.26, -.13, .028)]
+        if trap:
+            leg = [(sign*.133, .135, .71), (sign*.200, .051, .45),
+                   (sign*.256, .070, .128), (sign*.264, -.132, .037)]
+        chain([side + name for name in ("Thigh", "Shin", "Foot")], leg, "Pelvis")
+        chain([side+"Coat"], [(sign*.18, .035, .8), (sign*.24, .08, .44)], "Pelvis")
+else:
+    chain(["Pelvis", "Spine", "Chest", "Neck", "Head"],
+          [(0, .045, .74), (0, .04, .89), (0, .035, 1.08),
+           (0, .025, 1.31), (0, .005, 1.40), (0, -.025, 1.65)], "Root")
+    for side, sign in [("R", -1), ("L", 1)]:
+        chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+              [(sign*.29, .035, 1.27), (sign*.45, .005, 1.10),
+               (sign*.66, -.095, .934), (sign*.77, -.232, .68)], "Chest")
+        chain([side + name for name in ("Thigh", "Shin", "Foot")],
+              [(sign*.17, .035, .75), (sign*.22, .035, .42),
+               (sign*.25, .055, .13), (sign*.29, -.105, .04)], "Pelvis")
+        chain([side+"Coat"], [(sign*.29, .10, .83), (sign*.41, .12, .31)], "Pelvis")
+if tailed:
+    tail_points = [(0, .131, .684), (.196, .318, .515), (.430, .524, .318),
+                   (.692, .711, .174), (.912, .804, .252)]
+    if trap:
+        tail_points = [(0, .193, .700), (.181, .320, .558), (.400, .447, .388),
+                       (.618, .475, .337), (.855, .501, .498)]
+    if ember:
+        tail_points = [(0, .139, .724), (.190, .235, .555), (.350, .310, .430),
+                       (.543, .390, .350), (.819, .514, .440)]
+    if rat:
+        tail_points = [(0, .120, .787), (.172, .291, .551), (.350, .404, .359),
+                       (.550, .483, .330), (.744, .401, .505)]
+    chain(["TailBase", "TailMiddle", "TailOuter", "TailTip"], tail_points, "Pelvis")
+if ember:
+    hand_start, hand_end = map(Vector, segments["LHand"])
+    grip = hand_start.lerp(hand_end, .68)
+    cup = rig.data.edit_bones.new("Brazier")
+    cup.head, cup.tail = grip, grip+Vector((0, 0, .11))
+    cup.parent = rig.data.edit_bones["LHand"]
+bpy.ops.object.mode_set(mode="OBJECT")
+
+positions = np.empty(len(body.data.vertices) * 3, dtype=np.float32)
+body.data.vertices.foreach_get("co", positions)
+positions = positions.reshape(-1, 3)
+x, y, z = positions.T
+names = [name for name in segments if name != "Root"]
+def wrist_distances():
+    # The texture bake duplicates vertices along UV seams. Join coincident
+    # positions for the weight calculation without changing the exported mesh.
+    points, index = np.unique(np.round(positions, 5), axis=0, return_inverse=True)
+    edges = np.empty(len(body.data.edges)*2, dtype=np.int32)
+    body.data.edges.foreach_get("vertices", edges)
+    pairs = np.unique(np.sort(index[edges.reshape(-1, 2)], axis=1), axis=0)
+    lengths = np.linalg.norm(points[pairs[:, 0]]-points[pairs[:, 1]], axis=1)
+    neighbors = [[] for point in points]
+    for (a, b), length in zip(pairs, lengths):
+        if a != b:
+            neighbors[a].append((b, length))
+            neighbors[b].append((a, length))
+    distances = np.full(len(points), np.inf)
+    seeds = np.zeros(len(points), dtype=bool)
+    for side in ("R", "L"):
+        wrist = segments[side+"Hand"][0]
+        seeds |= np.linalg.norm(points-wrist, axis=1) < (.15 if bear else .066)
+    distances[seeds] = 0
+    queue = [(0, i) for i in np.flatnonzero(seeds)]
+    while queue:
+        cost, current = heapq.heappop(queue)
+        if cost > distances[current]:
+            continue
+        for neighbor, length in neighbors[current]:
+            candidate = cost+length
+            if candidate < min(.25, distances[neighbor]):
+                distances[neighbor] = candidate
+                heapq.heappush(queue, (candidate, neighbor))
+    return distances[index]
+
+
+wrist_field = wrist_distances() if rattle or slinger or tailed or bear else None
+distance_fields = []
+for name in names:
+    start, end = segments[name]
+    delta = end - start
+    projection = np.clip(((positions-start) @ delta)/(delta@delta), 0, 1)
+    distance = np.linalg.norm(positions-start-projection[:, None]*delta, axis=1)
+    if name.startswith(("L", "R")):
+        sign = 1 if name.startswith("L") else -1
+        distance += np.maximum(0, -sign*x)*2
+    if name.endswith(("UpperArm", "Forearm", "Hand")):
+        inner_arm = (.20 if lean else .26) + np.maximum(0, (1.04 if lean else 1.20)-z)*.75
+        if scrapper or firestarter:
+            inner_arm = .17 + np.maximum(0, 1.04-z)*.65
+        if rattle or slinger or rat:
+            inner_arm = .411 - np.maximum(0, z-.75)*.78
+            distance += np.maximum(0, np.abs(y+.04)-.14)*6 + np.maximum(0, z-1.11)*4
+        if kobold:
+            inner_arm = .315 - np.maximum(0, z-.80)*.65
+            rear_arm = .23 if trap else .08
+            distance += np.maximum(0, y-rear_arm)*5 + np.maximum(0, z-1.13)*4
+        lower_arm = .54 if rattle or slinger or rat else .50 if scrapper or firestarter else .58
+        if bear:
+            inner_arm = .40 + np.maximum(0, 1.41-z)*.50
+            side_depth = start[1]+projection*delta[1]
+            distance += np.maximum(0, abs(y-side_depth)-.24)*5 + np.maximum(0, z-1.69)*4
+            lower_arm = .55
+        distance += np.maximum(0, inner_arm-abs(x))*5 + np.maximum(0, lower_arm-z)*3
+    elif rattle or slinger or rat:
+        outside_arm = np.clip((z-.55)/.055, 0, 1)*np.clip((1.14-z)/.14, 0, 1)
+        distance += np.maximum(0, abs(x)-.39)*outside_arm*5
+    if not name.endswith(("Forearm", "Hand")):
+        arm_extent = .67 if bear else .43 if scrapper or firestarter else .49 if lean else .56
+        distance += np.maximum(0, abs(x)-arm_extent)*4
+    if name.endswith("Coat"):
+        distance += np.maximum(0, .26-abs(x))*4 + np.maximum(0, z-.88)*2
+    if name in {"Chest", "Spine", "Pelvis"}:
+        distance += np.maximum(0, abs(x)-.35)*2
+    if name != "Head":
+        head_base = 1.68 if bear else 1.23 if lean else 1.38
+        distance += np.maximum(0, z-head_base)*4
+    else:
+        neck_top = 1.59 if bear else 1.17 if lean else 1.33
+        distance += np.maximum(0, neck_top-z)*3
+    if tailed:
+        if name.startswith("Tail"):
+            tail_front = .19 if trap else .09
+            tail_ceiling = .89 if rat else .77
+            distance += np.maximum(0, tail_front-y)*6 + np.maximum(0, z-tail_ceiling)*6
+        else:
+            rear_body = .27 if trap else .17
+            distance += np.maximum(0, y-rear_body)*np.clip((.80-z)*12, 0, 1)*4
+    if ember:
+        if "Wing" in name:
+            distance += np.maximum(0, .12-y)*6 + np.maximum(0, 1.00-z)*6
+        else:
+            wing_region = np.clip((z-.98)*10, 0, 1)*np.clip((abs(x)-.21)*10, 0, 1)
+            distance += np.maximum(0, y-.14)*wing_region*5
+    if wrist_field is not None:
+        wrist_weight = np.clip((.235-wrist_field)/.08, 0, 1)
+        if name.endswith(("UpperArm", "Forearm", "Hand")):
+            distance = distance*(1-wrist_weight)+wrist_weight*np.linalg.norm(
+                positions-start-projection[:, None]*delta, axis=1)
+        else:
+            distance += .34*wrist_weight
+    distance_fields.append(distance)
+distances = np.stack(distance_fields, axis=1)
+indices = np.argsort(distances, axis=1)[:, :3]
+values = np.take_along_axis(distances, indices, axis=1)
+weights = np.exp(-((values-values[:, :1])/.035)**2)
+weights /= weights.sum(axis=1, keepdims=True)
+groups = [body.vertex_groups.new(name=name) for name in names]
+for index, (bones, influences) in enumerate(zip(indices, weights)):
+    for bone, influence in zip(bones, influences):
+        if influence > 1e-6:
+            groups[bone].add([index], float(influence), "REPLACE")
+body.parent = rig
+modifier = body.modifiers.new(f"{creature_name} skeleton", "ARMATURE")
+modifier.object = rig
+
+def bind_held_prop(obj, hand):
+    obj.vertex_groups.new(name=hand).add(list(range(len(obj.data.vertices))), 1, "REPLACE")
+    obj.parent = rig
+    obj.modifiers.new("Rigid hand grip", "ARMATURE").object = rig
+
+
+if bear:
+    # Project the painted iris into the reconstructed socket. Its outline
+    # follows the face surface and the small pupil stays dark.
+    tree = BVHTree.FromPolygons(
+        [vertex.co for vertex in body.data.vertices],
+        [polygon.vertices[:] for polygon in body.data.polygons],
+    )
+    eye_materials = []
+    for name, color, emission in (
+        ("Werebear amber iris", (.64, .19, .012, 1), .27),
+        ("Werebear iris rim", (.20, .048, .009, 1), .10),
+        ("Werebear pupil", (.019, .009, .004, 1), 0),
+    ):
+        material = bpy.data.materials.new(name)
+        material.use_nodes = True
+        surface = material.node_tree.nodes["Principled BSDF"]
+        surface.inputs["Base Color"].default_value = color
+        surface.inputs["Emission Color"].default_value = color
+        surface.inputs["Emission Strength"].default_value = emission
+        surface.inputs["Roughness"].default_value = .3
+        eye_materials.append(material)
+    for side, sign in (("R", -1), ("L", 1)):
+        center = Vector((sign*.082, -1.5, 1.886))
+        points = []
+        for radius in (.35, .89, 1):
+            for index in range(16):
+                angle = math.tau*index/16
+                dx = radius*.024*math.cos(angle)
+                dz = radius*.013*math.sin(angle)+sign*.23*dx
+                points.append(center+Vector((dx, 0, dz)))
+        points.append(center)
+        for index, point in enumerate(points):
+            hit, _, _, _ = tree.ray_cast(point, Vector((0, 1, 0)))
+            assert hit is not None, "The bear iris must sit on the socket"
+            points[index] = hit+Vector((0, -.0045, 0))
+        rings = [
+            (offset+i, offset+16+i, offset+16+(i+1)%16, offset+(i+1)%16)
+            for offset in (0, 16) for i in range(16)
+        ]
+        pupil = [(i, (i+1)%16, 48) for i in range(16)]
+        data = bpy.data.meshes.new(side+" inset eye")
+        data.from_pydata(points, [], rings+pupil)
+        eye = bpy.data.objects.new(side+" inset eye", data)
+        bpy.context.collection.objects.link(eye)
+        for material in eye_materials:
+            data.materials.append(material)
+        for face in data.polygons:
+            face.material_index = face.index // 16
+            face.use_smooth = True
+        bind_held_prop(eye, "Head")
+
+
+if kobold:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from reconstructed_kobold_gear import fit_brazier, fit_launcher, fit_throw_dart
+
+    if ember:
+        held_props = fit_brazier(weapon_source, rig, rig.data.bones["Brazier"].head_local, bind_held_prop)
+    else:
+        hand_start, hand_end = map(Vector, segments["RHand"])
+        fit_dart_gear = fit_launcher if scout else fit_throw_dart
+        held_props, blade_direction = fit_dart_gear(
+            weapon_source, rig, hand_start.lerp(hand_end, .63), bind_held_prop)
+elif slinger or bear:
+    held_props = []
+elif rattle:
+    recipe = json.loads(weapon_source.read_text())
+    props = {}
+    landmarks = {}
+    for cfg, hand in zip(recipe["externalParts"][:2], ("RHand", "LHand")):
+        existing = set(bpy.data.objects)
+        bpy.ops.import_scene.gltf(filepath=cfg["path"])
+        added = set(bpy.data.objects)-existing
+        obj, = [item for item in added if item.type == "MESH"]
+        obj.data.transform(obj.matrix_world)
+        obj.parent = None
+        obj.matrix_world = Matrix.Identity(4)
+        obj.name = cfg["name"]
+        grip = Vector((-.493 if hand == "RHand" else .493, -.104, .677))
+        rotation = Matrix.Rotation(math.radians(cfg.get("rotateX", 0)), 4, "X")
+        if hand == "LHand":
+            rotation = Matrix.Rotation(math.radians(42), 4, "Y") @ rotation
+        transform = (Matrix.Translation(grip) @ rotation @ Matrix.Scale(cfg["scale"]*.62, 4)
+                     @ Matrix.Translation(-Vector(cfg.get("origin", (0, 0, 0)))))
+        obj.data.transform(transform)
+        landmarks[hand] = {key: transform @ Vector(point) for key, point in cfg["landmarks"].items()}
+        bind_held_prop(obj, hand)
+        props[hand] = obj
+        for item in added-{obj}:
+            bpy.data.objects.remove(item, do_unlink=True)
+    held_props = list(props.values())
+    muzzle = bpy.data.objects.new("RattlePanMuzzle", None)
+    bpy.context.collection.objects.link(muzzle)
+    muzzle.parent = rig
+    muzzle.parent_type = "BONE"
+    muzzle.parent_bone = "LHand"
+    bpy.context.view_layer.update()
+    muzzle.matrix_world = Matrix.Translation(landmarks["LHand"]["strike"])
+else:
+    # Fit the owned weapon as a rigid part on the reconstructed right hand.
+    before = set(bpy.data.objects)
+    if scrapper or rat:
+        name = "OHS02_Niddle" if rat else "Scrapper weapon_r gear"
+        with bpy.data.libraries.load(str(weapon_source), link=False) as (available, loaded):
+            assert name in available.objects, "Missing reviewed scrap knife"
+            loaded.objects = [name]
+        weapon, = loaded.objects
+        bpy.context.collection.objects.link(weapon)
+        # The reviewed knife assembly already has its grip at its mesh origin.
+        if rat:
+            weapon.data.transform(weapon.matrix_basis.to_3x3().to_4x4())
+        assert max(vertex.co.length for vertex in weapon.data.vertices) < .4
+        weapon.modifiers.clear()
+        weapon.vertex_groups.clear()
+    elif firestarter:
+        bpy.ops.import_scene.gltf(filepath=str(weapon_source))
+        weapon, = [obj for obj in set(bpy.data.objects)-before if obj.type == "MESH"]
+        weapon.data.transform(weapon.matrix_world)
+        low = Vector([min(v.co[i] for v in weapon.data.vertices) for i in range(3)])
+        high = Vector([max(v.co[i] for v in weapon.data.vertices) for i in range(3)])
+        neck = Vector(((low.x+high.x)/2, (low.y+high.y)/2, low.z+.78*(high.z-low.z)))
+        flask_scale = .27/(high.z-low.z)
+        weapon.data.transform(Matrix.Scale(flask_scale, 4) @ Matrix.Translation(-neck))
+    else:
+        bpy.ops.import_scene.fbx(filepath=str(weapon_source))
+        weapon, = [obj for obj in set(bpy.data.objects)-before if obj.type == "MESH"]
+        weapon.data.transform(weapon.matrix_world)
+    weapon.parent = None
+    weapon.matrix_world = Matrix.Identity(4)
+    blade_direction = Vector((-.18, -.91, .38) if spearhand else (-.52, -.23, .82)).normalized()
+    if firestarter:
+        blade_direction = Vector((0, 0, 1))
+    if rat:
+        blade_direction = Vector((-.32, -.88, .35)).normalized()
+    blade_rotation = Vector((0, 0, 1)).rotation_difference(blade_direction).to_matrix().to_4x4()
+    grip = Vector((-.61, -.095, .694) if lean else (-.733, -.167, .802))
+    if scrapper:
+        grip = Vector((-.563, -.032, .657))
+    if firestarter:
+        grip = Vector((-.557, -.067, .713))
+    if rat:
+        start, end = map(Vector, segments["RHand"])
+        grip = start.lerp(end, .65)
+    weapon_scale = 1 if scrapper or firestarter or rat else .8
+    weapon_height = [vertex.co.z for vertex in weapon.data.vertices]
+    weapon.data.transform(Matrix.Translation(grip) @ blade_rotation @ Matrix.Diagonal((weapon_scale, weapon_scale, weapon_scale, 1)))
+    weapon_name = {"boss": "officer sword", "spearhand": "spear", "scrapper": "scrap knife", "firestarter": "flask", "wererat": "sewer knife"}[args.role]
+    weapon.name = "Firestarter_held_flask" if firestarter else f"{creature_name} {weapon_name}"
+    if not scrapper and not firestarter and not rat:
+        material = bpy.data.materials.new("Held weapon steel")
+        material.use_nodes = True
+        surface = material.node_tree.nodes.get("Principled BSDF")
+        surface.inputs["Base Color"].default_value = (.44, .47, .46, 1)
+        surface.inputs["Metallic"].default_value = .63
+        surface.inputs["Roughness"].default_value = .34
+        weapon.data.materials.clear()
+        weapon.data.materials.append(material)
+        if spearhand:
+            wood = material.copy()
+            wood.name = "Weathered spear shaft"
+            wood_surface = wood.node_tree.nodes.get("Principled BSDF")
+            wood_surface.inputs["Base Color"].default_value = (.20, .085, .032, 1)
+            wood_surface.inputs["Metallic"].default_value = 0
+            wood_surface.inputs["Roughness"].default_value = .7
+            weapon.data.materials.append(wood)
+            tip_start = max(weapon_height) - .21*(max(weapon_height)-min(weapon_height))
+            for face in weapon.data.polygons:
+                if max(weapon_height[index] for index in face.vertices) < tip_start:
+                    face.material_index = 1
+    weapon.vertex_groups.new(name="RHand").add(list(range(len(weapon.data.vertices))), 1, "REPLACE")
+    weapon.parent = rig
+    modifier = weapon.modifiers.new("Rigid hand grip", "ARMATURE")
+    modifier.object = rig
+    for obj in set(bpy.data.objects)-before-{weapon}:
+        if obj.type != "MESH":
+            bpy.data.objects.remove(obj, do_unlink=True)
+    held_props = [weapon]
+
+
+scene = bpy.context.scene
+scene.render.fps = 24
+rig.animation_data_create()
+basis = {bone.name: bone.bone.matrix_local.to_quaternion() for bone in rig.pose.bones}
+
+
+def orient(name, x=0, y=0, z=0):
+    rotation = Euler(tuple(map(math.radians, (x, y, z)))).to_quaternion()
+    bone = rig.pose.bones[name]
+    bone.rotation_mode = "QUATERNION"
+    bone.rotation_quaternion = basis[name].inverted() @ rotation @ basis[name]
+
+
+def pose(clip, t):
+    wave = math.sin(math.tau*t)
+    pulse = math.sin(math.pi*t)**2
+    orient("Chest", x=1.5*wave)
+    orient("Head", z=4*wave)
+    orient("RUpperArm", y=-13)
+    orient("LUpperArm", y=20)
+    orient("RForearm", x=-8)
+    if tailed:
+        for index, name in enumerate(("TailBase", "TailMiddle", "TailOuter", "TailTip")):
+            yaw = (9 if clip == "Walking_A" else 3)*math.sin(math.tau*t-index*.46)
+            if clip == "Death_A_Pose":
+                settle = t*t*(3-2*t)
+                orient(name, x=(-37, -6, -7, -12)[index]*settle, z=yaw*(1-settle))
+            else:
+                orient(name, z=yaw)
+    if ember:
+        for side, sign in (("R", -1), ("L", 1)):
+            flare = 15*pulse if clip == "Spellcast_Shoot" else 3*wave
+            if clip == "Death_A_Pose":
+                flare = -14*t*t*(3-2*t)
+            orient(side+"Wing", y=sign*flare, z=sign*flare*.4)
+            orient(side+"WingTip", y=sign*flare*.3)
+    if clip == "Walking_A":
+        for side, sign in [("R", -1), ("L", 1)]:
+            stride = 11 if bear else 16
+            orient(side+"Thigh", x=sign*stride*wave)
+            orient(side+"Shin", x=stride*max(0, sign*wave))
+            orient(side+"Foot", x=-sign*8*wave)
+            orient(side+"Coat", x=sign*6*wave)
+        orient("LUpperArm", x=13*wave, y=20)
+        orient("RUpperArm", x=-7*wave, y=-13)
+    elif firestarter and clip == "1H_Melee_Attack_Slice_Diagonal":
+        windup = math.sin(math.pi*min(1, t/.50))**2
+        throw = math.sin(math.pi*t)**2
+        orient("Chest", x=16*throw, z=22*throw)
+        orient("RUpperArm", x=-52*throw+19*windup, y=-20, z=35*throw)
+        orient("RForearm", x=-29*throw-26*windup, z=12*throw)
+        orient("LUpperArm", x=20*throw, y=24)
+    elif ember and clip == "Spellcast_Shoot":
+        release = 10/30
+        phase = t/release if t < release else (1-t)/(1-release)
+        flare = phase**2*(3-2*phase)
+        orient("Chest", x=10*flare, z=16*flare)
+        orient("RUpperArm", x=-54*flare, y=-12, z=24*flare)
+        orient("RForearm", x=-8-30*flare, z=12*flare)
+        orient("LUpperArm", x=5*flare, y=21)
+    elif scout and clip == "2H_Ranged_Shoot":
+        release = .3
+        phase = t/release if t < release else (1-t)/(1-release)
+        aim = phase**2*(3-2*phase)
+        orient("Chest", x=7*aim, z=21*aim)
+        orient("RUpperArm", x=-37*aim, y=-14, z=32*aim)
+        orient("RForearm", x=-8-16*aim, z=16*aim)
+        orient("LUpperArm", x=12*aim, y=16)
+    elif trap and clip == "2H_Ranged_Shoot":
+        release = 14/30
+        phase = t/release if t < release else (1-t)/(1-release)
+        throw = phase**2*(3-2*phase)
+        windup = math.sin(math.pi*phase)**2 if t < release else 0
+        orient("Chest", x=13*throw, z=25*throw-22*windup)
+        orient("RUpperArm", x=-61*throw+31*windup, y=-12, z=26*throw)
+        orient("RForearm", x=-12-22*throw-37*windup, z=16*throw)
+        orient("LUpperArm", x=20*throw, y=18)
+    elif slinger and clip == "2H_Ranged_Shoot":
+        release = .40
+        phase = t/release if t < release else (1-t)/(1-release)
+        swing = phase**2*(3-2*phase)
+        windup = math.sin(math.pi*phase)**2 if t < release else 0
+        orient("Chest", x=10*swing, z=24*swing-14*windup)
+        orient("RUpperArm", x=-37*swing+26*windup, y=-15, z=21*swing)
+        orient("RForearm", x=-12-24*swing-13*windup, z=18*swing)
+        orient("LUpperArm", x=16*swing, y=18)
+    elif ember and clip == "1H_Melee_Attack_Slice_Diagonal":
+        orient("Chest", x=14*pulse, z=20*pulse)
+        orient("RUpperArm", x=-46*pulse, y=-11, z=30*pulse)
+        orient("RForearm", x=-12-21*pulse)
+    elif clip == "Unarmed_Melee_Attack_Punch_A" or ((slinger or kobold) and clip == "1H_Melee_Attack_Slice_Diagonal"):
+        orient("Chest", x=15*pulse, z=-23*pulse)
+        orient("LUpperArm", x=-39*pulse, y=20, z=-36*pulse)
+        orient("LForearm", x=-19*pulse)
+    elif bear and clip == "1H_Melee_Attack_Slice_Diagonal":
+        contact = 10/27
+        phase = t/contact if t < contact else (1-t)/(1-contact)
+        strike = phase**2*(3-2*phase)
+        windup = math.sin(math.pi*phase)**2 if t < contact else 0
+        recovery = math.sin(math.pi*phase)**2 if t > contact else 0
+        orient("Chest", x=9*strike, z=22*strike-19*windup)
+        orient("RUpperArm", x=-42*strike+19*windup, y=-12+8*strike, z=49*strike-26*windup-14*recovery)
+        orient("RForearm", x=-8-9*strike-9*recovery, z=12*strike)
+        orient("RHand", y=-16*strike, z=13*strike)
+        orient("LUpperArm", x=14*strike, y=18)
+    elif rat and clip == "1H_Melee_Attack_Slice_Diagonal":
+        contact = 7/27
+        phase = t/contact if t < contact else (1-t)/(1-contact)
+        thrust = phase**2*(3-2*phase)
+        orient("Chest", x=11*thrust, z=21*thrust)
+        orient("RUpperArm", x=-41*thrust, y=-17, z=32*thrust)
+        orient("RForearm", x=-8-19*thrust, z=12*thrust)
+        orient("LUpperArm", x=14*thrust, y=24)
+    elif clip == "1H_Melee_Attack_Slice_Diagonal" and spearhand:
+        thrust = math.sin(math.pi*t)**4
+        orient("Chest", x=12*thrust, z=14*thrust)
+        orient("RUpperArm", x=-28*thrust, y=-12, z=46*thrust)
+        orient("RForearm", x=-15*thrust-8, z=18*thrust)
+        orient("LUpperArm", x=14*thrust, y=25)
+    elif clip == "1H_Melee_Attack_Slice_Diagonal":
+        sweep = math.sin(math.tau*t)*pulse
+        orient("Chest", x=10*pulse, z=-24*sweep)
+        orient("RUpperArm", x=-28*pulse, y=8*pulse-13, z=60*sweep)
+        orient("RForearm", x=-22*pulse-8, z=30*sweep)
+        orient("LUpperArm", x=16*pulse, y=18)
+    elif clip == "Hit_A":
+        orient("Chest", x=-18*pulse, y=12*pulse)
+        orient("Head", x=-12*pulse, z=10*pulse)
+    elif clip == "Death_A_Pose":
+        settle = t*t*(3-2*t)
+        orient("Root", x=88*settle, y=4*settle)
+        orient("Neck", x=-16*settle)
+        orient("RUpperArm", y=-13+30*settle)
+        orient("LUpperArm", y=20-35*settle)
+        orient("RThigh", x=-8*settle)
+        if bear:
+            orient("RShin", x=17*settle)
+            orient("LShin", x=12*settle)
+            orient("RForearm", x=-19*settle)
+            orient("LForearm", x=-12*settle)
+
+
+def strike_pan(weight, windup):
+    """Place both wrists so the mallet face strikes the center of the pan."""
+    left = rig.pose.bones["LHand"]
+    right = rig.pose.bones["RHand"]
+    left_delta = (Matrix.Translation(Vector((.045, -.18, .86)))
+                  @ Matrix.Rotation(math.radians(-42), 4, "Y")
+                  @ Matrix.Translation(-left.bone.head_local))
+    strike = left_delta @ landmarks["LHand"]["strike"]
+    axis = (landmarks["RHand"]["tip"]-landmarks["RHand"]["center"]).normalized()
+    rotation = axis.rotation_difference(Vector((.8, .6, 0))).to_matrix().to_4x4()
+    right_delta = Matrix.Translation(strike-rotation@landmarks["RHand"]["tip"]) @ rotation
+    for hand, delta in ((left, left_delta), (right, right_delta)):
+        side = hand.name[0]
+        upper, forearm = [rig.pose.bones[side+name] for name in ("UpperArm", "Forearm")]
+        desired = hand.matrix.lerp(delta @ hand.bone.matrix_local, weight)
+        if side == "R":
+            desired.translation += Vector((-.06, -.02, .06))*windup
+        shoulder, elbow, wrist = [joint.head.copy() for joint in (upper, forearm, hand)]
+        end = desired.translation
+        upper_length, lower_length = (elbow-shoulder).length, (wrist-elbow).length
+        direction = (end-shoulder).normalized()
+        distance = (end-shoulder).length
+        assert abs(upper_length-lower_length) < distance < upper_length+lower_length, (side, distance, upper_length+lower_length)
+        pole = elbow-shoulder
+        pole = (pole-direction*pole.dot(direction)).normalized()
+        along = (upper_length**2-lower_length**2+distance**2)/(2*distance)
+        new_elbow = shoulder+direction*along+pole*math.sqrt(max(0, upper_length**2-along**2))
+        for joint, child, target in ((upper, forearm, new_elbow), (forearm, hand, end)):
+            pivot = joint.head.copy()
+            turn = (child.head-pivot).rotation_difference(target-pivot).to_matrix().to_4x4()
+            joint.matrix = Matrix.Translation(pivot) @ turn @ Matrix.Translation(-pivot) @ joint.matrix
+            bpy.context.view_layer.update()
+        hand.matrix = desired
+        bpy.context.view_layer.update()
+    if weight == 1:
+        pan_point = left.matrix @ left.bone.matrix_local.inverted() @ landmarks["LHand"]["strike"]
+        mallet_tip = right.matrix @ right.bone.matrix_local.inverted() @ landmarks["RHand"]["tip"]
+        gap = (pan_point-mallet_tip).length
+        assert gap < .005, gap
+        print(f"Mallet contact gap: {gap:.6f} m", flush=True)
+
+
+clips = {"Idle": 38, "Walking_A": 27, "1H_Melee_Attack_Slice_Diagonal": 28,
+         "Hit_A": 17, "Death_A_Pose": 39}
+if slinger or scout or trap:
+    clips["2H_Ranged_Shoot"] = 31
+if rattle or ember:
+    clips["Spellcast_Shoot"] = 31
+if firestarter:
+    clips["Unarmed_Melee_Attack_Punch_A"] = 19
+for clip, length in clips.items():
+    action = bpy.data.actions.new(clip)
+    rig.animation_data.action = action
+    for frame in range(1, length+1):
+        scene.frame_set(frame)
+        for bone in rig.pose.bones:
+            bone.matrix_basis.identity()
+        t = (frame-1)/(length-1)
+        pose(clip, t)
+        bpy.context.view_layer.update()
+        if rattle and clip == "Spellcast_Shoot":
+            contact = 14/30
+            approach = t/contact if t <= contact else (1-t)/(1-contact)
+            weight = approach**2*(3-2*approach)
+            strike_pan(weight, math.sin(math.pi*approach) if t < contact else 0)
+        if ember:
+            cup = rig.pose.bones["Brazier"]
+            cup.rotation_mode = "QUATERNION"
+            tilt = -76*t*t*(3-2*t) if clip == "Death_A_Pose" else 3*math.sin(math.tau*t)
+            upright = Matrix.Rotation(math.radians(tilt), 4, "Y") @ cup.bone.matrix_local
+            upright.translation = cup.head
+            cup.matrix = upright
+            bpy.context.view_layer.update()
+        if spearhand or scout or trap or rat:
+            hand = rig.pose.bones["RHand"]
+            direction = (hand.matrix @ hand.bone.matrix_local.inverted()).to_3x3() @ blade_direction
+            thrust = math.sin(math.pi*t)**4 if clip == "1H_Melee_Attack_Slice_Diagonal" else 0
+            if rat and clip == "1H_Melee_Attack_Slice_Diagonal":
+                contact = 7/27
+                phase = t/contact if t < contact else (1-t)/(1-contact)
+                thrust = phase**2*(3-2*phase)
+            if kobold and clip == "2H_Ranged_Shoot":
+                release = .3 if scout else 14/30
+                phase = t/release if t < release else (1-t)/(1-release)
+                thrust = phase**2*(3-2*phase)
+            aim = blade_direction.lerp(Vector((0, -1, .03)), thrust).normalized()
+            if clip == "Death_A_Pose":
+                settle = t*t*(3-2*t)
+                aim = blade_direction.lerp(Vector((-.6, -.8, 0)), settle).normalized()
+            rotated = direction.rotation_difference(aim).to_matrix().to_4x4() @ hand.matrix
+            rotated.translation = hand.matrix.translation
+            hand.matrix = rotated
+            bpy.context.view_layer.update()
+        graph = bpy.context.evaluated_depsgraph_get()
+        evaluated = body.evaluated_get(graph)
+        points = np.empty(len(evaluated.data.vertices)*3, dtype=np.float32)
+        evaluated.data.vertices.foreach_get("co", points)
+        prop_evaluations = [prop.evaluated_get(graph) for prop in held_props]
+        weapon_floor = min((prop.matrix_world @ vertex.co).z
+                           for prop in prop_evaluations for vertex in prop.data.vertices) if held_props else math.inf
+        floor = min(float(points.reshape(-1, 3)[:, 2].min()), weapon_floor)
+        rig.pose.bones["Root"].location = basis["Root"].inverted() @ Vector((0, 0, .002-floor))
+        for bone in rig.pose.bones:
+            bone.keyframe_insert("rotation_quaternion", frame=frame)
+        rig.pose.bones["Root"].keyframe_insert("location", frame=frame)
+        if ember:
+            rig.pose.bones["Brazier"].keyframe_insert("location", frame=frame)
+    rig.animation_data.action = None
+    track = rig.animation_data.nla_tracks.new()
+    track.name = clip
+    track.strips.new(clip, 1, action)
+    track.mute = True
+for track in rig.animation_data.nla_tracks:
+    track.mute = False
+for bone in rig.pose.bones:
+    bone.matrix_basis.identity()
+if slinger:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from owned_sling import add_owned_sling
+
+    def sling_material(color):
+        srgb = [int(color[index:index+2], 16)/255 for index in (1, 3, 5)]
+        rgb = [c/12.92 if c <= .04045 else ((c+.055)/1.055)**2.4 for c in srgb]
+        material = bpy.data.materials.new("Sling " + color)
+        material.use_nodes = True
+        material["preserveAuthoredRoughness"] = True
+        surface = material.node_tree.nodes["Principled BSDF"]
+        surface.inputs["Base Color"].default_value = (*rgb, 1)
+        surface.inputs["Roughness"].default_value = .3
+        return material
+
+    config = json.loads(weapon_source.read_text())["sling"]
+    hand_start, hand_end = map(Vector, segments["RHand"])
+    config.update(handBone="RHand", grip=tuple(hand_start.lerp(hand_end, .63)),
+                  releaseFrame=13, length=.26)
+    add_owned_sling(rig, config, sling_material)
+scene.frame_set(1)
+bpy.ops.wm.save_as_mainfile(filepath=str(output/f"{slug}.blend"))
+bpy.ops.export_scene.gltf(
+    filepath=str(output/f"{slug}.glb"), export_format="GLB",
+    export_animations=True, export_animation_mode="NLA_TRACKS",
+    export_force_sampling=True, export_extras=True,
+)
