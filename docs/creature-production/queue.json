@@ -928,9 +928,16 @@
       "name": "Wraith",
       "order": 57,
       "family": "effects",
-      "status": "queued",
+      "status": "integrated",
       "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/wraith.md",
+        "model": "docs/creature-production/wraith.md",
+        "motion": "docs/creature-production/wraith.md",
+        "game-view": "docs/creature-production/wraith.md",
+        "integration": "docs/creature-production/wraith.md"
+      },
+      "approvedAsset": "Wraith"
     },
     {
       "id": "creature-mire-ooze",

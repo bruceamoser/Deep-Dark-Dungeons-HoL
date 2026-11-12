@@ -235,3 +235,7 @@ Private multiview body/18-bone rig retained with narrower/taller proportions; `p
 ## Shadow — dark streaming body and receding death
 
 Private multiview13-bone body retained; `prepare-shadow.py`, `texture-shadow.py`. TextureCraft Clouds in charcoal/deep-blue regions, pale source-eye mask, stronger claw reach and shrinking death. Editable shadow/final/shadow.blend, hashes base/sources.json. No gear or topology repair. Reviewed full clips/game; dense rounded wisps are documented simplification. Reuse must preserve readable edge/eye contrast under dungeon light.
+
+## Wraith — owned hood/shroud and fitted spectral claws
+
+Owned Mason Body11/Hat05/Head01/Eye01 from reviewed Cultist; Ghoul nail-tip recipe and NoWeapon Attack02 claw sweep. `build-wraith.py`, `texture-wraith.py`; private wraith/final/wraith.blend, base/sources.json. Boot-only262vertices removed, dark hood/eye sparks, TextureCraft worn linen, pelvis-bound trailing hem. Initial cloak-joint attachment rejected in motion; final270frames reviewed. Rounded hood/intact upper robe deliberately retain bundle style. Reuse requires fit/animation review; no source assets modified.
