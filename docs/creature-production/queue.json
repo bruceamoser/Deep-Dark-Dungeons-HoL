@@ -880,9 +880,16 @@
       "name": "Cinder Strider",
       "order": 54,
       "family": "effects",
-      "status": "queued",
+      "status": "integrated",
       "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/cinder-strider.md",
+        "model": "docs/creature-production/cinder-strider.md",
+        "motion": "docs/creature-production/cinder-strider.md",
+        "game-view": "docs/creature-production/cinder-strider.md",
+        "integration": "docs/creature-production/cinder-strider.md"
+      },
+      "approvedAsset": "CinderStrider"
     },
     {
       "id": "creature-grave-wisp",

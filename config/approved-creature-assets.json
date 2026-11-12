@@ -1231,6 +1231,31 @@
           "contact": 0.44
         }
       }
+    },
+    {
+      "creatureId": "creature-cinder-strider",
+      "model": "CinderStrider",
+      "path": "/assets/licensed/creatures/CinderStrider.glb",
+      "sha256": "3fabed625bd571a7d9a16e7473eaeb151c16da8f0968c5ee86e9ca81082fdb0c",
+      "approvedOn": "2026-11-12",
+      "method": "refined-private-multiview",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/cinder-strider.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 3.4,
+        "height": 1.9,
+        "weapon": "unarmed",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.44
+        },
+        "ambient": "ash-smoke",
+        "ambientBone": "Chest",
+        "ambientScale": 0.3
+      }
     }
   ]
 }

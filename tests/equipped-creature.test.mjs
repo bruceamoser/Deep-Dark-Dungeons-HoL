@@ -352,3 +352,17 @@ test("glass constructs retain transmission and coat in independent instances", (
   a.model.userData.dispose(); b.model.userData.dispose();
   geometry.dispose(); material.dispose();
 });
+
+
+test("smoke supports a different rig and source units without moving its anchor", () => {
+  const scene = new T.Group(), chest = new T.Bone();
+  chest.name = "Chest"; chest.position.y = .25; scene.add(chest);
+  const base = { model: "StriderFixture", scale: 3.4, height: 1.9, ambient: "ash-smoke", ambientBone: "Chest" };
+  const a = equippedCreatureAppearance({ scene, animations: [] }, { ...base, ambientScale: .3 });
+  const b = equippedCreatureAppearance({ scene, animations: [] }, base);
+  a.model.userData.animate(1); b.model.userData.animate(1);
+  const small = a.model.getObjectByName("Ash smoke"), large = b.model.getObjectByName("Ash smoke");
+  assert.ok(Math.abs(small.position.y - .25) < 1e-6);
+  small.geometry.attributes.position.array.forEach((v, i) => assert.ok(Math.abs(v - large.geometry.attributes.position.array[i] * .3) < 1e-6));
+  a.model.userData.dispose(); b.model.userData.dispose();
+});
