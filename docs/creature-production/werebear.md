@@ -16,7 +16,7 @@ Delivery verification November12: refreshed full motion capture on the exact fin
 
 ## November 12 image rebuild
 
-A new frontal reference produced a fresh broad bear body, coarse sculpted fur, a heavy snout, oversized forepaws, worn vest, straps and waist wraps. Local TRELLIS Q6_K produced 4,949,374 source triangles. CuMesh reduced it to 73,056 for texturing. The finished 73,203-triangle export includes two surface-fitted amber irises with dark pupils, each rigidly skinned to the head. The eye accents preserve a readable gaze under dungeon lighting. No old body or outfit mesh was used.
+A new frontal reference produced a fresh broad bear body, coarse sculpted fur, a heavy snout, oversized forepaws, worn vest, straps and waist wraps. Local TRELLIS Q6_K produced 4,949,374 source triangles. CuMesh reduced it to 73,056 for texturing. The finished 73,203-triangle export includes two surface-fitted amber irises with dark pupils, each rigidly skinned to the head. The eye accents preserve a readable gaze under dungeon lighting. The reconstruction supplies the entire body and outfit.
 
 The new skeleton has fitted shoulders, wrists, claws and legs. The lower forepaw swipe contacts on frame 11 at 24 fps, with a curved return away from the chest. Head and central torso clearance passed at quarter-frame samples of the full attack. All five clips pass floor clearance. Removed one microscopic vest-adjacent degenerate triangle. The round-trip has zero degenerate faces, loose vertices or unweighted vertices. The editable rig and captures are in `~/.local/share/four-lanterns-creature-production/werebear/image-rebuild/recovery-fit/`.
 

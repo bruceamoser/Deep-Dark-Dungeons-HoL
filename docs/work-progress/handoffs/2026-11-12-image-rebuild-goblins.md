@@ -1,10 +1,10 @@
-# 2026-11-12 — Goblin image rebuilds
+# 2026-11-12 — Creature image rebuild and local delivery
 
 - Machine/platform: Ubuntu desktop, RTX 3090.
 - Task and intended result: Rebuild the remaining goblins from role-specific images, then the three kobolds, then Wererat and Werebear.
 - Work branch: `codex/creature-review-fixes` in `~/Projects/FLD-Creature-Production`.
 - Base commit: `db30c59effcee1328955c3de6754a738ae8c54df`.
-- Status: In progress.
+- Status: Complete, locally installed and ready for player review.
 
 ## Completed
 
@@ -18,7 +18,7 @@ Smoke Slinger is source-integrated with a reconstructed body, the fitted two-cor
 
 [Kobold Trapkeeper](../../creature-production/kobold-trapkeeper.md) is source-integrated. The shorter tail and wider body are fitted independently. Its separate dart is thrown by hand.
 
-[Kobold Emberkeeper](../../creature-production/kobold-emberkeeper.md) is source-integrated with new winged anatomy, a fitted lit brazier and a timed right-palm cast. The goblin and kobold wave is complete and locally installed.
+[Kobold Emberkeeper](../../creature-production/kobold-emberkeeper.md) is source-integrated with new winged anatomy, a fitted lit brazier and a timed right-palm cast. The goblins, kobolds and both werecreatures are included in the final local package.
 
 [Wererat](../../creature-production/wererat.md) is source-integrated with new rat anatomy, split coat and a repaired taper on the tail. The fitted Dungeon Mason knife uses a short forward thrust.
 
@@ -30,16 +30,21 @@ One creature completes the queue gates before the next begins. Reconstruct a new
 
 ## Verification
 
-Firestarter passed six-clip motion, GLB and floor checks, 522 preview frames, a six-enemy/four-hero development encounter and 45 sampled throw frames. Twenty-five focused tests and the required-assets build passed. Rattlechanter passed 552 motion frames, six clips of floor clearance, GLB round-trip, bestiary and the six-enemy dungeon fixture including its sonic attack. Smoke Slinger passed 591 motion frames, six clips of floor clearance, GLB round-trip and 56 in-game shot samples with release and recovery. All 379 tests and the required-assets build passed at the Rattlechanter checkpoint. Tunnel Scout passed 591 motion frames, six clips of floor clearance and 54 in-game shot samples. Focused tests and the required-assets build passed. Trapkeeper passed 591 motion frames, six clips of floor clearance and 60 in-game throw samples. Focused tests and the required-assets build passed. Emberkeeper passed 552 motion frames, floor clearance and the six-creature dungeon fixture including its fire attack. Wererat passed 474 motion frames, all five floor checks, quarter-frame knife clearance and muted development bestiary and dungeon checks. Werebear passed 474 motion frames, all five floor checks, quarter-frame paw clearance and muted development bestiary and dungeon checks. The packaged goblin and kobold wave and final source both passed all 379 tests. The unpacked app archive contains all 58 approved GLBs at their exact pinned hashes. Both the exact launcher and installed menu AppImage passed muted native QA in the normal terminal AppArmor context, including all 58 bestiary entries and their five states, disk save, save-on-close and sandbox checks. Debian artifact checksum passed. Earlier installed assets are recorded in the [prior handoff](2026-11-12-player-creature-review.md).
+- The rebuilt creatures passed GLB round-trip, floor clearance, role-specific motion and muted development bestiary and dungeon fixtures. Individual reports record exact hashes, frame counts, attachment checks and remaining visual limitations.
+- All 379 tests passed. The required-assets Linux AppImage and deb builds succeeded. The unpacked app archive contains all 58 approved GLBs at their pinned hashes. AppImage and Debian checksums passed. Debian metadata reports version 0.8.7 and amd64.
+- The exact native launcher passed the 14-creature changed-model sweep in the normal terminal AppArmor context. The ten-second samples used live AI turns, six enemies and four visible heroes at 1600×1000 on one RTX 3090. Average frame rates were 59.5–60.0 FPS, worst p95 16.8 ms, and zero JavaScript errors. The fixture boosts hero HP and forces enemy model visibility to sustain the render load.
+- The installed AppImage passed all 58 bestiary entries and five animation states, pointer and keyboard controls, rendered dungeon, isolated disk save, save-on-close and sandbox checks. Native tests used `--mute-audio`.
 
-## Remaining and next steps
+## Next step
 
-Build the final local Linux package and run the changed-model bulk encounter sweep before updating the local install. Package and test the local delivery after the sequence.
+Player review of the completed local art wave in the bestiary and dungeon.
 
 ## Local-only state / transfer needs
 
-Reference images, meshes, blend scenes, GLBs and evidence are under `~/.local/share/four-lanterns-creature-production/<id>/image-rebuild/`. Transfer private assets separately. The local 0.8.7 AppImage and deb are in `~/Downloads/FLD-Goblin-Kobold-Review-2026-11-12/`. Installed AppImage SHA-256 is `a70bf08aa43bbe6a7eb747b1d7d92129bc895270846bc0eeb24ef22be603fdc0`. Backups are in `~/.local/share/four-lanterns-local-backups/goblin-kobold-20261112-112705/`. Native evidence is in `~/.local/share/four-lanterns-creature-production/delivery-2026-11-12-goblins-kobolds/`. Public release and system Debian installation stay on their previous builds.
+Reference images, reconstructed meshes, editable rigs, approved GLBs and captures are under `~/.local/share/four-lanterns-creature-production/<id>/image-rebuild/`. Transfer private assets separately.
+
+The local 0.8.7 packages are in `~/Downloads/FLD-Completed-Creature-Review-2026-11-12/`. Installed AppImage SHA-256 is `63c567d57a3f12031a736303d3b703a69258c83b116dae45ee3d2c3dcc683ab5`. The previous AppImage and checkout runtime backups are in `/home/bmoser/.local/share/four-lanterns-local-backups/completed-creature-wave-20261112-115239`. Native evidence and exact package asset hashes are in `/home/bmoser/.local/share/four-lanterns-creature-production/delivery-2026-11-12-completed-review`. Delivery is a private per-user Linux review build.
 
 ## Sync status
 
-The work branch is the checkpoint transport. Private export files and review evidence stay local.
+Use the verified remote branch `codex/creature-review-fixes` for source and progress. Private exports and review evidence require local transfer.

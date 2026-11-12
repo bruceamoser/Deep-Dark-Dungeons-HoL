@@ -1,8 +1,12 @@
 # Current working progress
 
-## Active — November 12 creature review fixes
+## Complete — November 12 creature review fixes
 
-The local menu and original launcher contain the Animated Armor and Barrow Guard weapon fixes, the image-rebuilt Cinder Imp, and the completed goblin and kobold rebuilds. The new AppImage and checkout runtime passed native bestiary, normal terminal launch and isolated save checks. Linux AppImage and deb review packages are in `~/Downloads/FLD-Goblin-Kobold-Review-2026-11-12/`. Wererat and Werebear are image-rebuilt and integrated in development. The final local Linux package and bulk encounter verification are in progress. See the [image rebuild handoff](handoffs/2026-11-12-image-rebuild-goblins.md).
+The normal Four Lanterns Deep menu entry and the original launcher contain the Animated Armor and Barrow Guard weapon fixes, the rebuilt Cinder Imp, the completed goblin and kobold rebuilds, Wererat and Werebear. All 58 production entries are integrated. Restart the game to load the local 0.8.7 review build.
+
+All 379 tests passed. The 14 changed-creature native dungeon fixtures averaged 59.5–60.0 FPS at 1600×1000 on one RTX 3090, with six enemies and four heroes visible throughout. Worst p95 frame time was 16.8 ms. The installed AppImage passed full bestiary, disk save, save-on-close and sandbox checks using isolated saves.
+
+AppImage, deb and checksums are in `~/Downloads/FLD-Completed-Creature-Review-2026-11-12/`. Source and progress are on `codex/creature-review-fixes`. See the [image rebuild handoff](handoffs/2026-11-12-image-rebuild-goblins.md) for per-creature reports, backups and private transfer details.
 
 ## Complete — 58-creature local review delivery (November 12)
 
