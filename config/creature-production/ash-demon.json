@@ -1,0 +1,142 @@
+{
+  "id": "ash-demon",
+  "body": "Body01",
+  "parts": [],
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/WalkFWD_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack02_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "NoWeapon/Die02_NoWeapon.fbx",
+    "Spellcast_Shoot": "MagicWand/Attack01_MagicWand.fbx"
+  },
+  "palette": {
+    "1": "#25262a",
+    "2": "#25262a",
+    "3": "#25262a",
+    "4": "#25262a",
+    "5": "#25262a",
+    "6": "#25262a",
+    "7": "#25262a",
+    "8": "#25262a",
+    "9": "#25262a"
+  },
+  "solid": {},
+  "partFit": {},
+  "paintBands": [],
+  "groundContactClips": [],
+  "surfaceWraps": [],
+  "paintRegions": [],
+  "vertexPaint": [],
+  "poseOffsets": [
+    {
+      "bone": "spine_03",
+      "axis": "X",
+      "degrees": 12,
+      "clips": [
+        "Idle",
+        "Walking_A"
+      ]
+    }
+  ],
+  "roughnessOverrides": {
+    "Body01": 0.83,
+    "Ghoul nail tips": 0.6
+  },
+  "claws": {
+    "color": "#685b50",
+    "nails": [
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          -0.045,
+          0.669
+        ],
+        "direction": [
+          1,
+          -0.13695652173913045,
+          0
+        ],
+        "length": 0.0806,
+        "radius": 0.014,
+        "curl": 0.030099999999999995
+      },
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          -0.015,
+          0.669
+        ],
+        "direction": [
+          1,
+          -0.045652173913043485,
+          0
+        ],
+        "length": 0.09815,
+        "radius": 0.014,
+        "curl": 0.030099999999999995
+      },
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          0.016,
+          0.669
+        ],
+        "direction": [
+          1,
+          0.04869565217391305,
+          0
+        ],
+        "length": 0.10660000000000001,
+        "radius": 0.014,
+        "curl": 0.030099999999999995
+      },
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          0.046,
+          0.669
+        ],
+        "direction": [
+          1,
+          0.14,
+          0
+        ],
+        "length": 0.08645000000000001,
+        "radius": 0.014,
+        "curl": 0.030099999999999995
+      },
+      {
+        "bone": "thumb_02",
+        "start": [
+          0.608,
+          -0.1,
+          0.563
+        ],
+        "direction": [
+          0.63,
+          -0.5,
+          -0.55
+        ],
+        "length": 0.065,
+        "radius": 0.015,
+        "curl": 0.0161
+      }
+    ]
+  },
+  "fingerOpening": {
+    "Idle": 0.83,
+    "Walking_A": 0.76,
+    "1H_Melee_Attack_Slice_Diagonal": 0.93
+  },
+  "additionalBodies": [],
+  "partPalette": {},
+  "headFixture": {
+    "path": "~/.local/share/four-lanterns-modular-pilot/2026-11-11/goblin-spearhand/goblin-spearhand.blend",
+    "object": "Goblin head"
+  }
+}

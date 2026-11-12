@@ -640,9 +640,16 @@
       "name": "Ash Demon",
       "order": 39,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/ash-demon.md",
+        "model": "docs/creature-production/ash-demon.md",
+        "motion": "docs/creature-production/ash-demon.md",
+        "game-view": "docs/creature-production/ash-demon.md",
+        "integration": "docs/creature-production/ash-demon.md"
+      },
+      "approvedAsset": "AshDemon"
     },
     {
       "id": "creature-dire-wolf",

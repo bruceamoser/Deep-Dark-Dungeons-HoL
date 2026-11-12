@@ -299,3 +299,36 @@ test("grave flies follow the authored head and dispose only owned resources", ()
   result.model.userData.dispose();
   assert.equal(disposed, true);
 });
+
+test("ash smoke follows its chest after posing and releases only its own resources", () => {
+  const scene = new T.Group(),
+    chest = new T.Bone();
+  chest.name = "spine_03";
+  scene.add(chest);
+  const sourceMaterial = new T.MeshStandardMaterial({
+    emissive: 0xff5500,
+    emissiveIntensity: 2,
+  });
+  const body = new T.Mesh(new T.BoxGeometry(), sourceMaterial);
+  scene.add(body);
+  const result = equippedCreatureAppearance(
+    { scene, animations: [] },
+    { model: "AshDemon", scale: 1, height: 1.8, ambient: "ash-smoke" },
+  );
+  const smoke = result.model.getObjectByName("Ash smoke");
+  result.model.getObjectByName("spine_03").position.y = 0.2;
+  result.model.userData.animate(2);
+  assert.ok(Math.abs(smoke.position.y - 0.2) < 1e-6);
+  assert.ok(
+    [...smoke.geometry.attributes.position.array].every(Number.isFinite),
+  );
+  assert.equal(sourceMaterial.emissiveIntensity, 2);
+  assert.equal(scene.getObjectByName("Ash smoke"), undefined);
+  let disposed = 0;
+  smoke.geometry.addEventListener("dispose", () => disposed++);
+  smoke.material.addEventListener("dispose", () => disposed++);
+  result.model.userData.dispose();
+  assert.equal(disposed, 2);
+  body.geometry.dispose();
+  sourceMaterial.dispose();
+});

@@ -24,6 +24,9 @@ try {
   });
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
   await page.goto(process.env.AUDIT_URL ?? "http://127.0.0.1:5198");
   await waitForGame(page);
   if (await page.locator("#modal .close").count())
@@ -109,6 +112,27 @@ try {
   );
   expect(instances.length).toBe(6);
   for (const instance of instances) expect(instance.avatar).toBe(entry.model);
+  let ambientReview;
+  if (entry.runtime?.ambient === "ash-smoke") {
+    ambientReview = await page.evaluate(() => {
+      return [...window.__ddd.scene.entities.values()]
+        .filter((e) => e.data.id.startsWith("visual-"))
+        .map((e) => {
+          const smoke = e.model.getObjectByName("Ash smoke");
+          if (!smoke) throw Error("Missing authored ash smoke");
+          const before = [...smoke.geometry.attributes.position.array];
+          e.model.userData.animate(2);
+          const after = [...smoke.geometry.attributes.position.array];
+          return {
+            points: after.length / 3,
+            moved: before.some((v, i) => Math.abs(v - after[i]) > 0.001),
+            finite: after.every(Number.isFinite),
+          };
+        });
+    });
+    for (const row of ambientReview)
+      expect(row).toEqual({ points: 18, moved: true, finite: true });
+  }
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
   let projectileReview;
   const projectileKind = entry.runtime?.attack?.kind;
@@ -248,6 +272,7 @@ try {
         clips,
         instances,
         projectileReview,
+        ambientReview,
         errors,
         scope:
           "Actual game bestiary + dungeon appearance routing; muted isolated browser context; performance deferred",
