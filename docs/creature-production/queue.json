@@ -784,9 +784,16 @@
       "name": "Clay Helper",
       "order": 48,
       "family": "construct",
-      "status": "queued",
+      "status": "integrated",
       "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/clay-helper.md",
+        "model": "docs/creature-production/clay-helper.md",
+        "motion": "docs/creature-production/clay-helper.md",
+        "game-view": "docs/creature-production/clay-helper.md",
+        "integration": "docs/creature-production/clay-helper.md"
+      },
+      "approvedAsset": "ClayHelper"
     },
     {
       "id": "creature-clockwork-scout",

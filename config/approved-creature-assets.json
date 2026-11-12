@@ -1092,6 +1092,28 @@
           "contact": 0.48
         }
       }
+    },
+    {
+      "creatureId": "creature-clay-helper",
+      "model": "ClayHelper",
+      "path": "/assets/licensed/creatures/ClayHelper.glb",
+      "sha256": "288829fabbb0af581435975e2c364de71c8ac4bd815715428def549731247c61",
+      "approvedOn": "2026-11-12",
+      "method": "existing-multiview-construct",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/clay-helper.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 3.2,
+        "height": 1.48,
+        "weapon": "unarmed",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.44
+        }
+      }
     }
   ]
 }
