@@ -800,9 +800,16 @@
       "name": "Clockwork Scout",
       "order": 49,
       "family": "construct",
-      "status": "queued",
+      "status": "integrated",
       "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/clockwork-scout.md",
+        "model": "docs/creature-production/clockwork-scout.md",
+        "motion": "docs/creature-production/clockwork-scout.md",
+        "game-view": "docs/creature-production/clockwork-scout.md",
+        "integration": "docs/creature-production/clockwork-scout.md"
+      },
+      "approvedAsset": "ClockworkScout"
     },
     {
       "id": "creature-glass-sentinel",
