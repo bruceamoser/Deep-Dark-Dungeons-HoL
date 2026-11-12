@@ -736,9 +736,16 @@
       "name": "Giant Spider",
       "order": 45,
       "family": "animal",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/giant-spider.md",
+        "model": "docs/creature-production/giant-spider.md",
+        "motion": "docs/creature-production/giant-spider.md",
+        "game-view": "docs/creature-production/giant-spider.md",
+        "integration": "docs/creature-production/giant-spider.md"
+      },
+      "approvedAsset": "GiantSpider"
     },
     {
       "id": "creature-animated-armor",

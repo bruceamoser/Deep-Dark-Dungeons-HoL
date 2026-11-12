@@ -187,3 +187,7 @@ Existing private multiview quadruped donor, fitted amber eyes/black sockets and 
 ## Cave Bat leather membrane and flight landing
 
 Existing private clean-sheet multiview bat, original22-bone rig. `prepare-cave-bat.py` retains atlas/body, separates green membranes, lifts live flight and grounds death; `texture-cave-bat.py` adds Leather grain. Private `cave-bat/final/cave-bat.blend`.405 frames and actual dungeon reviewed. Shoulder-driven panels, not full finger flexion. No gear.
+
+## Giant Spider articulated vermin layout
+
+Project-authored refinement of `src/view/creatures.mjs` eight-leg layout: all roots on front body, two-segment analytic gait, eight eyes, curved fangs, curled death. `build-giant-spider.py` + `texture-giant-spider.py`; private `giant-spider/final/giant-spider.blend`.19bones/43,136 triangles,535 final frames and actual dungeon reviewed. TextureCraft green/gold chitin maps. Generated extra-leg donors rejected; no purchased mesh input. Reuse only after anatomy/motion checks.
