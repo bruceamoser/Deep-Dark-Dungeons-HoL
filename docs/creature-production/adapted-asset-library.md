@@ -143,3 +143,7 @@ CC0 KayKit-derived prior Trapkeeper recipe, refitted to the refined Scout anatom
 ## Emberkeeper wings and suspended brazier
 
 CC0 KayKit-derived legacy Emberkeeper recipe adapted to refined kobold anatomy. Open batlike wings on wing.l/wing.r; bronze cup and short chains on dedicated brazier joint. `build-kobold-emberkeeper-refined.py` preserves original27 rest bones; `animate-kobold-emberkeeper.py` bakes gravity alignment and floor clearance. Private editable `kobold-emberkeeper/animated/kobold-emberkeeper.blend`. Green robe, textured brown wing membranes and bronze charms contrast with red-copper skin and bright coals. Front/side/back,513 frames and muted dungeon checks passed. Reusing these on another body requires separate grip, wing and floor checks.
+
+## Wererat thief coat, knife, keys and rat anatomy
+
+Owned Mason Body12/OHS02_Niddle, KayKit Dungeon keyring and prior CC0-derived rat head/tail. `config/creature-production/wererat.json` fits knife/keyring to weapon_r/pelvis; `refine-wererat-anatomy.py` narrows/lowers the existing rat head, recesses eyes and fits four tail joints without changing original43 bone rests. `texture-wererat.py` applies wool-based short fur, smooth leather and subtle cloth. Private editable `wererat/final/wererat.blend`;256-frame and muted dungeon checks passed. Use separate fit checks on another body.
