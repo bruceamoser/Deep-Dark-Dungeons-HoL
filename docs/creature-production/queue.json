@@ -848,9 +848,16 @@
       "name": "Icebound Warden",
       "order": 52,
       "family": "construct",
-      "status": "queued",
+      "status": "integrated",
       "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/icebound-warden.md",
+        "model": "docs/creature-production/icebound-warden.md",
+        "motion": "docs/creature-production/icebound-warden.md",
+        "game-view": "docs/creature-production/icebound-warden.md",
+        "integration": "docs/creature-production/icebound-warden.md"
+      },
+      "approvedAsset": "IceboundWarden"
     },
     {
       "id": "creature-emberling",
