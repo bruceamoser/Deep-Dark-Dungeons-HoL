@@ -480,9 +480,11 @@
       "name": "Crypt Ghoul",
       "order": 29,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "active",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/crypt-ghoul.md"
+      }
     },
     {
       "id": "creature-ghast",

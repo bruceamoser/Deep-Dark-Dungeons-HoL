@@ -295,6 +295,13 @@ for cfg in spec.get('externalParts',[]):
   if uri and not uri.startswith('data:'):deps.append(file.parent/uri)
  for dep in deps:extra_sources[str(dep)]=hashlib.sha256(dep.read_bytes()).hexdigest()
 
+# Per-surface finish overrides clone materials so shared palette colors on
+# clothing or eyes are not changed by a skin-only roughness adjustment.
+for name,roughness in spec.get('roughnessOverrides',{}).items():
+ obj=bpy.data.objects[name]
+ for i,old in enumerate(list(obj.data.materials)):
+  m=old.copy();m.name=name+' surface finish';m['preserveAuthoredRoughness']=True;m.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value=roughness;obj.data.materials[i]=m
+ modifications.append({'part':name,'purpose':'Reviewed surface-specific roughness','roughness':roughness})
 # Small painted inscriptions conform to the inspected owned surface. Join the
 # baked letters into that part so its existing socket fit moves them together.
 for cfg in spec.get('inscriptions',[]):

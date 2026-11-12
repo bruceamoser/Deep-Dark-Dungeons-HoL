@@ -165,5 +165,9 @@
         "Walking_A"
       ]
     }
-  ]
+  ],
+  "roughnessOverrides": {
+    "Body01": 0.78,
+    "Head01_Male": 0.78
+  }
 }
