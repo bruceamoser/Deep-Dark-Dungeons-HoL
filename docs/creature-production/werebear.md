@@ -11,3 +11,5 @@ Halved oversized saber-like fangs, separated amber eye emission from ivory claws
 Author fit80/100: anatomy4, silhouette4, signature4, gear4, materials4, distinction4. Remaining: visibly layered stylized fur clumps and permanently open mouth. Bulk user review/install/performance deferred.
 
 Final export: 2,537,992 bytes,4,520 triangles,23 bones,five clips,10 materials/primitives and18 packed512px maps.
+
+Delivery verification November12: refreshed full motion capture on the exact final material/export hash (400frames), reviewed all clips and attachment/deformation again. Evidence: `final/review-delivery`; this supersedes the older pre-material motion capture. No model bytes changed.

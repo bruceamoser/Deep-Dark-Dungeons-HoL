@@ -11,3 +11,5 @@ TextureCraft Asphalt starts the material. Rejected glowing Pores dots and overly
 Private root `~/.local/share/four-lanterns-creature-production/ash-demon/`. Rebuild JSON through owned builder, `assemble-cinder-imp.py` into the private Ash anatomy folder, `texture-ash-demon.py`, `animate-ash-demon.py`. Purchased inputs/exports private-only.
 
 Author fit80/100: anatomy4, silhouette4, signature4, gear4, materials4, distinction4. Remaining: a solid stylized body rather than fully volumetric ash, one-joint wing panels and shared fiend facial structure. Bulk user review/install/performance deferred.
+
+Delivery verification November12: refreshed full motion capture on the exact final material/export hash (320frames), reviewed all clips and attachment/deformation again. Evidence: `final/review-delivery`; this supersedes the older pre-material motion capture. No model bytes changed.

@@ -11,3 +11,5 @@ Eight individually skinned chain links and three fitted hooks follow eight new j
 Private root `~/.local/share/four-lanterns-creature-production/horned-devil/`. Rebuild owned base JSON, `assemble-horned-devil.py` (reuses Cinder anatomy assembly), `texture-horned-devil.py`, `animate-horned-devil.py`. Original assets untouched; purchased input/export private-only.
 
 Author fit83/100: anatomy4, silhouette4, signature4, gear5, materials4, distinction4. Remaining: chunky shared face, rigid one-joint wing panels, modest chain reach and deliberately posed chain rather than physics simulation. Bulk user review/install/performance deferred.
+
+Delivery verification November12: refreshed full motion capture on the exact final material/export hash (256frames), reviewed all clips and attachment/deformation again. Evidence: `final/review-delivery`; this supersedes the older pre-material motion capture. No model bytes changed.

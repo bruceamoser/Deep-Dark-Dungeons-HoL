@@ -100,3 +100,7 @@ After completing one creature, commit/push its progress and verify the remote ha
 Bruce’s latest November 11 instruction: get through the creatures, then deliver the updated game for bulk review and a targeted tweak pass. Keep author visual/motion/runtime checks and source checkpoints per creature. Do not pause for user approval per model, rebuild installers, reinstall the game or repeat native package checks after every creature. Leave the currently installed seven-creature build alone until the roster delivery checkpoint. Performance also remains a final bulk pass.
 
 Bruce further directs continuing across commits/PR checkpoints without stopping. A checkpoint preserves progress; it is not a stopping condition. Continue until the roster is complete unless a significant unresolved failure or decision genuinely requires user input.
+
+## Completed local roster delivery — November 12
+
+All 58 entries have completed author model/motion/game-view/integration gates and are installed locally for Bruce's bulk review. The native whole-roster sweep and installed bestiary/launch/save checks pass. See [delivery and rollback](2026-11-12-roster-delivery.md) and [measured performance](2026-11-12-roster-performance.md). No active creature or unattended generator remains; resume with specific review feedback, preserving the documented source/private-asset boundaries.
