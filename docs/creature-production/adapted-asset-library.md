@@ -163,3 +163,7 @@ Ash Demon's existing CC0-derived separable anatomy fitted by `assemble-cinder-im
 ## Horned Devil contract book and animated barbed chain
 
 Mason Body19 armor, KayKit Adventurers spellbook_closed on weapon_l, Mixed Bag1 chainlink and RPG Tools fishing_hook_B on eight independent chain joints. `assemble-horned-devil.py` builds the reusable link/hook assembly and reuses fitted fiend anatomy. `animate-horned-devil.py` extends the chain on strike and curls it near ground; rotations remove rig scale before writing pose matrices. Private `horned-devil/final/horned-devil.blend`.256 frames, floor and dungeon reviewed. Chain is posed, not simulated physics; new bearers need grip/reach/fall checks.
+
+## Ash heat-vein materials and smoke presentation
+
+Reusable TextureCraft Asphalt base with Marble veins driving matching base color, height and emission (`texture-ash-demon.py`). Pores and Voronoi prototypes were rejected as dots/flat patches. Private `ash-demon/materials/ash-demon.tcraft`, packed final Blend/GLB under `ash-demon/final/`. Runtime `ambient: ash-smoke` adds one fading point-cloud draw following the owned spine_03 joint and pulses cloned emissive materials; orthographic/perspective sizing and disposal tested.320 motion frames plus final material/runtime review passed. Suitable for heat/ash forms after separate palette, scale and readability review.

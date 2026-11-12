@@ -1,5 +1,9 @@
 import {
   BooleanKeyframeTrack,
+  BufferGeometry,
+  Float32BufferAttribute,
+  Points,
+  ShaderMaterial,
   Group,
   Mesh,
   SphereGeometry,
@@ -59,6 +63,83 @@ export function equippedCreatureAppearance(asset, spec) {
           Math.sin(a) * 0.31,
         );
       });
+    };
+    const dispose = model.userData.dispose;
+    model.userData.dispose = () => {
+      dispose();
+      geometry.dispose();
+      material.dispose();
+    };
+    model.userData.animate(0);
+  }
+  if (spec.ambient === "ash-smoke") {
+    const anchor = model.getObjectByName("spine_03");
+    if (!anchor) throw new Error("Ash smoke requires the reviewed chest bone");
+    const count = 18;
+    const geometry = new BufferGeometry();
+    geometry.setAttribute(
+      "position",
+      new Float32BufferAttribute(new Float32Array(count * 3), 3),
+    );
+    geometry.setAttribute(
+      "puffSize",
+      new Float32BufferAttribute(new Float32Array(count), 1),
+    );
+    geometry.setAttribute(
+      "puffAlpha",
+      new Float32BufferAttribute(new Float32Array(count), 1),
+    );
+    const material = new ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      vertexShader: `attribute float puffSize; attribute float puffAlpha;
+        varying float opacity;
+        void main() {
+          opacity = puffAlpha;
+          vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * viewPosition;
+          float attenuation = projectionMatrix[3][3] > 0.5 ? 1.0 : max(0.1, -viewPosition.z);
+          gl_PointSize = clamp(260.0 * puffSize * projectionMatrix[1][1] / attenuation, 2.0, 90.0);
+        }`,
+      fragmentShader: `varying float opacity;
+        void main() {
+          float radius = length(gl_PointCoord - vec2(0.5)) * 2.0;
+          float edge = 1.0 - smoothstep(0.12, 1.0, radius);
+          gl_FragColor = vec4(vec3(0.36, 0.37, 0.39), opacity * edge * edge);
+        }`,
+    });
+    const smoke = new Points(geometry, material);
+    smoke.name = "Ash smoke";
+    smoke.frustumCulled = false;
+    model.add(smoke);
+    const emission = [...materials.values()].map((m) => [
+      m,
+      m.emissiveIntensity,
+    ]);
+    model.userData.animate = (time) => {
+      anchor.updateWorldMatrix(true, false);
+      smoke.position.copy(anchor.getWorldPosition(smoke.position));
+      model.worldToLocal(smoke.position);
+      for (let i = 0; i < count; i++) {
+        const age = (((time * 0.26 + i / count) % 1) + 1) % 1;
+        const angle = i * 2.4 + time * 0.4;
+        geometry.attributes.position.setXYZ(
+          i,
+          Math.cos(angle) * (0.22 + age * 0.32),
+          0.05 + age * 0.9,
+          -0.18 + Math.sin(angle) * 0.18,
+        );
+        geometry.attributes.puffSize.setX(i, 0.7 + age * 1.2);
+        geometry.attributes.puffAlpha.setX(i, Math.sin(age * Math.PI) * 0.5);
+      }
+      Object.values(geometry.attributes).forEach((attribute) => {
+        attribute.needsUpdate = true;
+      });
+      for (const [m, intensity] of emission) {
+        if (Number.isFinite(intensity))
+          m.emissiveIntensity =
+            intensity * (0.92 + 0.08 * Math.sin(time * 5.7));
+      }
     };
     const dispose = model.userData.dispose;
     model.userData.dispose = () => {
