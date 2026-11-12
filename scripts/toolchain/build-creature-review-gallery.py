@@ -9,7 +9,7 @@ out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 manifest=json.loads((repo/'config/approved-creature-assets.json').read_text())['assets']
 queue=json.loads((repo/'docs/creature-production/queue.json').read_text())['creatures'];names={r['id']:r['name'] for r in queue}
 captures={}
-for p in sorted(root.rglob('capture*.json'), key=lambda p:p.name=='capture.json'):
+for p in root.rglob('capture.json'):
     d=json.loads(p.read_text());captures[d['sha256']]=p.parent
 anchors={'GoblinSpearhand':pilot/'goblin-spearhand/presentation','AirElementalSculpted':pilot/'air-elemental/review-v3','WolfPilot':pilot/'wolf/review-v2'}
 font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',18)

@@ -1,12 +1,13 @@
 # Current working progress
 
-## Active work — owned assets and no-cost modular pilot (November 11)
+## Complete — 58-creature local review delivery (November 12)
 
-### Latest — Roster production; bulk delivery/review deferred
+**58/58 integrated and locally installed; no active production creature.** Normal menu AppImage and the primary checkout's ignored packaged runtime now contain the full roster. Version label remains **0.8.7 local art-review build**; public release and system Debian are unchanged. Restart the game to load it. Source worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/creature-roster-delivery`, PR205; historical dirty primary source is preserved.
 
-Bruce requests continuing through the58-creature roster without stopping at source/PR checkpoints. Pause only for a significant unresolved problem requiring him. Finish author model/motion/runtime checks and source checkpoints per creature; defer installers, user art review and performance to bulk delivery. Installed remains the seven-creature Firestarter0.8.7 build.
+All379 unit tests pass. All58 native six-creature/four-hero encounters average58.60–60.00FPS at1600×1000 on oneRTX3090, worst p95 16.8ms, zero JS errors. Exact launcher and installed menu pass full58-model bestiary/art/animation controls, disk save, save-on-close and sandbox checks. Full final-material motion refreshed for Werebear/Horned Devil/Ash Demon. [Delivery report](../creature-production/2026-11-12-roster-delivery.md) and [timing table](../creature-production/2026-11-12-roster-performance.md) record limitations and evidence.
 
-**58/58 source-integrated. Bulk delivery/testing underway.** Production worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/creature-roster-delivery`. Last Mire Ooze passes475-frame motion, ground/reimport and six-creature dungeon/bestiary review. Full379tests pass; AppImage/deb built with all required approved assets. Wraith PR203 merged after fixing queue tests that assumed unfinished entries always existed. Native bulk sweep is running via normal user service; [delivery record](../creature-production/2026-11-12-roster-delivery.md) tracks remaining qualification and private review gallery. Installed menu update follows; installed seven-creature build remains unchanged until qualified. See [handoff](handoffs/2026-11-12-roster-complete.md).
+Local review gallery: `/home/bmoser/Downloads/FLD-Creature-Review-2026-11-12/index.html`. AppImage/deb/installer: `/home/bmoser/Downloads/FLD-Roster-Review-Build-2026-11-12/`. Old builds backed up under `~/.local/share/four-lanterns-local-backups/roster-20261112-022336/`; saves/audio preferences untouched. Private models/media require separate machine transfer; Git contains recipes/hashes/docs. Next: Bruce's bulk art review and targeted refinements, not another unattended generation batch. See [handoff](handoffs/2026-11-12-roster-delivery.md).
+
 
 Recent completed fixes include Sage’s book pages facing inward, Sentry’s collapse and bestiary animation framing, and arrows remaining attached until their actual release without a duplicate projectile. See [production queue](../creature-production/queue.json), [Archer report](../creature-production/bone-archer.md), [Champion report](../creature-production/skeleton-champion.md), and [handoff](handoffs/2026-11-11-roster-bulk-review.md). Private editable scenes, exports and review media under `~/.local/share/four-lanterns-creature-production/` need separate transfer; Git carries recipes/hashes/docs, not purchased models.
 

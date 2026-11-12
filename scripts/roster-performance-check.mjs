@@ -402,8 +402,10 @@ try {
   };
   expect(sandbox.mainProfile).toBe("unconfined");
   expect(sandbox.rendererSeccomp).toBe("2");
-  expect(sandbox.arguments).toContain("--mute-audio");
-  expect(sandbox.arguments).not.toContain("--no-sandbox");
+  expect(sandbox.arguments.join(" ")).toMatch(/(?:^|\s)--mute-audio(?:\s|$)/);
+  expect(sandbox.arguments.join(" ")).not.toMatch(
+    /(?:^|\s)--no-sandbox(?:\s|$)/,
+  );
   expect(sandbox.executable).not.toContain(" ");
   await fs.rm(path.join(out, "failure.json"), { force: true });
   await fs.rm(path.join(out, "failure.png"), { force: true });
