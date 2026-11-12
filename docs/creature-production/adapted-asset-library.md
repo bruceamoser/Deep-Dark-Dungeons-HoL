@@ -179,3 +179,7 @@ Approved private Wolf donor, white/glacial-blue vertex coat, cyan irises, new in
 ## Hell Hound charcoal and furnace surfaces
 
 Approved private Wolf body/jaw, TextureCraft Asphalt/Marble veins maps (matching height/emission), black nose mask, furnace eye/mouth/teeth materials. `prepare-hell-hound.py` then `texture-hell-hound.py`; private `hell-hound/final/hell-hound.blend`.485 frames and dungeon reviewed. Reusable heat-surface recipe, preserve donor provenance; no gear.
+
+## Giant Rat facial fittings and grounded clips
+
+Existing private multiview quadruped donor, fitted amber eyes/black sockets and paired ivory incisors. `prepare-giant-rat.py` preserves22-bone anatomy/four-joint tail and corrects source root floor drift. Source muzzle is offset x0.057; do not assume symmetry. Private `giant-rat/final/giant-rat.blend`;450 final frames and real dungeon reviewed. Mouth remains a lunge/nip without separate jaw hinge.

@@ -704,9 +704,16 @@
       "name": "Giant Rat",
       "order": 43,
       "family": "animal",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/giant-rat.md",
+        "model": "docs/creature-production/giant-rat.md",
+        "motion": "docs/creature-production/giant-rat.md",
+        "game-view": "docs/creature-production/giant-rat.md",
+        "integration": "docs/creature-production/giant-rat.md"
+      },
+      "approvedAsset": "GiantRat"
     },
     {
       "id": "creature-cave-bat",
