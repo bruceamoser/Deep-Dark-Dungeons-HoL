@@ -136,7 +136,11 @@ try {
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
   let projectileReview;
   const projectileKind = entry.runtime?.attack?.kind;
-  if (["bottle", "arrow", "sonic", "sling", "dart"].includes(projectileKind)) {
+  if (
+    ["bottle", "arrow", "sonic", "sling", "dart", "cold"].includes(
+      projectileKind,
+    )
+  ) {
     const frameFolder =
       projectileKind === "bottle"
         ? "throw-frames"
@@ -158,7 +162,7 @@ try {
         fx: s.attackEffect({
           attacker: actor.data.id,
           target: target.data.id,
-          spell: ["bottle", "sonic"].includes(kind),
+          spell: ["bottle", "sonic", "cold"].includes(kind),
           ranged: ["arrow", "sling", "dart"].includes(kind),
           element: kind === "bottle" ? "fire" : undefined,
           damage: 0,
@@ -239,10 +243,12 @@ try {
       (s) => s.time > release + 0.03 && s.time < release + 0.13,
     );
     expect(flying.kind).toBe(projectileKind);
-    if (projectileKind !== "sonic") expect(flying.held).toBe(false);
+    if (!["sonic", "cold"].includes(projectileKind))
+      expect(flying.held).toBe(false);
     expect(flying.meshes).toBeGreaterThan(0);
     expect(flying.projectile).toBe(true);
-    if (projectileKind !== "sonic") expect(samples.at(-1).held).toBe(true);
+    if (!["sonic", "cold"].includes(projectileKind))
+      expect(samples.at(-1).held).toBe(true);
     expect(samples.every((s) => s.position.every(Number.isFinite))).toBe(true);
     if (projectileKind === "arrow")
       expect(
