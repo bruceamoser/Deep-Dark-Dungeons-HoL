@@ -448,9 +448,16 @@
       "name": "Death Knight",
       "order": 27,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/death-knight.md",
+        "model": "docs/creature-production/death-knight.md",
+        "motion": "docs/creature-production/death-knight.md",
+        "game-view": "docs/creature-production/death-knight.md",
+        "integration": "docs/creature-production/death-knight.md"
+      },
+      "approvedAsset": "DeathKnight"
     },
     {
       "id": "creature-plague-zombie",

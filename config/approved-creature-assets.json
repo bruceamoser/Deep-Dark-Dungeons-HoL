@@ -582,6 +582,29 @@
           "contact": 0.3
         }
       }
+    },
+    {
+      "creatureId": "creature-death-knight",
+      "model": "DeathKnight",
+      "path": "/assets/licensed/creatures/DeathKnight.glb",
+      "sha256": "afbd47bc2a352e15c48874cb7f40a30d24a96bc7db98a130bb625dfab3b8e767",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/death-knight.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1,
+        "height": 1.8,
+        "weapon": "melee",
+        "attack": {
+          "kind": "slash",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.3
+        },
+        "shield": true
+      }
     }
   ]
 }

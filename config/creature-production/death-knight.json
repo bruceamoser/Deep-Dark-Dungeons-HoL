@@ -1,0 +1,156 @@
+{
+  "id": "death-knight",
+  "body": "Body18",
+  "parts": [
+    [
+      "HeadParts",
+      "Hat10",
+      "head"
+    ],
+    [
+      "Weapons",
+      "OHS09_Sword",
+      "weapon_r"
+    ],
+    [
+      "Weapons",
+      "Shield14",
+      "weapon_l"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack03_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#343b3c",
+    "2": "#293333",
+    "3": "#9b9480",
+    "4": "#8f7951",
+    "5": "#5c6664",
+    "6": "#3f3032",
+    "7": "#35302b",
+    "8": "#626d6b",
+    "9": "#273a38"
+  },
+  "solid": {},
+  "partPalette": {
+    "Cloak03": {
+      "1": "#293431",
+      "2": "#293431",
+      "3": "#293431",
+      "4": "#293431",
+      "5": "#293431",
+      "6": "#293431",
+      "7": "#293431",
+      "8": "#293431",
+      "9": "#293431"
+    },
+    "Hat10": {
+      "1": "#273635",
+      "2": "#273635",
+      "3": "#273635",
+      "4": "#947b4d",
+      "5": "#273635",
+      "6": "#273635",
+      "7": "#273635",
+      "8": "#273635",
+      "9": "#273635"
+    },
+    "OHS09_Sword": {
+      "4": "#8f7951",
+      "8": "#83b8b0"
+    },
+    "Shield14": {
+      "1": "#383d38",
+      "2": "#383d38",
+      "3": "#383d38",
+      "4": "#8d7950",
+      "5": "#383d38",
+      "6": "#383d38",
+      "7": "#383d38",
+      "8": "#aaa18a",
+      "9": "#383d38"
+    }
+  },
+  "externalParts": [
+    {
+      "name": "Knight entombed skull",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/skull.gltf",
+      "bone": "head",
+      "scale": 0.55,
+      "origin": [
+        0,
+        0,
+        0.45
+      ],
+      "offset": [
+        0,
+        -0.02,
+        0.04
+      ],
+      "sourceColors": [
+        {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            1,
+            1,
+            1
+          ],
+          "color": "#364e49"
+        }
+      ],
+      "sourceRegions": [
+        {
+          "centers": [
+            [
+              -0.2,
+              0,
+              0.4
+            ],
+            [
+              0.2,
+              0,
+              0.4
+            ]
+          ],
+          "radius": 0.14,
+          "frontY": 0.05,
+          "color": "#83d2c0"
+        }
+      ]
+    }
+  ],
+  "fitUpright": [
+    {
+      "part": "OHS09_Sword",
+      "bone": "weapon_r",
+      "frame": 6
+    }
+  ],
+  "partFit": {},
+  "additionalBodies": [
+    "Cloak03"
+  ],
+  "groundContactClips": [
+    {
+      "clip": "Walking_A",
+      "maxCorrection": 0.06
+    },
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.16
+    }
+  ],
+  "fitShield": {
+    "part": "Shield14",
+    "frame": 6
+  }
+}
