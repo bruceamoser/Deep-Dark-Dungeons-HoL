@@ -624,9 +624,16 @@
       "name": "Horned Devil",
       "order": 38,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/horned-devil.md",
+        "model": "docs/creature-production/horned-devil.md",
+        "motion": "docs/creature-production/horned-devil.md",
+        "game-view": "docs/creature-production/horned-devil.md",
+        "integration": "docs/creature-production/horned-devil.md"
+      },
+      "approvedAsset": "HornedDevil"
     },
     {
       "id": "creature-ash-demon",

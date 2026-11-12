@@ -159,3 +159,7 @@ Existing authored CC0 Ninja-based Werebear assembly, refined through `refine-wer
 ## Cinder Imp horns, wings and coil-tail assembly
 
 Ash Demon's existing CC0-derived separable anatomy fitted by `assemble-cinder-imp.py` to Mason Body01/approved goblin head. Dedicated wing.l/wing.r/imp_tail joints preserve original43 source bones. `texture-cinder-imp.py` gives soot skin and orange leather membranes; `animate-cinder-imp.py` bakes restrained wing pulses/folding and tail pivot. Private editable `cinder-imp/final/cinder-imp.blend`.320 frames and muted dungeon reviewed; one-joint wing and coiled tail remain stylized. Reuse requires fresh scale/attachment/motion review.
+
+## Horned Devil contract book and animated barbed chain
+
+Mason Body19 armor, KayKit Adventurers spellbook_closed on weapon_l, Mixed Bag1 chainlink and RPG Tools fishing_hook_B on eight independent chain joints. `assemble-horned-devil.py` builds the reusable link/hook assembly and reuses fitted fiend anatomy. `animate-horned-devil.py` extends the chain on strike and curls it near ground; rotations remove rig scale before writing pose matrices. Private `horned-devil/final/horned-devil.blend`.256 frames, floor and dungeon reviewed. Chain is posed, not simulated physics; new bearers need grip/reach/fall checks.

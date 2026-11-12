@@ -856,6 +856,28 @@
           }
         }
       }
+    },
+    {
+      "creatureId": "creature-horned-devil",
+      "model": "HornedDevil",
+      "path": "/assets/licensed/creatures/HornedDevil.glb",
+      "sha256": "5b444de2c0fd94c8152e419ba787c4c764b0e1ae8365fe7b65f6aa0db34fa6f5",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/horned-devil.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.15,
+        "height": 1.8,
+        "weapon": "melee",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.24
+        }
+      }
     }
   ]
 }
