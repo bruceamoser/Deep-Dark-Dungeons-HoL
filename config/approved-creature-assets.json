@@ -958,6 +958,28 @@
           }
         }
       }
+    },
+    {
+      "creatureId": "creature-hell-hound",
+      "model": "HellHound",
+      "path": "/assets/licensed/creatures/HellHound.glb",
+      "sha256": "880c7fb0b4324925ff3fd51509303d36e3943c898fed504b6eb2072e77d1b075",
+      "approvedOn": "2026-11-12",
+      "method": "existing-multiview-animal",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/hell-hound.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 3.2,
+        "height": 1.15,
+        "weapon": "bite",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.54
+        }
+      }
     }
   ]
 }
