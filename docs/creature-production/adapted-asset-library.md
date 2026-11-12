@@ -239,3 +239,7 @@ Private multiview13-bone body retained; `prepare-shadow.py`, `texture-shadow.py`
 ## Wraith — owned hood/shroud and fitted spectral claws
 
 Owned Mason Body11/Hat05/Head01/Eye01 from reviewed Cultist; Ghoul nail-tip recipe and NoWeapon Attack02 claw sweep. `build-wraith.py`, `texture-wraith.py`; private wraith/final/wraith.blend, base/sources.json. Boot-only262vertices removed, dark hood/eye sparks, TextureCraft worn linen, pelvis-bound trailing hem. Initial cloak-joint attachment rejected in motion; final270frames reviewed. Rounded hood/intact upper robe deliberately retain bundle style. Reuse requires fit/animation review; no source assets modified.
+
+## Mire Ooze — immersed bone scraps and wet sludge
+
+Owned KayKit Halloween bone_A/B copied, proportioned, BVH-fitted partly into private six-bone ooze and weighted Core. `prepare-mire-ooze.py`, `texture-mire-ooze.py`; private mire-ooze/final/mire-ooze.blend, hashes base/sources.json. TextureCraft clay/Clouds sludge/debris maps; no eyes or gear.475frames and game view reviewed. Reuse requires attachment/deformation and palette review.
