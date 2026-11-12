@@ -1,0 +1,9 @@
+# Clockwork Scout — brass surveying machine
+
+Book24e545e6d860e8c1b03a21356fd22cae1c039785, text7682b7cf79e6a4d8333934a30d0545021a22b76c38ab7b7c57854203f37fad17; portrait inspected: small brass machine, jointed feet, large glass lens, speaking grille; adjacent needle strike. Portrait four-legged. Existing generated raw mesh inspected:4.62million triangles, floating debris, no rig; not accepted.
+
+Owned search inspected KayKit barrel_small, compass_base/lid/needle and Platformer straight pipe. Reuse curved barrel housing and compass lid dish; pipe cube-sized topology unsuitable as articulated thin leg, so fit rigid mechanical struts/joints to four-leg rig derived from reviewed Spider IK. Add missing lens/grille/needle; brass/forest enamel/bright green glass. No extraneous humanoid gear. Private owned sources untouched; no source redistribution.
+
+TextureCraft copper_hammered recolored as brass on selected regions; three512maps, green enamel and dark polished lens retained. Housing rivets ray-fitted to curved source surface, grille recessed, needle base extended inside body so extension cannot detach. Source hashes recorded privately in `base/sources.json`.
+
+Final535frames, front/side/back, needle reach and actual muted six-scout/four-hero dungeon reviewed.29,949triangles,one mesh/seven materials,11bones,fiveclips,three512maps. Reimport no degenerate/loose/unweighted vertices; all clip floors0.005.22focused tests and final build pass (existing chunk warning). Fit80/100: anatomy4,silhouette4,signature5,gear4,materials4,distinction3. Author review, not independent/user approval. Final private evidence `final/review-needle` and `game-view-final`. Simplified barrel housing and struts omit portrait engraving and complex exposed cogs; original four-leg identity, lens/grille/dish/needle retained. User art approval and bulk installation/performance deferred.
