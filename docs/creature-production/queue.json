@@ -678,10 +678,14 @@
       "name": "Wererat",
       "order": 34,
       "family": "humanoid-specialized",
-      "status": "active",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "status": "integrated",
+      "route": "Image-derived anatomy and outfit, reconstructed tail-tip repair and fitted owned knife.",
       "gates": {
-        "brief": "docs/creature-production/wererat.md"
+        "brief": "docs/creature-production/wererat.md",
+        "model": "docs/creature-production/wererat.md",
+        "motion": "docs/creature-production/wererat.md",
+        "game-view": "docs/creature-production/wererat.md",
+        "integration": "docs/creature-production/wererat.md"
       },
       "revisions": [
         {
@@ -694,7 +698,8 @@
           },
           "approvedAsset": "Wererat"
         }
-      ]
+      ],
+      "approvedAsset": "Wererat"
     },
     {
       "id": "creature-werewolf",
@@ -717,16 +722,23 @@
       "name": "Werebear",
       "order": 36,
       "family": "humanoid-specialized",
-      "status": "integrated",
+      "status": "active",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/werebear.md",
-        "model": "docs/creature-production/werebear.md",
-        "motion": "docs/creature-production/werebear.md",
-        "game-view": "docs/creature-production/werebear.md",
-        "integration": "docs/creature-production/werebear.md"
+        "brief": "docs/creature-production/werebear.md"
       },
-      "approvedAsset": "Werebear"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/werebear.md",
+            "model": "docs/creature-production/werebear.md",
+            "motion": "docs/creature-production/werebear.md",
+            "game-view": "docs/creature-production/werebear.md",
+            "integration": "docs/creature-production/werebear.md"
+          },
+          "approvedAsset": "Werebear"
+        }
+      ]
     },
     {
       "id": "creature-cinder-imp",

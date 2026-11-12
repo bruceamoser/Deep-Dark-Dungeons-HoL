@@ -793,21 +793,21 @@
       "creatureId": "creature-wererat",
       "model": "Wererat",
       "path": "/assets/licensed/creatures/Wererat.glb",
-      "sha256": "3510ce1a335892801e76abcb2326fe2ca06b9efecfd2ea398a7b34387d5e8538",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "99279fedfcb9a8a802a560bc8c59e87e120200cb2e1f6404b766eef6087129ae",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/wererat.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 1,
+        "scale": 0.92,
         "height": 1.45,
         "weapon": "melee",
         "attack": {
-          "kind": "sword",
+          "kind": "thrust",
           "clip": "1H_Melee_Attack_Slice_Diagonal",
-          "contact": 0.27
+          "contact": 0.2916666666666667
         }
       }
     },
