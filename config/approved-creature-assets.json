@@ -1069,6 +1069,29 @@
           "contact": 0.2
         }
       }
+    },
+    {
+      "creatureId": "creature-animated-statue",
+      "model": "AnimatedStatue",
+      "path": "/assets/licensed/creatures/AnimatedStatue.glb",
+      "sha256": "ba030a58997a4cf61d9f4d9402428e0b21d6f71f516f0997236c3c4ae99f17c8",
+      "approvedOn": "2026-11-12",
+      "method": "owned-humanoid",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/animated-statue.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1.15,
+        "height": 1.65,
+        "weapon": "spear",
+        "shield": true,
+        "attack": {
+          "kind": "thrust",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.48
+        }
+      }
     }
   ]
 }

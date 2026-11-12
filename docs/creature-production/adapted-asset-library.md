@@ -195,3 +195,7 @@ Project-authored refinement of `src/view/creatures.mjs` eight-leg layout: all ro
 ## Enclosed guardian helmet and hammered steel
 
 Owned HeadArmor01 main enclosing shell/crest retained; three identified disconnected spikes removed, source UV colors remapped to green/gold/steel and black visor. `refine-animated-armor.py`; use without a human head inside. `texture-animated-armor.py` uses TextureCraft copper_hammered/Pores recolored as steel on selected face-bearing slots. Body19/Shield08 retain source rig. Private `animated-armor/final/animated-armor.blend`;272 frames and actual dungeon reviewed. Shield requires shield-specific death, not the rejected unarmed forward fall.
+
+## Civic stone guardian palette
+
+Owned Body18/Cloak02, Head01_Male/Hair02/AC11_Mustache03, fitted Spear03/Shield07. `animated-statue.json` and `texture-animated-statue.py`: TextureCraft sandstone/Pores plus coarse mineral veins on stone face/hair/plate; green drapery and gold trim preserved. Private `animated-statue/final/animated-statue.blend`,242 frames and actual dungeon reviewed. Retains thrust/43-bone source rig; short moustache, not full carved beard.
