@@ -102,3 +102,10 @@ Bandit Bow fit revision: same cant60°/height.77/arrowlength.75 recipe as Hobgob
 - Private editable objects: `~/.local/share/four-lanterns-creature-production/skeleton-champion/skeleton-champion.blend`, `Champion crown`, `Champion heraldic shield`, `Champion oath sword`.
 - Fit: crown on head, sword/right socket, shield/left socket; wrists align gear to ground during collapse and one added crown bone settles loose headwear. Crown has nonuniform fit; do not apply transforms indiscriminately. Refit to every new donor.
 - Author front/side/back,756-frame motion, floor/reimport and bestiary/dungeon review passed. Bulk user review/performance deferred. Open crown and short cloth are deliberate simplifications relative to the book's crowned helm/cape.
+
+## Barrow Guard burial kit
+
+- Owned sources/license: Mason Hat05, Shield07, OHS09_Sword and original tint masks (private Unity Asset Store derivatives); KayKit Skeleton Warrior and Forest Nature Grass_1_A/D (CC0). Originals unchanged.
+- Recipe `config/creature-production/barrow-guard.json`, `build-owned-kaykit.py`, `owned_mason_palette.py`. Fitted enclosing hood, muted bronze/olive shield/blade, two scaled earthy turf clumps attached in shield-source coordinates. Private atlas copy tints inspected armor UV region while preserving bone/cloth/leather and gradients.
+- Editable private scene `~/.local/share/four-lanterns-creature-production/barrow-guard/final/barrow-guard.blend`; objects `Barrow hood`, `Barrow oath blade`, `Barrow turf shield`, `Barrow hanging turf`, `Barrow rim grass`. Head/right/left original sockets; hood1.75 fit is specific to this skeleton skull, not universal. Hood's loose-head floor correction applies only to skeleton collapse.
+- Author turnarounds,756-frame motion, ground/reimport/finite and actual bestiary/dungeon review pass. User review/performance deferred. Refit each new wearer; keep turf grounded in role rather than arbitrary decoration.
