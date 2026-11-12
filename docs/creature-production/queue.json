@@ -594,10 +594,14 @@
       "name": "Kobold Tunnel Scout",
       "order": 31,
       "family": "humanoid-specialized",
-      "status": "active",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "status": "integrated",
+      "route": "Image-derived reconstruction, independently fitted tail and transferred CC0-derived launcher/dart.",
       "gates": {
-        "brief": "docs/creature-production/kobold-tunnel-scout.md"
+        "brief": "docs/creature-production/kobold-tunnel-scout.md",
+        "model": "docs/creature-production/kobold-tunnel-scout.md",
+        "motion": "docs/creature-production/kobold-tunnel-scout.md",
+        "game-view": "docs/creature-production/kobold-tunnel-scout.md",
+        "integration": "docs/creature-production/kobold-tunnel-scout.md"
       },
       "revisions": [
         {
@@ -610,23 +614,31 @@
           },
           "approvedAsset": "KoboldScout"
         }
-      ]
+      ],
+      "approvedAsset": "KoboldScout"
     },
     {
       "id": "creature-kobold-trapkeeper",
       "name": "Kobold Trapkeeper",
       "order": 32,
       "family": "humanoid-specialized",
-      "status": "integrated",
+      "status": "active",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/kobold-trapkeeper.md",
-        "model": "docs/creature-production/kobold-trapkeeper.md",
-        "motion": "docs/creature-production/kobold-trapkeeper.md",
-        "game-view": "docs/creature-production/kobold-trapkeeper.md",
-        "integration": "docs/creature-production/kobold-trapkeeper.md"
+        "brief": "docs/creature-production/kobold-trapkeeper.md"
       },
-      "approvedAsset": "KoboldTrapkeeper"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/kobold-trapkeeper.md",
+            "model": "docs/creature-production/kobold-trapkeeper.md",
+            "motion": "docs/creature-production/kobold-trapkeeper.md",
+            "game-view": "docs/creature-production/kobold-trapkeeper.md",
+            "integration": "docs/creature-production/kobold-trapkeeper.md"
+          },
+          "approvedAsset": "KoboldTrapkeeper"
+        }
+      ]
     },
     {
       "id": "creature-kobold-emberkeeper",
