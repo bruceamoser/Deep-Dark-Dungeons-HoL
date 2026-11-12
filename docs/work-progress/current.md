@@ -1,8 +1,8 @@
 # Current working progress
 
-## Ready for visual review — Halfling wardrobe pilot
+## Paused — Halfling wardrobe pilot
 
-The male and female bases, shared scout outfit, light armor and reused KayKit short sword and round shield are available as editable private scenes and six GLB previews. Both bodies use the same wardrobe recipe. Side-by-side motion and validation are recorded in the [halfling pilot handoff](handoffs/2026-11-12-halfling-wardrobe-pilot.md). The pilot is in `codex/halfling-wardrobe-pilot` and is ready for art direction review before player-avatar integration.
+Bruce asked to return to the player models later. The facial detail experiments and new references are recorded in the [pause handoff](handoffs/2026-11-12-halfling-detail-pause.md). The approved creature build is the release candidate.
 
 ## Complete — November 12 creature review fixes
 
