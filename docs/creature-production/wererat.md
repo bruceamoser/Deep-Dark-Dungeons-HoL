@@ -17,3 +17,11 @@ Rejected the first backwards fall, which buried the knife and tail. The forward 
 Author fit83/100: anatomy4, silhouette4, signature4, gear5, materials4, distinction4. Remaining limits: softly rounded stylized face/ears, static whiskers and relatively simple tail silhouette. Bulk player art review, installed delivery and performance remain pending.
 
 Rebuild: owned humanoid builder with `config/creature-production/wererat.json`, `refine-wererat-anatomy.py` with the earlier public rat donor, `texture-wererat.py`, then `animate-wererat-tail.py`. Private exact output/Blend/evidence in `wererat/final/`, TextureCraft project/maps in `materials-final/`.
+
+## November 12 image rebuild
+
+A new frontal A-pose reference produced the rat's muzzle, large pink ears, warm brown fur, olive coat, gloves, keys, boots and tail. The local TRELLIS Q6_K reconstruction produced 2,289,466 triangles. CuMesh reduced it to 70,851 for texture inference. Repaired the terminal tail bridge with a tapered cap using the surrounding texture, and removed the one microscopic degenerate collar face. The accepted export is 70,868 triangles, including the separate owned Dungeon Mason knife.
+
+The new skeleton has four independently fitted tail joints and a shorter forward knife thrust. The blade remains in the right hand and points along the thrust at contact. The new body and clothing came from the reconstruction. The previously reviewed knife retains its source palette and materials. All five clips pass floor clearance, and the knife clears the head at every quarter-frame sample of the attack. GLB round-trip found zero degenerate faces, loose vertices or unweighted vertices. The final editable rig and 474-frame review are under `~/.local/share/four-lanterns-creature-production/wererat/image-rebuild/clean/`.
+
+The muted development bestiary and six-Wererat/four-hero dungeon fixture loaded the exact model, all five states and the knife-bearing attack clip, with zero JavaScript errors.

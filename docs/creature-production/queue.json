@@ -14,9 +14,21 @@
         "brief": "docs/goblin-spearhand-dungeon.md",
         "model": "docs/goblin-spearhand-dungeon.md",
         "motion": "docs/goblin-spearhand-dungeon.md",
-        "integration": "docs/goblin-spearhand-dungeon.md",
-        "game-view": "docs/goblin-spearhand-dungeon.md"
+        "game-view": "docs/goblin-spearhand-dungeon.md",
+        "integration": "docs/goblin-spearhand-dungeon.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/goblin-spearhand-dungeon.md",
+            "model": "docs/goblin-spearhand-dungeon.md",
+            "motion": "docs/goblin-spearhand-dungeon.md",
+            "integration": "docs/goblin-spearhand-dungeon.md",
+            "game-view": "docs/goblin-spearhand-dungeon.md"
+          },
+          "approvedAsset": "GoblinSpearhand"
+        }
+      ],
       "approvedAsset": "GoblinSpearhand"
     },
     {
@@ -75,6 +87,16 @@
             "integration": "docs/creature-production/goblin-scrapper.md"
           },
           "approvedAsset": "GoblinScrapper"
+        },
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-scrapper.md",
+            "model": "docs/creature-production/goblin-scrapper.md",
+            "motion": "docs/creature-production/goblin-scrapper.md",
+            "game-view": "docs/creature-production/goblin-scrapper.md",
+            "integration": "docs/creature-production/goblin-scrapper.md"
+          },
+          "approvedAsset": "GoblinScrapper"
         }
       ],
       "approvedAsset": "GoblinScrapper"
@@ -117,7 +139,7 @@
       "order": 7,
       "family": "humanoid-equipment",
       "status": "integrated",
-      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "route": "Image-derived reconstruction, reduced and textured locally; fitted rig and separate held props.",
       "gates": {
         "brief": "docs/creature-production/goblin-firestarter.md",
         "model": "docs/creature-production/goblin-firestarter.md",
@@ -125,6 +147,18 @@
         "game-view": "docs/creature-production/goblin-firestarter.md",
         "integration": "docs/creature-production/goblin-firestarter.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-firestarter.md",
+            "model": "docs/creature-production/goblin-firestarter.md",
+            "motion": "docs/creature-production/goblin-firestarter.md",
+            "game-view": "docs/creature-production/goblin-firestarter.md",
+            "integration": "docs/creature-production/goblin-firestarter.md"
+          },
+          "approvedAsset": "GoblinFirestarter"
+        }
+      ],
       "approvedAsset": "GoblinFirestarter"
     },
     {
@@ -253,6 +287,18 @@
         "game-view": "docs/creature-production/goblin-boss.md",
         "integration": "docs/creature-production/goblin-boss.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-boss.md",
+            "model": "docs/creature-production/goblin-boss.md",
+            "motion": "docs/creature-production/goblin-boss.md",
+            "game-view": "docs/creature-production/goblin-boss.md",
+            "integration": "docs/creature-production/goblin-boss.md"
+          },
+          "approvedAsset": "GoblinBoss"
+        }
+      ],
       "approvedAsset": "GoblinBoss"
     },
     {
@@ -273,7 +319,7 @@
     },
     {
       "id": "creature-tomb-sage",
-      "name": "Lich — Tomb Sage",
+      "name": "Lich \u2014 Tomb Sage",
       "order": 17,
       "family": "humanoid-equipment",
       "status": "integrated",
@@ -337,7 +383,7 @@
       "order": 20,
       "family": "humanoid-equipment",
       "status": "integrated",
-      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "route": "Image-derived reconstruction, reduced and textured locally; fitted rig and separate held props.",
       "gates": {
         "brief": "docs/creature-production/goblin-rattlechanter.md",
         "model": "docs/creature-production/goblin-rattlechanter.md",
@@ -345,6 +391,18 @@
         "game-view": "docs/creature-production/goblin-rattlechanter.md",
         "integration": "docs/creature-production/goblin-rattlechanter.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-rattlechanter.md",
+            "model": "docs/creature-production/goblin-rattlechanter.md",
+            "motion": "docs/creature-production/goblin-rattlechanter.md",
+            "game-view": "docs/creature-production/goblin-rattlechanter.md",
+            "integration": "docs/creature-production/goblin-rattlechanter.md"
+          },
+          "approvedAsset": "GoblinRattlechanter"
+        }
+      ],
       "approvedAsset": "GoblinRattlechanter"
     },
     {
@@ -353,7 +411,7 @@
       "order": 21,
       "family": "humanoid-equipment",
       "status": "integrated",
-      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "route": "Image-derived reconstruction, reduced and textured locally; fitted rig and separate held props.",
       "gates": {
         "brief": "docs/creature-production/goblin-smoke-slinger.md",
         "model": "docs/creature-production/goblin-smoke-slinger.md",
@@ -361,6 +419,18 @@
         "game-view": "docs/creature-production/goblin-smoke-slinger.md",
         "integration": "docs/creature-production/goblin-smoke-slinger.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-smoke-slinger.md",
+            "model": "docs/creature-production/goblin-smoke-slinger.md",
+            "motion": "docs/creature-production/goblin-smoke-slinger.md",
+            "game-view": "docs/creature-production/goblin-smoke-slinger.md",
+            "integration": "docs/creature-production/goblin-smoke-slinger.md"
+          },
+          "approvedAsset": "GoblinSmokeSlinger"
+        }
+      ],
       "approvedAsset": "GoblinSmokeSlinger"
     },
     {
@@ -425,6 +495,18 @@
         "game-view": "docs/creature-production/barrow-guard.md",
         "integration": "docs/creature-production/barrow-guard.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/barrow-guard.md",
+            "model": "docs/creature-production/barrow-guard.md",
+            "motion": "docs/creature-production/barrow-guard.md",
+            "game-view": "docs/creature-production/barrow-guard.md",
+            "integration": "docs/creature-production/barrow-guard.md"
+          },
+          "approvedAsset": "BarrowGuard"
+        }
+      ],
       "approvedAsset": "BarrowGuard"
     },
     {
@@ -513,7 +595,7 @@
       "order": 31,
       "family": "humanoid-specialized",
       "status": "integrated",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "route": "Image-derived reconstruction, independently fitted tail and transferred CC0-derived launcher/dart.",
       "gates": {
         "brief": "docs/creature-production/kobold-tunnel-scout.md",
         "model": "docs/creature-production/kobold-tunnel-scout.md",
@@ -521,6 +603,18 @@
         "game-view": "docs/creature-production/kobold-tunnel-scout.md",
         "integration": "docs/creature-production/kobold-tunnel-scout.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/kobold-tunnel-scout.md",
+            "model": "docs/creature-production/kobold-tunnel-scout.md",
+            "motion": "docs/creature-production/kobold-tunnel-scout.md",
+            "game-view": "docs/creature-production/kobold-tunnel-scout.md",
+            "integration": "docs/creature-production/kobold-tunnel-scout.md"
+          },
+          "approvedAsset": "KoboldScout"
+        }
+      ],
       "approvedAsset": "KoboldScout"
     },
     {
@@ -529,7 +623,7 @@
       "order": 32,
       "family": "humanoid-specialized",
       "status": "integrated",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "route": "Image-derived reconstruction, separately fitted tail and transferred throwing dart.",
       "gates": {
         "brief": "docs/creature-production/kobold-trapkeeper.md",
         "model": "docs/creature-production/kobold-trapkeeper.md",
@@ -537,6 +631,18 @@
         "game-view": "docs/creature-production/kobold-trapkeeper.md",
         "integration": "docs/creature-production/kobold-trapkeeper.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/kobold-trapkeeper.md",
+            "model": "docs/creature-production/kobold-trapkeeper.md",
+            "motion": "docs/creature-production/kobold-trapkeeper.md",
+            "game-view": "docs/creature-production/kobold-trapkeeper.md",
+            "integration": "docs/creature-production/kobold-trapkeeper.md"
+          },
+          "approvedAsset": "KoboldTrapkeeper"
+        }
+      ],
       "approvedAsset": "KoboldTrapkeeper"
     },
     {
@@ -545,7 +651,7 @@
       "order": 33,
       "family": "humanoid-specialized",
       "status": "integrated",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "route": "Image-derived reconstruction with fitted wing and tail joints, retained suspended brazier and palm cast.",
       "gates": {
         "brief": "docs/creature-production/kobold-emberkeeper.md",
         "model": "docs/creature-production/kobold-emberkeeper.md",
@@ -553,6 +659,18 @@
         "game-view": "docs/creature-production/kobold-emberkeeper.md",
         "integration": "docs/creature-production/kobold-emberkeeper.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/kobold-emberkeeper.md",
+            "model": "docs/creature-production/kobold-emberkeeper.md",
+            "motion": "docs/creature-production/kobold-emberkeeper.md",
+            "game-view": "docs/creature-production/kobold-emberkeeper.md",
+            "integration": "docs/creature-production/kobold-emberkeeper.md"
+          },
+          "approvedAsset": "KoboldEmberkeeper"
+        }
+      ],
       "approvedAsset": "KoboldEmberkeeper"
     },
     {
@@ -561,7 +679,7 @@
       "order": 34,
       "family": "humanoid-specialized",
       "status": "integrated",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "route": "Image-derived anatomy and outfit, reconstructed tail-tip repair and fitted owned knife.",
       "gates": {
         "brief": "docs/creature-production/wererat.md",
         "model": "docs/creature-production/wererat.md",
@@ -569,6 +687,18 @@
         "game-view": "docs/creature-production/wererat.md",
         "integration": "docs/creature-production/wererat.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/wererat.md",
+            "model": "docs/creature-production/wererat.md",
+            "motion": "docs/creature-production/wererat.md",
+            "game-view": "docs/creature-production/wererat.md",
+            "integration": "docs/creature-production/wererat.md"
+          },
+          "approvedAsset": "Wererat"
+        }
+      ],
       "approvedAsset": "Wererat"
     },
     {
@@ -593,7 +723,7 @@
       "order": 36,
       "family": "humanoid-specialized",
       "status": "integrated",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "route": "Fresh image-derived bear body and outfit, fitted amber eyes and unarmed forepaw swipe.",
       "gates": {
         "brief": "docs/creature-production/werebear.md",
         "model": "docs/creature-production/werebear.md",
@@ -601,6 +731,18 @@
         "game-view": "docs/creature-production/werebear.md",
         "integration": "docs/creature-production/werebear.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/werebear.md",
+            "model": "docs/creature-production/werebear.md",
+            "motion": "docs/creature-production/werebear.md",
+            "game-view": "docs/creature-production/werebear.md",
+            "integration": "docs/creature-production/werebear.md"
+          },
+          "approvedAsset": "Werebear"
+        }
+      ],
       "approvedAsset": "Werebear"
     },
     {
@@ -617,6 +759,18 @@
         "game-view": "docs/creature-production/cinder-imp.md",
         "integration": "docs/creature-production/cinder-imp.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/cinder-imp.md",
+            "model": "docs/creature-production/cinder-imp.md",
+            "motion": "docs/creature-production/cinder-imp.md",
+            "game-view": "docs/creature-production/cinder-imp.md",
+            "integration": "docs/creature-production/cinder-imp.md"
+          },
+          "approvedAsset": "CinderImp"
+        }
+      ],
       "approvedAsset": "CinderImp"
     },
     {
@@ -761,6 +915,18 @@
         "game-view": "docs/creature-production/animated-armor.md",
         "integration": "docs/creature-production/animated-armor.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/animated-armor.md",
+            "model": "docs/creature-production/animated-armor.md",
+            "motion": "docs/creature-production/animated-armor.md",
+            "game-view": "docs/creature-production/animated-armor.md",
+            "integration": "docs/creature-production/animated-armor.md"
+          },
+          "approvedAsset": "AnimatedArmor"
+        }
+      ],
       "approvedAsset": "AnimatedArmor"
     },
     {

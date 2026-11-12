@@ -35,3 +35,7 @@ Evidence: private `~/.local/share/four-lanterns-creature-production/goblin-fires
 ## Local delivery
 
 AppImage and Debian package built with all seven approved private assets required. Primary `launch-game.sh` and updated menu AppImage both passed full 58-entry bestiary interaction, native window-close/save and sandbox checks through `aa-exec -p unconfined`. Muted audio, temporary save data; real saves/audio preferences unchanged. Version remains 0.8.7 local review build, no public release or Windows runtime claim. Prior menu image backed up under `~/.local/share/four-lanterns-install-backups/2026-11-11-firestarter/`. Preserve the launcher's symlink to the root-owned system Chrome sandbox helper when copying unpacked packages; do not copy through it.
+
+## Image reconstruction revision
+
+Reconstructed a fresh Firestarter reference with round soot goggles, orange scarf, apron and reserve bottles. CuMesh reduced the shape before the texture bake. The separate KayKit flask grips by its neck and retains the runtime release and recovery. The 74,936-triangle export passed reimport, six grounded clips, 522 reviewed motion frames, the muted development encounter and the 45-frame bottle flight check. The detailed straps and hair are most legible in the bestiary. Private reference, rig and evidence are under `goblin-firestarter/image-rebuild/`.

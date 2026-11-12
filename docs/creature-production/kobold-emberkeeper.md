@@ -17,3 +17,11 @@ Author-reviewed front, side, back and 513 motion frames; floor contact, reimport
 Author fit 83/100: anatomy4, silhouette4, signature5, gear4, materials4, distinction4. Remaining limitations: angular wing membranes, stylized solid flame forms, chunky fingers and simplified robe panels. No flight animation promised. Bulk user review, installed delivery and performance remain pending.
 
 Rebuild using `build-kobold-emberkeeper-refined.py` from the Scout recessed-base GLB, `texture-kobold-emberkeeper.py`, then `animate-kobold-emberkeeper.py`. Private exact output/Blend/evidence in `kobold-emberkeeper/animated/`; TextureCraft project/maps in `materials/`.
+
+## November 12 image rebuild
+
+The new frontal reference produced a fresh winged reptile with bright copper-red scale plates, inset amber eyes, dark green ceremonial clothing and brass trim. Local TRELLIS Q6_K produced 2,384,260 triangles. CuMesh reduced it to 70,941 for texture inference. The exported model contains 71,707 triangles including the retained authored brazier.
+
+The wing and tail joints follow this reconstruction's proportions. The fitted suspension ring follows the left palm while the lit bronze cup hangs below it. The cup stays upright in locomotion and casting and tips outward during the forward fall. Ember release comes from the right-palm socket on frame 11 at 24 fps. The melee fallback uses the free hand. All six clips pass floor clearance and the GLB round-trips with zero degenerate faces, loose vertices or unweighted vertices. The private rig and 552-frame review are in `~/.local/share/four-lanterns-creature-production/kobold-emberkeeper/image-rebuild/rigged/`.
+
+The muted development bestiary and six-Emberkeeper/four-hero dungeon fixture loaded the pinned export and played all five bestiary states. The actual fire effect launches from the animated casting hand, with zero JavaScript errors. The wings accent the cast and locomotion with small movements while the creature remains grounded.

@@ -17,3 +17,11 @@ GLB reimport has zero degenerate faces/unweighted vertices; sampled Three.js ski
 Fit A5/S4/F4/G4/M4/D5 =88/100. Recognizable goblin slinger with clay smoke pots; distinct from the Firestarter’s goggles/fuel pack and Rattlechanter’s pans/bells. Mouth scarf is lowered, pot loops are simplified, clothing is clean, and the animation is a compact underhand release. User bulk review remains pending. Smoke-cover rules and physical stone damage are unchanged.
 
 Actual development-game bestiary five-state controls, six Slinger/four-hero appearance and45-frame shot capture pass with no JavaScript errors. At release, the held stone disappears and the same shaped stone flies from the pouch; recovery restores it. Dungeon scale keeps the face, pots and sling readable. No installer update or FPS claim.
+
+## November 12 image rebuild
+
+A new frontal A-pose reference produced the body, oxblood scarf, fitted travel clothes, dark tied hair, terracotta pots and spare coil. TRELLIS Q6_K produced 1,631,287 source triangles, CuMesh reduced them to 69,045, and the texture pass retained the olive skin and warm clay. The final rigged export has 69,863 triangles across the reconstructed body, two cords, the leather pouch and the owned stone. The original hand-sling recipe now accepts a grip in the new hand's rest space. The compact underhand release is baked into frame 13 (0.50 seconds) of the ranged clip. The melee fallback is a left-hand punch.
+
+All six clips pass the floor check and GLB round-trip shows zero degenerate faces, loose vertices or unweighted vertices. Reviewed 591 sampled motion frames with the actual new model, including the release pose. The sling remains on the throwing hand and the pouch swings with it. The private recipe inputs, textured reconstruction and final rig are in `~/.local/share/four-lanterns-creature-production/goblin-smoke-slinger/image-rebuild/`.
+
+The muted development bestiary and six-Slinger/four-hero dungeon fixture passed with zero JavaScript errors. The released stone is the held mesh at its sampled pose, and the load returns at 0.95 seconds. This export is source-integrated for the next local delivery.

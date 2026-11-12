@@ -4,6 +4,10 @@ This is the active production workflow, approved November 11, 2026. It supersede
 
 The queue and its evidence are the cross-machine source of truth. No job continues merely because a chat ends: the next local session reads this queue, resumes its one active creature and records its actual progress. These tools track work and prevent overlap; they do not automate artistic judgment or claim generation is running in the background.
 
+## November 12 image rebuild wave
+
+The current review wave uses new image-derived body and outfit geometry for the selected goblins and kobolds, then Wererat and Werebear. Follow the active order in [work progress](../work-progress/current.md). Preserve the prior approved export and keep the new role-specific reference, source reconstruction, reduced mesh, texture bake and editable rig outside Git. Use the local TRELLIS Q6 shape, CuMesh and TRELLIS texture pipeline for this route. Reuse independently fitted props when they need to move or release. The reduction step applies to raw reconstruction geometry; keep previously reviewed donor gear topology and UVs unless a specific fit requires an edit.
+
 ## Order and reuse
 
 1. **18 equipped humanoids:** Goblin Scrapper first, then Road Bandit and Shield Soldier. Reuse the approved Spearhand head/body approach and owned Dungeon Mason/KayKit rigs, parts and authored clips. Simple melee/caster roles precede bow, mallet and sling work. A spear stabs, a bow draws/releases, and a sling requires a real grip and release.
