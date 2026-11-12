@@ -432,9 +432,16 @@
       "name": "Wight",
       "order": 26,
       "family": "humanoid-specialized",
-      "status": "active",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/wight.md",
+        "model": "docs/creature-production/wight.md",
+        "motion": "docs/creature-production/wight.md",
+        "game-view": "docs/creature-production/wight.md",
+        "integration": "docs/creature-production/wight.md"
+      },
+      "approvedAsset": "Wight"
     },
     {
       "id": "creature-death-knight",

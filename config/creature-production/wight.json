@@ -23,7 +23,7 @@
     "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
     "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack03_SwordAndShiled.fbx",
     "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
-    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+    "Death_A_Pose": "SwordAndShield/Die02_SwordAndShield.fbx"
   },
   "palette": {
     "1": "#52604d",
@@ -50,6 +50,17 @@
       "7": "#453c2d",
       "8": "#b9c2b9",
       "9": "#453c2d"
+    },
+    "Cloak03": {
+      "1": "#284537",
+      "2": "#284537",
+      "3": "#284537",
+      "4": "#284537",
+      "5": "#284537",
+      "6": "#284537",
+      "7": "#284537",
+      "8": "#284537",
+      "9": "#284537"
     }
   },
   "externalParts": [
@@ -136,5 +147,18 @@
         0.045
       ]
     }
-  }
+  },
+  "additionalBodies": [
+    "Cloak03"
+  ],
+  "groundContactClips": [
+    {
+      "clip": "Walking_A",
+      "maxCorrection": 0.045
+    },
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.16
+    }
+  ]
 }
