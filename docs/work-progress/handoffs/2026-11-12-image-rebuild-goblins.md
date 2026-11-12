@@ -16,17 +16,19 @@ Smoke Slinger is source-integrated with a reconstructed body, the fitted two-cor
 
 [Kobold Tunnel Scout](../../creature-production/kobold-tunnel-scout.md) is source-integrated. The new reconstructed red body uses a four-joint tail and the fitted prior dart launcher.
 
+[Kobold Trapkeeper](../../creature-production/kobold-trapkeeper.md) is source-integrated. The shorter tail and wider body are fitted independently. Its separate dart is thrown by hand.
+
 ## Decisions
 
 One creature completes the queue gates before the next begins. Reconstruct a new body and outfit from a role-specific image. Fit independent held props when their motion or release requires it. Goblins come first, then Kobold Tunnel Scout, Trapkeeper and Emberkeeper, then the two werecreatures.
 
 ## Verification
 
-Firestarter passed six-clip motion, GLB and floor checks, 522 preview frames, a six-enemy/four-hero development encounter and 45 sampled throw frames. Twenty-five focused tests and the required-assets build passed. Rattlechanter passed 552 motion frames, six clips of floor clearance, GLB round-trip, bestiary and the six-enemy dungeon fixture including its sonic attack. Smoke Slinger passed 591 motion frames, six clips of floor clearance, GLB round-trip and 56 in-game shot samples with release and recovery. All 379 tests and the required-assets build passed at the Rattlechanter checkpoint. Tunnel Scout passed 591 motion frames, six clips of floor clearance and 54 in-game shot samples. Focused tests and the required-assets build passed. Earlier installed assets are recorded in the [prior handoff](2026-11-12-player-creature-review.md).
+Firestarter passed six-clip motion, GLB and floor checks, 522 preview frames, a six-enemy/four-hero development encounter and 45 sampled throw frames. Twenty-five focused tests and the required-assets build passed. Rattlechanter passed 552 motion frames, six clips of floor clearance, GLB round-trip, bestiary and the six-enemy dungeon fixture including its sonic attack. Smoke Slinger passed 591 motion frames, six clips of floor clearance, GLB round-trip and 56 in-game shot samples with release and recovery. All 379 tests and the required-assets build passed at the Rattlechanter checkpoint. Tunnel Scout passed 591 motion frames, six clips of floor clearance and 54 in-game shot samples. Focused tests and the required-assets build passed. Trapkeeper passed 591 motion frames, six clips of floor clearance and 60 in-game throw samples. Focused tests and the required-assets build passed. Earlier installed assets are recorded in the [prior handoff](2026-11-12-player-creature-review.md).
 
 ## Remaining and next steps
 
-Kobold Trapkeeper is active. Create the distinct trapper reference, reconstruct its body, then fit the throwing dart and check the tail through motion and dungeon view. Emberkeeper follows. Package and test the local delivery after the sequence.
+Kobold Emberkeeper is active. Reconstruct its new copper-scaled winged body, then fit the retained suspended brazier, tail and cast motion. Wererat and Werebear follow. Package and test the local delivery after the sequence.
 
 ## Local-only state / transfer needs
 

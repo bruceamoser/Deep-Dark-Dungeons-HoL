@@ -17,3 +17,11 @@ The exact candidate passed muted bestiary and six-Trapkeeper/four-hero dungeon c
 Author fit 83/100: anatomy4, silhouette4, signature4, gear4, materials5, distinction4. Remaining limits: chunky stylized hands, simplified apron panels and a small dart at the normal dungeon zoom. Bulk user review, packaged delivery and performance remain pending.
 
 Rebuild with `build-kobold-trapkeeper-refined.py` from the private Scout recessed-base GLB, then `texture-kobold-trapkeeper.py`, then `animate-kobold-trapkeeper.py`. Exact reviewed Blend, GLB and evidence are under private `kobold-trapkeeper/final-v2/`; TextureCraft project/maps are in `materials-v2/`.
+
+## November 12 image rebuild
+
+The Trapkeeper has new reconstructed anatomy and clothing from its own frontal reference. Red sculpted scales, inset amber eyes, a wider stance, green tunic, ochre apron, tool pockets, dart case and marked rope distinguish it from the Scout. TRELLIS Q6_K reconstructed 3,343,861 triangles. CuMesh reduced that mesh to 72,328 for texture inference. The finished export has 72,452 triangles including the separate fitted dart.
+
+The tail has four joints fitted to this creature's shorter curved geometry. The hand carries the previously reviewed locally authored dart, preserving its materials. A one-arm windup and throw let it leave the palm on frame 15 at 24 fps, with recovery at 1.10 seconds. The melee fallback is a left-hand strike. All six clips pass floor clearance and the GLB round-trips without degenerate faces, loose vertices or unweighted vertices. The private files and 591-frame motion review are in `~/.local/share/four-lanterns-creature-production/kobold-trapkeeper/image-rebuild/rigged/`.
+
+The muted development bestiary and six-Trapkeeper/four-hero dungeon fixture loaded the pinned export. Sixty shot samples confirm that the held dart disappears, the single dart mesh flies and the load returns on recovery. Zero JavaScript errors. The 25 focused tests and required-assets build passed. Desktop delivery and bulk FPS testing remain pending.

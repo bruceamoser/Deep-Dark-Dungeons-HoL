@@ -1,4 +1,4 @@
-"""Fit the previously reviewed launcher and dart to the reconstructed scout."""
+"""Fit reviewed dart equipment to reconstructed kobold palms."""
 
 import bmesh
 import bpy
@@ -44,13 +44,40 @@ def fit_launcher(source, rig, grip, bind):
         bind(obj, "RHand")
     launcher.name = "Scout dart launcher"
     axis = (spin.to_3x3() @ Vector((-1, 0, 0))).normalized()
-    muzzle = bpy.data.objects.new("ScoutDartMuzzle", None)
+    donor_muzzle = Vector((-.885-.78*(.481-.055), -.055, 1.09))
+    hand_muzzle(rig, "ScoutDartMuzzle", transform @ donor_muzzle, axis)
+    return [launcher, dart], axis
+
+
+def hand_muzzle(rig, name, tip, axis):
+    muzzle = bpy.data.objects.new(name, None)
     bpy.context.collection.objects.link(muzzle)
     muzzle.parent = rig
     muzzle.parent_type = "BONE"
     muzzle.parent_bone = "RHand"
     bpy.context.view_layer.update()
-    donor_muzzle = Vector((-.885-.78*(.481-.055), -.055, 1.09))
-    muzzle.matrix_world = (Matrix.Translation(transform @ donor_muzzle)
+    muzzle.matrix_world = (Matrix.Translation(tip)
                           @ axis.to_track_quat("Z", "Y").to_matrix().to_4x4())
-    return [launcher, dart], axis
+
+
+def fit_throw_dart(source, rig, grip, bind):
+    with bpy.data.libraries.load(str(source), link=False) as (available, loaded):
+        assert "Loaded_Dart" in available.objects
+        loaded.objects = ["Loaded_Dart"]
+    dart, = loaded.objects
+    bpy.context.collection.objects.link(dart)
+    donor_base = Vector((-.890, -.085, 1.045))
+    donor_tip = Vector((-1.030, -.295, .835))
+    donor_axis = (donor_tip-donor_base).normalized()
+    donor_grip = donor_base.lerp(donor_tip, .40)
+    axis = Vector((-.18, -.84, .51)).normalized()
+    rotation = donor_axis.rotation_difference(axis).to_matrix().to_4x4()
+    transform = Matrix.Translation(grip) @ rotation @ Matrix.Scale(.8, 4) @ Matrix.Translation(-donor_grip)
+    dart.data.transform(transform @ dart.matrix_world)
+    dart.parent = None
+    dart.matrix_world = Matrix.Identity(4)
+    dart.modifiers.clear()
+    dart.vertex_groups.clear()
+    bind(dart, "RHand")
+    hand_muzzle(rig, "TrapkeeperDartMuzzle", transform @ donor_tip, axis)
+    return [dart], axis

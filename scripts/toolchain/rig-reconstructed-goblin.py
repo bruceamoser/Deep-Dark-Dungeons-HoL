@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("source", type=Path)
 parser.add_argument("weapon_source", type=Path)
 parser.add_argument("output", type=Path)
-parser.add_argument("--role", choices=("boss", "spearhand", "scrapper", "firestarter", "rattlechanter", "smoke-slinger", "tunnel-scout"), default="boss")
+parser.add_argument("--role", choices=("boss", "spearhand", "scrapper", "firestarter", "rattlechanter", "smoke-slinger", "tunnel-scout", "trapkeeper"), default="boss")
 args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
 source, weapon_source, output = args.source, args.weapon_source, args.output
 spearhand = args.role == "spearhand"
@@ -24,10 +24,13 @@ firestarter = args.role == "firestarter"
 rattle = args.role == "rattlechanter"
 slinger = args.role == "smoke-slinger"
 scout = args.role == "tunnel-scout"
-lean = spearhand or scrapper or firestarter or rattle or slinger or scout
-creature_name = "Kobold Tunnel Scout" if scout else "Goblin " + args.role.title()
-slug = ("kobold-" if scout else "goblin-") + args.role
-height = {"boss": 1.65, "spearhand": 1.57, "scrapper": 1.50, "firestarter": 1.52, "rattlechanter": 1.56, "smoke-slinger": 1.53, "tunnel-scout": 1.68}[args.role]
+trap = args.role == "trapkeeper"
+kobold = scout or trap
+lean = spearhand or scrapper or firestarter or rattle or slinger or kobold
+ancestry = "Kobold" if kobold else "Goblin"
+creature_name = ancestry + " " + args.role.replace("-", " ").title()
+slug = ancestry.lower() + "-" + args.role
+height = {"boss": 1.65, "spearhand": 1.57, "scrapper": 1.50, "firestarter": 1.52, "rattlechanter": 1.56, "smoke-slinger": 1.53, "tunnel-scout": 1.68, "trapkeeper": 1.64}[args.role]
 output.mkdir(parents=True, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=str(source))
@@ -41,7 +44,7 @@ lo = Vector([min(v.co[i] for v in body.data.vertices) for i in range(3)])
 hi = Vector([max(v.co[i] for v in body.data.vertices) for i in range(3)])
 factor = height / (hi.z - lo.z)
 offset = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
-if scout:
+if kobold:
     feet = [v.co for v in body.data.vertices if v.co.z < lo.z+.14*(hi.z-lo.z)]
     toe = min(point.y for point in feet)
     feet = [point for point in feet if point.y < toe+.24*(hi.z-lo.z)]
@@ -82,14 +85,21 @@ def chain(names, points, parent=None):
 
 chain(["Root"], [(0, 0, 0), (0, 0, .12)])
 if lean:
-    chain(["Pelvis", "Spine", "Chest", "Neck", "Head"],
-          [(0, .04, .72), (0, .025, .82), (0, .01, .95),
-           (0, 0, 1.17), (0, -.025, 1.24), (0, -.025, 1.55)], "Root")
+    torso = [(0, .04, .72), (0, .025, .82), (0, .01, .95),
+             (0, 0, 1.17), (0, -.025, 1.24), (0, -.025, 1.55)]
+    if trap:
+        torso = [(0, .153, .72), (0, .136, .83), (0, .132, .96),
+                 (0, .107, 1.16), (0, .043, 1.29), (0, .011, 1.54)]
+    chain(["Pelvis", "Spine", "Chest", "Neck", "Head"], torso, "Root")
     for side, sign in [("R", -1), ("L", 1)]:
         if rattle:
             chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
                   [(sign*.188, .012, 1.09), (sign*.337, .015, .925),
                    (sign*.465, -.069, .752), (sign*.495, -.106, .664)], "Chest")
+        elif trap:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.202, .164, 1.11), (sign*.317, .134, .985),
+                   (sign*.444, .051, .843), (sign*.529, .012, .694)], "Chest")
         elif scout:
             chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
                   [(sign*.15, .012, 1.11), (sign*.257, -.006, .97),
@@ -102,9 +112,12 @@ if lean:
             chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
                   [(sign*.235, .018, 1.11), (sign*.402, -.02, .945),
                    (sign*.552, -.075, .778), (sign*.655, -.10, .62)], "Chest")
-        chain([side + name for name in ("Thigh", "Shin", "Foot")],
-              [(sign*.135, .035, .72), (sign*.19, -.025, .45),
-               (sign*.242, .02, .126), (sign*.26, -.13, .028)], "Pelvis")
+        leg = [(sign*.135, .035, .72), (sign*.19, -.025, .45),
+               (sign*.242, .02, .126), (sign*.26, -.13, .028)]
+        if trap:
+            leg = [(sign*.133, .135, .71), (sign*.200, .051, .45),
+                   (sign*.256, .070, .128), (sign*.264, -.132, .037)]
+        chain([side + name for name in ("Thigh", "Shin", "Foot")], leg, "Pelvis")
         chain([side+"Coat"], [(sign*.18, .035, .8), (sign*.24, .08, .44)], "Pelvis")
 else:
     chain(["Pelvis", "Spine", "Chest", "Neck", "Head"],
@@ -118,10 +131,13 @@ else:
               [(sign*.17, .035, .75), (sign*.22, .035, .42),
                (sign*.25, .055, .13), (sign*.29, -.105, .04)], "Pelvis")
         chain([side+"Coat"], [(sign*.29, .10, .83), (sign*.41, .12, .31)], "Pelvis")
-if scout:
-    chain(["TailBase", "TailMiddle", "TailOuter", "TailTip"],
-          [(0, .131, .684), (.196, .318, .515), (.430, .524, .318),
-           (.692, .711, .174), (.912, .804, .252)], "Pelvis")
+if kobold:
+    tail_points = [(0, .131, .684), (.196, .318, .515), (.430, .524, .318),
+                   (.692, .711, .174), (.912, .804, .252)]
+    if trap:
+        tail_points = [(0, .193, .700), (.181, .320, .558), (.400, .447, .388),
+                       (.618, .475, .337), (.855, .501, .498)]
+    chain(["TailBase", "TailMiddle", "TailOuter", "TailTip"], tail_points, "Pelvis")
 bpy.ops.object.mode_set(mode="OBJECT")
 
 positions = np.empty(len(body.data.vertices) * 3, dtype=np.float32)
@@ -161,7 +177,7 @@ def wrist_distances():
     return distances[index]
 
 
-wrist_field = wrist_distances() if rattle or slinger or scout else None
+wrist_field = wrist_distances() if rattle or slinger or kobold else None
 distance_fields = []
 for name in names:
     start, end = segments[name]
@@ -178,9 +194,10 @@ for name in names:
         if rattle or slinger:
             inner_arm = .411 - np.maximum(0, z-.75)*.78
             distance += np.maximum(0, np.abs(y+.04)-.14)*6 + np.maximum(0, z-1.11)*4
-        if scout:
+        if kobold:
             inner_arm = .315 - np.maximum(0, z-.80)*.65
-            distance += np.maximum(0, y-.08)*5 + np.maximum(0, z-1.13)*4
+            rear_arm = .23 if trap else .08
+            distance += np.maximum(0, y-rear_arm)*5 + np.maximum(0, z-1.13)*4
         lower_arm = .54 if rattle or slinger else .50 if scrapper or firestarter else .58
         distance += np.maximum(0, inner_arm-abs(x))*5 + np.maximum(0, lower_arm-z)*3
     elif rattle or slinger:
@@ -196,11 +213,13 @@ for name in names:
         distance += np.maximum(0, z-(1.23 if lean else 1.38))*4
     else:
         distance += np.maximum(0, (1.17 if lean else 1.33)-z)*3
-    if scout:
+    if kobold:
         if name.startswith("Tail"):
-            distance += np.maximum(0, .09-y)*6 + np.maximum(0, z-.77)*6
+            tail_front = .19 if trap else .09
+            distance += np.maximum(0, tail_front-y)*6 + np.maximum(0, z-.77)*6
         else:
-            distance += np.maximum(0, y-.17)*np.clip((.80-z)*12, 0, 1)*4
+            rear_body = .27 if trap else .17
+            distance += np.maximum(0, y-rear_body)*np.clip((.80-z)*12, 0, 1)*4
     if wrist_field is not None:
         wrist_weight = np.clip((.235-wrist_field)/.08, 0, 1)
         if name.endswith(("UpperArm", "Forearm", "Hand")):
@@ -229,12 +248,14 @@ def bind_held_prop(obj, hand):
     obj.modifiers.new("Rigid hand grip", "ARMATURE").object = rig
 
 
-if scout:
+if kobold:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from reconstructed_scout_gear import fit_launcher
+    from reconstructed_kobold_gear import fit_launcher, fit_throw_dart
 
     hand_start, hand_end = map(Vector, segments["RHand"])
-    held_props, blade_direction = fit_launcher(weapon_source, rig, hand_start.lerp(hand_end, .63), bind_held_prop)
+    fit_dart_gear = fit_launcher if scout else fit_throw_dart
+    held_props, blade_direction = fit_dart_gear(
+        weapon_source, rig, hand_start.lerp(hand_end, .63), bind_held_prop)
 elif slinger:
     held_props = []
 elif rattle:
@@ -365,7 +386,7 @@ def pose(clip, t):
     orient("RUpperArm", y=-13)
     orient("LUpperArm", y=20)
     orient("RForearm", x=-8)
-    if scout:
+    if kobold:
         for index, name in enumerate(("TailBase", "TailMiddle", "TailOuter", "TailTip")):
             yaw = (9 if clip == "Walking_A" else 3)*math.sin(math.tau*t-index*.46)
             if clip == "Death_A_Pose":
@@ -396,6 +417,15 @@ def pose(clip, t):
         orient("RUpperArm", x=-37*aim, y=-14, z=32*aim)
         orient("RForearm", x=-8-16*aim, z=16*aim)
         orient("LUpperArm", x=12*aim, y=16)
+    elif trap and clip == "2H_Ranged_Shoot":
+        release = 14/30
+        phase = t/release if t < release else (1-t)/(1-release)
+        throw = phase**2*(3-2*phase)
+        windup = math.sin(math.pi*phase)**2 if t < release else 0
+        orient("Chest", x=13*throw, z=25*throw-22*windup)
+        orient("RUpperArm", x=-61*throw+31*windup, y=-12, z=26*throw)
+        orient("RForearm", x=-12-22*throw-37*windup, z=16*throw)
+        orient("LUpperArm", x=20*throw, y=18)
     elif slinger and clip == "2H_Ranged_Shoot":
         release = .40
         phase = t/release if t < release else (1-t)/(1-release)
@@ -405,7 +435,7 @@ def pose(clip, t):
         orient("RUpperArm", x=-37*swing+26*windup, y=-15, z=21*swing)
         orient("RForearm", x=-12-24*swing-13*windup, z=18*swing)
         orient("LUpperArm", x=16*swing, y=18)
-    elif clip == "Unarmed_Melee_Attack_Punch_A" or ((slinger or scout) and clip == "1H_Melee_Attack_Slice_Diagonal"):
+    elif clip == "Unarmed_Melee_Attack_Punch_A" or ((slinger or kobold) and clip == "1H_Melee_Attack_Slice_Diagonal"):
         orient("Chest", x=15*pulse, z=-23*pulse)
         orient("LUpperArm", x=-39*pulse, y=20, z=-36*pulse)
         orient("LForearm", x=-19*pulse)
@@ -477,7 +507,7 @@ def strike_pan(weight, windup):
 
 clips = {"Idle": 38, "Walking_A": 27, "1H_Melee_Attack_Slice_Diagonal": 28,
          "Hit_A": 17, "Death_A_Pose": 39}
-if slinger or scout:
+if slinger or kobold:
     clips["2H_Ranged_Shoot"] = 31
 if rattle:
     clips["Spellcast_Shoot"] = 31
@@ -498,12 +528,13 @@ for clip, length in clips.items():
             approach = t/contact if t <= contact else (1-t)/(1-contact)
             weight = approach**2*(3-2*approach)
             strike_pan(weight, math.sin(math.pi*approach) if t < contact else 0)
-        if spearhand or scout:
+        if spearhand or kobold:
             hand = rig.pose.bones["RHand"]
             direction = (hand.matrix @ hand.bone.matrix_local.inverted()).to_3x3() @ blade_direction
             thrust = math.sin(math.pi*t)**4 if clip == "1H_Melee_Attack_Slice_Diagonal" else 0
-            if scout and clip == "2H_Ranged_Shoot":
-                phase = t/.3 if t < .3 else (1-t)/.7
+            if kobold and clip == "2H_Ranged_Shoot":
+                release = .3 if scout else 14/30
+                phase = t/release if t < release else (1-t)/(1-release)
                 thrust = phase**2*(3-2*phase)
             aim = blade_direction.lerp(Vector((0, -1, .03)), thrust).normalized()
             if clip == "Death_A_Pose":
