@@ -137,7 +137,7 @@ try {
   let projectileReview;
   const projectileKind = entry.runtime?.attack?.kind;
   if (
-    ["bottle", "arrow", "sonic", "sling", "dart", "cold"].includes(
+    ["bottle", "arrow", "sonic", "sling", "dart", "cold", "radiant"].includes(
       projectileKind,
     )
   ) {
@@ -162,7 +162,7 @@ try {
         fx: s.attackEffect({
           attacker: actor.data.id,
           target: target.data.id,
-          spell: ["bottle", "sonic", "cold"].includes(kind),
+          spell: ["bottle", "sonic", "cold", "radiant"].includes(kind),
           ranged: ["arrow", "sling", "dart"].includes(kind),
           element: kind === "bottle" ? "fire" : undefined,
           damage: 0,
@@ -243,11 +243,11 @@ try {
       (s) => s.time > release + 0.03 && s.time < release + 0.13,
     );
     expect(flying.kind).toBe(projectileKind);
-    if (!["sonic", "cold"].includes(projectileKind))
+    if (!["sonic", "cold", "radiant"].includes(projectileKind))
       expect(flying.held).toBe(false);
     expect(flying.meshes).toBeGreaterThan(0);
     expect(flying.projectile).toBe(true);
-    if (!["sonic", "cold"].includes(projectileKind))
+    if (!["sonic", "cold", "radiant"].includes(projectileKind))
       expect(samples.at(-1).held).toBe(true);
     expect(samples.every((s) => s.position.every(Number.isFinite))).toBe(true);
     if (projectileKind === "arrow")

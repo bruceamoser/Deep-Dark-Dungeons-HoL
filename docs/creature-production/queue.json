@@ -816,9 +816,16 @@
       "name": "Glass Sentinel",
       "order": 50,
       "family": "construct",
-      "status": "queued",
+      "status": "integrated",
       "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/glass-sentinel.md",
+        "model": "docs/creature-production/glass-sentinel.md",
+        "motion": "docs/creature-production/glass-sentinel.md",
+        "game-view": "docs/creature-production/glass-sentinel.md",
+        "integration": "docs/creature-production/glass-sentinel.md"
+      },
+      "approvedAsset": "GlassSentinel"
     },
     {
       "id": "creature-stone-knuckle",

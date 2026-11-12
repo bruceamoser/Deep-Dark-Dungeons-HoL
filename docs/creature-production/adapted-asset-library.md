@@ -207,3 +207,7 @@ Existing private multiview18-bone clay sculpt; `prepare-clay-helper.py` preserve
 ## Brass survey machine housing and dish
 
 KayKit Dungeon barrel_small reshaped/recolored into green/brass housing; RPG Tools compass_lid repurposed into surveying dish. `build-clockwork-scout.py` retains owned topology, adds fitted rivets, lens/grille, internal needle shaft and four-leg rigid rig. `texture-clockwork-scout.py`: TextureCraft hammered brass. Private `clockwork-scout/final/clockwork-scout.blend`,535frames and actual dungeon reviewed. Reuse source hashes from private base/sources.json; original packs untouched. Simplified housing lacks portrait engravings/exposed cogs.
+
+## Faceted glass guardian and reflection palm
+
+Owned Body18/HeadArmor01 retain enclosing shell and crest/spikes. `refine-glass-sentinel.py` remaps facets to aqua/ivory/violet physical glass, gold seams and source-hand ReflectionPalm socket. `texture-glass-sentinel.py` applies TextureCraft hammered gold to trim only. Private `glass-sentinel/final/glass-sentinel.blend`;320frames and actual radiant projectile/dungeon reviewed. Physical glass clone/isolation test protects transmission; partial0.35 transmission intentionally keeps silhouette readable.
