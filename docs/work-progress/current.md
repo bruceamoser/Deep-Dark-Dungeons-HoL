@@ -1,5 +1,9 @@
 # Current working progress
 
+## Active — Release 0.8.8
+
+The reviewed 58-creature build is the release candidate in PR #206. The halfling pilot is paused on its own branch. See the [release handoff](handoffs/2026-11-12-release-0.8.8.md).
+
 ## Complete — November 12 creature review fixes
 
 The normal Four Lanterns Deep menu entry and the original launcher contain the Animated Armor and Barrow Guard weapon fixes, the rebuilt Cinder Imp, the completed goblin and kobold rebuilds, Wererat and Werebear. All 58 production entries are integrated. Restart the game to load the local 0.8.7 review build.
