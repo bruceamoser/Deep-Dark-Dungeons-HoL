@@ -13,6 +13,33 @@ const out = path.resolve(
 );
 await fs.mkdir(out, { recursive: true });
 const userData = await fs.mkdtemp(path.join(os.tmpdir(), "fld-roster-"));
+let browser, page;
+let log = "";
+const errors = [];
+const manifest = JSON.parse(
+  await fs.readFile(path.join(root, "config/approved-creature-assets.json")),
+);
+const startIndex = Number(process.env.DDD_ROSTER_START ?? 0);
+if (
+  !Number.isInteger(startIndex) ||
+  startIndex < 0 ||
+  startIndex >= manifest.assets.length
+)
+  throw Error("Invalid start index");
+const reports = startIndex
+  ? JSON.parse(await fs.readFile(path.join(out, "results.json"))).reports.slice(
+      0,
+      startIndex,
+    )
+  : [];
+expect(reports).toHaveLength(startIndex);
+for (let i = 0; i < reports.length; i++) {
+  expect(reports[i].id).toBe(manifest.assets[i].creatureId);
+  expect(reports[i].model).toBe(manifest.assets[i].model);
+  expect(reports[i].performance.minVisible).toBe(10);
+  expect(reports[i].performance.minInFrame).toBe(10);
+  expect(reports[i].performance.fps).toBeGreaterThan(30);
+}
 const child = spawn(
   "/usr/bin/aa-exec",
   [
@@ -30,13 +57,6 @@ const child = spawn(
     env: { ...process.env, DDD_TEST_USER_DATA: userData },
   },
 );
-let browser, page;
-let log = "";
-const errors = [];
-const manifest = JSON.parse(
-  await fs.readFile(path.join(root, "config/approved-creature-assets.json")),
-);
-const reports = [];
 try {
   const endpoint = await new Promise((resolve, reject) => {
     const timer = setTimeout(
@@ -66,7 +86,7 @@ try {
   const drafts = await page.evaluate(() =>
     window.__ddd.game.party.map((h) => h.draft),
   );
-  for (const entry of manifest.assets) {
+  for (const entry of manifest.assets.slice(startIndex)) {
     await page.reload();
     await waitForGame(page);
     await page.evaluate((drafts) => window.__ddd.game.fresh(drafts), drafts);
@@ -129,6 +149,15 @@ try {
       window.rosterReview = { events, center: { x, z } };
       g.emit("floor");
       g.emit("change");
+      // Render-load fixture only: smoke/concealment must not make a faster
+      // benchmark by culling opponents. Rules and AI still see real conditions.
+      for (const entity of s.entities.values())
+        if (entity.isEnemy)
+          Object.defineProperty(entity.group, "visible", {
+            configurable: true,
+            get: () => true,
+            set: () => {},
+          });
       s.zoom = 22;
       s.angle = (3 * Math.PI) / 4;
       s.follow = false;
@@ -310,7 +339,7 @@ try {
       const average = samples.reduce((a, b) => a + b, 0) / samples.length;
       return {
         scope:
-          "10s live dungeon combat, AI turns; heroes pass turns, boosted fixture HP",
+          "10s live dungeon combat, AI turns; heroes pass, boosted HP, six enemy models forced rendered through concealment",
         effectFrames,
         turnsAdvanced: g.encounter.serial - startSerial,
         minInFrame,
@@ -353,6 +382,7 @@ try {
     expect(performanceReport.fps).toBeGreaterThan(30);
     expect(performanceReport.turnsAdvanced).toBeGreaterThan(0);
   }
+  expect(reports).toHaveLength(manifest.assets.length);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const processes = (await cdp.send("SystemInfo.getProcessInfo")).processInfo;
@@ -375,6 +405,8 @@ try {
   expect(sandbox.arguments).toContain("--mute-audio");
   expect(sandbox.arguments).not.toContain("--no-sandbox");
   expect(sandbox.executable).not.toContain(" ");
+  await fs.rm(path.join(out, "failure.json"), { force: true });
+  await fs.rm(path.join(out, "failure.png"), { force: true });
   await fs.writeFile(
     path.join(out, "complete.json"),
     JSON.stringify({ count: reports.length, errors, sandbox }, null, 2),
