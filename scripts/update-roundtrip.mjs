@@ -59,6 +59,7 @@ const child = spawn(
     "--",
     installed,
     "--remote-debugging-port=0",
+    "--mute-audio",
     "--inspect=0",
   ],
   {

@@ -1,3 +1,16 @@
+**v0.8.8 — A rebuilt dungeon bestiary**
+
+- Explore a 58-creature bestiary with animated 3D models beside their book illustrations.
+- Rebuilt goblins, kobolds, the Cinder Imp, Wererat and Werebear bring distinct silhouettes, fitted gear and role-specific attacks into the dungeon.
+- Animated Armor carries its sword again, and Barrow Guard's swing clears its head. Goblin and kobold ranged attacks show their held equipment through the release.
+- The bestiary supports orbit, pan, zoom and animation selection for inspecting creatures up close.
+
+### Install
+
+Debian and Ubuntu players can install the amd64 Debian package. Other Linux players can use the AppImage and its menu installer. Windows players can use the x64 setup executable. Installed releases can check **Settings → Updates**.
+
+---
+
 **v0.8.7 — Better journeys, clearer equipment**
 
 - Equipment bonuses now say what they do: accuracy, damage, range, Push 1, defence, resistance, attributes and discipline competence. Matching equipment bonuses use the strongest value. Light reduces Bulk; suitable equipment can provide toggleable, fuel-free magical illumination.
