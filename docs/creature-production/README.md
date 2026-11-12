@@ -71,6 +71,8 @@ Bruce explicitly requires deliberate color and color schemes when adapting owned
 
 Use [TextureCraft](../asset-production-pipeline.md#texturecraft-for-creature-materials) when skin, cloth, metal or other surfaces need more than a flat tint. Start with appropriate library materials and adapt their channels and masks. Bruce wants bold grain and broad, high-contrast paint that reads in the dungeon. Use the actual game view to set texture scale and contrast.
 
+Give each creature a few surface details that support its identity. The Crypt Ghoul uses gray-blue skin, reddish-purple pits and amber eyes. The Plague Zombie uses cracked leather grain and wide bruises. When a feature needs both larger marks and greater density, layer two sizes with different seeds and match their color masks to the relief.
+
 `review-equipped-creature.mjs PRIVATE.glb REVIEW_DIR [SCALE] [full|stills]` defaults to full motion capture. Use `stills` during bounded fit/color iterations to inspect front/side/back and a wide final death pose quickly; it writes separate `capture-stills.json` and does not overwrite the full-motion evidence. Stills alone never pass the motion gate. The final reviewed export must match the full capture hash. `check-equipped-ground.py` samples every integer source frame, including frame0 clips, and supplements visual inspection; it does not prove body/gear collision correctness.
 
 ## Gates for each creature
