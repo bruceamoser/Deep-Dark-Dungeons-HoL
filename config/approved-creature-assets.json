@@ -1256,6 +1256,36 @@
         "ambientBone": "Chest",
         "ambientScale": 0.3
       }
+    },
+    {
+      "creatureId": "creature-grave-wisp",
+      "model": "GraveWisp",
+      "path": "/assets/licensed/creatures/GraveWisp.glb",
+      "sha256": "15f1d2d1efccf5c30aece596e8a373b66d959d51ad00688bc8efddc79f81a7ff",
+      "approvedOn": "2026-11-12",
+      "method": "owned-face-authored-mist",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/grave-wisp.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1,
+        "height": 1.4,
+        "ethereal": true,
+        "weapon": "spell",
+        "attack": {
+          "kind": "cold",
+          "when": "projectile",
+          "clip": "Spellcast_Shoot",
+          "release": 0.5,
+          "muzzleBone": "Core",
+          "melee": {
+            "kind": "unarmed",
+            "clip": "1H_Melee_Attack_Slice_Diagonal",
+            "contact": 0.5
+          }
+        }
+      }
     }
   ]
 }

@@ -227,3 +227,7 @@ Owned KayKit Space Base rock_A/B complete-stone adaptation, reviewed Clay18-bone
 ## Cinder Strider — charred long-limbed elemental and smoke anchor
 
 Private multiview body/18-bone rig retained with narrower/taller proportions; `prepare-cinder-strider.py`, `texture-cinder-strider.py`. Nine TextureCraft1024maps separate coal/hot flame/matte smoke; weighted eyes and forward claw reach. Private cinder-strider/final/cinder-strider.blend. Runtime ash-smoke supports `ambientBone` and `ambientScale` for differently sized rigs, preserving defaults. Review each reuse in actual animation/game; dense source geometry and sculpted smoke are documented limits.
+
+## Grave Wisp — faint owned face and animated mist
+
+`build-grave-wisp.py` extracts only reviewed KayKit Skeleton Minion head/jaw copies from Sentry, fits them inside original asymmetric transported mist sweeps, with five-bone bob/glide/pulse/dissolution. Private grave-wisp/final/grave-wisp.blend; source hash sources.json. First coil rejected, root-axis motion fixed; final574frames and cold-spark game release reviewed. Pale mint/ivory smooth translucent materials are intentional; ethereal runtime avoids solid shadows. Reuse requires new silhouette/opacity/deformation review.

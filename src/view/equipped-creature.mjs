@@ -25,7 +25,7 @@ export function equippedCreatureAppearance(asset, spec) {
     mesh.material = Array.isArray(mesh.material)
       ? mesh.material.map(own)
       : own(mesh.material);
-    mesh.castShadow = mesh.receiveShadow = true;
+    mesh.castShadow = mesh.receiveShadow = !spec.ethereal;
   });
   model.scale.setScalar(spec.scale);
   Object.assign(model.userData, {

@@ -366,3 +366,16 @@ test("smoke supports a different rig and source units without moving its anchor"
   small.geometry.attributes.position.array.forEach((v, i) => assert.ok(Math.abs(v - large.geometry.attributes.position.array[i] * .3) < 1e-6));
   a.model.userData.dispose(); b.model.userData.dispose();
 });
+
+
+test("ethereal creatures retain spectral materials without solid shadow casting", () => {
+  const scene = new T.Group(), geometry = new T.BoxGeometry();
+  const material = new T.MeshStandardMaterial({ transparent: true, opacity: .48, emissive: 0xaaddbb, emissiveIntensity: .45 });
+  const mesh = new T.Mesh(geometry, material); mesh.castShadow = true; scene.add(mesh);
+  const result = equippedCreatureAppearance({ scene, animations: [] }, { model: "WispFixture", scale: 1, height: 1.4, ethereal: true });
+  const ghost = result.model.children[0];
+  assert.equal(ghost.castShadow, false); assert.equal(ghost.receiveShadow, false);
+  assert.equal(ghost.material.opacity, .48); assert.equal(ghost.material.transparent, true);
+  assert.equal(mesh.castShadow, true); assert.notEqual(ghost.material, material);
+  result.model.userData.dispose(); geometry.dispose(); material.dispose();
+});
