@@ -137,6 +137,31 @@ for cfg in spec.get('paintBands',[]):
   if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
  assert count>0,('Paint band missed',cfg['part'])
  modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
+# Derive cloth strips from owned surfaces, retaining original deform weights.
+# Bisect copies only; do not cut the body or globally remesh its joints.
+for cfg in spec.get('surfaceWraps',[]):
+ source=bpy.data.objects[cfg['source']];obj=source.copy();obj.data=source.data.copy();obj.name=cfg['name'];bpy.context.collection.objects.link(obj)
+ bm=bmesh.new();bm.from_mesh(obj.data);bm.transform(obj.matrix_world)
+ # Split-normal seams must be joined only on this disposable cloth copy.
+ bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-6)
+ axis=Vector(cfg.get('axis',[0,0,1])).normalized()
+ for value in [cfg['min'],cfg['max']]:
+  bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),dist=1e-6,plane_co=axis*value,plane_no=axis)
+ discard=[f for f in bm.faces if not cfg['min']-1e-6<=axis.dot(f.calc_center_median())<=cfg['max']+1e-6 or abs(f.calc_center_median().x)>cfg.get('maxX',99)]
+ assert 0<len(discard)<len(bm.faces),('Inspect wrap region',cfg['name'])
+ bmesh.ops.delete(bm,geom=discard,context='FACES');bm.transform(obj.matrix_world.inverted());bm.to_mesh(obj.data);bm.free()
+ # Offset in bind space using the original smooth surface normals; a shell
+ # alone can retain coplanar inner faces and flicker against the body.
+ obj.data.update()
+ normal_matrix=obj.matrix_world.to_3x3().inverted().transposed();inverse=obj.matrix_world.to_3x3().inverted()
+ for vertex in obj.data.vertices:vertex.co+=inverse@((normal_matrix@vertex.normal).normalized()*cfg.get('clearance',.012))
+ obj.data.materials.clear();obj.data.materials.append(mat(cfg['color']))
+ for face in obj.data.polygons:face.material_index=0
+ # Evaluate the shell before the armature so the copied bind weights survive.
+ shell=obj.modifiers.new('Raised burial linen','SOLIDIFY');shell.thickness=cfg.get('thickness',.012)/max(obj.matrix_world.to_scale());shell.offset=1
+ bpy.context.view_layer.objects.active=obj
+ bpy.ops.object.modifier_move_to_index(modifier=shell.name,index=0);bpy.ops.object.modifier_apply(modifier=shell.name)
+ modifications.append({'part':obj.name,'purpose':'Cloth derived from owned surface with interpolated original skin weights','recipe':cfg})
 for cfg in spec.get('faceShells',[]):
  source=bpy.data.objects[cfg['source']];obj=source.copy();obj.data=source.data.copy();obj.name=cfg['name'];bpy.context.collection.objects.link(obj)
  bm=bmesh.new();bm.from_mesh(obj.data)
