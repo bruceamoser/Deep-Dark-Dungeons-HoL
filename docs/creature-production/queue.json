@@ -650,10 +650,14 @@
       "name": "Kobold Emberkeeper",
       "order": 33,
       "family": "humanoid-specialized",
-      "status": "active",
-      "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
+      "status": "integrated",
+      "route": "Image-derived reconstruction with fitted wing and tail joints, retained suspended brazier and palm cast.",
       "gates": {
-        "brief": "docs/creature-production/kobold-emberkeeper.md"
+        "brief": "docs/creature-production/kobold-emberkeeper.md",
+        "model": "docs/creature-production/kobold-emberkeeper.md",
+        "motion": "docs/creature-production/kobold-emberkeeper.md",
+        "game-view": "docs/creature-production/kobold-emberkeeper.md",
+        "integration": "docs/creature-production/kobold-emberkeeper.md"
       },
       "revisions": [
         {
@@ -666,23 +670,31 @@
           },
           "approvedAsset": "KoboldEmberkeeper"
         }
-      ]
+      ],
+      "approvedAsset": "KoboldEmberkeeper"
     },
     {
       "id": "creature-wererat",
       "name": "Wererat",
       "order": 34,
       "family": "humanoid-specialized",
-      "status": "integrated",
+      "status": "active",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/wererat.md",
-        "model": "docs/creature-production/wererat.md",
-        "motion": "docs/creature-production/wererat.md",
-        "game-view": "docs/creature-production/wererat.md",
-        "integration": "docs/creature-production/wererat.md"
+        "brief": "docs/creature-production/wererat.md"
       },
-      "approvedAsset": "Wererat"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/wererat.md",
+            "model": "docs/creature-production/wererat.md",
+            "motion": "docs/creature-production/wererat.md",
+            "game-view": "docs/creature-production/wererat.md",
+            "integration": "docs/creature-production/wererat.md"
+          },
+          "approvedAsset": "Wererat"
+        }
+      ]
     },
     {
       "id": "creature-werewolf",

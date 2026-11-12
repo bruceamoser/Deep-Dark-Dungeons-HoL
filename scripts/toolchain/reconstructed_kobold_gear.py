@@ -81,3 +81,23 @@ def fit_throw_dart(source, rig, grip, bind):
     bind(dart, "RHand")
     hand_muzzle(rig, "TrapkeeperDartMuzzle", transform @ donor_tip, axis)
     return [dart], axis
+
+
+def fit_brazier(source, rig, grip, bind):
+    with bpy.data.libraries.load(str(source), link=False) as (available, loaded):
+        assert "HangingBrazier" in available.objects
+        loaded.objects = ["HangingBrazier"]
+    brazier, = loaded.objects
+    bpy.context.collection.objects.link(brazier)
+    donor_grip = Vector((.900, -.110, 1.096))
+    transform = Matrix.Translation(grip) @ Matrix.Scale(.67, 4) @ Matrix.Translation(-donor_grip)
+    brazier.data.transform(transform @ brazier.matrix_world)
+    brazier.parent = None
+    brazier.matrix_world = Matrix.Identity(4)
+    brazier.modifiers.clear()
+    brazier.vertex_groups.clear()
+    bind(brazier, "Brazier")
+    hand = rig.data.bones["RHand"]
+    palm = hand.head_local.lerp(hand.tail_local, .69)
+    hand_muzzle(rig, "EmberPalmMuzzle", palm, Vector((0, -1, 0)))
+    return [brazier]
