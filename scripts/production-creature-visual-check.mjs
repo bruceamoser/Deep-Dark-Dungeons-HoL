@@ -112,7 +112,7 @@ try {
   await page.screenshot({ path: path.join(output, "dungeon-look.png") });
   let projectileReview;
   const projectileKind = entry.runtime?.attack?.kind;
-  if (["bottle", "arrow", "sonic", "sling"].includes(projectileKind)) {
+  if (["bottle", "arrow", "sonic", "sling", "dart"].includes(projectileKind)) {
     const frameFolder =
       projectileKind === "bottle"
         ? "throw-frames"
@@ -135,7 +135,7 @@ try {
           attacker: actor.data.id,
           target: target.data.id,
           spell: ["bottle", "sonic"].includes(kind),
-          ranged: ["arrow", "sling"].includes(kind),
+          ranged: ["arrow", "sling", "dart"].includes(kind),
           element: kind === "bottle" ? "fire" : undefined,
           damage: 0,
         }),
@@ -173,6 +173,7 @@ try {
             actor.model.getObjectByName("Firestarter_held_flask") ??
             actor.model.getObjectByName("Firestarter held flask") ??
             actor.model.getObjectByName("Slinger_stone") ??
+            actor.model.getObjectByName("Loaded_Dart") ??
             actor.model.getObjectByName("Archer_arrow");
           const arrow = actor.model.getObjectByName("arrowBone"),
             nock =
