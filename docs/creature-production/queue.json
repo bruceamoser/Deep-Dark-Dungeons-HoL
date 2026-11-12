@@ -8,16 +8,23 @@
       "name": "Goblin Spearhand",
       "order": 1,
       "family": "owned-humanoid",
-      "status": "integrated",
+      "status": "active",
       "route": "owned-humanoid",
       "gates": {
-        "brief": "docs/goblin-spearhand-dungeon.md",
-        "model": "docs/goblin-spearhand-dungeon.md",
-        "motion": "docs/goblin-spearhand-dungeon.md",
-        "integration": "docs/goblin-spearhand-dungeon.md",
-        "game-view": "docs/goblin-spearhand-dungeon.md"
+        "brief": "docs/goblin-spearhand-dungeon.md"
       },
-      "approvedAsset": "GoblinSpearhand"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/goblin-spearhand-dungeon.md",
+            "model": "docs/goblin-spearhand-dungeon.md",
+            "motion": "docs/goblin-spearhand-dungeon.md",
+            "integration": "docs/goblin-spearhand-dungeon.md",
+            "game-view": "docs/goblin-spearhand-dungeon.md"
+          },
+          "approvedAsset": "GoblinSpearhand"
+        }
+      ]
     },
     {
       "id": "creature-air-elemental",
@@ -244,10 +251,14 @@
       "name": "Goblin Boss",
       "order": 15,
       "family": "humanoid-equipment",
-      "status": "active",
+      "status": "integrated",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
       "gates": {
-        "brief": "docs/creature-production/goblin-boss.md"
+        "brief": "docs/creature-production/goblin-boss.md",
+        "model": "docs/creature-production/goblin-boss.md",
+        "motion": "docs/creature-production/goblin-boss.md",
+        "game-view": "docs/creature-production/goblin-boss.md",
+        "integration": "docs/creature-production/goblin-boss.md"
       },
       "revisions": [
         {
@@ -260,7 +271,8 @@
           },
           "approvedAsset": "GoblinBoss"
         }
-      ]
+      ],
+      "approvedAsset": "GoblinBoss"
     },
     {
       "id": "creature-orc-warcaller",

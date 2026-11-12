@@ -2,7 +2,7 @@
 
 ## Active — November 12 creature review fixes
 
-Animated Armor and Barrow Guard weapon fixes are installed. The Cinder Imp was rebuilt from a new image and passed Blender, motion, bestiary and dungeon checks including fire casting. The rebuilt Imp and both weapon fixes are installed in the menu AppImage and original launcher. Native bestiary and isolated save checks passed. Goblin Boss is the active image-to-3D rebuild. Bruce requested this same method for the full goblin and kobold roster, followed by fresh Wererat and Werebear models. See [the review handoff](handoffs/2026-11-12-player-creature-review.md).
+Animated Armor and Barrow Guard weapon fixes are installed. The Cinder Imp was rebuilt from a new image and passed Blender, motion, bestiary and dungeon checks including fire casting. The rebuilt Imp and both weapon fixes are installed in the menu AppImage and original launcher. Native bestiary and isolated save checks passed. Goblin Boss completed the image-to-3D rebuild and passed development motion, sword clearance and dungeon checks. Spearhand is the active rebuild with a new reference and reconstruction underway. Bruce requested this same method for the full goblin and kobold roster, followed by fresh Wererat and Werebear models. See [the review handoff](handoffs/2026-11-12-player-creature-review.md).
 
 ## Complete — 58-creature local review delivery (November 12)
 

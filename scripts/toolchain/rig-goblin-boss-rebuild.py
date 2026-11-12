@@ -48,8 +48,8 @@ chain(["Pelvis", "Spine", "Chest", "Neck", "Head"],
        (0, .025, 1.31), (0, .005, 1.40), (0, -.025, 1.65)], "Root")
 for side, sign in [("R", -1), ("L", 1)]:
     chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
-          [(sign*.24, .035, 1.28), (sign*.43, .015, 1.10),
-           (sign*.63, -.028, .94), (sign*.76, -.034, .82)], "Chest")
+          [(sign*.29, .035, 1.27), (sign*.45, .005, 1.10),
+           (sign*.66, -.095, .934), (sign*.77, -.232, .68)], "Chest")
     chain([side + name for name in ("Thigh", "Shin", "Foot")],
           [(sign*.17, .035, .75), (sign*.22, .035, .42),
            (sign*.25, .055, .13), (sign*.29, -.105, .04)], "Pelvis")
@@ -71,7 +71,10 @@ for name in names:
         sign = 1 if name.startswith("L") else -1
         distance += np.maximum(0, -sign*x)*2
     if name.endswith(("UpperArm", "Forearm", "Hand")):
-        distance += np.maximum(0, .31-abs(x))*2 + np.maximum(0, .75-z)*3
+        inner_arm = .26 + np.maximum(0, 1.20-z)*.75
+        distance += np.maximum(0, inner_arm-abs(x))*5 + np.maximum(0, .58-z)*3
+    if not name.endswith(("Forearm", "Hand")):
+        distance += np.maximum(0, abs(x)-.56)*4
     if name.endswith("Coat"):
         distance += np.maximum(0, .26-abs(x))*4 + np.maximum(0, z-.88)*2
     if name in {"Chest", "Spine", "Pelvis"}:
@@ -104,7 +107,7 @@ sword.parent = None
 sword.matrix_world = Matrix.Identity(4)
 blade_direction = Vector((-.52, -.23, .82)).normalized()
 blade_rotation = Vector((0, 0, 1)).rotation_difference(blade_direction).to_matrix().to_4x4()
-grip = Vector((-.705, -.043, .872))
+grip = Vector((-.733, -.167, .802))
 sword.data.transform(Matrix.Translation(grip) @ blade_rotation @ Matrix.Diagonal((.8,.8,.8,1)))
 sword.name = "Goblin Boss officer sword"
 material = bpy.data.materials.new("Officer sword steel")
