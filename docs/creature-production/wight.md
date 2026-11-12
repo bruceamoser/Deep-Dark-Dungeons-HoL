@@ -1,0 +1,15 @@
+# Wight — active source inspection
+
+Status: source/owned-body inspection; no completed model yet. Pinned source24e545e6d860e8c1b03a21356fd22cae1c039785, textSHAd7d513311c7699d72210e7a806a90d12fe2495989cd0e84f3cc140c277cb64d2. Read the actual creature record and portrait: armored aristocratic corpse with crown, long pale hair, green mantle, gold armor and sword; no shield. Pursuit controller with oath-draining blade and fear. Preserve rules.
+
+Inspected owned Mason Body01–20 contact sheet. Body15/19 have strong armored shoulders; Body11 has long cloth but lacks the right armored silhouette. Prefer Body15 with controlled old-gold/forest-green palette, bone-pale exposed face/hands and gray-white supplied hair. Compare Sage's owned skull adaptation and Champion crown recipe before choosing a head; do not assume a skull alone represents a fleshed corpse. Reuse a supplied crown/sword and inspect compatible one-handed clips. No shield, random bag or food props. A small worn oath/charter accessory may reinforce role if it remains readable and does not clutter the silhouette.
+
+Next: inspect original head/hair/crown meshes and candidate Body15 geometry, choose face adaptation, then assemble in private task-owned scene. Model/motion/game gates remain pending. No new purchased asset, generation or installer update.
+
+First assembly rendered privately: Body15, Sage's owned skull source, Hair09 and Crown01, OHS05 sword on original Mason rig. Inspected all supplied hair thumbnails; Hair09 gives the closest long side/back silhouette. First render rejected for undersized crown, hair fit and overly gold blade; correction underway. No model gate recorded. Private files `~/.local/share/four-lanterns-creature-production/wight/`; active spec `config/creature-production/wight.json`. Barrow PR172 passed both hosted checks and merged.
+
+Final candidate: owned Body15/Cloak03, pale Hair09 and fitted Crown01, aged-gold/forest-green armor, owned Halloween skull and OHS05 sword. Original43-bone rig, five clips; no retarget. Backward fall rejected for hair penetration; compatible forward SwordAndShield Die02 plus bounded root contact (maximum.150 units) clears the assembled face/sword. Walking correction clears boots. Source inputs untouched.256-frame capture matches GLB d4c6487e39120c284ff9c34a107279d5d8c9793a9fb56ae28fd5188da13b790a. Front/side/back and full collapse inspected; finite Three.js passes,6516tri/10materials/15draw calls/no embedded textures. Original small sole contacts minimum-.0141 remain, gear floor checks pass.
+
+Provisional fit82: anatomy4,silhouette4,signature4,gear4,materials4,distinction5. Skeletal rather than fleshed face and short mantle/clean armor simplify the book depiction; no claim of final user art approval. Crown/hair give distinct noble silhouette. Dungeon review pending.
+
+Actual bestiary/five-state animation and six-Wight/four-hero dungeon view pass with zero JavaScript errors. Inspected final contact frame9/30, held grip and cloak motion. Reimport reports zero unweighted/loose/zero-area vertices/faces. Source integration reviewed; performance, installation and user bulk art review remain deferred.

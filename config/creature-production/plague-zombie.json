@@ -1,0 +1,98 @@
+{
+  "id": "plague-zombie",
+  "body": "Body01",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth07",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "AC08_NinjaMask01",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/WalkFWD_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "NoWeapon/Die01_NoWeapon.fbx"
+  },
+  "palette": {
+    "1": "#9b956e",
+    "2": "#9b956e",
+    "3": "#9b956e",
+    "4": "#9b956e",
+    "5": "#9b956e",
+    "6": "#9b956e",
+    "7": "#9b956e",
+    "8": "#9b956e",
+    "9": "#9b956e"
+  },
+  "solid": {
+    "Body01": "#6d7953",
+    "Head01_Male": "#7c845e",
+    "Eye01": "#cfbd64",
+    "Mouth07": "#352e24",
+    "AC08_NinjaMask01": "#b9b08d"
+  },
+  "partFit": {
+    "AC08_NinjaMask01": {
+      "offset": [
+        0,
+        0,
+        0.26
+      ],
+      "scale": [
+        1.01,
+        1.01,
+        1
+      ]
+    }
+  },
+  "paintBands": [
+    {
+      "part": "Body01",
+      "minZ": 0.2,
+      "maxZ": 0.29,
+      "color": "#aaa181",
+      "purpose": "Burial cloth at hips"
+    },
+    {
+      "part": "Body01",
+      "minZ": 0.43,
+      "maxZ": 0.51,
+      "color": "#b9b08d",
+      "purpose": "Torso burial cloth"
+    },
+    {
+      "part": "Body01",
+      "minZ": 0.08,
+      "maxZ": 0.15,
+      "color": "#a59d7d",
+      "purpose": "Ankle wrapping"
+    }
+  ],
+  "groundContactClips": [
+    {
+      "clip": "Walking_A",
+      "maxCorrection": 0.06
+    },
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.15
+    }
+  ]
+}
