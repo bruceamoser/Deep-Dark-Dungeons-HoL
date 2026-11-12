@@ -528,9 +528,16 @@
       "name": "Kobold Trapkeeper",
       "order": 32,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/kobold-trapkeeper.md",
+        "model": "docs/creature-production/kobold-trapkeeper.md",
+        "motion": "docs/creature-production/kobold-trapkeeper.md",
+        "game-view": "docs/creature-production/kobold-trapkeeper.md",
+        "integration": "docs/creature-production/kobold-trapkeeper.md"
+      },
+      "approvedAsset": "KoboldTrapkeeper"
     },
     {
       "id": "creature-kobold-emberkeeper",
