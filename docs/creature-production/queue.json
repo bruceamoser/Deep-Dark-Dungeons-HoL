@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updated": "2026-11-11",
+  "updated": "2026-11-12",
   "policy": "One active creature at a time. Reviewed individual promotion; no unattended generator batch.",
   "creatures": [
     {
@@ -400,9 +400,16 @@
       "name": "Skeleton Champion",
       "order": 24,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/skeleton-champion.md",
+        "model": "docs/creature-production/skeleton-champion.md",
+        "motion": "docs/creature-production/skeleton-champion.md",
+        "game-view": "docs/creature-production/skeleton-champion.md",
+        "integration": "docs/creature-production/skeleton-champion.md"
+      },
+      "approvedAsset": "SkeletonChampion"
     },
     {
       "id": "creature-barrow-guard",
