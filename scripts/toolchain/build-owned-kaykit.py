@@ -64,6 +64,27 @@ for obj in bpy.context.scene.objects:
  if obj.name.endswith('_Eyes'):
   obj.data.materials.clear();m=material('Dim spectral eyes',cfg['eyes']);bs=m.node_tree.nodes['Principled BSDF'];bs.inputs['Emission Color'].default_value=color(cfg['eyes']);bs.inputs['Emission Strength'].default_value=.6;obj.data.materials.append(m)
   for face in obj.data.polygons:face.material_index=0
+# Bake the inspected atlas-region tint into a private image copy. A generic
+# shader Mix node is not reliably portable to glTF; originals remain read-only.
+tinted_images={}
+for tint in cfg.get('tintUvRegions',[]):
+ for name in tint['objects']:
+  obj=bpy.data.objects[name];originals=list(obj.data.materials);slots={};count=0
+  for i,old in enumerate(originals):
+   m=old.copy();m.name=name+' tarnished armor';b=m.node_tree.nodes['Principled BSDF'];b.inputs['Roughness'].default_value=tint.get('roughness',.4);b.inputs['Metallic'].default_value=tint.get('metallic',.4)
+   node=next(n for n in m.node_tree.nodes if n.type=='TEX_IMAGE' and n.image);key=(node.image.name,json.dumps(tint,sort_keys=True))
+   if key not in tinted_images:
+    original=node.image;img=original.copy();img.name=cfg['id']+' private armor atlas';img.filepath_raw='';pixels=list(original.pixels);w,h=original.size;rgb=[int(tint['color'][k:k+2],16)/255 for k in (1,3,5)];strength=tint['strength']
+    for y in range(int(tint['min'][1]*h),min(h,math.ceil(tint['max'][1]*h))):
+     for x in range(int(tint['min'][0]*w),min(w,math.ceil(tint['max'][0]*w))):
+      for c in range(3):offset=(y*w+x)*4+c;pixels[offset]=pixels[offset]*(1-strength)+rgb[c]*strength
+    img.pixels.foreach_set(pixels);img.update();img.pack();tinted_images[key]=img
+   node.image=tinted_images[key];slots[i]=len(obj.data.materials);obj.data.materials.append(m)
+  uv=obj.data.uv_layers.active.data
+  for face in obj.data.polygons:
+   point=sum((uv[i].uv for i in face.loop_indices),Vector((0,0)))/len(face.loop_indices)
+   if all(tint['min'][a]<=point[a]<=tint['max'][a] for a in range(2)):face.material_index=slots[face.material_index];count+=1
+  assert count>0,('Source atlas region missed',name)
 source_matrices={}
 for part in cfg['parts']:
  added=source(part['path']);assert sum(o.type=='MESH' for o in added)==1,('Inspect multi-mesh prop before fitting',part['path'])
@@ -169,6 +190,13 @@ for part in cfg['parts']:
  orientation=Matrix.Rotation(math.radians(part.get('tiltZ',0)),4,'Z')@Matrix.Rotation(math.radians(part.get('tiltY',0)),4,'Y')@Matrix.Rotation(math.radians(part.get('tiltX',0)),4,'X');offset=delta.to_3x3().inverted()@Vector(part.get('worldOffset',[0,0,0]))
  bpy.data.objects[part['name']].matrix_world=Matrix.Translation(anchor+offset)@delta.to_3x3().inverted().to_4x4()@orientation@Matrix.Diagonal(tuple(part.get('scaleXYZ',[part.get('scale',1)]*3))+(1,))@Matrix.Translation(-Vector(part.get('sourceCenter',[0,0,0])))@source_matrices[part['name']]
  bpy.data.objects[part['name']]['restForward']=list(delta.to_3x3().inverted()@orientation.to_3x3()@Vector(part.get('reviewAxis',[0,0,1])))
+# Supporting gear may attach to another inspected owned part in its source
+# coordinates. Sharing that part's bone preserves the fit through wrist motion.
+for part in cfg['parts']:
+ if not part.get('attachTo'):continue
+ parent=next(p for p in cfg['parts'] if p['name']==part['attachTo']);assert part['bone']==parent['bone'],('Attached parts must share the reviewed socket',part['name']);base=bpy.data.objects[parent['name']].matrix_world@source_matrices[parent['name']].inverted();rotation=Matrix.Identity(4)
+ for axis in 'XYZ':rotation=rotation@Matrix.Rotation(math.radians(part.get('rotate'+axis,0)),4,axis)
+ bpy.data.objects[part['name']].matrix_world=base@Matrix.Translation(Vector(part['attachOffset']))@rotation@Matrix.Diagonal((part['scale'],)*3+(1,))@source_matrices[part['name']]
 bow_checks=None
 if cfg.get('bow'):
  sys.path.insert(0,str(Path(__file__).parent))
@@ -223,11 +251,27 @@ for contact in cfg.get('groundContactClips',[]):
  for frame in range(math.floor(action.frame_range[0]),math.ceil(action.frame_range[1])+1):
   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();minimum=999
   for obj in bpy.context.scene.objects:
-   if obj.type!='MESH':continue
+   if obj.type!='MESH' or obj.name in contact.get('excludeObjects',[]):continue
    ev=obj.evaluated_get(dg);minimum=min(minimum,min((ev.matrix_world@v.co).z for v in ev.data.vertices))
   lift=max(0,.002-minimum);assert lift<=contact['maxCorrection'],('Repair pose/gear before ground contact',frame,lift);samples.append((frame,root.location.copy()+inverse@Vector((0,0,lift)),lift))
  for frame,location,lift in samples:root.location=location;root.keyframe_insert(data_path='location',frame=frame,group='Reviewed assembled ground contact')
  contact_checks.append({'clip':contact['clip'],'maxCorrection':max(v[2] for v in samples)})
+# A disassembled skeleton's padded head can settle independently of the body.
+# Sample before baking so correction never accumulates across frames.
+for contact in cfg.get('boneGroundContact',[]):
+ for track in rig.animation_data.nla_tracks:track.mute=True
+ for bone in rig.pose.bones:bone.matrix_basis.identity()
+ action=next(t for t in rig.animation_data.nla_tracks if t.name==contact['clip']).strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];bone=rig.pose.bones[contact['bone']];bone.rotation_mode='QUATERNION';samples=[]
+ objects=[bpy.data.objects[name] for name in contact['objects']]
+ for frame in range(math.floor(action.frame_range[0]),math.ceil(action.frame_range[1])+1):
+  bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get();minimum=999
+  for obj in objects:
+   ev=obj.evaluated_get(dg);minimum=min(minimum,min((ev.matrix_world@v.co).z for v in ev.data.vertices))
+  lift=max(0,.002-minimum);assert lift<=contact['maxCorrection'],('Repair detached head pose',frame,lift);matrix=rig.matrix_world@bone.matrix;matrix.translation+=Vector((0,0,lift));samples.append((frame,matrix,lift))
+ for frame,matrix,lift in samples:
+  bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();bone.matrix=rig.matrix_world.inverted()@matrix
+  for channel in ['location','rotation_quaternion','scale']:bone.keyframe_insert(data_path=channel,frame=frame,group='Reviewed loose head ground contact')
+ contact_checks.append({'clip':contact['clip'],'bone':contact['bone'],'maxCorrection':max(v[2] for v in samples)})
 rig.animation_data.action=None
 for bone in rig.pose.bones:bone.matrix_basis.identity()
 for track in rig.animation_data.nla_tracks:track.mute=False

@@ -1,0 +1,339 @@
+{
+  "id": "barrow-guard",
+  "body": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/characters/gltf/Skeleton_Warrior.glb",
+  "cloth": {
+    "Skeleton_Warrior_Cloak": "#4b5034"
+  },
+  "eyes": "#92b591",
+  "parts": [
+    {
+      "name": "Barrow oath blade",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart/Mesh/Weapons/OHS09_Sword.fbx",
+      "bone": "handslot.r",
+      "scale": 1.05,
+      "fitIdle": true,
+      "tiltX": 12,
+      "tag": "melee",
+      "masonRoot": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart",
+      "masonPalette": {
+        "1": {
+          "color": "#3d3429",
+          "metallic": 0
+        },
+        "2": {
+          "color": "#3d3429",
+          "metallic": 0
+        },
+        "3": {
+          "color": "#3d3429",
+          "metallic": 0
+        },
+        "4": {
+          "color": "#8a7951",
+          "metallic": 0.4
+        },
+        "5": {
+          "color": "#3d3429",
+          "metallic": 0
+        },
+        "6": {
+          "color": "#3d3429",
+          "metallic": 0
+        },
+        "7": {
+          "color": "#3d3429",
+          "metallic": 0
+        },
+        "8": {
+          "color": "#848878",
+          "metallic": 0.4
+        },
+        "9": {
+          "color": "#3d3429",
+          "metallic": 0
+        }
+      }
+    },
+    {
+      "name": "Barrow turf shield",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart/Mesh/Weapons/Shield07.fbx",
+      "bone": "handslot.l",
+      "scale": 1.5,
+      "fitIdle": true,
+      "worldOffset": [
+        0,
+        -0.09,
+        0.1
+      ],
+      "reviewAxis": [
+        0,
+        -1,
+        0
+      ],
+      "masonRoot": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart",
+      "masonPalette": {
+        "1": {
+          "color": "#4b5034",
+          "metallic": 0
+        },
+        "2": {
+          "color": "#4b5034",
+          "metallic": 0
+        },
+        "3": {
+          "color": "#4b5034",
+          "metallic": 0
+        },
+        "4": {
+          "color": "#8a7951",
+          "metallic": 0.35
+        },
+        "5": {
+          "color": "#4b5034",
+          "metallic": 0
+        },
+        "6": {
+          "color": "#4b5034",
+          "metallic": 0
+        },
+        "7": {
+          "color": "#4b5034",
+          "metallic": 0
+        },
+        "8": {
+          "color": "#8a7951",
+          "metallic": 0.35
+        },
+        "9": {
+          "color": "#4b5034",
+          "metallic": 0
+        }
+      }
+    },
+    {
+      "name": "Barrow hood",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart/Mesh/HeadParts/Hat05.fbx",
+      "bone": "head",
+      "scale": 1,
+      "scaleXYZ": [
+        1.75,
+        1.75,
+        1.75
+      ],
+      "fitIdle": true,
+      "worldOffset": [
+        0,
+        -0.035,
+        0.14
+      ],
+      "masonRoot": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/DungeonMason/Assets/RPGTinyHeroWavePolyart",
+      "masonPalette": {
+        "1": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "2": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "3": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "4": {
+          "color": "#8a7951",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "5": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "6": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "7": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "8": {
+          "color": "#8a7951",
+          "metallic": 0,
+          "roughness": 0.6
+        },
+        "9": {
+          "color": "#4b5034",
+          "metallic": 0,
+          "roughness": 0.6
+        }
+      }
+    },
+    {
+      "name": "Barrow hanging turf",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Forest Nature Pack 1.0/Assets/gltf/Color1/Grass_1_D_Color1.gltf",
+      "bone": "handslot.l",
+      "scale": 0.3,
+      "attachTo": "Barrow turf shield",
+      "attachOffset": [
+        0.12,
+        -0.12,
+        0.27
+      ],
+      "rotateX": 160,
+      "paintBands": [
+        {
+          "name": "earthy turf roots",
+          "min": -1,
+          "max": 0.3,
+          "color": "#4c5532",
+          "roughness": 0.75
+        },
+        {
+          "name": "dry turf tips",
+          "min": 0.3,
+          "max": 1,
+          "color": "#787c49",
+          "roughness": 0.75
+        }
+      ]
+    },
+    {
+      "name": "Barrow rim grass",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Forest Nature Pack 1.0/Assets/gltf/Color1/Grass_1_A_Color1.gltf",
+      "bone": "handslot.l",
+      "scale": 0.35,
+      "attachTo": "Barrow turf shield",
+      "attachOffset": [
+        -0.15,
+        -0.12,
+        0.28
+      ],
+      "rotateX": 35,
+      "paintBands": [
+        {
+          "name": "earthy turf roots",
+          "min": -1,
+          "max": 0.3,
+          "color": "#4c5532",
+          "roughness": 0.75
+        },
+        {
+          "name": "dry turf tips",
+          "min": 0.3,
+          "max": 1,
+          "color": "#787c49",
+          "roughness": 0.75
+        }
+      ]
+    }
+  ],
+  "clips": {
+    "Idle": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Idle"
+    },
+    "Walking_A": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Walking"
+    },
+    "1H_Melee_Attack_Slice_Diagonal": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatMelee.glb",
+      "name": "Melee_1H_Attack_Slice_Diagonal"
+    },
+    "Hit_A": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Skeletons 1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb",
+      "name": "Hit_A"
+    },
+    "Death_A_Pose": {
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Character Animations 1.1/Animations/gltf/Rig_Medium/Rig_Medium_Special.glb",
+      "name": "Skeletons_Death"
+    }
+  },
+  "groundContactClips": [
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.2,
+      "excludeObjects": [
+        "Barrow hood"
+      ]
+    },
+    {
+      "clip": "Walking_A",
+      "maxCorrection": 0.06
+    },
+    {
+      "clip": "1H_Melee_Attack_Slice_Diagonal",
+      "maxCorrection": 0.04
+    }
+  ],
+  "fallWrists": [
+    {
+      "part": "Barrow oath blade",
+      "hand": "hand.r",
+      "start": 0,
+      "end": 10,
+      "direction": [
+        -1,
+        -0.1,
+        0
+      ]
+    },
+    {
+      "part": "Barrow turf shield",
+      "hand": "hand.l",
+      "start": 0,
+      "end": 10,
+      "direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "removeParts": [
+    "Skeleton_Warrior_Helmet"
+  ],
+  "fallProps": [],
+  "tintUvRegions": [
+    {
+      "objects": [
+        "Skeleton_Warrior_Body",
+        "Skeleton_Warrior_ArmLeft",
+        "Skeleton_Warrior_ArmRight",
+        "Skeleton_Warrior_LegLeft",
+        "Skeleton_Warrior_LegRight"
+      ],
+      "min": [
+        0.375,
+        0.75
+      ],
+      "max": [
+        0.5,
+        1
+      ],
+      "color": "#7c7656",
+      "strength": 0.55,
+      "roughness": 0.45,
+      "metallic": 0.4
+    }
+  ],
+  "boneGroundContact": [
+    {
+      "clip": "Death_A_Pose",
+      "bone": "head",
+      "objects": [
+        "Barrow hood",
+        "Skeleton_Warrior_Head",
+        "Skeleton_Warrior_Jaw"
+      ],
+      "maxCorrection": 0.4
+    }
+  ]
+}

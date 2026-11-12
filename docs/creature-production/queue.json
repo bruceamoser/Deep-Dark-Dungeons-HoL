@@ -416,9 +416,16 @@
       "name": "Barrow Guard",
       "order": 25,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/barrow-guard.md",
+        "model": "docs/creature-production/barrow-guard.md",
+        "motion": "docs/creature-production/barrow-guard.md",
+        "game-view": "docs/creature-production/barrow-guard.md",
+        "integration": "docs/creature-production/barrow-guard.md"
+      },
+      "approvedAsset": "BarrowGuard"
     },
     {
       "id": "creature-wight",
