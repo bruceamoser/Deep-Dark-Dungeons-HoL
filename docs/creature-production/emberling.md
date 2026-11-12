@@ -1,0 +1,9 @@
+# Emberling — curious coal elemental
+
+Pinned book text/portrait inspected: small glowing-coal elemental, bright cracks for eyes, flames, blunt coal touch. No carried gear. Owned/adapted search: rounded KayKit Space Base rock_A/B (reviewed Stone Knuckle adaptation) provide coal anatomy; Dungeon torch_lit fixture is a single prop and not a complete elemental. Raw earlier multiview has7,148,491triangles and no reviewed rig; do not deliver it directly. Select owned rounded coal pieces around the reviewed18-bone Clay rig, re-proportion face/limbs, bright recessed eyes and layered curved flame tongues. Original Air wind sweep technique can support smooth flame shapes, not reused wind body. Charcoal/ember-red dominant, hot orange seams, yellow focal eyes/tips; no clothing.
+
+Production in progress; no new generator or paid service. Private sources untouched.
+
+Book24e545e6d860e8c1b03a21356fd22cae1c039785, texte25aa7b00bb9ce91d3f5378dc56b7d1fbb16f71ed46010ec1be6b8eefd42f1d2. Owned source hashes in private base/sources.json. First orange-body preview rejected as too uniform; reversed TextureCraft marble-vein palette to charcoal with broad hot seams, enlarged eyes. Four added flame bones preserve the18-bone donor; loops close and flame scales dwindle during death. No simulated fire claim.
+
+Final15,696triangles,one mesh/six materials,22bones,five clips.466frames/front-side-back/strike peak and muted six-Emberling/four-hero dungeon reviewed; reimport has no degenerate/loose/unweighted/nonmanifold edges excluding UV boundaries. All body floors0.001.23focused tests and required-assets build pass. Fit83/100: anatomy4,silhouette4,signature4,gear5,materials4,distinction4. Faceted coal clusters, fused fists and separate sculpted flame tongues simplify portrait anatomy/flame coverage. Author review only; bulk user art review/install/performance deferred. Final evidence `final/review`, `final/game-view` under private creature-production/emberling.

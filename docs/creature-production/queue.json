@@ -864,9 +864,16 @@
       "name": "Emberling",
       "order": 53,
       "family": "effects",
-      "status": "queued",
+      "status": "integrated",
       "route": "Author layered forms/materials and motion; reuse the Air approach where appropriate, not a humanoid rig by default.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/emberling.md",
+        "model": "docs/creature-production/emberling.md",
+        "motion": "docs/creature-production/emberling.md",
+        "game-view": "docs/creature-production/emberling.md",
+        "integration": "docs/creature-production/emberling.md"
+      },
+      "approvedAsset": "Emberling"
     },
     {
       "id": "creature-cinder-strider",

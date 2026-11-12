@@ -219,3 +219,7 @@ Space Base rock_A/B half-boulders adapted into full faceted stones by mirrored c
 ## Icebound Warden — ice palette and bubble eyes
 
 Private original multiview Warden retained; `prepare-icebound-warden.py` separates source pale/teal regions, fits weighted bubble eyes and revises fist reach. `texture-icebound-warden.py` uses TextureCraft marble/Clouds and clay/Pores, six1024maps, partial ice transmission and opaque rough rime. Private editable `~/.local/share/four-lanterns-creature-production/icebound-warden/final/icebound-warden.blend`. No carried gear. Source geometry remains dense and has minor nonmanifold junctions; no generic cleanup. Reuse needs new surface/rig fit and review, not blind recoloring.
+
+## Emberling — coal body and looping flame tongues
+
+Owned KayKit Space Base rock_A/B complete-stone adaptation, reviewed Clay18-bone anatomy, four added weighted plume bones. `build-emberling.py` and `texture-emberling.py`; editable private emberling/final/emberling.blend. TextureCraft marble veins/Pores become charcoal/ember seams; layered original curved tongues flicker, loop and shrink on death.22bones/five clips reviewed. No clothing or carried equipment. Use on another elemental only after silhouette, bone fit and motion review; source/license hashes in base/sources.json.

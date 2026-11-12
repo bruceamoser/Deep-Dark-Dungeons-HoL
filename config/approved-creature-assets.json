@@ -1209,6 +1209,28 @@
           "contact": 0.44
         }
       }
+    },
+    {
+      "creatureId": "creature-emberling",
+      "model": "Emberling",
+      "path": "/assets/licensed/creatures/Emberling.glb",
+      "sha256": "fc602cd8dc4fe720bb0d76680037e4e0e88228f48b9a1710e855788c4063c4e1",
+      "approvedOn": "2026-11-12",
+      "method": "owned-prop-elemental",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/emberling.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 2.6,
+        "height": 1.55,
+        "weapon": "unarmed",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.44
+        }
+      }
     }
   ]
 }
