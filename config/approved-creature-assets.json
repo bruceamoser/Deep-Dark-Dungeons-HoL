@@ -837,10 +837,10 @@
       "creatureId": "creature-werebear",
       "model": "Werebear",
       "path": "/assets/licensed/creatures/Werebear.glb",
-      "sha256": "6835d3b85066b3d218c1fe276b1dd4feacff3bdc95b2c603addb800e739bfb26",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; bulk user review deferred",
+      "sha256": "3e04c74d109cd5cca44236fc43b4ba55ab7aea97729e9205ffab4e947a960bd3",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/werebear.md",
       "distribution": "private-local-build",
       "runtime": {
@@ -851,7 +851,7 @@
         "attack": {
           "kind": "unarmed",
           "clip": "1H_Melee_Attack_Slice_Diagonal",
-          "contact": 0.42
+          "contact": 0.4166666666666667
         }
       }
     },

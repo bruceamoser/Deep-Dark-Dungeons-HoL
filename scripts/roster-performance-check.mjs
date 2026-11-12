@@ -16,14 +16,20 @@ const userData = await fs.mkdtemp(path.join(os.tmpdir(), "fld-roster-"));
 let browser, page;
 let log = "";
 const errors = [];
-const manifest = JSON.parse(
+const { assets: allAssets } = JSON.parse(
   await fs.readFile(path.join(root, "config/approved-creature-assets.json")),
 );
+const requestedIds = process.env.DDD_ROSTER_IDS?.split(",").map((id) => id.trim());
+const assets = requestedIds
+  ? allAssets.filter(({ creatureId }) => requestedIds.includes(creatureId))
+  : allAssets;
+if (requestedIds && assets.length !== requestedIds.length)
+  throw Error("DDD_ROSTER_IDS requires distinct approved creature IDs");
 const startIndex = Number(process.env.DDD_ROSTER_START ?? 0);
 if (
   !Number.isInteger(startIndex) ||
   startIndex < 0 ||
-  startIndex >= manifest.assets.length
+  startIndex >= assets.length
 )
   throw Error("Invalid start index");
 const reports = startIndex
@@ -34,8 +40,8 @@ const reports = startIndex
   : [];
 expect(reports).toHaveLength(startIndex);
 for (let i = 0; i < reports.length; i++) {
-  expect(reports[i].id).toBe(manifest.assets[i].creatureId);
-  expect(reports[i].model).toBe(manifest.assets[i].model);
+  expect(reports[i].id).toBe(assets[i].creatureId);
+  expect(reports[i].model).toBe(assets[i].model);
   expect(reports[i].performance.minVisible).toBe(10);
   expect(reports[i].performance.minInFrame).toBe(10);
   expect(reports[i].performance.fps).toBeGreaterThan(30);
@@ -86,7 +92,7 @@ try {
   const drafts = await page.evaluate(() =>
     window.__ddd.game.party.map((h) => h.draft),
   );
-  for (const entry of manifest.assets.slice(startIndex)) {
+  for (const entry of assets.slice(startIndex)) {
     await page.reload();
     await waitForGame(page);
     await page.evaluate((drafts) => window.__ddd.game.fresh(drafts), drafts);
@@ -382,7 +388,7 @@ try {
     expect(performanceReport.fps).toBeGreaterThan(30);
     expect(performanceReport.turnsAdvanced).toBeGreaterThan(0);
   }
-  expect(reports).toHaveLength(manifest.assets.length);
+  expect(reports).toHaveLength(assets.length);
   expect(errors).toEqual([]);
   const cdp = await browser.newBrowserCDPSession();
   const processes = (await cdp.send("SystemInfo.getProcessInfo")).processInfo;

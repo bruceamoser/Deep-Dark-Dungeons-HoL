@@ -9,6 +9,7 @@ import sys
 import bmesh
 import bpy
 from mathutils import Euler, Matrix, Vector
+from mathutils.bvhtree import BVHTree
 import numpy as np
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -19,7 +20,7 @@ heights = {
     "boss": 1.65, "spearhand": 1.57, "scrapper": 1.50, "firestarter": 1.52,
     "rattlechanter": 1.56, "smoke-slinger": 1.53,
     "tunnel-scout": 1.68, "trapkeeper": 1.64, "emberkeeper": 1.66,
-    "wererat": 1.74,
+    "wererat": 1.74, "werebear": 2.08,
 }
 parser.add_argument("--role", choices=tuple(heights), default="boss")
 args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
@@ -34,11 +35,12 @@ trap = args.role == "trapkeeper"
 ember = args.role == "emberkeeper"
 kobold = scout or trap or ember
 rat = args.role == "wererat"
+bear = args.role == "werebear"
 tailed = kobold or rat
 lean = spearhand or scrapper or firestarter or rattle or slinger or tailed
 ancestry = "Kobold" if kobold else "Goblin"
-creature_name = "Wererat" if rat else ancestry + " " + args.role.replace("-", " ").title()
-slug = "wererat" if rat else ancestry.lower() + "-" + args.role
+creature_name = args.role.title() if rat or bear else ancestry + " " + args.role.replace("-", " ").title()
+slug = args.role if rat or bear else ancestry.lower() + "-" + args.role
 height = heights[args.role]
 output.mkdir(parents=True, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -104,6 +106,14 @@ if rat:
     bmesh.ops.delete(mesh, geom=degenerate, context="FACES")
     mesh.to_mesh(body.data)
     mesh.free()
+if bear:
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+    degenerate = [face for face in mesh.faces if face.calc_area() <= 1e-12]
+    assert len(degenerate) == 1 and .8 < degenerate[0].calc_center_median().z < .9
+    bmesh.ops.delete(mesh, geom=degenerate, context="FACES")
+    mesh.to_mesh(body.data)
+    mesh.free()
 if spearhand or scrapper:
     mesh = bmesh.new()
     mesh.from_mesh(body.data)
@@ -136,7 +146,19 @@ def chain(names, points, parent=None):
 
 
 chain(["Root"], [(0, 0, 0), (0, 0, .12)])
-if lean:
+if bear:
+    chain(["Pelvis", "Spine", "Chest", "Neck", "Head"],
+          [(0, .145, .91), (0, .13, 1.12), (0, .145, 1.39),
+           (0, .10, 1.63), (0, .02, 1.72), (0, -.04, 2.07)], "Root")
+    for side, sign in (("R", -1), ("L", 1)):
+        chain([side+"UpperArm", side+"Forearm", side+"Hand"],
+              [(sign*.433, .181, 1.60), (sign*.661, .095, 1.343),
+               (sign*.829, -.091, .988), (sign*.911, -.216, .704)], "Chest")
+        chain([side+"Thigh", side+"Shin", side+"Foot"],
+              [(sign*.26, .164, .91), (sign*.323, .18, .548),
+               (sign*.389, .106, .173), (sign*.401, -.191, .04)], "Pelvis")
+        chain([side+"Coat"], [(sign*.257, .12, .94), (sign*.36, .10, .58)], "Pelvis")
+elif lean:
     torso = [(0, .04, .72), (0, .025, .82), (0, .01, .95),
              (0, 0, 1.17), (0, -.025, 1.24), (0, -.025, 1.55)]
     if trap:
@@ -237,7 +259,7 @@ def wrist_distances():
     seeds = np.zeros(len(points), dtype=bool)
     for side in ("R", "L"):
         wrist = segments[side+"Hand"][0]
-        seeds |= np.linalg.norm(points-wrist, axis=1) < .066
+        seeds |= np.linalg.norm(points-wrist, axis=1) < (.15 if bear else .066)
     distances[seeds] = 0
     queue = [(0, i) for i in np.flatnonzero(seeds)]
     while queue:
@@ -252,7 +274,7 @@ def wrist_distances():
     return distances[index]
 
 
-wrist_field = wrist_distances() if rattle or slinger or tailed else None
+wrist_field = wrist_distances() if rattle or slinger or tailed or bear else None
 distance_fields = []
 for name in names:
     start, end = segments[name]
@@ -274,20 +296,28 @@ for name in names:
             rear_arm = .23 if trap else .08
             distance += np.maximum(0, y-rear_arm)*5 + np.maximum(0, z-1.13)*4
         lower_arm = .54 if rattle or slinger or rat else .50 if scrapper or firestarter else .58
+        if bear:
+            inner_arm = .40 + np.maximum(0, 1.41-z)*.50
+            side_depth = start[1]+projection*delta[1]
+            distance += np.maximum(0, abs(y-side_depth)-.24)*5 + np.maximum(0, z-1.69)*4
+            lower_arm = .55
         distance += np.maximum(0, inner_arm-abs(x))*5 + np.maximum(0, lower_arm-z)*3
     elif rattle or slinger or rat:
         outside_arm = np.clip((z-.55)/.055, 0, 1)*np.clip((1.14-z)/.14, 0, 1)
         distance += np.maximum(0, abs(x)-.39)*outside_arm*5
     if not name.endswith(("Forearm", "Hand")):
-        distance += np.maximum(0, abs(x)-(.43 if scrapper or firestarter else .49 if lean else .56))*4
+        arm_extent = .67 if bear else .43 if scrapper or firestarter else .49 if lean else .56
+        distance += np.maximum(0, abs(x)-arm_extent)*4
     if name.endswith("Coat"):
         distance += np.maximum(0, .26-abs(x))*4 + np.maximum(0, z-.88)*2
     if name in {"Chest", "Spine", "Pelvis"}:
         distance += np.maximum(0, abs(x)-.35)*2
     if name != "Head":
-        distance += np.maximum(0, z-(1.23 if lean else 1.38))*4
+        head_base = 1.68 if bear else 1.23 if lean else 1.38
+        distance += np.maximum(0, z-head_base)*4
     else:
-        distance += np.maximum(0, (1.17 if lean else 1.33)-z)*3
+        neck_top = 1.59 if bear else 1.17 if lean else 1.33
+        distance += np.maximum(0, neck_top-z)*3
     if tailed:
         if name.startswith("Tail"):
             tail_front = .19 if trap else .09
@@ -330,6 +360,58 @@ def bind_held_prop(obj, hand):
     obj.modifiers.new("Rigid hand grip", "ARMATURE").object = rig
 
 
+if bear:
+    # Project the painted iris into the reconstructed socket. Its outline
+    # follows the face surface and the small pupil stays dark.
+    tree = BVHTree.FromPolygons(
+        [vertex.co for vertex in body.data.vertices],
+        [polygon.vertices[:] for polygon in body.data.polygons],
+    )
+    eye_materials = []
+    for name, color, emission in (
+        ("Werebear amber iris", (.64, .19, .012, 1), .27),
+        ("Werebear iris rim", (.20, .048, .009, 1), .10),
+        ("Werebear pupil", (.019, .009, .004, 1), 0),
+    ):
+        material = bpy.data.materials.new(name)
+        material.use_nodes = True
+        surface = material.node_tree.nodes["Principled BSDF"]
+        surface.inputs["Base Color"].default_value = color
+        surface.inputs["Emission Color"].default_value = color
+        surface.inputs["Emission Strength"].default_value = emission
+        surface.inputs["Roughness"].default_value = .3
+        eye_materials.append(material)
+    for side, sign in (("R", -1), ("L", 1)):
+        center = Vector((sign*.082, -1.5, 1.886))
+        points = []
+        for radius in (.35, .89, 1):
+            for index in range(16):
+                angle = math.tau*index/16
+                dx = radius*.024*math.cos(angle)
+                dz = radius*.013*math.sin(angle)+sign*.23*dx
+                points.append(center+Vector((dx, 0, dz)))
+        points.append(center)
+        for index, point in enumerate(points):
+            hit, _, _, _ = tree.ray_cast(point, Vector((0, 1, 0)))
+            assert hit is not None, "The bear iris must sit on the socket"
+            points[index] = hit+Vector((0, -.0045, 0))
+        rings = [
+            (offset+i, offset+16+i, offset+16+(i+1)%16, offset+(i+1)%16)
+            for offset in (0, 16) for i in range(16)
+        ]
+        pupil = [(i, (i+1)%16, 48) for i in range(16)]
+        data = bpy.data.meshes.new(side+" inset eye")
+        data.from_pydata(points, [], rings+pupil)
+        eye = bpy.data.objects.new(side+" inset eye", data)
+        bpy.context.collection.objects.link(eye)
+        for material in eye_materials:
+            data.materials.append(material)
+        for face in data.polygons:
+            face.material_index = face.index // 16
+            face.use_smooth = True
+        bind_held_prop(eye, "Head")
+
+
 if kobold:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from reconstructed_kobold_gear import fit_brazier, fit_launcher, fit_throw_dart
@@ -341,7 +423,7 @@ if kobold:
         fit_dart_gear = fit_launcher if scout else fit_throw_dart
         held_props, blade_direction = fit_dart_gear(
             weapon_source, rig, hand_start.lerp(hand_end, .63), bind_held_prop)
-elif slinger:
+elif slinger or bear:
     held_props = []
 elif rattle:
     recipe = json.loads(weapon_source.read_text())
@@ -495,8 +577,9 @@ def pose(clip, t):
             orient(side+"WingTip", y=sign*flare*.3)
     if clip == "Walking_A":
         for side, sign in [("R", -1), ("L", 1)]:
-            orient(side+"Thigh", x=sign*16*wave)
-            orient(side+"Shin", x=16*max(0, sign*wave))
+            stride = 11 if bear else 16
+            orient(side+"Thigh", x=sign*stride*wave)
+            orient(side+"Shin", x=stride*max(0, sign*wave))
             orient(side+"Foot", x=-sign*8*wave)
             orient(side+"Coat", x=sign*6*wave)
         orient("LUpperArm", x=13*wave, y=20)
@@ -550,6 +633,17 @@ def pose(clip, t):
         orient("Chest", x=15*pulse, z=-23*pulse)
         orient("LUpperArm", x=-39*pulse, y=20, z=-36*pulse)
         orient("LForearm", x=-19*pulse)
+    elif bear and clip == "1H_Melee_Attack_Slice_Diagonal":
+        contact = 10/27
+        phase = t/contact if t < contact else (1-t)/(1-contact)
+        strike = phase**2*(3-2*phase)
+        windup = math.sin(math.pi*phase)**2 if t < contact else 0
+        recovery = math.sin(math.pi*phase)**2 if t > contact else 0
+        orient("Chest", x=9*strike, z=22*strike-19*windup)
+        orient("RUpperArm", x=-42*strike+19*windup, y=-12+8*strike, z=49*strike-26*windup-14*recovery)
+        orient("RForearm", x=-8-9*strike-9*recovery, z=12*strike)
+        orient("RHand", y=-16*strike, z=13*strike)
+        orient("LUpperArm", x=14*strike, y=18)
     elif rat and clip == "1H_Melee_Attack_Slice_Diagonal":
         contact = 7/27
         phase = t/contact if t < contact else (1-t)/(1-contact)
@@ -580,6 +674,11 @@ def pose(clip, t):
         orient("RUpperArm", y=-13+30*settle)
         orient("LUpperArm", y=20-35*settle)
         orient("RThigh", x=-8*settle)
+        if bear:
+            orient("RShin", x=17*settle)
+            orient("LShin", x=12*settle)
+            orient("RForearm", x=-19*settle)
+            orient("LForearm", x=-12*settle)
 
 
 def strike_pan(weight, windup):
