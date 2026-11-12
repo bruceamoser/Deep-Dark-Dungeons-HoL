@@ -1,5 +1,9 @@
 # Current working progress
 
+## Ready for visual review — Halfling wardrobe pilot
+
+The male and female bases, shared scout outfit, light armor and reused KayKit short sword and round shield are available as editable private scenes and six GLB previews. Both bodies use the same wardrobe recipe. Side-by-side motion and validation are recorded in the [halfling pilot handoff](handoffs/2026-11-12-halfling-wardrobe-pilot.md). The pilot is in `codex/halfling-wardrobe-pilot` and is ready for art direction review before player-avatar integration.
+
 ## Complete — November 12 creature review fixes
 
 The normal Four Lanterns Deep menu entry and the original launcher contain the Animated Armor and Barrow Guard weapon fixes, the rebuilt Cinder Imp, the completed goblin and kobold rebuilds, Wererat and Werebear. All 58 production entries are integrated. Restart the game to load the local 0.8.7 review build.
