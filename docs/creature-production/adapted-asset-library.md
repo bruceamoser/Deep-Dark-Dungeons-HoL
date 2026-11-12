@@ -211,3 +211,7 @@ KayKit Dungeon barrel_small reshaped/recolored into green/brass housing; RPG Too
 ## Faceted glass guardian and reflection palm
 
 Owned Body18/HeadArmor01 retain enclosing shell and crest/spikes. `refine-glass-sentinel.py` remaps facets to aqua/ivory/violet physical glass, gold seams and source-hand ReflectionPalm socket. `texture-glass-sentinel.py` applies TextureCraft hammered gold to trim only. Private `glass-sentinel/final/glass-sentinel.blend`;320frames and actual radiant projectile/dungeon reviewed. Physical glass clone/isolation test protects transmission; partial0.35 transmission intentionally keeps silhouette readable.
+
+## Complete owned boulders and stone-cluster body
+
+Space Base rock_A/B half-boulders adapted into full faceted stones by mirrored curved halves, removal of interior flat base faces and exact equator joining. First Medieval Hexagon stone assembly rejected as masonry. `build-stone-knuckle.py` fits copies to Clay Helper18-bone rig, with heavy fists, joint pebbles and ray-fitted eyes. `texture-stone-knuckle.py`: TextureCraft granite/moss/Pores. Private `stone-knuckle/final/stone-knuckle.blend`;466frames and dungeon reviewed. Static-copy operations only; original source and all donor rests/clips preserved except new root ground correction.
