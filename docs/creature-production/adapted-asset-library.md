@@ -89,8 +89,16 @@ Bandit Bow fit revision: same cant60°/height.77/arrowlength.75 recipe as Hobgob
 
 ## Skeleton Archer bow, arrow and collapse quiver
 
-- Owned source/license: KayKit Adventurers2.0 `bow_withString`, bare `bow`, `arrow_bow`, `quiver`, under the existing purchased collection license; private derivatives only.
+- Owned source/license: KayKit Adventurers2.0 `bow_withString`, bare `bow`, `arrow_bow`, `quiver`, CC0 under the verified KayKit collection license; derivatives remain private under the project delivery workflow.
 - Recipe: `config/creature-production/bone-archer.json`, `build-owned-kaykit.py`, `owned_bow.py`. Keep original UVs/topology. Compare bare/string bow vertex positions to isolate cord/knots; add modest Draw morph and hand-driven BowNock/ArrowNock. Preserve original character bones. Added quiver bone keeps normal chest fit and settles loose gear during skeleton collapse.
 - Editable private objects: `~/.local/share/four-lanterns-creature-production/bone-archer/bone-archer.blend`, `Archer bow`, `Archer_arrow`, `Archer quiver`.
 - Fit/palette: left socket bow, right-hand nock, brown wood/leather with contrasting pale string and feathered steel-tipped arrow; olive skeleton cloth. Review all fits again on a different donor. Same owned arrow supplies the runtime projectile at matching scale.
 - Review: author model,768-frame motion, ground/reimport and actual bestiary/dungeon projectile gates pass; see Archer report/queue. User bulk review and performance deferred. Reload is a timed presentation restore, not a bespoke quiver-fetch motion.
+
+## Skeleton Champion royal equipment
+
+- Source/license: owned Dungeon Mason `AC06_Crown01`, `Shield14`, `OHS05_Sword` with original Albedo/MaskTint textures; Unity Asset Store private derivatives. KayKit Warrior body/cloth/armor CC0, original inputs untouched.
+- Recipe: `config/creature-production/skeleton-champion.json`, `build-owned-kaykit.py`, `owned_mason_palette.py`. Crown centered/resized to skull with slight tilt; source-height band makes green gem caps. Shield's inspected separate132-vertex heraldic decoration recolored gold, green field/aged-gold edge. Steel/gold/leather sword uses original tint regions. No procedural replacement crown/shield.
+- Private editable objects: `~/.local/share/four-lanterns-creature-production/skeleton-champion/skeleton-champion.blend`, `Champion crown`, `Champion heraldic shield`, `Champion oath sword`.
+- Fit: crown on head, sword/right socket, shield/left socket; wrists align gear to ground during collapse and one added crown bone settles loose headwear. Crown has nonuniform fit; do not apply transforms indiscriminately. Refit to every new donor.
+- Author front/side/back,756-frame motion, floor/reimport and bestiary/dungeon review passed. Bulk user review/performance deferred. Open crown and short cloth are deliberate simplifications relative to the book's crowned helm/cape.

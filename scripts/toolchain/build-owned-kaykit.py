@@ -16,7 +16,10 @@ def source(path):
    uri=ref.get('uri','')
    if uri and not uri.startswith('data:'):
     dep=path.parent/uri;hashes[str(dep)]=hashlib.sha256(dep.read_bytes()).hexdigest()
- before=set(bpy.data.objects);bpy.ops.import_scene.gltf(filepath=str(path));return set(bpy.data.objects)-before
+ before=set(bpy.data.objects)
+ if path.suffix=='.fbx':bpy.ops.import_scene.fbx(filepath=str(path))
+ else:bpy.ops.import_scene.gltf(filepath=str(path))
+ return set(bpy.data.objects)-before
 
 def color(h):
  rgb=[int(h[i:i+2],16)/255 for i in (1,3,5)]
@@ -41,6 +44,9 @@ for shape in shapes:
  for bone in rig.pose.bones:
   if bone.custom_shape==shape:bone.custom_shape=None
  bpy.data.objects.remove(shape,do_unlink=True)
+for name in cfg.get('removeParts',[]):
+ assert bpy.data.objects.get(name),('Missing explicitly replaced owned part',name)
+ bpy.data.objects.remove(bpy.data.objects[name],do_unlink=True)
 for name,hexcolor in cfg.get('cloth',{}).items():
  obj=bpy.data.objects[name]
  for i,old in enumerate(list(obj.data.materials)):
@@ -68,6 +74,10 @@ for part in cfg['parts']:
  for obj in added:
   if obj.type!='MESH':continue
   world=obj.matrix_world.copy();source_matrices[part['name']]=world.copy();obj.parent=None;obj.matrix_world=fit@world;obj.name=part['name'];obj.vertex_groups.clear();obj.vertex_groups.new(name=part['bone']).add(list(range(len(obj.data.vertices))),1,'REPLACE');obj.modifiers.new('Original source socket','ARMATURE').object=rig
+  if part.get('masonPalette'):
+   sys.path.insert(0,str(Path(__file__).parent))
+   from owned_mason_palette import paint_mason_part
+   paint_mason_part(obj,part['masonRoot'],part['masonPalette'],material,hashes)
   if part.get('tag'):obj['equipmentPart']=part['tag']
   if part.get('woodColor'):
    originals=list(obj.data.materials);idx=len(originals);obj.data.materials.append(material(part['name']+' faded wood',part['woodColor'],.6));uv=obj.data.uv_layers.active.data;selected=0
@@ -77,6 +87,22 @@ for part in cfg['parts']:
     pixel=sum((uv[i].uv for i in face.loop_indices),Vector((0,0)))/len(face.loop_indices);x=min(texture.size[0]-1,max(0,int(pixel.x*texture.size[0])));y=min(texture.size[1]-1,max(0,int(pixel.y*texture.size[1])));offset=(y*texture.size[0]+x)*4;r,g,b=texture.pixels[offset:offset+3]
     if r>g*1.15 and r>b*1.15:face.material_index=idx;selected+=1
    assert selected>0,('No owned wood color region found',part['name'])
+  for paint in part.get('componentPaint',[]):
+   adjacent={v.index:set() for v in obj.data.vertices}
+   for edge in obj.data.edges:
+    x,y=edge.vertices;adjacent[x].add(y);adjacent[y].add(x)
+   unseen=set(adjacent);selected=set();groups=0
+   while unseen:
+    todo=[unseen.pop()];component=[]
+    while todo:
+     vertex=todo.pop();component.append(vertex)
+     for neighbor in adjacent[vertex]:
+      if neighbor in unseen:unseen.remove(neighbor);todo.append(neighbor)
+    if len(component)==paint['vertices']:selected.update(component);groups+=1
+   assert groups==paint['expectedComponents'],('Inspect owned decoration topology',part['name'],groups)
+   slot=len(obj.data.materials);obj.data.materials.append(material(part['name']+' '+paint['name'],paint['color'],paint.get('roughness',.3),paint.get('metallic',0)))
+   for face in obj.data.polygons:
+    if all(i in selected for i in face.vertices):face.material_index=slot
   for band in part.get('paintBands',[]):
    idx=len(obj.data.materials);obj.data.materials.append(material(part['name']+' '+band['name'],band['color'],band.get('roughness',.3),band.get('metallic',0)));count=0
    for face in obj.data.polygons:
@@ -141,7 +167,7 @@ for part in cfg['parts']:
  bpy.context.scene.frame_set(6);bpy.context.view_layer.update()
  bone=part['bone'];delta=(rig.matrix_world@rig.pose.bones[bone].matrix)@(rig.matrix_world@rig.data.bones[bone].matrix_local).inverted();anchor=rig.matrix_world@rig.data.bones[bone].head_local
  orientation=Matrix.Rotation(math.radians(part.get('tiltZ',0)),4,'Z')@Matrix.Rotation(math.radians(part.get('tiltY',0)),4,'Y')@Matrix.Rotation(math.radians(part.get('tiltX',0)),4,'X');offset=delta.to_3x3().inverted()@Vector(part.get('worldOffset',[0,0,0]))
- bpy.data.objects[part['name']].matrix_world=Matrix.Translation(anchor+offset)@delta.to_3x3().inverted().to_4x4()@orientation@Matrix.Diagonal((part.get('scale',1),)*3+(1,))@source_matrices[part['name']]
+ bpy.data.objects[part['name']].matrix_world=Matrix.Translation(anchor+offset)@delta.to_3x3().inverted().to_4x4()@orientation@Matrix.Diagonal(tuple(part.get('scaleXYZ',[part.get('scale',1)]*3))+(1,))@Matrix.Translation(-Vector(part.get('sourceCenter',[0,0,0])))@source_matrices[part['name']]
  bpy.data.objects[part['name']]['restForward']=list(delta.to_3x3().inverted()@orientation.to_3x3()@Vector(part.get('reviewAxis',[0,0,1])))
 bow_checks=None
 if cfg.get('bow'):
@@ -179,7 +205,7 @@ for fall in cfg.get('fallProps',[]):
  action=next(t for t in rig.animation_data.nla_tracks if t.name=='Death_A_Pose').strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];bone=rig.pose.bones[name];bone.rotation_mode='QUATERNION';samples=[]
  rotation=Matrix.Identity(4)
  for axis in 'XYZ':rotation=rotation@Matrix.Rotation(math.radians(fall.get('rotate'+axis,0)),4,axis)
- final=Matrix.Translation(Vector(fall['position']))@rotation@Matrix.Diagonal((part['scale'],)*3+(1,))@source_matrices[part['name']];target=final@prop_rest.inverted()@rest
+ final=Matrix.Translation(Vector(fall['position']))@rotation@Matrix.Diagonal(tuple(part.get('scaleXYZ',[part.get('scale',1)]*3))+(1,))@Matrix.Translation(-Vector(part.get('sourceCenter',[0,0,0])))@source_matrices[part['name']];target=final@prop_rest.inverted()@rest
  for frame in range(math.floor(action.frame_range[0]),math.ceil(action.frame_range[1])+1):
   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();original=(rig.matrix_world@rig.pose.bones[parent].matrix)@source_rest.inverted()@rest;t=max(0,min(1,(frame-fall['start'])/(fall['end']-fall['start'])));t=t*t*(3-2*t);l1,q1,s1=original.decompose();l2,q2,s2=target.decompose();samples.append((frame,Matrix.LocRotScale(l1.lerp(l2,t),q1.slerp(q2,t),s1.lerp(s2,t))))
  for frame,matrix in samples:
