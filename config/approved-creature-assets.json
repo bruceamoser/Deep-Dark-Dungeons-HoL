@@ -610,7 +610,7 @@
       "creatureId": "creature-plague-zombie",
       "model": "PlagueZombie",
       "path": "/assets/licensed/creatures/PlagueZombie.glb",
-      "sha256": "fffd75187952795a82fe2567cf1d23bee9d30b73ef9b88b2b091dfc4dabba170",
+      "sha256": "1eefeab22b055c7303e6094c0633c87ded58e5c6963a429b51436ffc1df0cb90",
       "approvedOn": "2026-11-11",
       "method": "owned-humanoid",
       "review": "Author model/motion review; bulk user review deferred",

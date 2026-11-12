@@ -11,7 +11,7 @@ On the bmoser desktop:
 - Blender **5.2.4 LTS**, official archive SHA-256 `2fd14c50987426897ba60237ee996edf2b4151f4b1a72a460ca20be58c1d2d86`, extracted under `~/.local/opt/blender-5.2.4-linux-x64`; `~/.local/bin/blender` points to it. Original download stays in Downloads, outside Git.
 - **Rigify** is bundled and enabled. Blender's Python, Geometry Nodes, mesh/weight tools and glTF exporter are available without extra packages.
 - **MCP for Blender 2.2.7** installed in an isolated uv tool environment; matching add-on installed/enabled in Blender 5.2. Codex registers `mcp_servers.blender` on loopback port 9876. Telemetry disabled for this integration. Optional cloud providers disabled in the isolated workspace.
-- Existing SolidCraft remains available for props/equipment. No Unity installation or engine migration is needed to prepare GLBs; Unity remains an optional future import utility if a specific asset requires it. TextureCraft was not found on this desktop's PATH; it is not required for this initial Blender pipeline.
+- Existing SolidCraft remains available for props/equipment. No Unity installation or engine migration is needed to prepare GLBs. TextureCraft 0.3.2 is available locally for creature materials via `~/.local/bin/texturecraft-cli`.
 - Repo skill: `.agents/skills/fld-game-assets/SKILL.md`. Source models/runtime GLBs are not altered by setup.
 
 Launch a new isolated workspace from the repo root:
@@ -21,6 +21,15 @@ DISABLE_TELEMETRY=true blender --factory-startup --python scripts/toolchain/star
 ```
 
 This intentionally starts a new scene. Do not run scene-clearing/import scripts inside an unrelated personal Blender window. The setup enabled the add-ons in user preferences; it did not replace a startup scene. A fresh Codex session/restart may be needed to load its new MCP registration. The current session can use the installed bridge through the MCP probe CLI.
+
+## TextureCraft for creature materials
+
+1. Prepare a static paint copy in Blender with one texture set per surface that needs a different treatment. Use non-overlapping UVs in the first UV set on this copy. TextureCraft 0.3.2 reads that set on GLB import. Keep the rigged source and its material assignments for the final export.
+2. Start with TextureCraft's material library. Borrow only the relevant channels when adapting a preset: leather grain for corpse skin, linen weave for wraps, or hammered height for pitted metal. Set color, metallic and roughness for the intended surface. For the Plague Zombie, coarse Leather and Linen supplied distinct relief, and masked layers gave the skin broad olive, yellow and purple patches.
+3. Give the important grain and painted patches enough scale and contrast to read under actual dungeon lighting. Use masks to keep the material breakup deliberate. Tune it on the creature in motion and from the play camera as well as in the material preview.
+4. Save the editable `.tcraft` project and export sRGB base color, linear roughness and OpenGL tangent normals with island padding. Reapply these maps to the correct UVs on the rigged Blender asset. Export its GLB with animations and verify the final hash, texture routing, rig and five clips. Choose map sizes by what remains visible in the game. Record the recipe and keep projects that contain licensed mesh copies private.
+
+The verified local entry points are `texturecraft-cli commands`, `batch`, `export`, and the stdio `mcp` server. Use the CLI directly for scripted work or attach MCP with explicit private read/write roots. The installed AppImage contains the CLI at `usr/bin/texturecraft-cli` after extraction. [TextureCraft control protocol](https://github.com/storytold/texturecraft/blob/main/docs/control-protocol.md).
 
 ## DeepSeek worker alongside GPT
 
