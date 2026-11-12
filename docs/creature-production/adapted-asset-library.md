@@ -223,3 +223,7 @@ Private original multiview Warden retained; `prepare-icebound-warden.py` separat
 ## Emberling — coal body and looping flame tongues
 
 Owned KayKit Space Base rock_A/B complete-stone adaptation, reviewed Clay18-bone anatomy, four added weighted plume bones. `build-emberling.py` and `texture-emberling.py`; editable private emberling/final/emberling.blend. TextureCraft marble veins/Pores become charcoal/ember seams; layered original curved tongues flicker, loop and shrink on death.22bones/five clips reviewed. No clothing or carried equipment. Use on another elemental only after silhouette, bone fit and motion review; source/license hashes in base/sources.json.
+
+## Cinder Strider — charred long-limbed elemental and smoke anchor
+
+Private multiview body/18-bone rig retained with narrower/taller proportions; `prepare-cinder-strider.py`, `texture-cinder-strider.py`. Nine TextureCraft1024maps separate coal/hot flame/matte smoke; weighted eyes and forward claw reach. Private cinder-strider/final/cinder-strider.blend. Runtime ash-smoke supports `ambientBone` and `ambientScale` for differently sized rigs, preserving defaults. Review each reuse in actual animation/game; dense source geometry and sculpted smoke are documented limits.

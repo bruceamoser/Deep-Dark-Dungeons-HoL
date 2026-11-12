@@ -73,8 +73,10 @@ export function equippedCreatureAppearance(asset, spec) {
     model.userData.animate(0);
   }
   if (spec.ambient === "ash-smoke") {
-    const anchor = model.getObjectByName("spine_03");
+    const anchor = model.getObjectByName(spec.ambientBone ?? "spine_03");
     if (!anchor) throw new Error("Ash smoke requires the reviewed chest bone");
+    const spread = spec.ambientScale ?? 1;
+    if (!Number.isFinite(spread) || spread <= 0) throw new Error("Invalid smoke scale");
     const count = 18;
     const geometry = new BufferGeometry();
     geometry.setAttribute(
@@ -125,9 +127,9 @@ export function equippedCreatureAppearance(asset, spec) {
         const angle = i * 2.4 + time * 0.4;
         geometry.attributes.position.setXYZ(
           i,
-          Math.cos(angle) * (0.22 + age * 0.32),
-          0.05 + age * 0.9,
-          -0.18 + Math.sin(angle) * 0.18,
+          Math.cos(angle) * (0.22 + age * 0.32) * spread,
+          (0.05 + age * 0.9) * spread,
+          (-0.18 + Math.sin(angle) * 0.18) * spread,
         );
         geometry.attributes.puffSize.setX(i, 0.7 + age * 1.2);
         geometry.attributes.puffAlpha.setX(i, Math.sin(age * Math.PI) * 0.5);
