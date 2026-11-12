@@ -215,3 +215,7 @@ Owned Body18/HeadArmor01 retain enclosing shell and crest/spikes. `refine-glass-
 ## Complete owned boulders and stone-cluster body
 
 Space Base rock_A/B half-boulders adapted into full faceted stones by mirrored curved halves, removal of interior flat base faces and exact equator joining. First Medieval Hexagon stone assembly rejected as masonry. `build-stone-knuckle.py` fits copies to Clay Helper18-bone rig, with heavy fists, joint pebbles and ray-fitted eyes. `texture-stone-knuckle.py`: TextureCraft granite/moss/Pores. Private `stone-knuckle/final/stone-knuckle.blend`;466frames and dungeon reviewed. Static-copy operations only; original source and all donor rests/clips preserved except new root ground correction.
+
+## Icebound Warden — ice palette and bubble eyes
+
+Private original multiview Warden retained; `prepare-icebound-warden.py` separates source pale/teal regions, fits weighted bubble eyes and revises fist reach. `texture-icebound-warden.py` uses TextureCraft marble/Clouds and clay/Pores, six1024maps, partial ice transmission and opaque rough rime. Private editable `~/.local/share/four-lanterns-creature-production/icebound-warden/final/icebound-warden.blend`. No carried gear. Source geometry remains dense and has minor nonmanifold junctions; no generic cleanup. Reuse needs new surface/rig fit and review, not blind recoloring.

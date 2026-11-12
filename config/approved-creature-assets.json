@@ -1187,6 +1187,28 @@
           "contact": 0.44
         }
       }
+    },
+    {
+      "creatureId": "creature-icebound-warden",
+      "model": "IceboundWarden",
+      "path": "/assets/licensed/creatures/IceboundWarden.glb",
+      "sha256": "a884038975f7d01bb6a54813d8025c173e14000e05bc879a1d1187f9f5a33eea",
+      "approvedOn": "2026-11-12",
+      "method": "refined-private-multiview",
+      "review": "Author review; bulk user review deferred",
+      "report": "docs/creature-production/icebound-warden.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 3.3,
+        "height": 1.55,
+        "weapon": "unarmed",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.44
+        }
+      }
     }
   ]
 }
