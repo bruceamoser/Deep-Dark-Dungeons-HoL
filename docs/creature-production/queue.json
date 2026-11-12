@@ -576,9 +576,16 @@
       "name": "Werewolf",
       "order": 35,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/werewolf.md",
+        "model": "docs/creature-production/werewolf.md",
+        "motion": "docs/creature-production/werewolf.md",
+        "game-view": "docs/creature-production/werewolf.md",
+        "integration": "docs/creature-production/werewolf.md"
+      },
+      "approvedAsset": "Werewolf"
     },
     {
       "id": "creature-werebear",

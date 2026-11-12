@@ -147,3 +147,7 @@ CC0 KayKit-derived legacy Emberkeeper recipe adapted to refined kobold anatomy. 
 ## Wererat thief coat, knife, keys and rat anatomy
 
 Owned Mason Body12/OHS02_Niddle, KayKit Dungeon keyring and prior CC0-derived rat head/tail. `config/creature-production/wererat.json` fits knife/keyring to weapon_r/pelvis; `refine-wererat-anatomy.py` narrows/lowers the existing rat head, recesses eyes and fits four tail joints without changing original43 bone rests. `texture-wererat.py` applies wool-based short fur, smooth leather and subtle cloth. Private editable `wererat/final/wererat.blend`;256-frame and muted dungeon checks passed. Use separate fit checks on another body.
+
+## Werewolf fitted head, toe claws and fur brush
+
+CC0 KayKit Werewolf_Wolf head/toe claws and prior rat tail adapted to owned Mason Body01, with existing Ghoul nail recipe. `refine-werewolf-anatomy.py` preserves43 source rests and adds four tail joints. `texture-werewolf.py` supplies Wool-based fur and linen trunks. Private editable `werewolf/final/werewolf.blend`;280 frames and actual dungeon reviewed. New wearers require fresh anatomy and clearance checks.
