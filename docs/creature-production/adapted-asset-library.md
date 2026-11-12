@@ -231,3 +231,7 @@ Private multiview body/18-bone rig retained with narrower/taller proportions; `p
 ## Grave Wisp — faint owned face and animated mist
 
 `build-grave-wisp.py` extracts only reviewed KayKit Skeleton Minion head/jaw copies from Sentry, fits them inside original asymmetric transported mist sweeps, with five-bone bob/glide/pulse/dissolution. Private grave-wisp/final/grave-wisp.blend; source hash sources.json. First coil rejected, root-axis motion fixed; final574frames and cold-spark game release reviewed. Pale mint/ivory smooth translucent materials are intentional; ethereal runtime avoids solid shadows. Reuse requires new silhouette/opacity/deformation review.
+
+## Shadow — dark streaming body and receding death
+
+Private multiview13-bone body retained; `prepare-shadow.py`, `texture-shadow.py`. TextureCraft Clouds in charcoal/deep-blue regions, pale source-eye mask, stronger claw reach and shrinking death. Editable shadow/final/shadow.blend, hashes base/sources.json. No gear or topology repair. Reviewed full clips/game; dense rounded wisps are documented simplification. Reuse must preserve readable edge/eye contrast under dungeon light.
