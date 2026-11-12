@@ -768,9 +768,16 @@
       "name": "Animated Statue",
       "order": 47,
       "family": "construct",
-      "status": "queued",
+      "status": "integrated",
       "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/animated-statue.md",
+        "model": "docs/creature-production/animated-statue.md",
+        "motion": "docs/creature-production/animated-statue.md",
+        "game-view": "docs/creature-production/animated-statue.md",
+        "integration": "docs/creature-production/animated-statue.md"
+      },
+      "approvedAsset": "AnimatedStatue"
     },
     {
       "id": "creature-clay-helper",

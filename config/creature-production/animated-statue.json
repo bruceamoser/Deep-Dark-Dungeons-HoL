@@ -1,0 +1,161 @@
+{
+  "id": "animated-statue",
+  "body": "Body18",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eyebrow01",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Hair02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "AC11_Mustache03",
+      "head"
+    ],
+    [
+      "Weapons",
+      "Spear03",
+      "weapon_r"
+    ],
+    [
+      "Weapons",
+      "Shield07",
+      "weapon_l"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack03_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#66665a",
+    "2": "#b4ad8d",
+    "3": "#aaa584",
+    "4": "#d0bd7f",
+    "5": "#807b64",
+    "6": "#b4ad8d",
+    "7": "#536b56",
+    "8": "#c8c1a3",
+    "9": "#c8c1a3"
+  },
+  "partPalette": {
+    "Shield07": {
+      "1": "#3b6450",
+      "2": "#3b6450",
+      "3": "#3b6450",
+      "4": "#c4b67c",
+      "5": "#3b6450",
+      "6": "#3b6450",
+      "7": "#3b6450",
+      "8": "#c4b67c",
+      "9": "#3b6450"
+    },
+    "Spear03": {
+      "1": "#8a805b",
+      "2": "#8a805b",
+      "3": "#8a805b",
+      "4": "#8a805b",
+      "5": "#8a805b",
+      "6": "#8a805b",
+      "7": "#8a805b",
+      "8": "#d3c9a0",
+      "9": "#8a805b"
+    },
+    "Cloak02": {
+      "1": "#405f4a",
+      "2": "#405f4a",
+      "3": "#405f4a",
+      "4": "#405f4a",
+      "5": "#405f4a",
+      "6": "#405f4a",
+      "7": "#405f4a",
+      "8": "#405f4a",
+      "9": "#405f4a"
+    }
+  },
+  "solid": {
+    "Head01_Male": "#bbb18e",
+    "Hair02": "#bbb18e",
+    "AC11_Mustache03": "#bbb18e",
+    "Mouth01": "#bbb18e",
+    "Eyebrow01": "#bbb18e",
+    "Eye01": "#716b55"
+  },
+  "fitShield": {
+    "part": "Shield07",
+    "frame": 6
+  },
+  "fitThrust": {
+    "part": "Spear03",
+    "frame": 9
+  },
+  "partFit": {
+    "Shield07": {
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ]
+    },
+    "Spear03": {
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    }
+  },
+  "additionalBodies": [
+    "Cloak02"
+  ],
+  "groundContactClips": [
+    {
+      "clip": "Idle",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Walking_A",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "1H_Melee_Attack_Slice_Diagonal",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Hit_A",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Death_A_Pose",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    }
+  ]
+}
