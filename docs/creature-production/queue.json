@@ -244,16 +244,23 @@
       "name": "Goblin Boss",
       "order": 15,
       "family": "humanoid-equipment",
-      "status": "integrated",
+      "status": "active",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
       "gates": {
-        "brief": "docs/creature-production/goblin-boss.md",
-        "model": "docs/creature-production/goblin-boss.md",
-        "motion": "docs/creature-production/goblin-boss.md",
-        "game-view": "docs/creature-production/goblin-boss.md",
-        "integration": "docs/creature-production/goblin-boss.md"
+        "brief": "docs/creature-production/goblin-boss.md"
       },
-      "approvedAsset": "GoblinBoss"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-boss.md",
+            "model": "docs/creature-production/goblin-boss.md",
+            "motion": "docs/creature-production/goblin-boss.md",
+            "game-view": "docs/creature-production/goblin-boss.md",
+            "integration": "docs/creature-production/goblin-boss.md"
+          },
+          "approvedAsset": "GoblinBoss"
+        }
+      ]
     },
     {
       "id": "creature-orc-warcaller",
@@ -620,10 +627,14 @@
       "name": "Cinder Imp",
       "order": 37,
       "family": "humanoid-specialized",
-      "status": "active",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/cinder-imp.md"
+        "brief": "docs/creature-production/cinder-imp.md",
+        "model": "docs/creature-production/cinder-imp.md",
+        "motion": "docs/creature-production/cinder-imp.md",
+        "game-view": "docs/creature-production/cinder-imp.md",
+        "integration": "docs/creature-production/cinder-imp.md"
       },
       "revisions": [
         {
@@ -636,7 +647,8 @@
           },
           "approvedAsset": "CinderImp"
         }
-      ]
+      ],
+      "approvedAsset": "CinderImp"
     },
     {
       "id": "creature-horned-devil",

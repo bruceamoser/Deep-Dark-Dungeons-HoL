@@ -2,7 +2,7 @@
 
 ## Active — November 12 creature review fixes
 
-Animated Armor now has a fitted sword and Barrow Guard's full-length sword clears its head during the attack. Both were integrated and installed in the menu AppImage and original launcher. The Linux packages are in `~/Downloads/FLD-Sword-Review-Fixes-2026-11-12/`. The Cinder Imp is active for a fresh mesh rebuild. Goblin Boss visual improvement and fresh Wererat/Werebear models remain queued for player-review follow-up. See [the review handoff](handoffs/2026-11-12-player-creature-review.md).
+Animated Armor and Barrow Guard weapon fixes are installed. The Cinder Imp was rebuilt from a new image and passed Blender, motion, bestiary and dungeon checks including fire casting. The rebuilt Imp and both weapon fixes are installed in the menu AppImage and original launcher. Native bestiary and isolated save checks passed. Goblin Boss is the active image-to-3D rebuild. Bruce requested this same method for the full goblin and kobold roster, followed by fresh Wererat and Werebear models. See [the review handoff](handoffs/2026-11-12-player-creature-review.md).
 
 ## Complete — 58-creature local review delivery (November 12)
 

@@ -15,3 +15,7 @@ Dark officer green, oxblood accents, brass trim, brown leather, natural parchmen
 Author fit A5/S4/F4/G4/M4/D4 =86/100. Clear goblin in a borrowed green/brass long coat with rolled map, food pouch and coin detail. Clean, simplified coat lacks fringed epaulettes and the illustration's many stitched pockets/medals; one snack pouch substitutes for overflowing pocket clutter. No crown/giant armor added. Small coin/cheese details are close-view features; coat/face/blade carry identity at game scale. Bulk user review pending.
 
 Actual development bestiary five-state controls and six Bosses beside four heroes passed with correct model and no JS errors. Author game-scale inspection complete; nine focused tests and required-private-assets production build pass. No installer/performance update.
+
+## Player review revision — image-to-3D
+
+The replacement starts from a new neutral reference derived from the book portrait, with a stockier face, broad brass epaulettes, oxblood cuffs and readable map pockets. Reconstruct and texture the new anatomy, then fit the owned officer's blade separately to the right hand. Keep the current model available while the replacement is in review. Private reference and candidate outputs are under `goblin-boss/rebuild/`.
