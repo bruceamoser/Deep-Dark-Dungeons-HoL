@@ -2,6 +2,7 @@ import * as T from "three";
 
 const UP = new T.Vector3(0, 1, 0);
 const MAGIC_LOOKS = {
+  radiant: { name: "Flying prismatic reflection", color: 0xfff3c6 },
   sonic: { name: "Traveling resonance rings", color: 0xe2c77e },
   cold: { name: "Flying ice lance", color: 0x91dfff },
   life: { name: "Living light ribbons", color: 0x82e8ba },
@@ -153,7 +154,7 @@ function magicMissile(owned, kind) {
     for (let i = 0; i < 3; i++) {
       const shard = owned.mesh(
         new T.OctahedronGeometry(1, 0),
-        glow(color, 0.6),
+        glow(kind === "radiant" ? [0x8fe8ff, 0xc9acff, 0xffed99][i] : color, 0.6),
       );
       shard.scale.set(0.035, 0.24, 0.035);
       shard.position.set(

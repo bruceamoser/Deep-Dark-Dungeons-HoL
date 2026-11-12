@@ -332,3 +332,23 @@ test("ash smoke follows its chest after posing and releases only its own resourc
   body.geometry.dispose();
   sourceMaterial.dispose();
 });
+
+test("glass constructs retain transmission and coat in independent instances", () => {
+  const scene = new T.Group();
+  const material = new T.MeshPhysicalMaterial({ transmission: 0.35, roughness: 0.13, clearcoat: 0.4, ior: 1.46 });
+  const geometry = new T.BoxGeometry();
+  scene.add(new T.Mesh(geometry, material));
+  const spec = { model: "GlassFixture", scale: 1, height: 1.5, weapon: "unarmed" };
+  const a = equippedCreatureAppearance({ scene, animations: [] }, spec);
+  const b = equippedCreatureAppearance({ scene, animations: [] }, spec);
+  const am = a.model.children[0].material;
+  assert.equal(am.isMeshPhysicalMaterial, true);
+  assert.equal(am.transmission, 0.35);
+  assert.equal(am.clearcoat, 0.4);
+  assert.equal(am.ior, 1.46);
+  am.transmission = 0;
+  assert.equal(b.model.children[0].material.transmission, 0.35);
+  assert.equal(material.transmission, 0.35);
+  a.model.userData.dispose(); b.model.userData.dispose();
+  geometry.dispose(); material.dispose();
+});

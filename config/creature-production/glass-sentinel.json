@@ -1,0 +1,63 @@
+{
+  "id": "glass-sentinel",
+  "body": "Body18",
+  "parts": [
+    [
+      "HeadParts",
+      "HeadArmor01",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/WalkFWD_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "NoWeapon/Die02_NoWeapon.fbx",
+    "Spellcast_Shoot": "MagicWand/Attack01_MagicWand.fbx"
+  },
+  "palette": {
+    "1": "#adced1",
+    "2": "#adced1",
+    "3": "#adced1",
+    "4": "#ba9d53",
+    "5": "#adced1",
+    "6": "#adced1",
+    "7": "#adced1",
+    "8": "#adced1",
+    "9": "#adced1"
+  },
+  "solid": {},
+  "groundContactClips": [
+    {
+      "clip": "Idle",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Walking_A",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "1H_Melee_Attack_Slice_Diagonal",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Hit_A",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Death_A_Pose",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Spellcast_Shoot",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    }
+  ]
+}
