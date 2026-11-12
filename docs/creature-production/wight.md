@@ -1,0 +1,9 @@
+# Wight — active source inspection
+
+Status: source/owned-body inspection; no completed model yet. Pinned source24e545e6d860e8c1b03a21356fd22cae1c039785, textSHAd7d513311c7699d72210e7a806a90d12fe2495989cd0e84f3cc140c277cb64d2. Read the actual creature record and portrait: armored aristocratic corpse with crown, long pale hair, green mantle, gold armor and sword; no shield. Pursuit controller with oath-draining blade and fear. Preserve rules.
+
+Inspected owned Mason Body01–20 contact sheet. Body15/19 have strong armored shoulders; Body11 has long cloth but lacks the right armored silhouette. Prefer Body15 with controlled old-gold/forest-green palette, bone-pale exposed face/hands and gray-white supplied hair. Compare Sage's owned skull adaptation and Champion crown recipe before choosing a head; do not assume a skull alone represents a fleshed corpse. Reuse a supplied crown/sword and inspect compatible one-handed clips. No shield, random bag or food props. A small worn oath/charter accessory may reinforce role if it remains readable and does not clutter the silhouette.
+
+Next: inspect original head/hair/crown meshes and candidate Body15 geometry, choose face adaptation, then assemble in private task-owned scene. Model/motion/game gates remain pending. No new purchased asset, generation or installer update.
+
+First assembly rendered privately: Body15, Sage's owned skull source, Hair09 and Crown01, OHS05 sword on original Mason rig. Inspected all supplied hair thumbnails; Hair09 gives the closest long side/back silhouette. First render rejected for undersized crown, hair fit and overly gold blade; correction underway. No model gate recorded. Private files `~/.local/share/four-lanterns-creature-production/wight/`; active spec `config/creature-production/wight.json`. Barrow PR172 passed both hosted checks and merged.

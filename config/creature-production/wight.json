@@ -1,0 +1,140 @@
+{
+  "id": "wight",
+  "body": "Body15",
+  "parts": [
+    [
+      "HeadParts",
+      "Hair09",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "AC06_Crown01",
+      "head"
+    ],
+    [
+      "Weapons",
+      "OHS05_Sword",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "SwordAndShield/Idle_Battle_SwordAndShiled.fbx",
+    "Walking_A": "SwordAndShield/InPlace/MoveFWD_Battle_InPlace_SwordAndShield.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SwordAndShield/Attack03_SwordAndShiled.fbx",
+    "Hit_A": "SwordAndShield/GetHit01_SwordAndShield.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#52604d",
+    "2": "#284537",
+    "3": "#d2c5a2",
+    "4": "#9c8653",
+    "5": "#babba6",
+    "6": "#344c39",
+    "7": "#493f33",
+    "8": "#b8a16c",
+    "9": "#6b705d"
+  },
+  "solid": {
+    "Hair09": "#b5b4a4"
+  },
+  "partPalette": {
+    "OHS05_Sword": {
+      "1": "#453c2d",
+      "2": "#453c2d",
+      "3": "#453c2d",
+      "4": "#9c8653",
+      "5": "#453c2d",
+      "6": "#453c2d",
+      "7": "#453c2d",
+      "8": "#b9c2b9",
+      "9": "#453c2d"
+    }
+  },
+  "externalParts": [
+    {
+      "name": "Wight death mask",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Halloween Bits 1.0/Assets/gltf/skull.gltf",
+      "bone": "head",
+      "scale": 0.7,
+      "origin": [
+        0,
+        0,
+        0.45
+      ],
+      "offset": [
+        0,
+        -0.08,
+        0.08
+      ],
+      "sourceColors": [
+        {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            1,
+            1,
+            1
+          ],
+          "color": "#a6aa8f"
+        }
+      ],
+      "sourceRegions": [
+        {
+          "centers": [
+            [
+              -0.2,
+              0,
+              0.4
+            ],
+            [
+              0.2,
+              0,
+              0.4
+            ]
+          ],
+          "radius": 0.14,
+          "frontY": 0.05,
+          "color": "#20251f"
+        }
+      ]
+    }
+  ],
+  "fitUpright": [
+    {
+      "part": "OHS05_Sword",
+      "bone": "weapon_r",
+      "frame": 6
+    }
+  ],
+  "partFit": {
+    "AC06_Crown01": {
+      "scale": [
+        1.7,
+        1.7,
+        1.2
+      ],
+      "offset": [
+        0,
+        0,
+        0.015
+      ]
+    },
+    "Hair09": {
+      "scale": [
+        1.02,
+        1.02,
+        1
+      ],
+      "offset": [
+        0,
+        0.025,
+        0.045
+      ]
+    }
+  }
+}
