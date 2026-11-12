@@ -108,16 +108,16 @@
       "creatureId": "creature-goblin-firestarter",
       "model": "GoblinFirestarter",
       "path": "/assets/licensed/creatures/GoblinFirestarter.glb",
-      "sha256": "2c7742f647046f8665fc4f1f440fa895f1aacf38c97d539088664e03b24ba2db",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "9df7cc3a6585513d633027f447f9f2822be8195972515543ef74b4a120c7e5f3",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "review": "Author review under delegated production direction; model, motion and runtime visual gates passed",
       "report": "docs/creature-production/goblin-firestarter.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.9,
-        "height": 1.2,
+        "scale": 0.82,
+        "height": 1.25,
         "weapon": "spell",
         "attack": {
           "kind": "bottle",
@@ -128,7 +128,8 @@
             "kind": "unarmed",
             "clip": "Unarmed_Melee_Attack_Punch_A",
             "contact": 0.2
-          }
+          },
+          "muzzleBone": "RHand"
         }
       }
     },
@@ -428,9 +429,9 @@
       "creatureId": "creature-goblin-rattlechanter",
       "model": "GoblinRattlechanter",
       "path": "/assets/licensed/creatures/GoblinRattlechanter.glb",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
-      "review": "Author model/motion review; user bulk review deferred",
+      "approvedOn": "2026-11-12",
+      "method": "image-reconstruction",
+      "review": "Author model, motion and dungeon review",
       "report": "docs/creature-production/goblin-rattlechanter.md",
       "distribution": "private-local-build",
       "runtime": {
@@ -442,15 +443,16 @@
           "kind": "sonic",
           "when": "projectile",
           "clip": "Spellcast_Shoot",
-          "release": 0.4666666666666667,
+          "release": 0.5833333333333334,
           "melee": {
             "kind": "unarmed",
             "clip": "1H_Melee_Attack_Slice_Diagonal",
             "contact": 0.3
-          }
+          },
+          "muzzleBone": "RattlePanMuzzle"
         }
       },
-      "sha256": "c259df1612a1366030b02f7b1ce160f4724a32bbdae59319204fa54872b4a66e"
+      "sha256": "5afe5c61d75bcff95dd45af4f2c34229e3293b6456aa09303813e7e049898816"
     },
     {
       "creatureId": "creature-goblin-smoke-slinger",

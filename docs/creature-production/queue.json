@@ -147,6 +147,18 @@
         "game-view": "docs/creature-production/goblin-firestarter.md",
         "integration": "docs/creature-production/goblin-firestarter.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-firestarter.md",
+            "model": "docs/creature-production/goblin-firestarter.md",
+            "motion": "docs/creature-production/goblin-firestarter.md",
+            "game-view": "docs/creature-production/goblin-firestarter.md",
+            "integration": "docs/creature-production/goblin-firestarter.md"
+          },
+          "approvedAsset": "GoblinFirestarter"
+        }
+      ],
       "approvedAsset": "GoblinFirestarter"
     },
     {
@@ -379,6 +391,18 @@
         "game-view": "docs/creature-production/goblin-rattlechanter.md",
         "integration": "docs/creature-production/goblin-rattlechanter.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-rattlechanter.md",
+            "model": "docs/creature-production/goblin-rattlechanter.md",
+            "motion": "docs/creature-production/goblin-rattlechanter.md",
+            "game-view": "docs/creature-production/goblin-rattlechanter.md",
+            "integration": "docs/creature-production/goblin-rattlechanter.md"
+          },
+          "approvedAsset": "GoblinRattlechanter"
+        }
+      ],
       "approvedAsset": "GoblinRattlechanter"
     },
     {
@@ -386,16 +410,23 @@
       "name": "Goblin Smoke Slinger",
       "order": 21,
       "family": "humanoid-equipment",
-      "status": "integrated",
+      "status": "active",
       "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
       "gates": {
-        "brief": "docs/creature-production/goblin-smoke-slinger.md",
-        "model": "docs/creature-production/goblin-smoke-slinger.md",
-        "motion": "docs/creature-production/goblin-smoke-slinger.md",
-        "game-view": "docs/creature-production/goblin-smoke-slinger.md",
-        "integration": "docs/creature-production/goblin-smoke-slinger.md"
+        "brief": "docs/creature-production/goblin-smoke-slinger.md"
       },
-      "approvedAsset": "GoblinSmokeSlinger"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-smoke-slinger.md",
+            "model": "docs/creature-production/goblin-smoke-slinger.md",
+            "motion": "docs/creature-production/goblin-smoke-slinger.md",
+            "game-view": "docs/creature-production/goblin-smoke-slinger.md",
+            "integration": "docs/creature-production/goblin-smoke-slinger.md"
+          },
+          "approvedAsset": "GoblinSmokeSlinger"
+        }
+      ]
     },
     {
       "id": "creature-bone-sentry",

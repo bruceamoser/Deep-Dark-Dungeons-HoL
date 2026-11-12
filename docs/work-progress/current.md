@@ -2,7 +2,7 @@
 
 ## Active — November 12 creature review fixes
 
-The local menu and original launcher contain the Animated Armor and Barrow Guard weapon fixes and the image-rebuilt Cinder Imp, Goblin Boss and Spearhand. Native bestiary, launch and isolated save checks passed. Scrapper is image-rebuilt and integrated in development. Remaining image rebuilds are Firestarter, Rattlechanter, Smoke Slinger, the three kobolds, Wererat and Werebear. See [the review handoff](handoffs/2026-11-12-player-creature-review.md).
+The local menu and original launcher contain the Animated Armor and Barrow Guard weapon fixes and the image-rebuilt Cinder Imp, Goblin Boss and Spearhand. Native bestiary, launch and isolated save checks passed. Scrapper, Firestarter and Rattlechanter are image-rebuilt and integrated in development. Smoke Slinger is active, followed by Kobold Tunnel Scout, Trapkeeper, Emberkeeper, Wererat and Werebear. See the [image rebuild handoff](handoffs/2026-11-12-image-rebuild-goblins.md).
 
 ## Complete — 58-creature local review delivery (November 12)
 
