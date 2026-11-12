@@ -191,3 +191,7 @@ Existing private clean-sheet multiview bat, original22-bone rig. `prepare-cave-b
 ## Giant Spider articulated vermin layout
 
 Project-authored refinement of `src/view/creatures.mjs` eight-leg layout: all roots on front body, two-segment analytic gait, eight eyes, curved fangs, curled death. `build-giant-spider.py` + `texture-giant-spider.py`; private `giant-spider/final/giant-spider.blend`.19bones/43,136 triangles,535 final frames and actual dungeon reviewed. TextureCraft green/gold chitin maps. Generated extra-leg donors rejected; no purchased mesh input. Reuse only after anatomy/motion checks.
+
+## Enclosed guardian helmet and hammered steel
+
+Owned HeadArmor01 main enclosing shell/crest retained; three identified disconnected spikes removed, source UV colors remapped to green/gold/steel and black visor. `refine-animated-armor.py`; use without a human head inside. `texture-animated-armor.py` uses TextureCraft copper_hammered/Pores recolored as steel on selected face-bearing slots. Body19/Shield08 retain source rig. Private `animated-armor/final/animated-armor.blend`;272 frames and actual dungeon reviewed. Shield requires shield-specific death, not the rejected unarmed forward fall.
