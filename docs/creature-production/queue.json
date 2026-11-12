@@ -720,9 +720,16 @@
       "name": "Cave Bat",
       "order": 44,
       "family": "animal",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/cave-bat.md",
+        "model": "docs/creature-production/cave-bat.md",
+        "motion": "docs/creature-production/cave-bat.md",
+        "game-view": "docs/creature-production/cave-bat.md",
+        "integration": "docs/creature-production/cave-bat.md"
+      },
+      "approvedAsset": "CaveBat"
     },
     {
       "id": "creature-giant-spider",

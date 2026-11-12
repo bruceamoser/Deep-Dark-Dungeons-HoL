@@ -183,3 +183,7 @@ Approved private Wolf body/jaw, TextureCraft Asphalt/Marble veins maps (matching
 ## Giant Rat facial fittings and grounded clips
 
 Existing private multiview quadruped donor, fitted amber eyes/black sockets and paired ivory incisors. `prepare-giant-rat.py` preserves22-bone anatomy/four-joint tail and corrects source root floor drift. Source muzzle is offset x0.057; do not assume symmetry. Private `giant-rat/final/giant-rat.blend`;450 final frames and real dungeon reviewed. Mouth remains a lunge/nip without separate jaw hinge.
+
+## Cave Bat leather membrane and flight landing
+
+Existing private clean-sheet multiview bat, original22-bone rig. `prepare-cave-bat.py` retains atlas/body, separates green membranes, lifts live flight and grounds death; `texture-cave-bat.py` adds Leather grain. Private `cave-bat/final/cave-bat.blend`.405 frames and actual dungeon reviewed. Shoulder-driven panels, not full finger flexion. No gear.
