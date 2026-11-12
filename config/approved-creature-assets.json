@@ -605,6 +605,29 @@
         },
         "shield": true
       }
+    },
+    {
+      "creatureId": "creature-plague-zombie",
+      "model": "PlagueZombie",
+      "path": "/assets/licensed/creatures/PlagueZombie.glb",
+      "sha256": "1eefeab22b055c7303e6094c0633c87ded58e5c6963a429b51436ffc1df0cb90",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/plague-zombie.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1,
+        "height": 1.45,
+        "weapon": "unarmed",
+        "ambient": "grave-flies",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.2
+        }
+      }
     }
   ]
 }

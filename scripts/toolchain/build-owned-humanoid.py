@@ -137,6 +137,43 @@ for cfg in spec.get('paintBands',[]):
   if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
  assert count>0,('Paint band missed',cfg['part'])
  modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
+# Smooth painted facial discoloration uses vertex colors, avoiding coarse
+# face-index rectangles on the supplied low-poly head. UVs/geometry stay intact.
+for cfg in spec.get('vertexPaint',[]):
+ obj=bpy.data.objects[cfg['part']];attr=obj.data.color_attributes.new(name='RolePaint',type='FLOAT_COLOR',domain='CORNER');base_rgb=tuple(lin(int(cfg['base'][i:i+2],16)/255) for i in (1,3,5));paint_rgb=tuple(lin(int(cfg['color'][i:i+2],16)/255) for i in (1,3,5))
+ for loop in obj.data.loops:
+  point=obj.matrix_world@obj.data.vertices[loop.vertex_index].co;weight=0
+  for center in cfg['centers']:
+   distance=sum(((point[i]-center[i])/cfg['radius'][i])**2 for i in range(3));weight=max(weight,max(0,1-distance)**.7)
+  attr.data[loop.index].color=tuple(base_rgb[i]*(1-weight)+paint_rgb[i]*weight for i in range(3))+(1,)
+ m=mat(cfg['base']).copy();m.name=cfg['part']+' graded corpse paint';node=m.node_tree.nodes.new('ShaderNodeVertexColor');node.layer_name=attr.name;m.node_tree.links.new(node.outputs['Color'],m.node_tree.nodes['Principled BSDF'].inputs['Base Color']);obj.data.materials.clear();obj.data.materials.append(m)
+ for face in obj.data.polygons:face.material_index=0
+ modifications.append({'part':obj.name,'purpose':'Smooth vertex-painted discoloration retaining source geometry','recipe':cfg})
+# Derive cloth strips from owned surfaces, retaining original deform weights.
+# Bisect copies only; do not cut the body or globally remesh its joints.
+for cfg in spec.get('surfaceWraps',[]):
+ source=bpy.data.objects[cfg['source']];obj=source.copy();obj.data=source.data.copy();obj.name=cfg['name'];bpy.context.collection.objects.link(obj)
+ bm=bmesh.new();bm.from_mesh(obj.data);bm.transform(obj.matrix_world)
+ # Split-normal seams must be joined only on this disposable cloth copy.
+ bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=1e-6)
+ axis=Vector(cfg.get('axis',[0,0,1])).normalized()
+ for value in [cfg['min'],cfg['max']]:
+  bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),dist=1e-6,plane_co=axis*value,plane_no=axis)
+ discard=[f for f in bm.faces if not cfg['min']-1e-6<=axis.dot(f.calc_center_median())<=cfg['max']+1e-6 or abs(f.calc_center_median().x)>cfg.get('maxX',99)]
+ assert 0<len(discard)<len(bm.faces),('Inspect wrap region',cfg['name'])
+ bmesh.ops.delete(bm,geom=discard,context='FACES');bm.transform(obj.matrix_world.inverted());bm.to_mesh(obj.data);bm.free()
+ # Offset in bind space using the original smooth surface normals; a shell
+ # alone can retain coplanar inner faces and flicker against the body.
+ obj.data.update()
+ normal_matrix=obj.matrix_world.to_3x3().inverted().transposed();inverse=obj.matrix_world.to_3x3().inverted()
+ for vertex in obj.data.vertices:vertex.co+=inverse@((normal_matrix@vertex.normal).normalized()*cfg.get('clearance',.012))
+ obj.data.materials.clear();obj.data.materials.append(mat(cfg['color']))
+ for face in obj.data.polygons:face.material_index=0
+ # Evaluate the shell before the armature so the copied bind weights survive.
+ shell=obj.modifiers.new('Raised burial linen','SOLIDIFY');shell.thickness=cfg.get('thickness',.012)/max(obj.matrix_world.to_scale());shell.offset=1
+ bpy.context.view_layer.objects.active=obj
+ bpy.ops.object.modifier_move_to_index(modifier=shell.name,index=0);bpy.ops.object.modifier_apply(modifier=shell.name)
+ modifications.append({'part':obj.name,'purpose':'Cloth derived from owned surface with interpolated original skin weights','recipe':cfg})
 for cfg in spec.get('faceShells',[]):
  source=bpy.data.objects[cfg['source']];obj=source.copy();obj.data=source.data.copy();obj.name=cfg['name'];bpy.context.collection.objects.link(obj)
  bm=bmesh.new();bm.from_mesh(obj.data)
@@ -258,6 +295,13 @@ for cfg in spec.get('externalParts',[]):
   if uri and not uri.startswith('data:'):deps.append(file.parent/uri)
  for dep in deps:extra_sources[str(dep)]=hashlib.sha256(dep.read_bytes()).hexdigest()
 
+# Per-surface finish overrides clone materials so shared palette colors on
+# clothing or eyes are not changed by a skin-only roughness adjustment.
+for name,roughness in spec.get('roughnessOverrides',{}).items():
+ obj=bpy.data.objects[name]
+ for i,old in enumerate(list(obj.data.materials)):
+  m=old.copy();m.name=name+' surface finish';m['preserveAuthoredRoughness']=True;m.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value=roughness;obj.data.materials[i]=m
+ modifications.append({'part':name,'purpose':'Reviewed surface-specific roughness','roughness':roughness})
 # Small painted inscriptions conform to the inspected owned surface. Join the
 # baked letters into that part so its existing socket fit moves them together.
 for cfg in spec.get('inscriptions',[]):
@@ -344,6 +388,16 @@ if spec.get('propStrike'):
  sys.path.insert(0,str(Path(__file__).parent))
  from prop_strike import author_prop_strike
  modifications.append(author_prop_strike(rig,spec['propStrike']))
+# Small role-specific posture offsets are baked over compatible source motion.
+# Keep every original bone/rest transform and sample before inserting keys.
+for cfg in spec.get('poseOffsets',[]):
+ for track in rig.animation_data.nla_tracks:track.mute=True
+ for clip in cfg['clips']:
+  action=next(t for t in rig.animation_data.nla_tracks if t.name==clip).strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];bone=rig.pose.bones[cfg['bone']];bone.rotation_mode='QUATERNION';samples=[]
+  for frame in range(int(action.frame_range[0]),int(action.frame_range[1])+1):
+   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();rotation=bone.rotation_quaternion.copy();offset=Matrix.Rotation(math.radians(cfg['degrees']),3,cfg['axis']).to_quaternion();samples.append((frame,rotation@offset))
+  for frame,rotation in samples:bone.rotation_quaternion=rotation;bone.keyframe_insert(data_path='rotation_quaternion',frame=frame,group='Authored role posture')
+ modifications.append({'part':cfg['bone'],'purpose':'Bounded source-animation posture adaptation','recipe':cfg})
 # Bounded per-clip contact correction for reviewed forward falls. Sample the
 # assembled silhouette before writing keys; preserve all relative joint motion.
 # Large penetrations fail instead of lifting an unsuitable pose into the air.

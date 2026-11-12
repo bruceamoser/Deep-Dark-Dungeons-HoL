@@ -272,3 +272,30 @@ test("late bow release keeps the nocked arrow until release and restores it afte
   arrow.geometry.dispose();
   arrow.material.dispose();
 });
+
+test("grave flies follow the authored head and dispose only owned resources", () => {
+  const scene = new T.Group();
+  const head = new T.Bone();
+  head.name = "head";
+  head.position.y = 1.1;
+  scene.add(head);
+  const result = equippedCreatureAppearance(
+    { scene, animations: [] },
+    { model: "Zombie", scale: 1, height: 1.4, ambient: "grave-flies" },
+  );
+  const swarm = result.model.getObjectByName("Grave flies");
+  assert.equal(swarm.children.length, 9);
+  const first = swarm.children[0].position.clone();
+  result.model.getObjectByName("head").position.y = 0.3;
+  result.model.userData.animate(1);
+  assert.ok(Math.abs(swarm.position.y - 0.3) < 1e-6);
+  assert.ok(first.distanceTo(swarm.children[0].position) > 0.1);
+  assert.equal(scene.children.length, 1);
+  let disposed = false;
+  swarm.children[0].geometry.addEventListener(
+    "dispose",
+    () => (disposed = true),
+  );
+  result.model.userData.dispose();
+  assert.equal(disposed, true);
+});
