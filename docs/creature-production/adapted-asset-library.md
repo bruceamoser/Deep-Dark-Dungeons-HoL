@@ -135,3 +135,7 @@ Dungeon Mason Body12, Cloak03 and Hair12 with the Ghoul's refitted nail tips. Th
 ## Kobold Scout head, tail and dart kit
 
 CC0 KayKit Ninja donor rig and project-authored Scout geometry. The refined builder creates a wedge skull with carved eye pockets, a curved tail and the re-angled, shortened bronze launcher. The loaded dart remains a separate skinned object and the muzzle marker follows the grip. Reuse requires checking the next wearer's carried, firing and fall poses. See the [Scout report](kobold-tunnel-scout.md) for the editable scene and TextureCraft scale recipe.
+
+## Refined Trapkeeper outfit and thrown dart
+
+CC0 KayKit-derived prior Trapkeeper recipe, refitted to the refined Scout anatomy. Smooth moss tunic/tan apron, leather back dart case, brass belt tools, marked ivory cords and separate Loaded_Dart; reproducible through `build-kobold-trapkeeper-refined.py`. Private editable `kobold-trapkeeper/final-v2/kobold-trapkeeper.blend`. Chest/hips/hand sockets preserve the 27-bone rest rig; TrapkeeperDartMuzzle supplies the dart axis. Full motion and muted dungeon checks passed; new recipients require separate fit checks. TextureCraft maps and smooth cloth recipe are in `texture-kobold-trapkeeper.py`.
