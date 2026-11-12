@@ -592,9 +592,16 @@
       "name": "Werebear",
       "order": 36,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/werebear.md",
+        "model": "docs/creature-production/werebear.md",
+        "motion": "docs/creature-production/werebear.md",
+        "game-view": "docs/creature-production/werebear.md",
+        "integration": "docs/creature-production/werebear.md"
+      },
+      "approvedAsset": "Werebear"
     },
     {
       "id": "creature-cinder-imp",
