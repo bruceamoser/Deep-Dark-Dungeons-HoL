@@ -31,6 +31,8 @@ This intentionally starts a new scene. Do not run scene-clearing/import scripts 
 
 The verified local entry points are `texturecraft-cli commands`, `batch`, `export`, and the stdio `mcp` server. Use the CLI directly for scripted work or attach MCP with explicit private read/write roots. The installed AppImage contains the CLI at `usr/bin/texturecraft-cli` after extraction. [TextureCraft control protocol](https://github.com/storytold/texturecraft/blob/main/docs/control-protocol.md).
 
+For the Ghast's old clothes, bake position, ambient occlusion and curvature on the paint copy. Apply Mud through Ground Dirt and tint the folds through Dirt in Cavities. Preserve contrast between the clean upper cloth, tarnished trim and dirty lower hem. Give bright eyes a dark socket shape so their color remains legible at play distance.
+
 ## DeepSeek worker alongside GPT
 
 The GPT default and ChatGPT sign-in are preserved. A legacy `[profiles.deepseek]` entry was migrated to **`~/.codex/deepseek.config.toml`**, as required by this Codex version. Its scoped model catalog is `~/.codex/model-catalogs/deepseek.json`, sourced from DeepSeek's integration docs. It does not replace the GPT catalog globally. Official API model ID **`deepseek-flash`** currently routes to V4.1 Flash; do not invent a `deepseek-v4.1-flash` identifier.

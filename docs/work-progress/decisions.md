@@ -159,3 +159,7 @@ Bruce explicitly asks to stop updating the installed game per creature, complete
 ## 2026-11-11 — Continue across creature/source checkpoints
 
 Bruce explicitly corrected stopping at 15/58: continue the roster without ending at arbitrary batch/PR boundaries. Preserve sequential review gates and commits, but only pause for a significant unresolved error or a problem requiring his decision. Keep installed delivery, performance and user art review deferred to the full roster.
+
+## 2026-11-11 — Bold creature surfaces and focal details
+
+Bruce approved the Ghoul and Ghast looks and asked for similarly bold decisions across the roster. Push silhouette, material relief and deliberate color contrast so signature details are recognizable from the dungeon camera. The Ghoul uses enlarged wine-purple pits and amber eyes. The Ghast uses charcoal sockets, green eyes and concentrated dirt on worn finery. Use TextureCraft presets, masks and baked maps where they support that creature's own identity. Review the finished design from the play camera and through its clips.
