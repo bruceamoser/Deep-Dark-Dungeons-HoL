@@ -151,3 +151,7 @@ Owned Mason Body12/OHS02_Niddle, KayKit Dungeon keyring and prior CC0-derived ra
 ## Werewolf fitted head, toe claws and fur brush
 
 CC0 KayKit Werewolf_Wolf head/toe claws and prior rat tail adapted to owned Mason Body01, with existing Ghoul nail recipe. `refine-werewolf-anatomy.py` preserves43 source rests and adds four tail joints. `texture-werewolf.py` supplies Wool-based fur and linen trunks. Private editable `werewolf/final/werewolf.blend`;280 frames and actual dungeon reviewed. New wearers require fresh anatomy and clearance checks.
+
+## Refined bear anatomy and rustic vest
+
+Existing authored CC0 Ninja-based Werebear assembly, refined through `refine-werebear.py`: shorter bear fangs, independently lit amber eyes, retained vest/waist panels/strap/pouch. `texture-werebear.py` demonstrates tighter UV packing for assemblies with many disconnected pieces; original excessive margin flattened texture detail. Private `werebear/final/werebear.blend`;400-frame motion review and final material/dungeon review passed. Bear retains layered stylized fur clumps.
