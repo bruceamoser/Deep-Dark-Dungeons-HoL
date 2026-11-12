@@ -1,0 +1,7 @@
+# Stone Knuckle — assembled stone guardian
+
+Book24e545e6d860e8c1b03a21356fd22cae1c039785, text57c2258a6cb0bec393babdaa9185c51ff558ad37f85769b454794c7399e02be4; portrait inspected: squat pebble/rough-stone elemental, dense core, blunt hands, planted feet. No armor or carried gear.
+
+Owned search initially used Medieval Hexagon rock_single_A/B/E; rendered assembly rejected as stacked masonry. Space Base rock_A/B provide rounder half-boulders. Adapt copies into complete stones by mirroring the curved half, removing only planar interior base faces and joining coincident equator vertices; original source UVs/materials intentionally replaced on these static copies. Source packs untouched. Fit stone clusters to reviewed18-bone Clay Helper rig/strong palm reach. No new generator, unrelated gear or rerig.
+
+TextureCraft granite/Clouds/Pores on limestone and moss regions, six1024maps; ray-fitted recessed amber mineral eyes. Final466frames, front/side/back, reimport/floor and muted six-knuckle/four-hero dungeon reviewed.3,792triangles,one mesh/fourmaterials,18bones,fiveclips. No degenerate/loose/unweighted vertices; floors0.001source.23focused tests/build pass, existing chunk warning. Fit80/100: anatomy4,silhouette4,signature4,gear5,materials4,distinction3. Faceted boulder clusters and small articulation gaps simplify the densely pebbled portrait; stiff fists have no fingers. Author review, bulk user art/install/performance deferred. Private final evidence `final/review`, `game-view`; source hashes `base/sources.json`.
