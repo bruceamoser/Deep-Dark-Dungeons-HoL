@@ -1,0 +1,83 @@
+{
+  "id": "animated-armor",
+  "body": "Body19",
+  "parts": [
+    [
+      "HeadParts",
+      "HeadArmor01",
+      "head"
+    ],
+    [
+      "Weapons",
+      "Shield08",
+      "weapon_l"
+    ]
+  ],
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/WalkFWD_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack01_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "SwordAndShield/Die01_SwordAndShield.fbx"
+  },
+  "palette": {
+    "1": "#253f36",
+    "2": "#253f36",
+    "3": "#172a25",
+    "4": "#b69a55",
+    "5": "#596965",
+    "6": "#253f36",
+    "7": "#28342d",
+    "8": "#a6ae9b",
+    "9": "#8b968a"
+  },
+  "partPalette": {
+    "Shield08": {
+      "2": "#214635",
+      "4": "#b69a55",
+      "7": "#315740"
+    },
+    "HeadArmor01": {
+      "1": "#253f36",
+      "2": "#253f36",
+      "3": "#253f36",
+      "4": "#b69a55",
+      "5": "#596965",
+      "7": "#111b18",
+      "8": "#a6ae9b",
+      "9": "#111b18"
+    }
+  },
+  "solid": {},
+  "fitShield": {
+    "part": "Shield08",
+    "frame": 6
+  },
+  "groundContactClips": [
+    {
+      "clip": "Idle",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Walking_A",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "1H_Melee_Attack_Slice_Diagonal",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Hit_A",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    },
+    {
+      "clip": "Death_A_Pose",
+      "margin": 0.002,
+      "maxCorrection": 0.22
+    }
+  ]
+}

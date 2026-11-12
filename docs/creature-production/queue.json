@@ -752,9 +752,16 @@
       "name": "Animated Armor",
       "order": 46,
       "family": "construct",
-      "status": "queued",
+      "status": "integrated",
       "route": "Prefer existing rigid parts and authored joint/object motion; preserve clear silhouettes and correct materials.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/animated-armor.md",
+        "model": "docs/creature-production/animated-armor.md",
+        "motion": "docs/creature-production/animated-armor.md",
+        "game-view": "docs/creature-production/animated-armor.md",
+        "integration": "docs/creature-production/animated-armor.md"
+      },
+      "approvedAsset": "AnimatedArmor"
     },
     {
       "id": "creature-animated-statue",
