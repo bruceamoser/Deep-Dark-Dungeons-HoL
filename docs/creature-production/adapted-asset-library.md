@@ -139,3 +139,7 @@ CC0 KayKit Ninja donor rig and project-authored Scout geometry. The refined buil
 ## Refined Trapkeeper outfit and thrown dart
 
 CC0 KayKit-derived prior Trapkeeper recipe, refitted to the refined Scout anatomy. Smooth moss tunic/tan apron, leather back dart case, brass belt tools, marked ivory cords and separate Loaded_Dart; reproducible through `build-kobold-trapkeeper-refined.py`. Private editable `kobold-trapkeeper/final-v2/kobold-trapkeeper.blend`. Chest/hips/hand sockets preserve the 27-bone rest rig; TrapkeeperDartMuzzle supplies the dart axis. Full motion and muted dungeon checks passed; new recipients require separate fit checks. TextureCraft maps and smooth cloth recipe are in `texture-kobold-trapkeeper.py`.
+
+## Emberkeeper wings and suspended brazier
+
+CC0 KayKit-derived legacy Emberkeeper recipe adapted to refined kobold anatomy. Open batlike wings on wing.l/wing.r; bronze cup and short chains on dedicated brazier joint. `build-kobold-emberkeeper-refined.py` preserves original27 rest bones; `animate-kobold-emberkeeper.py` bakes gravity alignment and floor clearance. Private editable `kobold-emberkeeper/animated/kobold-emberkeeper.blend`. Green robe, textured brown wing membranes and bronze charms contrast with red-copper skin and bright coals. Front/side/back,513 frames and muted dungeon checks passed. Reusing these on another body requires separate grip, wing and floor checks.
