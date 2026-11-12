@@ -560,9 +560,16 @@
       "name": "Wererat",
       "order": 34,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/wererat.md",
+        "model": "docs/creature-production/wererat.md",
+        "motion": "docs/creature-production/wererat.md",
+        "game-view": "docs/creature-production/wererat.md",
+        "integration": "docs/creature-production/wererat.md"
+      },
+      "approvedAsset": "Wererat"
     },
     {
       "id": "creature-werewolf",

@@ -1,0 +1,60 @@
+{
+  "id": "wererat",
+  "body": "Body12",
+  "parts": [
+    [
+      "Weapons",
+      "OHS02_Niddle",
+      "weapon_r"
+    ]
+  ],
+  "clips": {
+    "Idle": "SingleSword/Idle_Battle_SingleSword.fbx",
+    "Walking_A": "SingleSword/InPlace/MoveFWD_Battle_InPlace_SingleSword.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "SingleSword/Attack01_SingleSword.fbx",
+    "Hit_A": "SingleSword/GetHit01_SingleSword.fbx",
+    "Death_A_Pose": "SingleSword/Die02_SingleSword.fbx"
+  },
+  "palette": {
+    "1": "#243e36",
+    "2": "#344e3a",
+    "3": "#493927",
+    "4": "#92754a",
+    "5": "#493c30",
+    "6": "#695039",
+    "7": "#403329",
+    "8": "#ad9d73",
+    "9": "#342b23"
+  },
+  "partPalette": {
+    "OHS02_Niddle": {
+      "4": "#9b7743",
+      "8": "#b9c4c5"
+    }
+  },
+  "solid": {},
+  "partFit": {
+    "OHS02_Niddle": {
+      "scale": [
+        1,
+        0.7,
+        0.2
+      ]
+    }
+  },
+  "groundContactClips": [],
+  "externalParts": [
+    {
+      "name": "Wererat stolen keys",
+      "path": "/home/bmoser/Projects/DDD-Asset-Workshop/PurchasedSource/KayKit-v8/The Complete KayKit Collection v8/KayKit Dungeon Pack 1.1/Assets/gltf/keyring.gltf",
+      "bone": "pelvis",
+      "scale": 0.17,
+      "offset": [
+        0.19,
+        -0.15,
+        0.02
+      ],
+      "rotateX": 90
+    }
+  ]
+}
