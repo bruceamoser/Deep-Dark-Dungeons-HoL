@@ -608,9 +608,16 @@
       "name": "Cinder Imp",
       "order": 37,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/cinder-imp.md",
+        "model": "docs/creature-production/cinder-imp.md",
+        "motion": "docs/creature-production/cinder-imp.md",
+        "game-view": "docs/creature-production/cinder-imp.md",
+        "integration": "docs/creature-production/cinder-imp.md"
+      },
+      "approvedAsset": "CinderImp"
     },
     {
       "id": "creature-horned-devil",

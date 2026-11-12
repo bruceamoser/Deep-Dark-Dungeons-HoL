@@ -155,3 +155,7 @@ CC0 KayKit Werewolf_Wolf head/toe claws and prior rat tail adapted to owned Maso
 ## Refined bear anatomy and rustic vest
 
 Existing authored CC0 Ninja-based Werebear assembly, refined through `refine-werebear.py`: shorter bear fangs, independently lit amber eyes, retained vest/waist panels/strap/pouch. `texture-werebear.py` demonstrates tighter UV packing for assemblies with many disconnected pieces; original excessive margin flattened texture detail. Private `werebear/final/werebear.blend`;400-frame motion review and final material/dungeon review passed. Bear retains layered stylized fur clumps.
+
+## Cinder Imp horns, wings and coil-tail assembly
+
+Ash Demon's existing CC0-derived separable anatomy fitted by `assemble-cinder-imp.py` to Mason Body01/approved goblin head. Dedicated wing.l/wing.r/imp_tail joints preserve original43 source bones. `texture-cinder-imp.py` gives soot skin and orange leather membranes; `animate-cinder-imp.py` bakes restrained wing pulses/folding and tail pivot. Private editable `cinder-imp/final/cinder-imp.blend`.320 frames and muted dungeon reviewed; one-joint wing and coiled tail remain stylized. Reuse requires fresh scale/attachment/motion review.
