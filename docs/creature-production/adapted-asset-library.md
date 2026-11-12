@@ -199,3 +199,7 @@ Owned HeadArmor01 main enclosing shell/crest retained; three identified disconne
 ## Civic stone guardian palette
 
 Owned Body18/Cloak02, Head01_Male/Hair02/AC11_Mustache03, fitted Spear03/Shield07. `animated-statue.json` and `texture-animated-statue.py`: TextureCraft sandstone/Pores plus coarse mineral veins on stone face/hair/plate; green drapery and gold trim preserved. Private `animated-statue/final/animated-statue.blend`,242 frames and actual dungeon reviewed. Retains thrust/43-bone source rig; short moustache, not full carved beard.
+
+## Clay Helper fired/unfired surface and palm reach
+
+Existing private multiview18-bone clay sculpt; `prepare-clay-helper.py` preserves anatomy and grounds clips, replaces weak right-arm attack keys with deliberate reach. `texture-clay-helper.py` applies TextureCraft clay/Pores to warm/pale regions, paints recessed eyes and removes exactly two inspected microscopic degenerate triangles. Private `clay-helper/final/clay-helper.blend`;466 final frames and actual dungeon reviewed. No finger articulation; coarse patch edges remain.
