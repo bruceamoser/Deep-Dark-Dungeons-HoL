@@ -542,7 +542,7 @@
       "creatureId": "creature-barrow-guard",
       "model": "BarrowGuard",
       "path": "/assets/licensed/creatures/BarrowGuard.glb",
-      "sha256": "44c4f86952532221140643378eaa6285215e9593e9781d040b27ccaf551133d4",
+      "sha256": "a9068c947bf8023da8b80046cbb753483a7a5ce0cd0f19804f3815a9b0718954",
       "approvedOn": "2026-11-11",
       "method": "owned-humanoid",
       "review": "Author model/motion review; bulk user review deferred",
@@ -1051,7 +1051,7 @@
       "creatureId": "creature-animated-armor",
       "model": "AnimatedArmor",
       "path": "/assets/licensed/creatures/AnimatedArmor.glb",
-      "sha256": "46381b448e90f615b2549946cbb2fc463c3f4807e28c9db392c9fabbc0a8856b",
+      "sha256": "a0a6ffab9ee1a0cadf23da60e63dc7cb2e508f5191b5577f5e8ddafd669a2a6c",
       "approvedOn": "2026-11-12",
       "method": "owned-humanoid",
       "review": "Author review; bulk user review deferred",
@@ -1061,12 +1061,12 @@
         "kind": "equipped",
         "scale": 1,
         "height": 1.5,
-        "weapon": "unarmed",
+        "weapon": "melee",
         "shield": true,
         "attack": {
-          "kind": "unarmed",
+          "kind": "slash",
           "clip": "1H_Melee_Attack_Slice_Diagonal",
-          "contact": 0.2
+          "contact": 0.35
         }
       }
     },

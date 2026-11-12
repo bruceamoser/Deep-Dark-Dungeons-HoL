@@ -1,5 +1,9 @@
 # Current working progress
 
+## Active — November 12 creature review fixes
+
+Animated Armor now has a fitted sword and Barrow Guard's full-length sword clears its head during the attack. Both were integrated and installed in the menu AppImage and original launcher. The Linux packages are in `~/Downloads/FLD-Sword-Review-Fixes-2026-11-12/`. The Cinder Imp is active for a fresh mesh rebuild. Goblin Boss visual improvement and fresh Wererat/Werebear models remain queued for player-review follow-up. See [the review handoff](handoffs/2026-11-12-player-creature-review.md).
+
 ## Complete — 58-creature local review delivery (November 12)
 
 **58/58 integrated and locally installed; no active production creature.** Normal menu AppImage and the primary checkout's ignored packaged runtime now contain the full roster. Version label remains **0.8.7 local art-review build**; public release and system Debian are unchanged. Restart the game to load it. Source worktree `/home/bmoser/Projects/FLD-Creature-Production`, branch `codex/creature-roster-delivery`, PR205; historical dirty primary source is preserved.

@@ -425,6 +425,18 @@
         "game-view": "docs/creature-production/barrow-guard.md",
         "integration": "docs/creature-production/barrow-guard.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/barrow-guard.md",
+            "model": "docs/creature-production/barrow-guard.md",
+            "motion": "docs/creature-production/barrow-guard.md",
+            "game-view": "docs/creature-production/barrow-guard.md",
+            "integration": "docs/creature-production/barrow-guard.md"
+          },
+          "approvedAsset": "BarrowGuard"
+        }
+      ],
       "approvedAsset": "BarrowGuard"
     },
     {
@@ -608,16 +620,23 @@
       "name": "Cinder Imp",
       "order": 37,
       "family": "humanoid-specialized",
-      "status": "integrated",
+      "status": "active",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/cinder-imp.md",
-        "model": "docs/creature-production/cinder-imp.md",
-        "motion": "docs/creature-production/cinder-imp.md",
-        "game-view": "docs/creature-production/cinder-imp.md",
-        "integration": "docs/creature-production/cinder-imp.md"
+        "brief": "docs/creature-production/cinder-imp.md"
       },
-      "approvedAsset": "CinderImp"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/cinder-imp.md",
+            "model": "docs/creature-production/cinder-imp.md",
+            "motion": "docs/creature-production/cinder-imp.md",
+            "game-view": "docs/creature-production/cinder-imp.md",
+            "integration": "docs/creature-production/cinder-imp.md"
+          },
+          "approvedAsset": "CinderImp"
+        }
+      ]
     },
     {
       "id": "creature-horned-devil",
@@ -761,6 +780,18 @@
         "game-view": "docs/creature-production/animated-armor.md",
         "integration": "docs/creature-production/animated-armor.md"
       },
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/animated-armor.md",
+            "model": "docs/creature-production/animated-armor.md",
+            "motion": "docs/creature-production/animated-armor.md",
+            "game-view": "docs/creature-production/animated-armor.md",
+            "integration": "docs/creature-production/animated-armor.md"
+          },
+          "approvedAsset": "AnimatedArmor"
+        }
+      ],
       "approvedAsset": "AnimatedArmor"
     },
     {

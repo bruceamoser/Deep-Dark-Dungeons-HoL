@@ -52,7 +52,12 @@
           "color": "#3d3429",
           "metallic": 0
         }
-      }
+      },
+      "restRotationDegrees": [
+        30,
+        -60,
+        30
+      ]
     },
     {
       "name": "Barrow turf shield",
@@ -334,6 +339,22 @@
         "Skeleton_Warrior_Jaw"
       ],
       "maxCorrection": 0.4
+    }
+  ],
+  "armClearance": [
+    {
+      "bone": "upperarm.r",
+      "degrees": [
+        15,
+        -45,
+        0
+      ],
+      "clips": [
+        "Idle",
+        "Walking_A",
+        "1H_Melee_Attack_Slice_Diagonal",
+        "Hit_A"
+      ]
     }
   ]
 }
