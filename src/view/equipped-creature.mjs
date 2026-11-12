@@ -1,4 +1,10 @@
-import { BooleanKeyframeTrack } from "three";
+import {
+  BooleanKeyframeTrack,
+  Group,
+  Mesh,
+  SphereGeometry,
+  MeshStandardMaterial,
+} from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 
 // Complete authored exports already include fitted gear and five source clips.
@@ -27,6 +33,41 @@ export function equippedCreatureAppearance(asset, spec) {
     equipment: { weapon: spec.weapon, shield: !!spec.shield },
     dispose: () => materials.forEach((material) => material.dispose()),
   });
+  if (spec.ambient === "grave-flies") {
+    const swarm = new Group();
+    swarm.name = "Grave flies";
+    const geometry = new SphereGeometry(0.009, 5, 3);
+    const material = new MeshStandardMaterial({
+      color: 0x25261c,
+      roughness: 0.8,
+    });
+    const flies = Array.from({ length: 9 }, () => new Mesh(geometry, material));
+    swarm.add(...flies);
+    const head = model.getObjectByName("head");
+    if (!head) throw new Error("Grave flies require the reviewed head bone");
+    // Keep world-sized insects outside the source rig's centimeter scale.
+    model.add(swarm);
+    model.userData.animate = (time) => {
+      head.updateWorldMatrix(true, false);
+      swarm.position.copy(head.getWorldPosition(swarm.position));
+      model.worldToLocal(swarm.position);
+      flies.forEach((fly, i) => {
+        const a = time * (2.1 + i * 0.13) + i * 2.4;
+        fly.position.set(
+          Math.cos(a) * (0.32 + i * 0.014),
+          0.05 + Math.sin(a * 1.7) * 0.18,
+          Math.sin(a) * 0.31,
+        );
+      });
+    };
+    const dispose = model.userData.dispose;
+    model.userData.dispose = () => {
+      dispose();
+      geometry.dispose();
+      material.dispose();
+    };
+    model.userData.animate(0);
+  }
   let clips = asset.animations;
   if (spec.attack?.kind === "bottle" || spec.attack?.payloadPart) {
     const flask = spec.attack.payloadPart

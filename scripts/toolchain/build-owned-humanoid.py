@@ -137,6 +137,18 @@ for cfg in spec.get('paintBands',[]):
   if cfg['minZ'] <= center.z <= cfg['maxZ']:face.material_index=slot;count+=1
  assert count>0,('Paint band missed',cfg['part'])
  modifications.append({'part':cfg['part'],'paintedFaces':count,'purpose':cfg['purpose']})
+# Smooth painted facial discoloration uses vertex colors, avoiding coarse
+# face-index rectangles on the supplied low-poly head. UVs/geometry stay intact.
+for cfg in spec.get('vertexPaint',[]):
+ obj=bpy.data.objects[cfg['part']];attr=obj.data.color_attributes.new(name='RolePaint',type='FLOAT_COLOR',domain='CORNER');base_rgb=tuple(lin(int(cfg['base'][i:i+2],16)/255) for i in (1,3,5));paint_rgb=tuple(lin(int(cfg['color'][i:i+2],16)/255) for i in (1,3,5))
+ for loop in obj.data.loops:
+  point=obj.matrix_world@obj.data.vertices[loop.vertex_index].co;weight=0
+  for center in cfg['centers']:
+   distance=sum(((point[i]-center[i])/cfg['radius'][i])**2 for i in range(3));weight=max(weight,max(0,1-distance)**.7)
+  attr.data[loop.index].color=tuple(base_rgb[i]*(1-weight)+paint_rgb[i]*weight for i in range(3))+(1,)
+ m=mat(cfg['base']).copy();m.name=cfg['part']+' graded corpse paint';node=m.node_tree.nodes.new('ShaderNodeVertexColor');node.layer_name=attr.name;m.node_tree.links.new(node.outputs['Color'],m.node_tree.nodes['Principled BSDF'].inputs['Base Color']);obj.data.materials.clear();obj.data.materials.append(m)
+ for face in obj.data.polygons:face.material_index=0
+ modifications.append({'part':obj.name,'purpose':'Smooth vertex-painted discoloration retaining source geometry','recipe':cfg})
 # Derive cloth strips from owned surfaces, retaining original deform weights.
 # Bisect copies only; do not cut the body or globally remesh its joints.
 for cfg in spec.get('surfaceWraps',[]):
@@ -369,6 +381,16 @@ if spec.get('propStrike'):
  sys.path.insert(0,str(Path(__file__).parent))
  from prop_strike import author_prop_strike
  modifications.append(author_prop_strike(rig,spec['propStrike']))
+# Small role-specific posture offsets are baked over compatible source motion.
+# Keep every original bone/rest transform and sample before inserting keys.
+for cfg in spec.get('poseOffsets',[]):
+ for track in rig.animation_data.nla_tracks:track.mute=True
+ for clip in cfg['clips']:
+  action=next(t for t in rig.animation_data.nla_tracks if t.name==clip).strips[0].action;rig.animation_data.action=action;rig.animation_data.action_slot=action.slots[0];bone=rig.pose.bones[cfg['bone']];bone.rotation_mode='QUATERNION';samples=[]
+  for frame in range(int(action.frame_range[0]),int(action.frame_range[1])+1):
+   bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();rotation=bone.rotation_quaternion.copy();offset=Matrix.Rotation(math.radians(cfg['degrees']),3,cfg['axis']).to_quaternion();samples.append((frame,rotation@offset))
+  for frame,rotation in samples:bone.rotation_quaternion=rotation;bone.keyframe_insert(data_path='rotation_quaternion',frame=frame,group='Authored role posture')
+ modifications.append({'part':cfg['bone'],'purpose':'Bounded source-animation posture adaptation','recipe':cfg})
 # Bounded per-clip contact correction for reviewed forward falls. Sample the
 # assembled silhouette before writing keys; preserve all relative joint motion.
 # Large penetrations fail instead of lifting an unsuitable pose into the air.

@@ -121,5 +121,49 @@
       "color": "#b4ab88"
     }
   ],
-  "paintRegions": []
+  "paintRegions": [],
+  "vertexPaint": [
+    {
+      "part": "Head01_Male",
+      "base": "#737b56",
+      "color": "#35412f",
+      "centers": [
+        [
+          -0.14,
+          -0.28,
+          0.94
+        ],
+        [
+          0.14,
+          -0.28,
+          0.94
+        ]
+      ],
+      "radius": [
+        0.13,
+        0.12,
+        0.14
+      ]
+    }
+  ],
+  "poseOffsets": [
+    {
+      "bone": "spine_03",
+      "axis": "X",
+      "degrees": 12,
+      "clips": [
+        "Idle",
+        "Walking_A"
+      ]
+    },
+    {
+      "bone": "head",
+      "axis": "Z",
+      "degrees": -8,
+      "clips": [
+        "Idle",
+        "Walking_A"
+      ]
+    }
+  ]
 }
