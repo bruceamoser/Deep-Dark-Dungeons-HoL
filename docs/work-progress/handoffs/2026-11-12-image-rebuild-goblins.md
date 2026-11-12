@@ -12,17 +12,19 @@ Scrapper and [Firestarter](../../creature-production/goblin-firestarter.md) are 
 
 Rattlechanter is source-integrated with a new image-derived body, separate fitted pan and mallet, and a sonic effect timed to the actual pan strike.
 
+Smoke Slinger is source-integrated with a reconstructed body, the fitted two-cord sling, and the actual held stone as its projectile.
+
 ## Decisions
 
 One creature completes the queue gates before the next begins. Reconstruct a new body and outfit from a role-specific image. Fit independent held props when their motion or release requires it. Goblins come first, then Kobold Tunnel Scout, Trapkeeper and Emberkeeper, then the two werecreatures.
 
 ## Verification
 
-Firestarter passed six-clip motion, GLB and floor checks, 522 preview frames, a six-enemy/four-hero development encounter and 45 sampled throw frames. Twenty-five focused tests and the required-assets build passed. Rattlechanter passed 552 motion frames, six clips of floor clearance, GLB round-trip, bestiary and the six-enemy dungeon fixture including its sonic attack. Earlier installed assets are recorded in the [prior handoff](2026-11-12-player-creature-review.md).
+Firestarter passed six-clip motion, GLB and floor checks, 522 preview frames, a six-enemy/four-hero development encounter and 45 sampled throw frames. Twenty-five focused tests and the required-assets build passed. Rattlechanter passed 552 motion frames, six clips of floor clearance, GLB round-trip, bestiary and the six-enemy dungeon fixture including its sonic attack. Smoke Slinger passed 591 motion frames, six clips of floor clearance, GLB round-trip and 56 in-game shot samples with release and recovery. All 379 tests and the required-assets build passed at the Rattlechanter checkpoint. Earlier installed assets are recorded in the [prior handoff](2026-11-12-player-creature-review.md).
 
 ## Remaining and next steps
 
-Smoke Slinger is active. Finish its reconstruction, sling release, motion and game review. Then continue into the three kobolds. Package and test the local delivery after the sequence.
+Kobold Tunnel Scout is active. Its new frontal reference enters the local reconstruction pipeline. Fit the tail, launcher and held dart before motion and dungeon review. Trapkeeper and Emberkeeper follow. Package and test the local delivery after the sequence.
 
 ## Local-only state / transfer needs
 

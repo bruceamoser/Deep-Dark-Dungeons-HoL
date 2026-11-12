@@ -15,17 +15,18 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("source", type=Path)
 parser.add_argument("weapon_source", type=Path)
 parser.add_argument("output", type=Path)
-parser.add_argument("--role", choices=("boss", "spearhand", "scrapper", "firestarter", "rattlechanter"), default="boss")
+parser.add_argument("--role", choices=("boss", "spearhand", "scrapper", "firestarter", "rattlechanter", "smoke-slinger"), default="boss")
 args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
 source, weapon_source, output = args.source, args.weapon_source, args.output
 spearhand = args.role == "spearhand"
 scrapper = args.role == "scrapper"
 firestarter = args.role == "firestarter"
 rattle = args.role == "rattlechanter"
-lean = spearhand or scrapper or firestarter or rattle
+slinger = args.role == "smoke-slinger"
+lean = spearhand or scrapper or firestarter or rattle or slinger
 creature_name = "Goblin " + args.role.title()
 slug = "goblin-" + args.role
-height = {"boss": 1.65, "spearhand": 1.57, "scrapper": 1.50, "firestarter": 1.52, "rattlechanter": 1.56}[args.role]
+height = {"boss": 1.65, "spearhand": 1.57, "scrapper": 1.50, "firestarter": 1.52, "rattlechanter": 1.56, "smoke-slinger": 1.53}[args.role]
 output.mkdir(parents=True, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=str(source))
@@ -82,6 +83,10 @@ if lean:
             chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
                   [(sign*.188, .012, 1.09), (sign*.337, .015, .925),
                    (sign*.465, -.069, .752), (sign*.495, -.106, .664)], "Chest")
+        elif slinger:
+            chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
+                  [(sign*.16, .012, 1.10), (sign*.30, -.005, .936),
+                   (sign*.446, -.04, .793), (sign*.489, -.085, .706)], "Chest")
         else:
             chain([side + name for name in ("UpperArm", "Forearm", "Hand")],
                   [(sign*.235, .018, 1.11), (sign*.402, -.02, .945),
@@ -141,7 +146,7 @@ def wrist_distances():
     return distances[index]
 
 
-wrist_field = wrist_distances() if rattle else None
+wrist_field = wrist_distances() if rattle or slinger else None
 distance_fields = []
 for name in names:
     start, end = segments[name]
@@ -155,12 +160,12 @@ for name in names:
         inner_arm = (.20 if lean else .26) + np.maximum(0, (1.04 if lean else 1.20)-z)*.75
         if scrapper or firestarter:
             inner_arm = .17 + np.maximum(0, 1.04-z)*.65
-        if rattle:
+        if rattle or slinger:
             inner_arm = .411 - np.maximum(0, z-.75)*.78
             distance += np.maximum(0, np.abs(y+.04)-.14)*6 + np.maximum(0, z-1.11)*4
-        lower_arm = .54 if rattle else .50 if scrapper or firestarter else .58
+        lower_arm = .54 if rattle or slinger else .50 if scrapper or firestarter else .58
         distance += np.maximum(0, inner_arm-abs(x))*5 + np.maximum(0, lower_arm-z)*3
-    elif rattle:
+    elif rattle or slinger:
         outside_arm = np.clip((z-.55)/.055, 0, 1)*np.clip((1.14-z)/.14, 0, 1)
         distance += np.maximum(0, abs(x)-.39)*outside_arm*5
     if not name.endswith(("Forearm", "Hand")):
@@ -173,7 +178,7 @@ for name in names:
         distance += np.maximum(0, z-(1.23 if lean else 1.38))*4
     else:
         distance += np.maximum(0, (1.17 if lean else 1.33)-z)*3
-    if rattle:
+    if wrist_field is not None:
         wrist_weight = np.clip((.235-wrist_field)/.08, 0, 1)
         if name.endswith(("UpperArm", "Forearm", "Hand")):
             distance = distance*(1-wrist_weight)+wrist_weight*np.linalg.norm(
@@ -201,7 +206,9 @@ def bind_held_prop(obj, hand):
     obj.modifiers.new("Rigid hand grip", "ARMATURE").object = rig
 
 
-if rattle:
+if slinger:
+    held_props = []
+elif rattle:
     recipe = json.loads(weapon_source.read_text())
     props = {}
     landmarks = {}
@@ -344,7 +351,16 @@ def pose(clip, t):
         orient("RUpperArm", x=-52*throw+19*windup, y=-20, z=35*throw)
         orient("RForearm", x=-29*throw-26*windup, z=12*throw)
         orient("LUpperArm", x=20*throw, y=24)
-    elif clip == "Unarmed_Melee_Attack_Punch_A":
+    elif slinger and clip == "2H_Ranged_Shoot":
+        release = .40
+        phase = t/release if t < release else (1-t)/(1-release)
+        swing = phase**2*(3-2*phase)
+        windup = math.sin(math.pi*phase)**2 if t < release else 0
+        orient("Chest", x=10*swing, z=24*swing-14*windup)
+        orient("RUpperArm", x=-37*swing+26*windup, y=-15, z=21*swing)
+        orient("RForearm", x=-12-24*swing-13*windup, z=18*swing)
+        orient("LUpperArm", x=16*swing, y=18)
+    elif clip == "Unarmed_Melee_Attack_Punch_A" or (slinger and clip == "1H_Melee_Attack_Slice_Diagonal"):
         orient("Chest", x=15*pulse, z=-23*pulse)
         orient("LUpperArm", x=-39*pulse, y=20, z=-36*pulse)
         orient("LForearm", x=-19*pulse)
@@ -416,6 +432,8 @@ def strike_pan(weight, windup):
 
 clips = {"Idle": 38, "Walking_A": 27, "1H_Melee_Attack_Slice_Diagonal": 28,
          "Hit_A": 17, "Death_A_Pose": 39}
+if slinger:
+    clips["2H_Ranged_Shoot"] = 31
 if rattle:
     clips["Spellcast_Shoot"] = 31
 if firestarter:
@@ -453,7 +471,7 @@ for clip, length in clips.items():
         evaluated.data.vertices.foreach_get("co", points)
         prop_evaluations = [prop.evaluated_get(graph) for prop in held_props]
         weapon_floor = min((prop.matrix_world @ vertex.co).z
-                           for prop in prop_evaluations for vertex in prop.data.vertices)
+                           for prop in prop_evaluations for vertex in prop.data.vertices) if held_props else math.inf
         floor = min(float(points.reshape(-1, 3)[:, 2].min()), weapon_floor)
         rig.pose.bones["Root"].location = basis["Root"].inverted() @ Vector((0, 0, .002-floor))
         for bone in rig.pose.bones:
@@ -468,6 +486,26 @@ for track in rig.animation_data.nla_tracks:
     track.mute = False
 for bone in rig.pose.bones:
     bone.matrix_basis.identity()
+if slinger:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from owned_sling import add_owned_sling
+
+    def sling_material(color):
+        srgb = [int(color[index:index+2], 16)/255 for index in (1, 3, 5)]
+        rgb = [c/12.92 if c <= .04045 else ((c+.055)/1.055)**2.4 for c in srgb]
+        material = bpy.data.materials.new("Sling " + color)
+        material.use_nodes = True
+        material["preserveAuthoredRoughness"] = True
+        surface = material.node_tree.nodes["Principled BSDF"]
+        surface.inputs["Base Color"].default_value = (*rgb, 1)
+        surface.inputs["Roughness"].default_value = .3
+        return material
+
+    config = json.loads(weapon_source.read_text())["sling"]
+    hand_start, hand_end = map(Vector, segments["RHand"])
+    config.update(handBone="RHand", grip=tuple(hand_start.lerp(hand_end, .63)),
+                  releaseFrame=13, length=.26)
+    add_owned_sling(rig, config, sling_material)
 scene.frame_set(1)
 bpy.ops.wm.save_as_mainfile(filepath=str(output/f"{slug}.blend"))
 bpy.ops.export_scene.gltf(

@@ -139,7 +139,7 @@
       "order": 7,
       "family": "humanoid-equipment",
       "status": "integrated",
-      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "route": "Image-derived reconstruction, reduced and textured locally; fitted rig and separate held props.",
       "gates": {
         "brief": "docs/creature-production/goblin-firestarter.md",
         "model": "docs/creature-production/goblin-firestarter.md",
@@ -319,7 +319,7 @@
     },
     {
       "id": "creature-tomb-sage",
-      "name": "Lich — Tomb Sage",
+      "name": "Lich \u2014 Tomb Sage",
       "order": 17,
       "family": "humanoid-equipment",
       "status": "integrated",
@@ -383,7 +383,7 @@
       "order": 20,
       "family": "humanoid-equipment",
       "status": "integrated",
-      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "route": "Image-derived reconstruction, reduced and textured locally; fitted rig and separate held props.",
       "gates": {
         "brief": "docs/creature-production/goblin-rattlechanter.md",
         "model": "docs/creature-production/goblin-rattlechanter.md",
@@ -410,10 +410,14 @@
       "name": "Goblin Smoke Slinger",
       "order": 21,
       "family": "humanoid-equipment",
-      "status": "active",
-      "route": "Owned humanoid rig and clips; authored ancestry/head/outfit; modular held gear.",
+      "status": "integrated",
+      "route": "Image-derived reconstruction, reduced and textured locally; fitted rig and separate held props.",
       "gates": {
-        "brief": "docs/creature-production/goblin-smoke-slinger.md"
+        "brief": "docs/creature-production/goblin-smoke-slinger.md",
+        "model": "docs/creature-production/goblin-smoke-slinger.md",
+        "motion": "docs/creature-production/goblin-smoke-slinger.md",
+        "game-view": "docs/creature-production/goblin-smoke-slinger.md",
+        "integration": "docs/creature-production/goblin-smoke-slinger.md"
       },
       "revisions": [
         {
@@ -426,7 +430,8 @@
           },
           "approvedAsset": "GoblinSmokeSlinger"
         }
-      ]
+      ],
+      "approvedAsset": "GoblinSmokeSlinger"
     },
     {
       "id": "creature-bone-sentry",
@@ -589,16 +594,23 @@
       "name": "Kobold Tunnel Scout",
       "order": 31,
       "family": "humanoid-specialized",
-      "status": "integrated",
+      "status": "active",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/kobold-tunnel-scout.md",
-        "model": "docs/creature-production/kobold-tunnel-scout.md",
-        "motion": "docs/creature-production/kobold-tunnel-scout.md",
-        "game-view": "docs/creature-production/kobold-tunnel-scout.md",
-        "integration": "docs/creature-production/kobold-tunnel-scout.md"
+        "brief": "docs/creature-production/kobold-tunnel-scout.md"
       },
-      "approvedAsset": "KoboldScout"
+      "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/kobold-tunnel-scout.md",
+            "model": "docs/creature-production/kobold-tunnel-scout.md",
+            "motion": "docs/creature-production/kobold-tunnel-scout.md",
+            "game-view": "docs/creature-production/kobold-tunnel-scout.md",
+            "integration": "docs/creature-production/kobold-tunnel-scout.md"
+          },
+          "approvedAsset": "KoboldScout"
+        }
+      ]
     },
     {
       "id": "creature-kobold-trapkeeper",
