@@ -480,11 +480,16 @@
       "name": "Crypt Ghoul",
       "order": 29,
       "family": "humanoid-specialized",
-      "status": "active",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
       "gates": {
-        "brief": "docs/creature-production/crypt-ghoul.md"
-      }
+        "brief": "docs/creature-production/crypt-ghoul.md",
+        "model": "docs/creature-production/crypt-ghoul.md",
+        "motion": "docs/creature-production/crypt-ghoul.md",
+        "game-view": "docs/creature-production/crypt-ghoul.md",
+        "integration": "docs/creature-production/crypt-ghoul.md"
+      },
+      "approvedAsset": "CryptGhoul"
     },
     {
       "id": "creature-ghast",

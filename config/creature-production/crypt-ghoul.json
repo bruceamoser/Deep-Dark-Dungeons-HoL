@@ -1,0 +1,240 @@
+{
+  "id": "crypt-ghoul",
+  "body": "Body01",
+  "parts": [
+    [
+      "HeadParts",
+      "Head01_Male",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Eye02",
+      "head"
+    ],
+    [
+      "HeadParts",
+      "Mouth07",
+      "head"
+    ]
+  ],
+  "clips": {
+    "Idle": "NoWeapon/Idle_Battle_NoWeapon.fbx",
+    "Walking_A": "NoWeapon/InPlace/WalkFWD_InPlace_NoWeapon.fbx",
+    "1H_Melee_Attack_Slice_Diagonal": "NoWeapon/Attack02_NoWeapon.fbx",
+    "Hit_A": "NoWeapon/GetHit01_NoWeapon.fbx",
+    "Death_A_Pose": "NoWeapon/Die01_NoWeapon.fbx"
+  },
+  "palette": {
+    "1": "#9b956e",
+    "2": "#9b956e",
+    "3": "#9b956e",
+    "4": "#9b956e",
+    "5": "#9b956e",
+    "6": "#9b956e",
+    "7": "#9b956e",
+    "8": "#9b956e",
+    "9": "#9b956e"
+  },
+  "solid": {
+    "Body01": "#858f82",
+    "Head01_Male": "#a1aa9b",
+    "Eye02": "#d8bd69",
+    "Mouth07": "#261e1c"
+  },
+  "partFit": {
+    "Head01_Male": {
+      "scale": [
+        0.83,
+        0.88,
+        0.88
+      ]
+    },
+    "Eye02": {
+      "scale": [
+        0.83,
+        0.88,
+        0.88
+      ]
+    },
+    "Mouth07": {
+      "scale": [
+        1.26,
+        0.88,
+        0.74
+      ],
+      "offset": [
+        0,
+        -0.014,
+        0.025
+      ]
+    }
+  },
+  "paintBands": [],
+  "groundContactClips": [
+    {
+      "clip": "Walking_A",
+      "maxCorrection": 0.06
+    },
+    {
+      "clip": "Death_A_Pose",
+      "maxCorrection": 0.15
+    }
+  ],
+  "surfaceWraps": [
+    {
+      "source": "Body01",
+      "name": "Ghoul burial rag",
+      "axis": [
+        0.1,
+        0,
+        1
+      ],
+      "min": 0.19,
+      "max": 0.29,
+      "maxX": 0.28,
+      "color": "#4c3c29"
+    }
+  ],
+  "paintRegions": [],
+  "vertexPaint": [
+    {
+      "part": "Head01_Male",
+      "base": "#a1aa9b",
+      "color": "#303936",
+      "centers": [
+        [
+          -0.115,
+          -0.24,
+          0.92
+        ],
+        [
+          0.115,
+          -0.24,
+          0.92
+        ]
+      ],
+      "radius": [
+        0.135,
+        0.17,
+        0.155
+      ]
+    }
+  ],
+  "poseOffsets": [
+    {
+      "bone": "spine_03",
+      "axis": "X",
+      "degrees": 28,
+      "clips": [
+        "Idle",
+        "Walking_A"
+      ]
+    },
+    {
+      "bone": "head",
+      "axis": "X",
+      "degrees": -13,
+      "clips": [
+        "Idle",
+        "Walking_A"
+      ]
+    }
+  ],
+  "roughnessOverrides": {
+    "Body01": 0.72,
+    "Head01_Male": 0.72,
+    "Ghoul burial rag": 0.94,
+    "Ghoul nail tips": 0.65
+  },
+  "claws": {
+    "color": "#d8ceaa",
+    "nails": [
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          -0.045,
+          0.669
+        ],
+        "direction": [
+          1,
+          -0.13695652173913045,
+          0
+        ],
+        "length": 0.124,
+        "radius": 0.014,
+        "curl": 0.043
+      },
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          -0.015,
+          0.669
+        ],
+        "direction": [
+          1,
+          -0.045652173913043485,
+          0
+        ],
+        "length": 0.151,
+        "radius": 0.014,
+        "curl": 0.043
+      },
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          0.016,
+          0.669
+        ],
+        "direction": [
+          1,
+          0.04869565217391305,
+          0
+        ],
+        "length": 0.164,
+        "radius": 0.014,
+        "curl": 0.043
+      },
+      {
+        "bone": "index_02",
+        "start": [
+          0.711,
+          0.046,
+          0.669
+        ],
+        "direction": [
+          1,
+          0.14,
+          0
+        ],
+        "length": 0.133,
+        "radius": 0.014,
+        "curl": 0.043
+      },
+      {
+        "bone": "thumb_02",
+        "start": [
+          0.608,
+          -0.1,
+          0.563
+        ],
+        "direction": [
+          0.63,
+          -0.5,
+          -0.55
+        ],
+        "length": 0.1,
+        "radius": 0.015,
+        "curl": 0.023
+      }
+    ]
+  },
+  "fingerOpening": {
+    "Idle": 0.83,
+    "Walking_A": 0.76,
+    "1H_Melee_Attack_Slice_Diagonal": 0.93
+  }
+}

@@ -6,7 +6,7 @@ import argparse,json,hashlib,sys,math
 from pathlib import Path
 import bpy
 import bmesh
-from mathutils import Matrix,Vector
+from mathutils import Matrix,Quaternion,Vector
 p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('spec',type=Path);p.add_argument('output',type=Path);a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);spec=json.loads(a.spec.read_text());a.output.mkdir(parents=True,exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.fbx(filepath=str(a.source/'Mesh/AllBodiesCloaks.fbx'))
@@ -295,6 +295,12 @@ for cfg in spec.get('externalParts',[]):
   if uri and not uri.startswith('data:'):deps.append(file.parent/uri)
  for dep in deps:extra_sources[str(dep)]=hashlib.sha256(dep.read_bytes()).hexdigest()
 
+# Fit nails against the donor's inspected rest-pose finger surfaces.
+if claws := spec.get('claws'):
+ sys.path.insert(0,str(Path(__file__).parent))
+ from owned_claws import add_claws
+ obj=add_claws(rig,claws['nails'],mat(claws['color']))
+ modifications.append({'part':obj.name,'purpose':'Curved nails fitted to the original skinned fingers','recipe':claws})
 # Per-surface finish overrides clone materials so shared palette colors on
 # clothing or eyes are not changed by a skin-only roughness adjustment.
 for name,roughness in spec.get('roughnessOverrides',{}).items():
@@ -390,6 +396,31 @@ if spec.get('propStrike'):
  modifications.append(author_prop_strike(rig,spec['propStrike']))
 # Small role-specific posture offsets are baked over compatible source motion.
 # Keep every original bone/rest transform and sample before inserting keys.
+if opening := spec.get('fingerOpening'):
+ bones = [
+  rig.pose.bones[f'{digit}_{joint}_{side}']
+  for side in ('l', 'r')
+  for digit in ('index', 'thumb')
+  for joint in ('01', '02', '03')
+ ]
+ for track in rig.animation_data.nla_tracks:
+  track.mute = True
+ for clip, amount in opening.items():
+  action = next(track for track in rig.animation_data.nla_tracks if track.name == clip).strips[0].action
+  rig.animation_data.action = action
+  rig.animation_data.action_slot = action.slots[0]
+  for bone in bones:
+   bone.rotation_mode = 'QUATERNION'
+  samples = []
+  for frame in range(int(action.frame_range[0]), int(action.frame_range[1]) + 1):
+   bpy.context.scene.frame_set(frame)
+   bpy.context.view_layer.update()
+   samples.append((frame, [bone.rotation_quaternion.slerp(Quaternion(), amount) for bone in bones]))
+  for frame, rotations in samples:
+   for bone, rotation in zip(bones, rotations):
+    bone.rotation_quaternion = rotation
+    bone.keyframe_insert(data_path='rotation_quaternion', frame=frame, group='Open fingers for claw pose')
+ modifications.append({'part':'hands','purpose':'Relax closed-fist source clips to expose the claws','recipe':opening})
 for cfg in spec.get('poseOffsets',[]):
  for track in rig.animation_data.nla_tracks:track.mute=True
  for clip in cfg['clips']:

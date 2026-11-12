@@ -628,6 +628,28 @@
           "contact": 0.2
         }
       }
+    },
+    {
+      "creatureId": "creature-crypt-ghoul",
+      "model": "CryptGhoul",
+      "path": "/assets/licensed/creatures/CryptGhoul.glb",
+      "sha256": "30151eb554e8be0b522bc0702d6ea4347f5e5c5da4a9141099062efc332ba0eb",
+      "approvedOn": "2026-11-11",
+      "method": "owned-humanoid",
+      "review": "Author model/motion review; bulk user review deferred",
+      "report": "docs/creature-production/crypt-ghoul.md",
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 1,
+        "height": 1.35,
+        "weapon": "claw",
+        "attack": {
+          "kind": "unarmed",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.18
+        }
+      }
     }
   ]
 }
