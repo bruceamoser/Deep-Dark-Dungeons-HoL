@@ -5,11 +5,22 @@
       "creatureId": "creature-goblin-spearhand",
       "model": "GoblinSpearhand",
       "path": "/assets/licensed/creatures/GoblinSpearhand.glb",
-      "sha256": "0774c4ca0b2c844e7160363ce2cbe620d89d158aaa987c7d11ada18197d1c099",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "f0b27f10e6c8f3d23439f54d01fa722f992c4eb90b0728ae6b22b1cbc927b97d",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "report": "docs/goblin-spearhand-dungeon.md",
-      "distribution": "private-local-build"
+      "distribution": "private-local-build",
+      "runtime": {
+        "kind": "equipped",
+        "scale": 0.85,
+        "height": 1.34,
+        "weapon": "spear",
+        "attack": {
+          "kind": "thrust",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.5
+        }
+      }
     },
     {
       "creatureId": "creature-air-elemental",
@@ -35,17 +46,22 @@
       "creatureId": "creature-goblin-scrapper",
       "model": "GoblinScrapper",
       "path": "/assets/licensed/creatures/GoblinScrapper.glb",
-      "sha256": "4fd5a5f9702a7367b7c387315cda17bba0eaa52106fa9e2bdc79955adc4d5631",
-      "approvedOn": "2026-11-11",
-      "method": "owned-humanoid",
+      "sha256": "e4951f313030c40a9b15944797234a6ad0326d995f34d4b2d24c7de77a660441",
+      "approvedOn": "2026-11-12",
+      "method": "fresh-image-reconstruction",
       "review": "author review under delegated production direction; not separate user approval",
       "report": "docs/creature-production/goblin-scrapper.md",
       "distribution": "private-local-build",
       "runtime": {
         "kind": "equipped",
-        "scale": 0.9,
-        "height": 1.2,
-        "weapon": "melee"
+        "scale": 0.82,
+        "height": 1.23,
+        "weapon": "melee",
+        "attack": {
+          "kind": "slash",
+          "clip": "1H_Melee_Attack_Slice_Diagonal",
+          "contact": 0.53
+        }
       }
     },
     {

@@ -8,10 +8,14 @@
       "name": "Goblin Spearhand",
       "order": 1,
       "family": "owned-humanoid",
-      "status": "active",
+      "status": "integrated",
       "route": "owned-humanoid",
       "gates": {
-        "brief": "docs/goblin-spearhand-dungeon.md"
+        "brief": "docs/goblin-spearhand-dungeon.md",
+        "model": "docs/goblin-spearhand-dungeon.md",
+        "motion": "docs/goblin-spearhand-dungeon.md",
+        "game-view": "docs/goblin-spearhand-dungeon.md",
+        "integration": "docs/goblin-spearhand-dungeon.md"
       },
       "revisions": [
         {
@@ -24,7 +28,8 @@
           },
           "approvedAsset": "GoblinSpearhand"
         }
-      ]
+      ],
+      "approvedAsset": "GoblinSpearhand"
     },
     {
       "id": "creature-air-elemental",
@@ -73,6 +78,16 @@
         "integration": "docs/creature-production/goblin-scrapper.md"
       },
       "revisions": [
+        {
+          "gates": {
+            "brief": "docs/creature-production/goblin-scrapper.md",
+            "model": "docs/creature-production/goblin-scrapper.md",
+            "motion": "docs/creature-production/goblin-scrapper.md",
+            "game-view": "docs/creature-production/goblin-scrapper.md",
+            "integration": "docs/creature-production/goblin-scrapper.md"
+          },
+          "approvedAsset": "GoblinScrapper"
+        },
         {
           "gates": {
             "brief": "docs/creature-production/goblin-scrapper.md",
