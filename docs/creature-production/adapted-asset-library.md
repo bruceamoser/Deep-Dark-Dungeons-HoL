@@ -171,3 +171,7 @@ Reusable TextureCraft Asphalt base with Marble veins driving matching base color
 ## Dire Wolf pale ruff and heavier chest
 
 Reviewed private Wolf donor, localized upper-chest morph plus ivory/charcoal vertex coat. `prepare-dire-wolf.py`; private `dire-wolf/final/dire-wolf.blend`. Original23-bone jaw rig/five clips preserved, bite aliased to canonical attack identifier. Private distribution provenance unchanged.485 motion frames and actual dungeon reviewed; reusable animal variant recipe, no gear.
+
+## Winter Wolf icy coat and mouth socket
+
+Approved private Wolf donor, white/glacial-blue vertex coat, cyan irises, new inhale/open-jaw Spellcast_Shoot and Head-parented BreathMuzzle. `prepare-winter-wolf.py`; private `winter-wolf/final/winter-wolf.blend`.585 rendered frames and actual mouth-launched frost attack reviewed. Original23 bones retained; no gear. Useful breath/socket recipe for other qualified quadrupeds; fresh visual checks required.
