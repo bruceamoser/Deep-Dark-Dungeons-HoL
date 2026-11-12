@@ -512,9 +512,16 @@
       "name": "Kobold Tunnel Scout",
       "order": 31,
       "family": "humanoid-specialized",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse suitable owned skeleton/rig; adapt anatomy selectively, then role-specific gear and motion.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/kobold-tunnel-scout.md",
+        "model": "docs/creature-production/kobold-tunnel-scout.md",
+        "motion": "docs/creature-production/kobold-tunnel-scout.md",
+        "game-view": "docs/creature-production/kobold-tunnel-scout.md",
+        "integration": "docs/creature-production/kobold-tunnel-scout.md"
+      },
+      "approvedAsset": "KoboldScout"
     },
     {
       "id": "creature-kobold-trapkeeper",

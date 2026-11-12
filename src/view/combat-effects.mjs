@@ -279,10 +279,16 @@ export function createAttackEffect(host, data, callbacks = {}) {
   });
   const payloadVisibility = payloadMeshes.map((o) => o.visible);
   const payloadFlight = new T.Group();
+  const muzzle = spec.muzzleBone && from.model.getObjectByName(spec.muzzleBone);
+  const payloadForward = v(0, 1, 0);
   // Freeze the actual owned prop at release, including its current skin pose.
   // This keeps the bottle/stone geometry without reusing a live skeleton.
   const releasePayload = () => {
     from.group.updateMatrixWorld(true);
+    if (muzzle)
+      payloadForward
+        .copy(UP)
+        .applyQuaternion(muzzle.getWorldQuaternion(new T.Quaternion()));
     const center = new T.Box3();
     for (const source of payloadMeshes) {
       source.skeleton?.update();
@@ -352,10 +358,16 @@ export function createAttackEffect(host, data, callbacks = {}) {
     wrapper.add(projectile);
     projectile = wrapper;
     projectile.name = "Arrow flight";
-  } else if (spec.kind === "bottle" || spec.kind === "sling") {
+  } else if (
+    spec.kind === "bottle" || spec.kind === "sling" || spec.kind === "dart"
+  ) {
     projectile = payloadFlight;
     projectile.name =
-      spec.kind === "sling" ? "Flying sling stone" : "Thrown fuel flask";
+      spec.kind === "dart"
+        ? "Flying scout dart"
+        : spec.kind === "sling"
+          ? "Flying sling stone"
+          : "Thrown fuel flask";
   } else if (spec.kind === "wind" || spec.kind === "sonic") {
     const sonic = spec.kind === "sonic";
     projectile = new T.Group();
@@ -425,6 +437,7 @@ export function createAttackEffect(host, data, callbacks = {}) {
     from.model.getObjectByName("weapon_r");
   const launchPoint = (age = spec.release) => {
     from.group.updateMatrixWorld(true);
+    if (muzzle) return muzzle.getWorldPosition(v());
     const authoredNock =
       spec.nockBone && from.model.getObjectByName(spec.nockBone);
     if (spec.kind === "arrow" && authoredNock)
@@ -494,7 +507,8 @@ export function createAttackEffect(host, data, callbacks = {}) {
       if (!released && age >= (spec.release ?? 0.15)) {
         released = true;
         if (isProjectile) start = launchPoint();
-        if (spec.kind === "bottle" || spec.kind === "sling") releasePayload();
+        if (spec.kind === "bottle" || spec.kind === "sling" || spec.kind === "dart")
+          releasePayload();
         callbacks.release?.(spec.kind);
       }
       if (projectile) {
@@ -521,7 +535,10 @@ export function createAttackEffect(host, data, callbacks = {}) {
           if (spec.kind === "bottle" || spec.kind === "sling")
             projectile.rotation.set(p * Math.PI * 2, 0, 0);
           else
-            projectile.quaternion.setFromUnitVectors(UP, tangent.normalize());
+            projectile.quaternion.setFromUnitVectors(
+              spec.kind === "dart" ? payloadForward : UP,
+              tangent.normalize(),
+            );
           if (age > contact && spec.kind === "arrow") {
             const alpha = Math.max(0, 1 - (age - contact) / 0.32);
             projectile.traverse((o) => {

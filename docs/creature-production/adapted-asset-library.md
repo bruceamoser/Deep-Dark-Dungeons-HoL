@@ -131,3 +131,7 @@ The waist rag is a narrower Body01-derived cloth copy, fitted for the Ghoul and 
 ## Ghast's dirt-stained finery
 
 Dungeon Mason Body12, Cloak03 and Hair12 with the Ghoul's refitted nail tips. The coat and tattered cloak have coarse Linen, worn gold and hem dirt driven by baked position and occlusion. Hair12 is shortened and colored pale cream. The editable parts, TextureCraft project and recipe are under `ghast/deep-sockets/` in the private production root. The [Ghast report](ghast.md) records motion fit and materials.
+
+## Kobold Scout head, tail and dart kit
+
+CC0 KayKit Ninja donor rig and project-authored Scout geometry. The refined builder creates a wedge skull with carved eye pockets, a curved tail and the re-angled, shortened bronze launcher. The loaded dart remains a separate skinned object and the muzzle marker follows the grip. Reuse requires checking the next wearer's carried, firing and fall poses. See the [Scout report](kobold-tunnel-scout.md) for the editable scene and TextureCraft scale recipe.
