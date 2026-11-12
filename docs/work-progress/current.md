@@ -1,8 +1,8 @@
 # Current working progress
 
-## Active — Release 0.8.8
+## Complete — Release 0.8.8
 
-The reviewed 58-creature build is the release candidate in PR #206. The halfling pilot is paused on its own branch. See the [release handoff](handoffs/2026-11-12-release-0.8.8.md).
+[Four Lanterns Deep v0.8.8](https://github.com/bruceamoser/Four-Lanterns-Deep/releases/tag/v0.8.8) is the latest stable release. It ships all 58 reviewed creature models in the Linux AppImage, amd64 Debian package, and Windows x64 installer. The halfling pilot is paused at `d2ea6f4` on `codex/halfling-wardrobe-pilot`. See the [release handoff](handoffs/2026-11-12-release-0.8.8.md).
 
 ## Complete — November 12 creature review fixes
 
