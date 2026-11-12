@@ -167,3 +167,7 @@ Mason Body19 armor, KayKit Adventurers spellbook_closed on weapon_l, Mixed Bag1 
 ## Ash heat-vein materials and smoke presentation
 
 Reusable TextureCraft Asphalt base with Marble veins driving matching base color, height and emission (`texture-ash-demon.py`). Pores and Voronoi prototypes were rejected as dots/flat patches. Private `ash-demon/materials/ash-demon.tcraft`, packed final Blend/GLB under `ash-demon/final/`. Runtime `ambient: ash-smoke` adds one fading point-cloud draw following the owned spine_03 joint and pulses cloned emissive materials; orthographic/perspective sizing and disposal tested.320 motion frames plus final material/runtime review passed. Suitable for heat/ash forms after separate palette, scale and readability review.
+
+## Dire Wolf pale ruff and heavier chest
+
+Reviewed private Wolf donor, localized upper-chest morph plus ivory/charcoal vertex coat. `prepare-dire-wolf.py`; private `dire-wolf/final/dire-wolf.blend`. Original23-bone jaw rig/five clips preserved, bite aliased to canonical attack identifier. Private distribution provenance unchanged.485 motion frames and actual dungeon reviewed; reusable animal variant recipe, no gear.

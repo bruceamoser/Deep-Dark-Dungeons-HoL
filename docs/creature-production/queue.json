@@ -656,9 +656,16 @@
       "name": "Dire Wolf",
       "order": 40,
       "family": "animal",
-      "status": "queued",
+      "status": "integrated",
       "route": "Reuse qualified quadruped anatomy/rig where appropriate; inspect existing sources for other body plans. No clothing/gear on ordinary animals.",
-      "gates": {}
+      "gates": {
+        "brief": "docs/creature-production/dire-wolf.md",
+        "model": "docs/creature-production/dire-wolf.md",
+        "motion": "docs/creature-production/dire-wolf.md",
+        "game-view": "docs/creature-production/dire-wolf.md",
+        "integration": "docs/creature-production/dire-wolf.md"
+      },
+      "approvedAsset": "DireWolf"
     },
     {
       "id": "creature-winter-wolf",
